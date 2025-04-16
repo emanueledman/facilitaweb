@@ -15,6 +15,13 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
+// Função para verificar estado de autenticação
+function checkAuthState(callback) {
+  auth.onAuthStateChanged(user => {
+    callback(user);
+  });
+}
+
 // Função para login com email e senha
 async function loginWithEmail(emailInput, passwordInput, loginBtn, loginText, loginSpinner, emailError, passwordError) {
   const email = emailInput.value.trim();
@@ -231,6 +238,7 @@ async function logout(logoutBtn, logoutText, logoutSpinner) {
 
 // Exportar funções para uso em outros arquivos
 window.firebaseAuth = {
+  checkAuthState,
   loginWithEmail,
   loginWithGoogle,
   resetPassword,
