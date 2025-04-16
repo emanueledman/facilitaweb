@@ -511,12 +511,17 @@
     }
     
     .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
       background: var(--dark-bg);
+      z-index: 9999;
     }
     
     .spinner {
@@ -604,7 +609,7 @@
 </head>
 <body>
   <!-- Homepage estática -->
-  <div id="homepage" class="homepage" style="display: none;">
+  <div id="homepage" class="homepage">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <div class="container">
@@ -897,6 +902,11 @@
     </footer>
   </div>
 
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-container">
+    <div class="spinner"></div>
+    <p class="mt-3">Carregando Facilita 2.0...</p>
+  </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
@@ -909,6 +919,7 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+ 
   <script>
     // Initialize AOS animation library
     try {
@@ -917,11 +928,10 @@
         easing: 'ease-in-out',
         once: true
       });
-      console.log("AOS inicializado com sucesso.");
     } catch (error) {
-      console.error("Erro ao inicializar AOS:", error.message);
+      console.error("Erro ao inicializar AOS:", error);
     }
-
+  
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
       try {
@@ -932,10 +942,10 @@
           navbar.classList.remove('scrolled');
         }
       } catch (error) {
-        console.error("Erro no efeito de scroll da navbar:", error.message);
+        console.error("Erro no efeito de scroll:", error);
       }
     });
-
+  
     // Counter animation for stats
     function animateCounters() {
       try {
@@ -946,12 +956,11 @@
         animateCounter(usersCount, 0, 50000, 2000);
         animateCounter(servicesCount, 0, 150, 1500);
         animateCounter(citiesCount, 0, 18, 1000);
-        console.log("Animação de contadores iniciada.");
       } catch (error) {
-        console.error("Erro ao animar contadores:", error.message);
+        console.error("Erro ao animar contadores:", error);
       }
     }
-
+  
     function animateCounter(element, start, end, duration) {
       try {
         let startTimestamp = null;
@@ -966,10 +975,10 @@
         };
         window.requestAnimationFrame(step);
       } catch (error) {
-        console.error("Erro na animação do contador:", error.message);
+        console.error("Erro na animação do contador:", error);
       }
     }
-
+  
     // Intersection Observer for counter animation
     try {
       const observer = new IntersectionObserver((entries) => {
@@ -981,41 +990,30 @@
         });
       }, {threshold: 0.5});
       observer.observe(document.querySelector('.stats-section'));
-      console.log("Intersection Observer configurado.");
     } catch (error) {
-      console.error("Erro ao configurar Intersection Observer:", error.message);
+      console.error("Erro no Intersection Observer:", error);
     }
-
-    // Initialize Firebase
-    let auth, db;
-    try {
-      auth = firebase.auth();
-      db = firebase.firestore();
-      console.log("Firebase inicializado com sucesso.");
-    } catch (error) {
-      console.error("Erro ao inicializar Firebase:", error.message);
-      showError("Não foi possível conectar ao servidor. Tente novamente mais tarde.");
-    }
-
+  
     // Função para exibir erro na UI
     function showError(message) {
-      const errorMessage = document.getElementById('errorMessage');
-      errorMessage.textContent = message;
-      errorMessage.style.display = 'block';
-      console.log("Erro exibido na UI:", message);
+      try {
+        const errorMessage = document.getElementById('errorMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      } catch (error) {
+        console.error("Erro ao exibir mensagem de erro:", error);
+      }
     }
-
+  
     // Função para atualizar a UI com base no estado de autenticação
     function updateUI(user, userData) {
       try {
-        console.log("Atualizando UI para usuário:", user ? user.uid : "Não logado");
         const authButton = document.getElementById('authButton');
         const accountButton = document.getElementById('accountButton');
         const welcomeMessage = document.getElementById('welcomeMessage');
         const ctaButton = document.getElementById('ctaButton');
-
+  
         if (user) {
-          // Usuário logado
           authButton.innerHTML = `<i class="fas fa-user me-1"></i> Perfil`;
           authButton.href = 'profile.html';
           accountButton.textContent = 'Ver Perfil';
@@ -1023,9 +1021,7 @@
           welcomeMessage.textContent = `Olá, ${userData?.nome || 'Usuário'}! Veja os serviços disponíveis.`;
           ctaButton.textContent = 'Acessar Perfil';
           ctaButton.href = 'profile.html';
-          console.log("UI configurada para usuário logado:", userData);
         } else {
-          // Usuário não logado
           authButton.innerHTML = `<i class="fas fa-sign-in-alt me-1"></i> Entrar`;
           authButton.href = 'login.html';
           accountButton.textContent = 'Acessar Conta';
@@ -1033,135 +1029,109 @@
           welcomeMessage.textContent = 'Bem-vindo(a)! Faça login para acessar os serviços.';
           ctaButton.textContent = 'Começar Agora';
           ctaButton.href = 'register.html';
-          console.log("UI configurada para usuário não logado.");
         }
       } catch (error) {
-        console.error("Erro ao atualizar UI:", error.message);
-        showError("Erro ao carregar interface. Tente recarregar a página.");
+        console.error("Erro ao atualizar UI:", error);
+        showError("Erro ao carregar interface");
       }
     }
-
+  
     // Carregar dados do usuário e atualizar UI
     function loadUserData() {
       try {
-        console.log("Iniciando loadUserData...");
-        if (!firebaseAuth || !firebaseAuth.checkAuthState) {
-          throw new Error("firebaseAuth não está definido.");
-        }
-        firebaseAuth.checkAuthState(async user => {
-          let userData = null;
+        firebase.auth().onAuthStateChanged(async (user) => {
           try {
             if (user) {
-              console.log("Usuário autenticado:", user.uid);
-              const userDoc = await db.collection('usuarios').doc(user.uid).get();
-              if (userDoc.exists) {
-                userData = userDoc.data();
-                console.log("Dados do usuário carregados:", userData);
-              } else {
-                console.warn("Documento usuarios/{uid} não encontrado. Usando dados do auth.");
-                userData = { nome: user.displayName || "Usuário", email: user.email || "" };
-              }
+              const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+              updateUI(user, userDoc.exists ? userDoc.data() : null);
             } else {
-              console.log("Nenhum usuário autenticado.");
+              updateUI(null, null);
             }
-            updateUI(user, userData);
           } catch (error) {
-            console.error("Erro ao carregar dados do usuário:", error.message);
-            userData = user ? { nome: user.displayName || "Usuário", email: user.email || "" } : null;
-            showError("Não foi possível carregar seus dados. Tente novamente.");
-            updateUI(user, userData);
+            console.error("Erro ao carregar dados do usuário:", error);
+            updateUI(user, null);
           }
         });
       } catch (error) {
-        console.error("Erro em loadUserData:", error.message);
-        showError("Erro ao inicializar autenticação. Tente recarregar a página.");
+        console.error("Erro na verificação de autenticação:", error);
         updateUI(null, null);
       }
     }
-
+  
     // Manipular cliques nos links de módulos
     function setupModuleLinks() {
       try {
-        console.log("Configurando links de módulos...");
         document.querySelectorAll('.module-link').forEach(link => {
           link.addEventListener('click', (e) => {
             e.preventDefault();
             const module = link.getAttribute('data-module');
-            console.log("Módulo clicado:", module);
-            try {
-              firebaseAuth.checkAuthState(user => {
-                if (user) {
-                  console.log("Redirecionando para profile.html#", module);
-                  window.location.href = `profile.html#${module}`;
-                } else {
-                  console.log("Usuário não logado, redirecionando para login.");
-                  window.location.href = 'login.html';
-                }
-              });
-            } catch (error) {
-              console.error("Erro ao verificar auth para módulo:", error.message);
-              showError("Erro ao acessar módulo. Faça login novamente.");
-              window.location.href = 'login.html';
-            }
+            firebase.auth().onAuthStateChanged(user => {
+              if (user) {
+                window.location.href = `profile.html#${module}`;
+              } else {
+                window.location.href = 'login.html';
+              }
+            });
           });
         });
       } catch (error) {
-        console.error("Erro ao configurar links de módulos:", error.message);
+        console.error("Erro ao configurar links de módulos:", error);
       }
     }
-
+  
     // Manipular clique no botão de autenticação
-    function handleAuthClick() {
+    function handleAuthClick(e) {
       try {
-        console.log("Botão de autenticação clicado.");
-        firebaseAuth.checkAuthState(user => {
-          if (user) {
-            console.log("Usuário logado, redirecionando para profile.html");
-            window.location.href = 'profile.html';
-          } else {
-            console.log("Usuário não logado, redirecionando para login.html");
-            window.location.href = 'login.html';
-          }
+        e.preventDefault();
+        firebase.auth().onAuthStateChanged(user => {
+          window.location.href = user ? 'profile.html' : 'login.html';
         });
       } catch (error) {
-        console.error("Erro ao processar clique no botão de autenticação:", error.message);
-        showError("Erro ao verificar autenticação. Tente novamente.");
+        console.error("Erro no botão de autenticação:", error);
         window.location.href = 'login.html';
       }
     }
-
+  
     // Simulate loading screen
     window.addEventListener('load', function() {
-      console.log("Página carregada, iniciando inicialização...");
-      try {
-        setTimeout(function() {
-          try {
-            document.getElementById('loadingScreen').classList.add('fade-out');
-            setTimeout(function() {
-              document.getElementById('loadingScreen').style.display = 'none';
-              document.getElementById('homepage').style.display = 'block';
-              console.log("Tela de carregamento removida, homepage exibida.");
-              loadUserData();
-              setupModuleLinks();
-              document.getElementById('authButton').addEventListener('click', (e) => {
-                e.preventDefault();
-                handleAuthClick();
-              });
-            }, 500);
-          } catch (error) {
-            console.error("Erro ao remover tela de carregamento:", error.message);
+      setTimeout(function() {
+        try {
+          document.getElementById('loadingScreen').classList.add('fade-out');
+          setTimeout(function() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('homepage').style.display = 'block';
-            showError("Erro ao carregar página. Tente recarregar.");
-          }
-        }, 1500);
-      } catch (error) {
-        console.error("Erro no evento de load:", error.message);
-        document.getElementById('loadingScreen').style.display = 'none';
-        document.getElementById('homepage').style.display = 'block';
-        showError("Erro ao inicializar página. Tente recarregar.");
-      }
+            
+            // Inicializa Firebase
+            try {
+              const firebaseConfig = {
+                apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+                authDomain: "facilita-479b3.firebaseapp.com",
+                projectId: "facilita-479b3",
+                storageBucket: "facilita-479b3.appspot.com",
+                messagingSenderId: "385676676886",
+                appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+              };
+              
+              if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+              }
+              
+              loadUserData();
+              setupModuleLinks();
+              document.getElementById('authButton').addEventListener('click', handleAuthClick);
+            } catch (error) {
+              console.error("Erro ao inicializar Firebase:", error);
+              showError("Erro de conexão com o servidor");
+            }
+          }, 500);
+        } catch (error) {
+          console.error("Erro na tela de carregamento:", error);
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('homepage').style.display = 'block';
+        }
+      }, 1500);
     });
   </script>
+  
 </body>
 </html>

@@ -3,53 +3,55 @@ const firebaseConfig = {
   apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
   authDomain: "facilita-479b3.firebaseapp.com",
   projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.firebasestorage.app",
+  storageBucket: "facilita-479b3.appspot.com",
   messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-  firebase_url: "https://facilita-479b3-default-rtdb.firebaseio.com",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // Função para verificar estado de autenticação
 function checkAuthState(callback) {
-  auth.onAuthStateChanged(user => {
+  return auth.onAuthStateChanged(user => {
     callback(user);
   });
 }
 
 // Função para login com email e senha
 async function loginWithEmail(emailInput, passwordInput, loginBtn, loginText, loginSpinner, emailError, passwordError) {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-
-  // Reset errors
-  emailError.style.display = 'none';
-  passwordError.style.display = 'none';
-
-  // Validate inputs
-  if (!email) {
-    emailError.textContent = 'Por favor, insira seu email';
-    emailError.style.display = 'block';
-    return;
-  }
-
-  if (!password) {
-    passwordError.textContent = 'Por favor, insira sua senha';
-    passwordError.style.display = 'block';
-    return;
-  }
-
-  // Show loading state
-  loginText.style.display = 'none';
-  loginSpinner.style.display = 'inline-block';
-  loginBtn.disabled = true;
-
   try {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    // Reset errors
+    emailError.style.display = 'none';
+    passwordError.style.display = 'none';
+
+    // Validate inputs
+    if (!email) {
+      emailError.textContent = 'Por favor, insira seu email';
+      emailError.style.display = 'block';
+      return;
+    }
+
+    if (!password) {
+      passwordError.textContent = 'Por favor, insira sua senha';
+      passwordError.style.display = 'block';
+      return;
+    }
+
+    // Show loading state
+    loginText.style.display = 'none';
+    loginSpinner.style.display = 'inline-block';
+    loginBtn.disabled = true;
+
     // Sign in with email and password
     await auth.signInWithEmailAndPassword(email, password);
     window.location.href = 'index.html';
@@ -91,6 +93,7 @@ async function loginWithGoogle(googleLoginBtn) {
     const result = await auth.signInWithPopup(googleProvider);
     const user = result.user;
 
+    // Verifica se o usuário já existe no Firestore
     const userDoc = await db.collection('usuarios').doc(user.uid).get();
 
     if (!userDoc.exists) {
@@ -117,71 +120,72 @@ async function loginWithGoogle(googleLoginBtn) {
 
 // Função para redefinição de senha
 async function resetPassword(forgotPasswordLink) {
-  const email = prompt('Por favor, insira seu email para redefinir a senha:');
-
-  if (email) {
-    try {
+  try {
+    const email = prompt('Por favor, insira seu email para redefinir a senha:');
+    if (email) {
       await auth.sendPasswordResetEmail(email);
       alert('Email de redefinição de senha enviado. Verifique sua caixa de entrada.');
-    } catch (error) {
-      alert('Erro ao enviar email de redefinição. Verifique o email e tente novamente.');
     }
+  } catch (error) {
+    alert('Erro ao enviar email de redefinição. Verifique o email e tente novamente.');
   }
 }
 
 // Função para registro de novo usuário
 async function registerUser(nameInput, emailInput, passwordInput, confirmPasswordInput, registerBtn, registerText, registerSpinner, nameError, emailError, passwordError, confirmPasswordError) {
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-  const confirmPassword = confirmPasswordInput.value;
-
-  // Reset errors
-  nameError.style.display = 'none';
-  emailError.style.display = 'none';
-  passwordError.style.display = 'none';
-  confirmPasswordError.style.display = 'none';
-
-  // Validate inputs
-  if (!name) {
-    nameError.textContent = 'Por favor, insira seu nome';
-    nameError.style.display = 'block';
-    return;
-  }
-
-  if (!email) {
-    emailError.textContent = 'Por favor, insira seu email';
-    emailError.style.display = 'block';
-    return;
-  }
-
-  if (!password) {
-    passwordError.textContent = 'Por favor, insira sua senha';
-    passwordError.style.display = 'block';
-    return;
-  }
-
-  if (password.length < 6) {
-    passwordError.textContent = 'A senha deve ter pelo menos 6 caracteres';
-    passwordError.style.display = 'block';
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    confirmPasswordError.textContent = 'As senhas não coincidem';
-    confirmPasswordError.style.display = 'block';
-    return;
-  }
-
-  // Show loading state
-  registerText.style.display = 'none';
-  registerSpinner.style.display = 'inline-block';
-  registerBtn.disabled = true;
-
   try {
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+
+    // Reset errors
+    nameError.style.display = 'none';
+    emailError.style.display = 'none';
+    passwordError.style.display = 'none';
+    confirmPasswordError.style.display = 'none';
+
+    // Validate inputs
+    if (!name) {
+      nameError.textContent = 'Por favor, insira seu nome';
+      nameError.style.display = 'block';
+      return;
+    }
+
+    if (!email) {
+      emailError.textContent = 'Por favor, insira seu email';
+      emailError.style.display = 'block';
+      return;
+    }
+
+    if (!password) {
+      passwordError.textContent = 'Por favor, insira sua senha';
+      passwordError.style.display = 'block';
+      return;
+    }
+
+    if (password.length < 6) {
+      passwordError.textContent = 'A senha deve ter pelo menos 6 caracteres';
+      passwordError.style.display = 'block';
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      confirmPasswordError.textContent = 'As senhas não coincidem';
+      confirmPasswordError.style.display = 'block';
+      return;
+    }
+
+    // Show loading state
+    registerText.style.display = 'none';
+    registerSpinner.style.display = 'inline-block';
+    registerBtn.disabled = true;
+
+    // Create user
     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
     const user = userCredential.user;
 
+    // Save additional user data
     await db.collection('usuarios').doc(user.uid).set({
       nome: name,
       email: email,

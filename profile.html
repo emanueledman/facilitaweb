@@ -371,215 +371,262 @@
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Initialize AOS
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true
-    });
+    // Initialize AOS animation library
+    try {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+      });
+      console.log("AOS inicializado.");
+    } catch (error) {
+      console.error("Erro ao inicializar AOS:", error.message);
+    }
 
     // Navbar scroll effect
     window.addEventListener('scroll', function() {
-      const navbar = document.querySelector('.navbar');
-      if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
+      try {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      } catch (error) {
+        console.error("Erro no scroll da navbar:", error.message);
       }
     });
 
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    // Load profile data
-    function loadProfileData() {
-      console.log("Iniciando carregamento dos dados do usuário...");
-      auth.onAuthStateChanged(async user => {
+    // Função para exibir erro na UI
+    function showError(message) {
+      try {
         const profileContent = document.getElementById('profileContent');
+        profileContent.innerHTML = `<div class="error-message">${message}</div>`;
+      } catch (error) {
+        console.error("Erro ao exibir mensagem de erro:", error.message);
+      }
+    }
+
+    // Função para atualizar a UI com base nos dados do usuário
+    function updateProfileUI(user, userData, stats) {
+      try {
         const userName = document.getElementById('userName');
         const userEmail = document.getElementById('userEmail');
+        const profileContent = document.getElementById('profileContent');
 
-        if (!user) {
-          console.error("Nenhum usuário autenticado encontrado.");
-          profileContent.innerHTML = `
-            <div class="error-message">Por favor, faça login para ver seu perfil.</div>
-          `;
-          setTimeout(() => window.location.href = 'login.html', 2000);
-          return;
+        userName.textContent = userData?.nome || user.displayName || "Usuário";
+        userEmail.textContent = userData?.email || user.email || "";
+        
+        profileContent.innerHTML = `
+          <div class="stats-section">
+            <h3 class="section-title">Minhas Contribuições</h3>
+            <div class="stats-grid">
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-exclamation-triangle text-danger"></i>
+                <div class="stat-number">${stats.reportedProblems}</div>
+                <div class="stat-label">Problemas Reportados</div>
+              </div>
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-calendar-alt text-primary"></i>
+                <div class="stat-number">${stats.agendamentos}</div>
+                <div class="stat-label">Agendamentos</div>
+              </div>
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-graduation-cap text-success"></i>
+                <div class="stat-number">${stats.matriculas}</div>
+                <div class="stat-label">Matrículas</div>
+              </div>
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+                <i class="fas fa-hand-holding-heart text-warning"></i>
+                <div class="stat-number">${stats.doacoes}</div>
+                <div class="stat-label">Doações</div>
+              </div>
+            </div>
+          </div>
+          <div class="modules-section mt-4">
+            <h3 class="section-title">Meus Dados nos Módulos</h3>
+            <div class="list-group modules-list">
+              <a href="#recursos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="recursos">
+                <div><i class="fas fa-location-dot text-primary"></i> Recursos Locais</div>
+                <span>Acessados: 2</span>
+              </a>
+              <a href="#agendamentos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="agendamentos">
+                <div><i class="fas fa-calendar-alt text-success"></i> Agendamentos</div>
+                <span>Pendentes: ${stats.agendamentos}</span>
+              </a>
+              <a href="#matriculas" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="matriculas">
+                <div><i class="fas fa-graduation-cap text-warning"></i> Matrículas</div>
+                <span>Registradas: ${stats.matriculas}</span>
+              </a>
+              <a href="#relatorios" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="relatorios">
+                <div><i class="fas fa-exclamation-triangle text-danger"></i> Relatórios</div>
+                <span>Enviados: ${stats.reportedProblems}</span>
+              </a>
+              <a href="#documentos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="documentos">
+                <div><i class="fas fa-file-alt text-purple"></i> Documentos</div>
+                <span>Válidos: 2</span>
+              </a>
+              <a href="#doacoes" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="doacoes">
+                <div><i class="fas fa-hand-holding-heart text-teal"></i> Doações</div>
+                <span>Necessidades: ${stats.doacoes}</span>
+              </a>
+            </div>
+          </div>
+        `;
+
+        // Destacar módulo ativo
+        const module = window.location.hash.substring(1);
+        if (module) {
+          const activeItem = document.querySelector(`.list-group-item[data-module="${module}"]`);
+          if (activeItem) {
+            activeItem.classList.add('active');
+            console.log(`Módulo ativo: ${module}`);
+          }
         }
 
-        console.log("Usuário autenticado:", user.uid);
+        // Manipular cliques nos módulos
+        document.querySelectorAll('.list-group-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const module = item.getAttribute('data-module');
+            console.log(`Módulo clicado: ${module}`);
+            alert(`Módulo ${module} selecionado. Funcionalidade em desenvolvimento.`);
+            window.location.hash = module;
+            document.querySelectorAll('.list-group-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+          });
+        });
+      } catch (error) {
+        console.error("Erro ao atualizar UI do perfil:", error.message);
+        showError("Erro ao carregar interface do perfil");
+      }
+    }
 
-        try {
-          // Busca dados do usuário
-          console.log("Buscando usuarios/{uid}...");
-          const userDoc = await db.collection('usuarios').doc(user.uid).get();
-          let userData = { nome: user.displayName || "Usuário", email: user.email || "" };
-          if (userDoc.exists) {
-            userData = userDoc.data();
-            console.log("Dados do usuário carregados:", userData);
-          } else {
-            console.warn("Documento usuarios/{uid} não encontrado. Usando dados do auth.");
+    // Carregar dados do perfil
+    function loadProfileData() {
+      try {
+        console.log("Iniciando carregamento dos dados do perfil...");
+        firebase.auth().onAuthStateChanged(async user => {
+          const profileContent = document.getElementById('profileContent');
+          
+          if (!user) {
+            console.warn("Nenhum usuário autenticado encontrado.");
+            profileContent.innerHTML = `
+              <div class="error-message">Por favor, faça login para ver seu perfil.</div>
+            `;
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
           }
 
-          // Busca estatísticas em paralelo
-          console.log("Buscando estatísticas...");
-          const [relatoriosSnapshot, agendamentosSnapshot, matriculasSnapshot, bancoSnapshot] = await Promise.all([
-            db.collection('relatorios_problemas').where('usuario_id', '==', user.uid).get()
-              .catch(e => {
-                console.error("Erro ao buscar relatorios_problemas:", e);
-                return { docs: [], size: 0 };
-              }),
-            db.collection('agendamentos').where('usuario_id', '==', user.uid).get()
-              .catch(e => {
-                console.error("Erro ao buscar agendamentos:", e);
-                return { docs: [], size: 0 };
-              }),
-            db.collection('matriculas').where('usuario_id', '==', user.uid).get()
-              .catch(e => {
-                console.error("Erro ao buscar matriculas:", e);
-                return { docs: [], size: 0 };
-              }),
-            db.collection('banco_alimentacao').where('usuario_id', '==', user.uid).get()
-              .catch(e => {
-                console.error("Erro ao buscar banco_alimentacao:", e);
-                return { docs: [], size: 0 };
-              })
-          ]);
+          console.log("Usuário autenticado:", user.uid);
 
-          const reportedProblems = relatoriosSnapshot.size;
-          const agendamentos = agendamentosSnapshot.size;
-          const matriculas = matriculasSnapshot.size;
-          const doacoes = bancoSnapshot.docs.length > 0 ? 
-            (bancoSnapshot.docs[0].data().necessidades?.length || 0) : 0;
+          try {
+            // Busca dados do usuário
+            console.log("Buscando usuarios/{uid}...");
+            const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+            console.log("Dados do usuário:", userData);
 
-          console.log("Estatísticas carregadas:", { reportedProblems, agendamentos, matriculas, doacoes });
+            // Busca estatísticas em paralelo
+            console.log("Buscando estatísticas...");
+            const [relatoriosSnapshot, agendamentosSnapshot, matriculasSnapshot, bancoSnapshot] = await Promise.all([
+              firebase.firestore().collection('relatorios_problemas').where('usuario_id', '==', user.uid).get()
+                .catch(e => {
+                  console.error("Erro ao buscar relatorios_problemas:", e);
+                  return { docs: [], size: 0 };
+                }),
+              firebase.firestore().collection('agendamentos').where('usuario_id', '==', user.uid).get()
+                .catch(e => {
+                  console.error("Erro ao buscar agendamentos:", e);
+                  return { docs: [], size: 0 };
+                }),
+              firebase.firestore().collection('matriculas').where('usuario_id', '==', user.uid).get()
+                .catch(e => {
+                  console.error("Erro ao buscar matriculas:", e);
+                  return { docs: [], size: 0 };
+                }),
+              firebase.firestore().collection('banco_alimentacao').where('usuario_id', '==', user.uid).get()
+                .catch(e => {
+                  console.error("Erro ao buscar banco_alimentacao:", e);
+                  return { docs: [], size: 0 };
+                })
+            ]);
 
-          // Atualiza UI
-          userName.textContent = userData.nome || "Usuário";
-          userEmail.textContent = userData.email || "";
+            const stats = {
+              reportedProblems: relatoriosSnapshot.size,
+              agendamentos: agendamentosSnapshot.size,
+              matriculas: matriculasSnapshot.size,
+              doacoes: bancoSnapshot.docs.length > 0 ? (bancoSnapshot.docs[0].data().necessidades?.length || 0) : 0
+            };
+            console.log("Estatísticas carregadas:", stats);
 
-          profileContent.innerHTML = `
-            <div class="stats-section">
-              <h3 class="section-title">Minhas Contribuições</h3>
-              <div class="stats-grid">
-                <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
-                  <i class="fas fa-exclamation-triangle text-danger"></i>
-                  <div class="stat-number">${reportedProblems}</div>
-                  <div class="stat-label">Problemas Reportados</div>
-                </div>
-                <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-                  <i class="fas fa-calendar-alt text-primary"></i>
-                  <div class="stat-number">${agendamentos}</div>
-                  <div class="stat-label">Agendamentos</div>
-                </div>
-                <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
-                  <i class="fas fa-graduation-cap text-success"></i>
-                  <div class="stat-number">${matriculas}</div>
-                  <div class="stat-label">Matrículas</div>
-                </div>
-                <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
-                  <i class="fas fa-hand-holding-heart text-warning"></i>
-                  <div class="stat-number">${doacoes}</div>
-                  <div class="stat-label">Doações</div>
-                </div>
-              </div>
-            </div>
-            <div class="modules-section mt-4">
-              <h3 class="section-title">Meus Dados nos Módulos</h3>
-              <div class="list-group modules-list">
-                <a href="#recursos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="recursos">
-                  <div><i class="fas fa-location-dot text-primary"></i> Recursos Locais</div>
-                  <span>Acessados: 2</span>
-                </a>
-                <a href="#agendamentos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="agendamentos">
-                  <div><i class="fas fa-calendar-alt text-success"></i> Agendamentos</div>
-                  <span>Pendentes: ${agendamentos}</span>
-                </a>
-                <a href="#matriculas" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="matriculas">
-                  <div><i class="fas fa-graduation-cap text-warning"></i> Matrículas</div>
-                  <span>Registradas: ${matriculas}</span>
-                </a>
-                <a href="#relatorios" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="relatorios">
-                  <div><i class="fas fa-exclamation-triangle text-danger"></i> Relatórios</div>
-                  <span>Enviados: ${reportedProblems}</span>
-                </a>
-                <a href="#documentos" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="documentos">
-                  <div><i class="fas fa-file-alt text-purple"></i> Documentos</div>
-                  <span>Válidos: 2</span>
-                </a>
-                <a href="#doacoes" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" data-module="doacoes">
-                  <div><i class="fas fa-hand-holding-heart text-teal"></i> Doações</div>
-                  <span>Necessidades: ${doacoes}</span>
-                </a>
-              </div>
-            </div>
-          `;
-
-          console.log("UI atualizada com sucesso.");
-
-          // Destacar módulo ativo
-          const module = window.location.hash.substring(1);
-          if (module) {
-            const activeItem = document.querySelector(`.list-group-item[data-module="${module}"]`);
-            if (activeItem) {
-              activeItem.classList.add('active');
-              console.log(`Módulo ativo: ${module}`);
+            updateProfileUI(user, userData, stats);
+          } catch (error) {
+            console.error("Erro ao carregar dados do perfil:", error.message);
+            showError(`Erro ao carregar perfil: ${error.message}`);
+            profileContent.innerHTML += `
+              <button class="btn btn-primary mt-2" onclick="loadProfileData()">Tentar Novamente</button>
+            `;
+            if (error.code === 'failed-precondition') {
+              profileContent.innerHTML += `
+                <p class="error-message">Por favor, crie índices para usuario_id em relatorios_problemas, agendamentos, matriculas e banco_alimentacao.</p>
+              `;
             }
           }
-
-          // Manipular cliques nos módulos
-          document.querySelectorAll('.list-group-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-              e.preventDefault();
-              const module = item.getAttribute('data-module');
-              console.log(`Módulo clicado: ${module}`);
-              alert(`Módulo ${module} selecionado. Funcionalidade em desenvolvimento.`);
-              window.location.hash = module;
-              document.querySelectorAll('.list-group-item').forEach(i => i.classList.remove('active'));
-              item.classList.add('active');
-            });
-          });
-        } catch (error) {
-          console.error("Erro ao carregar dados do usuário:", error.message, error.stack);
-          profileContent.innerHTML = `
-            <div class="error-message">Erro ao carregar perfil: ${error.message}</div>
-            <button class="btn btn-primary mt-2" onclick="loadProfileData()">Tentar Novamente</button>
-          `;
-          if (error.code === 'failed-precondition') {
-            console.warn("Índice ausente detectado.");
-            profileContent.innerHTML += `
-              <p class="error-message">Por favor, crie índices para usuario_id em relatorios_problemas, agendamentos, matriculas e banco_alimentacao.</p>
-            `;
-          }
-        }
-      });
+        });
+      } catch (error) {
+        console.error("Erro na inicialização do carregamento do perfil:", error.message);
+        showError("Erro ao iniciar carregamento do perfil");
+      }
     }
 
     // Manipular logout
-    document.getElementById('logoutLink').addEventListener('click', async (e) => {
-      e.preventDefault();
-      console.log("Iniciando logout...");
+    function handleLogout(e) {
       try {
-        await auth.signOut();
-        console.log("Logout concluído.");
-        window.location.href = 'login.html';
+        e.preventDefault();
+        console.log("Iniciando logout...");
+        const logoutBtn = document.getElementById('logoutLink');
+        const logoutText = logoutBtn.querySelector('span') || logoutBtn;
+        const logoutSpinner = document.createElement('span');
+        logoutSpinner.className = 'spinner';
+        
+        logoutText.style.display = 'none';
+        logoutBtn.appendChild(logoutSpinner);
+        logoutBtn.disabled = true;
+
+        firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
       } catch (error) {
-        console.error("Erro ao fazer logout:", error);
+        console.error("Erro ao iniciar logout:", error.message);
+        showError("Erro ao fazer logout");
       }
-    });
+    }
 
-    // Manipular editar perfil (placeholder)
-    document.getElementById('editProfile').addEventListener('click', (e) => {
-      e.preventDefault();
-      console.log("Editar perfil clicado.");
-      alert("Funcionalidade de edição de perfil em desenvolvimento.");
-    });
+    // Manipular editar perfil
+    function handleEditProfile(e) {
+      try {
+        e.preventDefault();
+        console.log("Editar perfil clicado.");
+        alert("Funcionalidade de edição de perfil em desenvolvimento.");
+      } catch (error) {
+        console.error("Erro ao clicar em editar perfil:", error.message);
+        showError("Erro ao acessar edição de perfil");
+      }
+    }
 
-    // Carregar dados ao iniciar
-    window.addEventListener('load', () => {
-      console.log("Página carregada, iniciando loadProfileData...");
-      loadProfileData();
+    // Inicializar página
+    window.addEventListener('load', function() {
+      console.log("Página carregada.");
+      try {
+        // Configurar eventos
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('editProfile').addEventListener('click', handleEditProfile);
+        
+        // Carregar dados do perfil
+        loadProfileData();
+      } catch (error) {
+        console.error("Erro ao inicializar página:", error.message);
+        showError("Erro ao carregar página");
+      }
     });
   </script>
 </body>
