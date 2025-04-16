@@ -745,7 +745,7 @@
               <div class="feature-content">
                 <h3>Relatar Problemas</h3>
                 <p>Denuncie questões na sua cidade e acompanhe as soluções em tempo real. Contribua para uma Angola melhor.</p>
-                <a href="#" class="feature-btn module-link" data-module="relatar">Explorar <i class="fas fa-arrow-right"></i></a>
+                <a href="report.html" class="feature-btn module-link" data-module="relatar">Explorar <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -841,8 +841,7 @@
       <div class="container">
         <div class="cta-content" data-aos="zoom-in">
           <h2>Pronto para Simplificar sua Vida?</h2>
-          <p>Junte-se a milhares de angolanos que já estão economizando tempo e evitando burocracia com o Facilita 2.0.</p>
-          <a id="ctaButton" href="register.html" class="cta-btn">Começar Agora <i class="fas fa-arrow-right ms-2"></i></a>
+          <p>Junte-se a milhares de angolanos que já estão economizando tempo e evitando burocracia com o Facilita 2url      <a id="ctaButton" href="register.html" class="cta-btn">Começar Agora <i class="fas fa-arrow-right ms-2"></i></a>
         </div>
       </div>
     </section>
@@ -872,6 +871,7 @@
               <li><a href="#features" class="module-link" data-module="educacao">Educação</a></li>
               <li><a href="#features" class="module-link" data-module="fila">Fila Online</a></li>
               <li><a href="#features" class="module-link" data-module="seguranca">Segurança</a></li>
+              <li><a href="report.html" class="module-link" data-module="relatar">Relatar Problemas</a></li>
             </ul>
           </div>
           <div class="col-md-4 col-lg-2 mb-4">
@@ -1063,8 +1063,9 @@
       try {
         document.querySelectorAll('.module-link').forEach(link => {
           link.addEventListener('click', (e) => {
-            e.preventDefault();
             const module = link.getAttribute('data-module');
+            if (module === 'relatar') return; // Deixa o href padrão para relatar problemas
+            e.preventDefault();
             firebase.auth().onAuthStateChanged(user => {
               if (user) {
                 window.location.href = `profile.html#${module}`;
@@ -1132,6 +1133,5 @@
       }, 1500);
     });
   </script>
-  
 </body>
 </html>
