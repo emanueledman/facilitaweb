@@ -28,9 +28,9 @@
   <title>FixABairro | Novo Relato</title>
   <style>
     :root {
-      --primary-color: #22c55e; /* Vibrant green for community focus */
+      --primary-color: #22c55e;
       --primary-dark: #16a34a;
-      --secondary-color: #f59e0b; /* Warm orange for action-oriented elements */
+      --secondary-color: #f59e0b;
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
@@ -566,6 +566,10 @@
         padding: 0.5rem;
         font-size: 0.85rem;
       }
+      
+      .form-control, .form-group label, .section-title {
+        font-size: 0.85rem;
+      }
     }
     
     @media (max-width: 992px) {
@@ -631,10 +635,9 @@
   </div>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -684,7 +687,7 @@
       image: null,
       latitude: null,
       longitude: null,
-      neighborhood: 'Desconhecido'
+      neighborhood: ''
     };
     let map, marker;
 
@@ -739,13 +742,14 @@
     }
 
     // Upload to Cloudinary
-    async function uploadToCloudinary(file) {
+    async function uploadToCloudinary(file, neighborhood) {
       try {
         const timestamp = Math.floor(Date.now() / 1000);
+        const folder = neighborhood ? `fixa/${neighborhood}` : cloudinaryConfig.folder;
         const paramsToSign = {
           timestamp,
           upload_preset: cloudinaryConfig.uploadPreset,
-          folder: cloudinaryConfig.folder
+          folder
         };
 
         const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
@@ -767,7 +771,7 @@
         formData.append('timestamp', timestamp);
         formData.append('signature', signature);
         formData.append('upload_preset', cloudinaryConfig.uploadPreset);
-        formData.append('folder', cloudinaryConfig.folder);
+        formData.append('folder', folder);
 
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
           method: 'POST',
@@ -950,6 +954,11 @@
                 <div class="error-message" id="mapError"></div>
               </div>
               <div class="form-group">
+                <label for="neighborhood">Bairro</label>
+                <input type="text" class="form-control" id="neighborhood" placeholder="Ex.: Cazenga" value="${formData.neighborhood}">
+                <div class="error-message" id="neighborhoodError"></div>
+              </div>
+              <div class="form-group">
                 <label for="suggestion">Sugestão de Solução (opcional)</label>
                 <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema">${formData.suggestion}</textarea>
                 <div class="error-message" id="suggestionError"></div>
@@ -1049,6 +1058,11 @@
             }
           });
 
+          document.getElementById('neighborhood').addEventListener('input', (e) => {
+            formData.neighborhood = e.target.value.trim();
+            hideError('neighborhoodError');
+          });
+
           document.getElementById('suggestion').addEventListener('input', (e) => {
             formData.suggestion = e.target.value.trim();
           });
@@ -1095,6 +1109,10 @@
               showError('mapError', 'Por favor, selecione uma localização');
               isValid = false;
             }
+            if (!formData.neighborhood) {
+              showError('neighborhoodError', 'Por favor, insira o nome do bairro');
+              isValid = false;
+            }
           }
 
           if (!isValid) return;
@@ -1111,10 +1129,13 @@
             nextBtn.disabled = true;
 
             try {
-              const imageUrl = await uploadToCloudinary(formData.image);
-              const problemRef = firebase.database().ref('problems').push();
-              await problemRef.set({
-                usuarioId: firebase.auth().currentUser.uid,
+              const user = firebase.auth().currentUser;
+              const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+              const userData = userDoc.exists ? userDoc.data() : { province: 'Desconhecida' };
+
+              const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
+              await firebase.firestore().collection('relatorios_problemas').add({
+                usuarioId: user.uid,
                 title: formData.title,
                 category: formData.category,
                 urgency: formData.urgency,
@@ -1126,8 +1147,9 @@
                   longitude: formData.longitude
                 },
                 status: 'Aguardando',
-                createdAt: firebase.database.ServerValue.TIMESTAMP,
-                neighborhood: formData.neighborhood
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                neighborhood: formData.neighborhood,
+                province: userData.province || 'Desconhecida'
               });
 
               alert('Problema relatado com sucesso!');
@@ -1206,7 +1228,6 @@
         const firebaseConfig = {
           apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
           authDomain: "facilita-479b3.firebaseapp.com",
-          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
           projectId: "facilita-479b3",
           storageBucket: "facilita-479b3.appspot.com",
           messagingSenderId: "385676676886",
