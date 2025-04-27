@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Facilita 2.0 - Dashboard de Relatórios">
-  <meta name="keywords" content="facilita, angola, serviços públicos, relatórios">
-  <meta name="author" content="Facilita Team">
+  <meta name="description" content="FixABairro - Dashboard de Relatórios">
+  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, relatórios">
+  <meta name="author" content="FixABairro Team">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
@@ -25,13 +25,16 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <title>Facilita 2.0 | Dashboard de Relatórios</title>
+  <title>FixABairro | Dashboard de Relatórios</title>
   <style>
     :root {
-      --primary-color: #3b82f6;
-      --primary-dark: #2563eb;
-      --dark-bg: #0f172a;
+      --primary-color: #22c55e; /* Vibrant green for community focus */
+      --primary-dark: #16a34a;
+      --secondary-color: #f59e0b; /* Warm orange for action-oriented elements */
+      --dark-bg: #1f2937;
+      --dark-card: #2d3748;
       --light-text: #f3f4f6;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       --accent-color: #10b981;
       --danger-color: #ef4444;
       --warning-color: #f59e0b;
@@ -47,51 +50,48 @@
     }
     
     .navbar {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(31, 41, 55, 0.95);
       backdrop-filter: blur(20px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      padding: 0.75rem 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem 2rem;
       transition: all 0.3s ease;
       z-index: 1000;
-      border-bottom: 2px solid var(--primary-color);
     }
     
     .navbar.scrolled {
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem 2rem;
     }
     
     .navbar-brand {
       display: flex;
       align-items: center;
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       color: white;
-      text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
     }
     
     .logo {
-      width: 36px;
-      height: 36px;
-      margin-right: 10px;
-      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
+      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
     
     .navbar-brand:hover .logo {
-      transform: rotate(15deg) scale(1.1);
+      transform: scale(1.1);
     }
     
     .nav-link {
       font-weight: 500;
-      color: white !important;
       position: relative;
-      margin: 0 0.4rem;
-      padding: 0.4rem 0.8rem !important;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem !important;
       transition: all 0.3s ease;
-      font-size: 0.9rem;
+      color: var(--light-text) !important;
     }
     
-    .nav-link::after {
+    .nav-link:not(.btn)::after {
       content: '';
       position: absolute;
       width: 0;
@@ -102,21 +102,39 @@
       transition: all 0.3s ease;
     }
     
-    .nav-link:hover::after {
+    .nav-link:not(.btn):hover::after {
       width: 80%;
       left: 10%;
     }
     
+    .nav-link.btn {
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 50px;
+      padding: 0.6rem 1.75rem !important;
+      font-weight: 600;
+      box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
+      color: white !important;
+    }
+    
+    .nav-link.btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
+    }
+    
     .dropdown-menu {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      background: var(--dark-card);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      box-shadow: var(--card-shadow);
+      border-radius: 8px;
     }
     
     .dropdown-item {
       color: var(--light-text);
-      font-size: 0.85rem;
       transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
     }
     
     .dropdown-item:hover {
@@ -125,26 +143,26 @@
     }
     
     .dashboard-container {
-      padding: 1.5rem;
-      margin-top: 64px;
-      min-height: calc(100vh - 64px);
+      padding: 2rem;
+      margin-top: 80px;
+      min-height: calc(100vh - 80px);
     }
     
     .dashboard-title {
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 700;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
     }
     
     .metric-card {
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 10px;
-      padding: 0.75rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
       max-width: 400px;
@@ -157,64 +175,66 @@
     }
     
     .metric-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.4);
     }
     
     .metric-icon {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       color: var(--primary-color);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
     }
     
     .metric-value {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--light-text);
     }
     
     .metric-label {
-      font-size: 0.75rem;
+      font-size: 0.9rem;
       font-weight: 500;
       color: rgba(255, 255, 255, 0.7);
     }
     
     .chart-container {
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease;
       height: 100%;
     }
     
     .chart-container:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
     }
     
     .chart-container h5 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--light-text);
     }
     
     .chart-container canvas {
-      max-height: 200px;
+      max-height: 250px;
     }
     
     .table-container {
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       overflow-x: auto;
       height: 100%;
     }
     
     .table-container h5 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: var(--light-text);
     }
     
     .table-container table {
@@ -223,10 +243,10 @@
     }
     
     .table-container th, .table-container td {
-      padding: 0.5rem;
+      padding: 0.75rem;
       text-align: left;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.8rem;
+      font-size: 0.9rem;
     }
     
     .table-container th {
@@ -240,47 +260,48 @@
     }
     
     .table-container tr:hover {
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(34, 197, 94, 0.1);
     }
     
     .filter-group {
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
     
     .filter-label {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.5rem;
       color: var(--light-text);
     }
     
     .filter-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.3rem;
+      gap: 0.5rem;
     }
     
     .filter-button {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: white;
-      border-radius: 15px;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--light-text);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     
     .filter-button:hover {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.4));
-      transform: translateY(-1px);
+      background: rgba(34, 197, 94, 0.2);
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
     }
     
     .filter-button.active {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      background: var(--primary-color);
       border-color: var(--primary-dark);
       color: white;
-      box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
     
     .error-message {
@@ -288,11 +309,11 @@
       font-size: 0.9rem;
       text-align: center;
       padding: 1.5rem;
-      background: rgba(255, 75, 75, 0.1);
+      background: rgba(239, 68, 68, 0.1);
       border-radius: 8px;
-      margin: 0.75rem;
-      border: 1px solid rgba(255, 75, 75, 0.3);
-      box-shadow: 0 4px 10px rgba(255, 75, 75, 0.1);
+      margin: 1rem;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.1);
     }
     
     .spinner {
@@ -311,7 +332,73 @@
     
     @media (max-width: 768px) {
       .dashboard-container {
+        padding: 1.5rem;
+      }
+      
+      .dashboard-title {
+        font-size: 1.75rem;
+      }
+      
+      .metric-card {
+        padding: 0.75rem;
+        max-width: 300px;
+      }
+      
+      .metric-icon {
+        font-size: 1.25rem;
+      }
+      
+      .metric-value {
+        font-size: 1.5rem;
+      }
+      
+      .metric-label {
+        font-size: 0.8rem;
+      }
+      
+      .chart-container {
         padding: 1rem;
+      }
+      
+      .chart-container h5 {
+        font-size: 1rem;
+      }
+      
+      .chart-container canvas {
+        max-height: 200px;
+      }
+      
+      .table-container {
+        padding: 1rem;
+      }
+      
+      .table-container h5 {
+        font-size: 1rem;
+      }
+      
+      .table-container th, .table-container td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .navbar {
+        padding: 0.75rem 1.5rem;
+      }
+      
+      .navbar-brand {
+        font-size: 1.5rem;
+      }
+      
+      .logo {
+        width: 36px;
+        height: 36px;
+      }
+      
+      .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem !important;
       }
       
       .dashboard-title {
@@ -320,7 +407,7 @@
       
       .metric-card {
         padding: 0.5rem;
-        max-width: 120px;
+        max-width: 250px;
       }
       
       .metric-icon {
@@ -332,7 +419,7 @@
       }
       
       .metric-label {
-        font-size: 0.7rem;
+        font-size: 0.75rem;
       }
       
       .chart-container {
@@ -357,88 +444,22 @@
       
       .table-container th, .table-container td {
         padding: 0.4rem;
-        font-size: 0.75rem;
-      }
-    }
-    
-    @media (max-width: 576px) {
-      .navbar {
-        padding: 0.5rem 1rem;
-      }
-      
-      .navbar-brand {
-        font-size: 1.25rem;
-      }
-      
-      .logo {
-        width: 30px;
-        height: 30px;
-      }
-      
-      .nav-link {
         font-size: 0.8rem;
-        padding: 0.3rem 0.6rem !important;
-      }
-      
-      .dashboard-title {
-        font-size: 1.25rem;
-      }
-      
-      .metric-card {
-        padding: 0.4rem;
-        max-width: 100px;
-      }
-      
-      .metric-icon {
-        font-size: 0.9rem;
-      }
-      
-      .metric-value {
-        font-size: 1.1rem;
-      }
-      
-      .metric-label {
-        font-size: 0.65rem;
-      }
-      
-      .chart-container {
-        padding: 0.5rem;
-      }
-      
-      .chart-container h5 {
-        font-size: 0.8rem;
-      }
-      
-      .chart-container canvas {
-        max-height: 120px;
-      }
-      
-      .table-container {
-        padding: 0.5rem;
-      }
-      
-      .table-container h5 {
-        font-size: 0.8rem;
-      }
-      
-      .table-container th, .table-container td {
-        padding: 0.3rem;
-        font-size: 0.7rem;
       }
       
       .filter-button {
-        padding: 0.2rem 0.6rem;
-        font-size: 0.7rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
       }
     }
     
     @media (max-width: 992px) {
       .navbar-collapse {
-        background: rgba(15, 23, 42, 0.98);
+        background: var(--dark-card);
         border-radius: 0 0 10px 10px;
-        padding: 0.75rem;
-        margin-top: 0.3rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: var(--card-shadow);
       }
     }
   </style>
@@ -448,8 +469,8 @@
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="icons/Icon-192.png" alt="Logo Facilita" class="logo">
-        Facilita 2.0
+        <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
+        FixABairro
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -457,13 +478,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="report.html">Mapa de Problemas</a>
+            <a class="nav-link" href="map.html">Mapa de Problemas</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="list.html">Lista</a>
+            <a class="nav-link btn btn-primary" href="report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -484,29 +505,29 @@
     <h1 class="dashboard-title" data-aos="fade-up">Dashboard de Relatórios</h1>
     
     <!-- Metrics Section -->
-    <div class="row g-3 mb-3 justify-content-center">
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="100">
+    <div class="row g-4 mb-4 justify-content-center">
+      <div class="col-md-3 col-sm-6 col-6" data-aos="fade-up" data-aos-delay="100">
         <div class="metric-card">
           <i class="fas fa-exclamation-circle metric-icon"></i>
           <div class="metric-value" id="totalProblems">0</div>
           <div class="metric-label">Total de Problemas</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-md-3 col-sm-6 col-6" data-aos="fade-up" data-aos-delay="200">
         <div class="metric-card">
           <i class="fas fa-hourglass-start metric-icon"></i>
           <div class="metric-value" id="openProblems">0</div>
           <div class="metric-label">Problemas Abertos</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-md-3 col-sm-6 col-6" data-aos="fade-up" data-aos-delay="300">
         <div class="metric-card">
           <i class="fas fa-cogs metric-icon"></i>
           <div class="metric-value" id="inProgressProblems">0</div>
           <div class="metric-label">Em Andamento</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="400">
+      <div class="col-md-3 col-sm-6 col-6" data-aos="fade-up" data-aos-delay="400">
         <div class="metric-card">
           <i class="fas fa-check-circle metric-icon"></i>
           <div class="metric-value" id="resolvedProblems">0</div>
@@ -516,7 +537,7 @@
     </div>
 
     <!-- Charts Section -->
-    <div class="row g-3 mb-3">
+    <div class="row g-4 mb-4">
       <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="500">
         <div class="chart-container">
           <h5 class="text-center">Problemas por Categoria</h5>
@@ -538,7 +559,7 @@
     </div>
 
     <!-- Recent Reports Section -->
-    <div class="row g-3">
+    <div class="row g-4">
       <div class="col-md-12" data-aos="fade-up" data-aos-delay="800">
         <div class="table-container">
           <h5>Problemas Recentes</h5>
@@ -608,14 +629,10 @@
     }
 
     // Navbar scroll effect
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
       try {
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
       } catch (error) {
         console.error("Erro no scroll da navbar:", error.message);
       }
@@ -633,124 +650,137 @@
 
     // Função para formatar data
     function formatDate(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      try {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      } catch (error) {
+        console.error("Erro ao formatar data:", error.message);
+        return 'Data inválida';
+      }
     }
 
     // Função para inicializar gráficos
     function initCharts(problems) {
-      const categories = { Buraco: 0, Lixo: 0, Iluminação: 0, Água: 0, Segurança: 0 };
-      const urgencies = { Baixa: 0, Média: 0, Alta: 0 };
-      const timeData = {};
-      
-      problems.forEach(p => {
-        if (p.category) categories[p.category]++;
-        if (p.urgency) urgencies[p.urgency]++;
-        if (p.createdAt) {
-          const date = formatDate(p.createdAt).split('/').slice(0, 2).join('/');
-          timeData[date] = (timeData[date] || 0) + 1;
-        }
-      });
-
-      // Category Chart
-      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-      new Chart(categoryCtx, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(categories),
-          datasets: [{
-            label: 'Problemas por Categoria',
-            data: Object.values(categories),
-            backgroundColor: ['#FFA500', '#43A047', '#FFA000', '#1E88E5', '#FF5252'],
-            borderColor: ['#FFB84D', '#66BB6A', '#FFB300', '#42A5F5', '#FF8A80'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, ticks: { font: { size: 10 } } },
-            x: { ticks: { font: { size: 10 } } }
+      try {
+        const categories = { Buraco: 0, Lixo: 0, Iluminação: 0, Água: 0, Segurança: 0, Outros: 0 };
+        const urgencies = { Baixa: 0, Média: 0, Alta: 0 };
+        const timeData = {};
+        
+        problems.forEach(p => {
+          if (p.category) categories[p.category]++;
+          if (p.urgency) urgencies[p.urgency]++;
+          if (p.createdAt) {
+            const date = formatDate(p.createdAt).split('/').slice(0, 2).join('/');
+            timeData[date] = (timeData[date] || 0) + 1;
           }
-        }
-      });
+        });
 
-      // Urgency Chart
-      const urgencyCtx = document.getElementById('urgencyChart').getContext('2d');
-      new Chart(urgencyCtx, {
-        type: 'pie',
-        data: {
-          labels: Object.keys(urgencies),
-          datasets: [{
-            data: Object.values(urgencies),
-            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-            borderColor: ['#34d399', '#fbbf24', '#f87171'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { font: { size: 10 }, color: '#f3f4f6' }
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+          type: 'bar',
+          data: {
+            labels: Object.keys(categories),
+            datasets: [{
+              label: 'Problemas por Categoria',
+              data: Object.values(categories),
+              backgroundColor: [var(--warning-color), var(--accent-color), var(--warning-color), var(--info-color), var(--danger-color), '#9ca3af'],
+              borderColor: [var(--warning-color), var(--accent-color), var(--warning-color), var(--info-color), var(--danger-color), '#9ca3af'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { font: { size: 12 }, color: var(--light-text) } },
+              x: { ticks: { font: { size: 12 }, color: var(--light-text) } }
             }
           }
-        }
-      });
+        });
 
-      // Time Chart
-      const timeCtx = document.getElementById('timeChart').getContext('2d');
-      new Chart(timeCtx, {
-        type: 'line',
-        data: {
-          labels: Object.keys(timeData).sort(),
-          datasets: [{
-            label: 'Problemas por Data',
-            data: Object.values(timeData),
-            borderColor: '#3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, ticks: { font: { size: 10 } } },
-            x: { ticks: { font: { size: 10 } } }
+        // Urgency Chart
+        const urgencyCtx = document.getElementById('urgencyChart').getContext('2d');
+        new Chart(urgencyCtx, {
+          type: 'pie',
+          data: {
+            labels: Object.keys(urgencies),
+            datasets: [{
+              data: Object.values(urgencies),
+              backgroundColor: [var(--accent-color), var(--warning-color), var(--danger-color)],
+              borderColor: [var(--accent-color), var(--warning-color), var(--danger-color)],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { font: { size: 12 }, color: var(--light-text) }
+              }
+            }
           }
-        }
-      });
+        });
+
+        // Time Chart
+        const timeCtx = document.getElementById('timeChart').getContext('2d');
+        new Chart(timeCtx, {
+          type: 'line',
+          data: {
+            labels: Object.keys(timeData).sort(),
+            datasets: [{
+              label: 'Problemas por Data',
+              data: Object.values(timeData),
+              borderColor: var(--primary-color),
+              backgroundColor: 'rgba(34, 197, 94, 0.2)',
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { font: { size: 12 }, color: var(--light-text) } },
+              x: { ticks: { font: { size: 12 }, color: var(--light-text) } }
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao inicializar gráficos:", error.message);
+      }
     }
 
     // Função para atualizar tabela
     function updateTable(problems, categoryFilter, statusFilter) {
-      const tbody = document.getElementById('recentReportsTable');
-      tbody.innerHTML = '';
-      
-      let filteredProblems = problems;
-      if (categoryFilter !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+      try {
+        const tbody = document.getElementById('recentReportsTable');
+        tbody.innerHTML = '';
+        
+        let filteredProblems = problems;
+        if (categoryFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+        }
+        if (statusFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
+        }
+        
+        filteredProblems.slice(0, 5).forEach(p => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${p.title || 'Sem título'}</td>
+            <td>${p.category || 'Desconhecida'}</td>
+            <td>${p.urgency || 'Desconhecida'}</td>
+            <td>${p.status || 'Desconhecido'}</td>
+            <td>${formatDate(p.createdAt)}</td>
+            <td>${p.neighborhood || 'Desconhecido'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Erro ao atualizar tabela:", error.message);
       }
-      if (statusFilter !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
-      }
-      
-      filteredProblems.slice(0, 5).forEach(p => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${p.title}</td>
-          <td>${p.category}</td>
-          <td>${p.urgency}</td>
-          <td>${p.status}</td>
-          <td>${formatDate(p.createdAt)}</td>
-          <td>${p.neighborhood || 'Desconhecido'}</td>
-        `;
-        tbody.appendChild(row);
-      });
     }
 
     // Função para carregar dados do dashboard
@@ -799,12 +829,16 @@
                 // Handle filters
                 ['categoryFilters', 'statusFilters'].forEach(filterId => {
                   document.getElementById(filterId).addEventListener('click', (e) => {
-                    if (e.target.classList.contains('filter-button')) {
-                      document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
-                      e.target.classList.add('active');
-                      const categoryFilter = document.querySelector('#categoryFilters .active').dataset.filter;
-                      const statusFilter = document.querySelector('#statusFilters .active').dataset.filter;
-                      updateTable(allProblems, categoryFilter, statusFilter);
+                    try {
+                      if (e.target.classList.contains('filter-button')) {
+                        document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        const categoryFilter = document.querySelector('#categoryFilters .active').dataset.filter;
+                        const statusFilter = document.querySelector('#statusFilters .active').dataset.filter;
+                        updateTable(allProblems, categoryFilter, statusFilter);
+                      }
+                    } catch (error) {
+                      console.error("Erro ao aplicar filtro:", error.message);
                     }
                   });
                 });
@@ -848,7 +882,7 @@
     }
 
     // Inicializar página
-    window.addEventListener('load', function() {
+    window.addEventListener('load', () => {
       try {
         const firebaseConfig = {
           apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",

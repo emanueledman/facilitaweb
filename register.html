@@ -3,18 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facilita 2.0 | Criar Conta</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="description" content="FixABairro - Criar Conta">
+  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, registro">
+  <meta name="author" content="FixABairro Team">
+  <title>FixABairro | Criar Conta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/favicon.png"/>
   <style>
     :root {
-      --primary-color: #3b82f6;
-      --primary-dark: #2563eb;
-      --error-color: #EA5455;
-      --dark-bg: #1E1E2C;
-      --dark-card: #2A2A3A;
+      --primary-color: #22c55e;
+      --primary-dark: #16a34a;
+      --secondary-color: #f59e0b;
+      --error-color: #ef4444;
+      --dark-bg: #1f2937;
+      --dark-card: #2d3748;
       --light-text: #f3f4f6;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      --accent-color: #10b981;
     }
     
     body {
@@ -37,8 +43,13 @@
       background: var(--dark-card);
       border-radius: 16px;
       padding: 2.5rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      transition: transform 0.3s ease;
+    }
+    
+    .auth-card:hover {
+      transform: translateY(-5px);
     }
     
     .auth-logo {
@@ -50,41 +61,54 @@
       width: 60px;
       height: 60px;
       margin-bottom: 1rem;
+      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
+      transition: transform 0.3s ease;
+    }
+    
+    .auth-logo img:hover {
+      transform: scale(1.1);
     }
     
     .auth-logo h1 {
       font-size: 1.75rem;
       font-weight: 700;
       margin: 0;
-      background: linear-gradient(to right, #ffffff, #93c5fd);
+      background: linear-gradient(to right, #ffffff, var(--primary-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     
     .auth-form .form-control {
-      background-color: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: white;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--light-text);
       padding: 0.75rem 1rem;
       border-radius: 12px;
       margin-bottom: 1.25rem;
+      transition: all 0.3s ease;
     }
     
     .auth-form .form-control:focus {
-      background-color: rgba(255, 255, 255, 0.15);
-      color: white;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
+      color: var(--light-text);
+    }
+    
+    .auth-form .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.5);
     }
     
     .auth-form .form-label {
       color: rgba(255, 255, 255, 0.8);
       margin-bottom: 0.5rem;
+      font-weight: 500;
     }
     
     .btn-auth {
       width: 100%;
       padding: 0.75rem;
-      border-radius: 12px;
+      border-radius: 50px;
       font-weight: 600;
       font-size: 1rem;
       margin-bottom: 1rem;
@@ -94,11 +118,19 @@
     .btn-primary {
       background-color: var(--primary-color);
       border: none;
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
     
     .btn-primary:hover {
       background-color: var(--primary-dark);
       transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
+    }
+    
+    .btn-primary:disabled {
+      background-color: #6b7280;
+      cursor: not-allowed;
+      box-shadow: none;
     }
     
     .auth-footer {
@@ -115,6 +147,7 @@
     
     .auth-footer a:hover {
       text-decoration: underline;
+      color: var(--primary-dark);
     }
     
     .error-message {
@@ -125,7 +158,6 @@
       display: none;
     }
     
-    /* Loading spinner */
     .spinner {
       display: inline-block;
       width: 20px;
@@ -134,13 +166,13 @@
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
+      margin-left: 0.5rem;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
-    /* Responsividade */
     @media (max-width: 576px) {
       .auth-container {
         padding: 1.5rem;
@@ -153,6 +185,11 @@
       .auth-logo h1 {
         font-size: 1.5rem;
       }
+      
+      .auth-logo img {
+        width: 50px;
+        height: 50px;
+      }
     }
   </style>
 </head>
@@ -160,32 +197,32 @@
   <div class="auth-container">
     <div class="auth-card">
       <div class="auth-logo">
-        <img src="icons/Icon-192.png" alt="Facilita Logo">
+        <img src="icons/Icon-192.png" alt="FixABairro Logo">
         <h1>Criar Conta</h1>
       </div>
       
       <form id="registerForm" class="auth-form">
         <div class="mb-3">
           <label for="name" class="form-label">Nome Completo</label>
-          <input type="text" class="form-control" id="name" required>
+          <input type="text" class="form-control" id="name" placeholder="Digite seu nome completo" required>
           <div id="nameError" class="error-message"></div>
         </div>
         
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" required>
+          <input type="email" class="form-control" id="email" placeholder="Digite seu email" required>
           <div id="emailError" class="error-message"></div>
         </div>
         
         <div class="mb-3">
           <label for="password" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="password" required>
+          <input type="password" class="form-control" id="password" placeholder="Crie uma senha" required>
           <div id="passwordError" class="error-message"></div>
         </div>
         
         <div class="mb-4">
           <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-          <input type="password" class="form-control" id="confirmPassword" required>
+          <input type="password" class="form-control" id="confirmPassword" placeholder="Confirme sua senha" required>
           <div id="confirmPasswordError" class="error-message"></div>
         </div>
         
@@ -227,7 +264,11 @@
     // Handle register form submission
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      await firebaseAuth.registerUser(nameInput, emailInput, passwordInput, confirmPasswordInput, registerBtn, registerText, registerSpinner, nameError, emailError, passwordError, confirmPasswordError);
+      try {
+        await firebaseAuth.registerUser(nameInput, emailInput, passwordInput, confirmPasswordInput, registerBtn, registerText, registerSpinner, nameError, emailError, passwordError, confirmPasswordError);
+      } catch (error) {
+        console.error("Erro ao registrar usuário:", error.message);
+      }
     });
   </script>
 </body>
