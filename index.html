@@ -50,7 +50,7 @@
     }
     
     body {
-      background: linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.95)), url('https://images.unsplash.com/photo-1516321497487-e288fb19713f') no-repeat center center fixed;
+      background: linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.95)), url('https://res.cloudinary.com/dlfukiusa/image/upload/v1730112345/fixa/background-angola-neighborhood.jpg') no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
     }
@@ -343,6 +343,89 @@
       opacity: 0.8;
     }
     
+    .recent-cases-section {
+      padding: 6rem 0;
+      background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), var(--dark-bg));
+    }
+    
+    .carousel-item {
+      padding: 1rem;
+    }
+    
+    .recent-case-card {
+      background: var(--dark-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      height: 100%;
+      transition: transform 0.3s ease;
+      border-left: 4px solid var(--primary-color);
+    }
+    
+    .recent-case-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .recent-case-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .recent-case-content {
+      padding: 1.5rem;
+    }
+    
+    .recent-case-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--light-text);
+    }
+    
+    .recent-case-content p {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .recent-case-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    
+    .status-aguardando {
+      color: #f59e0b;
+    }
+    
+    .status-resolvido {
+      color: var(--primary-color);
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 5%;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+    }
+    
+    .carousel-indicators {
+      bottom: -50px;
+    }
+    
+    .carousel-indicators [data-bs-target] {
+      background-color: var(--primary-color);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
     .testimonials-section {
       padding: 6rem 0;
       background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), var(--dark-bg));
@@ -564,6 +647,9 @@
       .hero-section h1 {
         font-size: 3rem;
       }
+      .recent-case-image {
+        height: 180px;
+      }
     }
     
     @media (max-width: 992px) {
@@ -572,6 +658,9 @@
       }
       .stat-number {
         font-size: 3rem;
+      }
+      .recent-case-image {
+        height: 160px;
       }
     }
     
@@ -591,8 +680,17 @@
       .section-title h2 {
         font-size: 2rem;
       }
-      .feature-card, .testimonial-card {
+      .feature-card, .testimonial-card, .recent-case-card {
         margin-bottom: 2rem;
+      }
+      .recent-case-image {
+        height: 140px;
+      }
+      .recent-case-content h3 {
+        font-size: 1.1rem;
+      }
+      .recent-case-content p {
+        font-size: 0.85rem;
       }
     }
     
@@ -618,6 +716,18 @@
       }
       .cta-content p {
         font-size: 1.1rem;
+      }
+      .recent-case-image {
+        height: 120px;
+      }
+      .recent-case-content h3 {
+        font-size: 1rem;
+      }
+      .recent-case-content p {
+        font-size: 0.8rem;
+      }
+      .recent-case-meta {
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -651,7 +761,7 @@
               <a class="nav-link" href="profile.html">Perfil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
+              <a class="nav-link btn btn-primary" href="report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
             </li>
             <li class="nav-item">
               <a class="nav-link btn btn-primary" id="authButton"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
@@ -674,7 +784,7 @@
             <h1>Transforme seu bairro com o FixABairro</h1>
             <p>Relate problemas na sua comunidade, acompanhe soluções em tempo real e contribua para um bairro melhor – tudo de forma simples e colaborativa.</p>
             <div>
-              <a href="new-report.html" class="btn btn-primary">Relatar Agora <i class="fas fa-arrow-right ms-2"></i></a>
+              <a href="report.html" class="btn btn-primary">Relatar Agora <i class="fas fa-arrow-right ms-2"></i></a>
               <a id="accountButton" href="login.html" class="btn btn-outline-light">Acessar Conta</a>
             </div>
           </div>
@@ -694,7 +804,7 @@
         </div>
         
         <div class="row g-4">
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
             <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-map-marked-alt"></i>
@@ -702,12 +812,12 @@
               <div class="feature-content">
                 <h3>Mapa de Problemas</h3>
                 <p>Visualize problemas reportados no seu bairro em um mapa interativo e acompanhe o progresso das soluções.</p>
-                <a href="report.html" class="feature-btn module-link" data-module="mapeamento">Explorar <i class="fas fa-arrow-right"></i></a>
+                <a href="map.html" class="feature-btn module-link" data-module="mapeamento">Explorar <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
           
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
             <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-bullhorn"></i>
@@ -715,12 +825,12 @@
               <div class="feature-content">
                 <h3>Relatar Problemas</h3>
                 <p>Denuncie buracos, iluminação pública quebrada, lixo acumulado e outros problemas com fotos e descrições.</p>
-                <a href="new-report.html" class="feature-btn module-link" data-module="relatar">Relatar <i class="fas fa-arrow-right"></i></a>
+                <a href="report.html" class="feature-btn module-link" data-module="relatar">Relatar <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
           
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
             <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-users"></i>
@@ -733,33 +843,7 @@
             </div>
           </div>
           
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
-            <div class="feature-card">
-              <div class="feature-icon">
-                <i class="fas fa-tasks"></i>
-              </div>
-              <div class="feature-content">
-                <h3>Acompanhamento</h3>
-                <p>Receba atualizações em tempo real sobre o status dos problemas relatados e veja o impacto das suas ações.</p>
-                <a href="#" class="feature-btn module-link" data-module="acompanhamento">Acompanhar <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="500">
-            <div class="feature-card">
-              <div class="feature-icon">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <div class="feature-content">
-                <h3>Bairro Seguro</h3>
-                <p>Relate questões de segurança, como iluminação inadequada ou áreas perigosas, para proteger sua comunidade.</p>
-                <a href="#" class="feature-btn module-link" data-module="seguranca">Explorar <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="600">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
             <div class="feature-card">
               <div class="feature-icon">
                 <i class="fas fa-chart-line"></i>
@@ -801,6 +885,86 @@
       </div>
     </section>
     
+    <!-- Recent Cases Section -->
+    <section class="recent-cases-section" id="recent-cases">
+      <div class="container">
+        <div class="section-title" data-aos="fade-up">
+          <h2>Casos Recentes</h2>
+          <p>Veja os problemas mais recentes relatados pela comunidade.</p>
+        </div>
+        <div id="recentCasesCarousel" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#recentCasesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#recentCasesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#recentCasesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#recentCasesCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="recent-case-card" data-aos="fade-up">
+                <img src="https://res.cloudinary.com/dlfukiusa/image/upload/v1730112345/fixa/hole.jpg" alt="Buraco na Rua" class="recent-case-image">
+                <div class="recent-case-content">
+                  <h3>Buraco na Rua Principal</h3>
+                  <p>Buraco perigoso no cruzamento causa acidentes frequentes.</p>
+                  <div class="recent-case-meta">
+                    <span>Bairro: Cazenga</span>
+                    <span class="status-aguardando">Status: Aguardando</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="recent-case-card" data-aos="fade-up">
+                <img src="https://res.cloudinary.com/dlfukiusa/image/upload/v1730112345/fixa/trash.jpg" alt="Acúmulo de Lixo" class="recent-case-image">
+                <div class="recent-case-content">
+                  <h3>Acúmulo de Lixo na Praça</h3>
+                  <p>Lixo acumulado na praça central gera mau cheiro.</p>
+                  <div class="recent-case-meta">
+                    <span>Bairro: Maianga</span>
+                    <span class="status-resolvido">Status: Resolvido</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="recent-case-card" data-aos="fade-up">
+                <img src="https://res.cloudinary.com/dlfukiusa/image/upload/v1730112345/fixa/lighting.jpg" alt="Iluminação Quebrada" class="recent-case-image">
+                <div class="recent-case-content">
+                  <h3>Iluminação Pública Quebrada</h3>
+                  <p>Rua escura devido a postes de luz danificados.</p>
+                  <div class="recent-case-meta">
+                    <span>Bairro: Kilamba</span>
+                    <span class="status-aguardando">Status: Aguardando</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="recent-case-card" data-aos="fade-up">
+                <img src="https://res.cloudinary.com/dlfukiusa/image/upload/v1730112345/fixa/water.jpg" alt="Falta de Água" class="recent-case-image">
+                <div class="recent-case-content">
+                  <h3>Falta de Água no Bairro</h3>
+                  <p>Comunidade sem água potável há três dias.</p>
+                  <div class="recent-case-meta">
+                    <span>Bairro: Viana</span>
+                    <span class="status-aguardando">Status: Aguardando</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#recentCasesCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#recentCasesCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- Testimonials Section -->
     <section class="testimonials-section" id="testimonials">
       <div class="container">
@@ -892,8 +1056,6 @@
               <li><a href="#features" class="module-link" data-module="mapeamento">Mapa de Problemas</a></li>
               <li><a href="report.html" class="module-link" data-module="relatar">Relatar Problemas</a></li>
               <li><a href="#features" class="module-link" data-module="comunidade">Comunidade</a></li>
-              <li><a href="#features" class="module-link" data-module="acompanhamento">Acompanhamento</a></li>
-              <li><a href="#features" class="module-link" data-module="seguranca">Segurança</a></li>
               <li><a href="#features" class="module-link" data-module="estatisticas">Estatísticas</a></li>
             </ul>
           </div>
@@ -930,9 +1092,9 @@
   </div>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
@@ -1089,7 +1251,7 @@
             e.preventDefault();
             firebase.auth().onAuthStateChanged(user => {
               if (user) {
-                window.location.href = `profile.html#${module}`;
+                window.location.href = `${module}`;
               } else {
                 window.location.href = 'login.html';
               }
