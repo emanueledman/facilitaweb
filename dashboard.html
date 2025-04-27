@@ -3,88 +3,782 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facilita 2.0 | Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="description" content="Facilita 2.0 - Dashboard de Relatórios">
+  <meta name="keywords" content="facilita, angola, serviços públicos, relatórios">
+  <meta name="author" content="Facilita Team">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- AOS Animation Library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <title>Facilita 2.0 | Dashboard de Relatórios</title>
   <style>
     :root {
       --primary-color: #3b82f6;
       --primary-dark: #2563eb;
-      --dark-bg: #1E1E2C;
-      --dark-card: #2A2A3A;
+      --dark-bg: #0f172a;
       --light-text: #f3f4f6;
+      --accent-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #0ea5e9;
     }
-
+    
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--dark-bg);
+      background: var(--dark-bg);
       color: var(--light-text);
-      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    
+    .navbar {
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      padding: 1rem 2rem;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    .navbar.scrolled {
+      padding: 0.5rem 2rem;
+    }
+    
+    .navbar-brand {
       display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: var(--dark-card);
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    h1 {
-      font-size: 2rem;
+      align-items: center;
       font-weight: 700;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(to right, #ffffff, #93c5fd);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      font-size: 1.75rem;
+      color: white;
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
     }
-
-    .btn-primary {
-      background-color: var(--primary-color);
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      font-weight: 600;
+    
+    .logo {
+      width: 42px;
+      height: 42px;
+      margin-right: 12px;
+      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+      transition: transform 0.3s ease;
+    }
+    
+    .navbar-brand:hover .logo {
+      transform: rotate(15deg) scale(1.1);
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      color: white !important;
+      position: relative;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem !important;
       transition: all 0.3s ease;
     }
-
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 50%;
+      background-color: var(--primary-color);
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 80%;
+      left: 10%;
+    }
+    
+    .nav-link.disabled {
+      color: rgba(255, 255, 255, 0.5) !important;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
+    .dropdown-menu {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .dropdown-item {
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-item:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .dashboard-container {
+      padding: 2rem;
+      margin-top: 76px;
+      min-height: calc(100vh - 76px);
+    }
+    
+    .dashboard-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: var(--primary-color);
+      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+    
+    .metric-card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .metric-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    }
+    
+    .metric-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--light-text);
+    }
+    
+    .metric-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .chart-container {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      transition: transform 0.3s ease;
+    }
+    
+    .chart-container:hover {
+      transform: translateY(-5px);
+    }
+    
+    .table-container {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      overflow-x: auto;
+    }
+    
+    .table-container table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .table-container th, .table-container td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .table-container th {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .table-container td {
+      font-weight: 500;
+      color: var(--light-text);
+    }
+    
+    .table-container tr:hover {
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .filter-group {
+      margin-bottom: 1rem;
+    }
+    
+    .filter-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--light-text);
+    }
+    
+    .filter-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .filter-button {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: white;
+      border-radius: 18px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-button:hover {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.4));
+      transform: translateY(-1px);
+    }
+    
+    .filter-button.active {
+      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      border-color: var(--primary-dark);
+      color: white;
+      box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
+    }
+    
+    .error-message {
+      color: var(--danger-color);
+      font-size: 1rem;
+      text-align: center;
+      padding: 2rem;
+      background: rgba(255, 75, 75, 0.1);
+      border-radius: 8px;
+      margin: 1rem;
+      border: 1px solid rgba(255, 75, 75, 0.3);
+      box-shadow: 0 5px 15px rgba(255, 75, 75, 0.1);
+    }
+    
+    .spinner {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 1rem;
+      }
+      
+      .dashboard-title {
+        font-size: 1.5rem;
+      }
+      
+      .metric-card {
+        padding: 1rem;
+      }
+      
+      .metric-value {
+        font-size: 2rem;
+      }
+      
+      .chart-container {
+        padding: 1rem;
+      }
+      
+      .table-container {
+        padding: 1rem;
+      }
+      
+      .table-container th, .table-container td {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .navbar {
+        padding: 0.75rem 1rem;
+      }
+      
+      .navbar-brand {
+        font-size: 1.5rem;
+      }
+      
+      .logo {
+        width: 36px;
+        height: 36px;
+      }
+      
+      .dashboard-title {
+        font-size: 1.25rem;
+      }
+      
+      .metric-card {
+        padding: 0.75rem;
+      }
+      
+      .metric-value {
+        font-size: 1.75rem;
+      }
+      
+      .metric-label {
+        font-size: 0.9rem;
+      }
+      
+      .filter-button {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.75rem;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .navbar-collapse {
+        background: rgba(15, 23, 42, 0.98);
+        border-radius: 0 0 10px 10px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bem-vindo ao Dashboard do Facilita 2.0</h1>
-    <p>Este é um placeholder para o dashboard. Implemente aqui as funcionalidades desejadas.</p>
-    <button class="btn btn-primary" onclick="firebaseAuth.logout()">Sair</button>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="icons/Icon-192.png" alt="Logo Facilita" class="logo">
+        Facilita 2.0
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="report.html">Mapa de Problemas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#" title="Em desenvolvimento">Lista</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Perfil
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="profile.html">Ver Perfil</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutLink">Sair</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Section -->
+  <div class="dashboard-container">
+    <h1 class="dashboard-title" data-aos="fade-up">Dashboard de Relatórios</h1>
+    
+    <!-- Metrics Section -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="metric-card text-center">
+          <i class="fas fa-exclamation-circle metric-icon"></i>
+          <div class="metric-value" id="totalProblems">0</div>
+          <div class="metric-label">Total de Problemas</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="metric-card text-center">
+          <i class="fas fa-hourglass-start metric-icon"></i>
+          <div class="metric-value" id="openProblems">0</div>
+          <div class="metric-label">Problemas Abertos</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="metric-card text-center">
+          <i class="fas fa-cogs metric-icon"></i>
+          <div class="metric-value" id="inProgressProblems">0</div>
+          <div class="metric-label">Em Andamento</div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="metric-card text-center">
+          <i class="fas fa-check-circle metric-icon"></i>
+          <div class="metric-value" id="resolvedProblems">0</div>
+          <div class="metric-label">Problemas Resolvidos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+        <div class="chart-container">
+          <h5 class="text-center mb-3">Problemas por Categoria</h5>
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
+        <div class="chart-container">
+          <h5 class="text-center mb-3">Distribuição de Urgência</h5>
+          <canvas id="urgencyChart"></canvas>
+        </div>
+      </div>
+      <div class="col-12" data-aos="fade-up" data-aos-delay="700">
+        <div class="chart-container">
+          <h5 class="text-center mb-3">Problemas ao Longo do Tempo</h5>
+          <canvas id="timeChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Reports Section -->
+    <div class="table-container" data-aos="fade-up" data-aos-delay="800">
+      <h5 class="mb-3">Problemas Recentes</h5>
+      <div class="filter-group">
+        <div class="filter-label">Filtrar por Categoria:</div>
+        <div class="filter-options" id="categoryFilters">
+          <button class="filter-button active" data-filter="all">Todos</button>
+          <button class="filter-button" data-filter="Buraco">Buracos</button>
+          <button class="filter-button" data-filter="Lixo">Lixo</button>
+          <button class="filter-button" data-filter="Iluminação">Iluminação</button>
+          <button class="filter-button" data-filter="Água">Água</button>
+          <button class="filter-button" data-filter="Segurança">Segurança</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Filtrar por Status:</div>
+        <div class="filter-options" id="statusFilters">
+          <button class="filter-button active" data-filter="all">Todos</button>
+          <button class="filter-button" data-filter="Aguardando">Aberto</button>
+          <button class="filter-button" data-filter="Em andamento">Em andamento</button>
+          <button class="filter-button" data-filter="Resolvido">Resolvido</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Categoria</th>
+            <th>Urgência</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Bairro</th>
+          </tr>
+        </thead>
+        <tbody id="recentReportsTable"></tbody>
+      </table>
+    </div>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- AOS Animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
   <!-- Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Add logout function to firebaseAuth
-    window.firebaseAuth.logout = async function() {
-      try {
-        await firebase.auth().signOut();
-        window.location.href = 'index.html';
-      } catch (error) {
-        alert('Erro ao sair: ' + error.message);
-      }
-    };
+    // Initialize AOS animation library
+    try {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+      });
+    } catch (error) {
+      console.error("Erro ao inicializar AOS:", error.message);
+    }
 
-    // Check auth state
-    firebaseAuth.checkAuthState();
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      try {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      } catch (error) {
+        console.error("Erro no scroll da navbar:", error.message);
+      }
+    });
+
+    // Função para exibir erro na UI
+    function showError(message) {
+      try {
+        const dashboardContainer = document.querySelector('.dashboard-container');
+        dashboardContainer.innerHTML = `<div class="error-message">${message}</div>`;
+      } catch (error) {
+        console.error("Erro ao exibir mensagem de erro:", error.message);
+      }
+    }
+
+    // Função para formatar data
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+
+    // Função para inicializar gráficos
+    function initCharts(problems) {
+      const categories = { Buraco: 0, Lixo: 0, Iluminação: 0, Água: 0, Segurança: 0 };
+      const urgencies = { Baixa: 0, Média: 0, Alta: 0 };
+      const timeData = {};
+      
+      problems.forEach(p => {
+        if (p.category) categories[p.category]++;
+        if (p.urgency) urgencies[p.urgency]++;
+        if (p.createdAt) {
+          const date = formatDate(p.createdAt).split('/').slice(0, 2).join('/');
+          timeData[date] = (timeData[date] || 0) + 1;
+        }
+      });
+
+      // Category Chart
+      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+      new Chart(categoryCtx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(categories),
+          datasets: [{
+            label: 'Problemas por Categoria',
+            data: Object.values(categories),
+            backgroundColor: ['#FFA500', '#43A047', '#FFA000', '#1E88E5', '#FF5252'],
+            borderColor: ['#FFB84D', '#66BB6A', '#FFB300', '#42A5F5', '#FF8A80'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+
+      // Urgency Chart
+      const urgencyCtx = document.getElementById('urgencyChart').getContext('2d');
+      new Chart(urgencyCtx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(urgencies),
+          datasets: [{
+            data: Object.values(urgencies),
+            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            borderColor: ['#34d399', '#fbbf24', '#f87171'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'bottom', labels: { color: '#f3f4f6' } } }
+        }
+      });
+
+      // Time Chart
+      const timeCtx = document.getElementById('timeChart').getContext('2d');
+      new Chart(timeCtx, {
+        type: 'line',
+        data: {
+          labels: Object.keys(timeData).sort(),
+          datasets: [{
+            label: 'Problemas por Data',
+            data: Object.values(timeData),
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+
+    // Função para atualizar tabela
+    function updateTable(problems, categoryFilter, statusFilter) {
+      const tbody = document.getElementById('recentReportsTable');
+      tbody.innerHTML = '';
+      
+      let filteredProblems = problems;
+      if (categoryFilter !== 'all') {
+        filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+      }
+      if (statusFilter !== 'all') {
+        filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
+      }
+      
+      filteredProblems.slice(0, 10).forEach(p => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${p.title}</td>
+          <td>${p.category}</td>
+          <td>${p.urgency}</td>
+          <td>${p.status}</td>
+          <td>${formatDate(p.createdAt)}</td>
+          <td>${p.neighborhood || 'Desconhecido'}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Função para carregar dados do dashboard
+    function loadDashboardData() {
+      try {
+        firebase.auth().onAuthStateChanged(async user => {
+          const dashboardContainer = document.querySelector('.dashboard-container');
+          
+          if (!user) {
+            dashboardContainer.innerHTML = `
+              <div class="error-message">Por favor, faça login para visualizar o dashboard.</div>
+            `;
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
+          }
+
+          try {
+            const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+
+            const problemsRef = firebase.database().ref('problems');
+            let allProblems = [];
+            
+            problemsRef.on('value', (snapshot) => {
+              try {
+                const problems = snapshot.val();
+                allProblems = [];
+                if (problems) {
+                  Object.entries(problems).forEach(([id, problem]) => {
+                    allProblems.push({ id, ...problem });
+                  });
+                }
+
+                // Update metrics
+                document.getElementById('totalProblems').textContent = allProblems.length;
+                document.getElementById('openProblems').textContent = allProblems.filter(p => p.status === 'Aguardando').length;
+                document.getElementById('inProgressProblems').textContent = allProblems.filter(p => p.status === 'Em andamento').length;
+                document.getElementById('resolvedProblems').textContent = allProblems.filter(p => p.status === 'Resolvido').length;
+
+                // Initialize charts
+                initCharts(allProblems);
+
+                // Initialize table
+                updateTable(allProblems, 'all', 'all');
+
+                // Handle filters
+                ['categoryFilters', 'statusFilters'].forEach(filterId => {
+                  document.getElementById(filterId).addEventListener('click', (e) => {
+                    if (e.target.classList.contains('filter-button')) {
+                      document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
+                      e.target.classList.add('active');
+                      const categoryFilter = document.querySelector('#categoryFilters .active').dataset.filter;
+                      const statusFilter = document.querySelector('#statusFilters .active').dataset.filter;
+                      updateTable(allProblems, categoryFilter, statusFilter);
+                    }
+                  });
+                });
+              } catch (error) {
+                console.error("Erro ao carregar problemas:", error.message);
+                showError("Erro ao carregar dados do dashboard");
+              }
+            });
+          } catch (error) {
+            console.error("Erro ao carregar dados:", error.message);
+            showError(`Erro ao carregar dados: ${error.message}`);
+            dashboardContainer.insertAdjacentHTML('afterend', `
+              <button class="btn btn-primary mt-2" onclick="loadDashboardData()">Tentar Novamente</button>
+            `);
+          }
+        });
+      } catch (error) {
+        console.error("Erro na inicialização do carregamento:", error.message);
+        showError("Erro ao iniciar carregamento");
+      }
+    }
+
+    // Manipular logout
+    function handleLogout(e) {
+      try {
+        e.preventDefault();
+        const logoutBtn = document.getElementById('logoutLink');
+        const logoutText = logoutBtn.querySelector('span') || logoutBtn;
+        const logoutSpinner = document.createElement('span');
+        logoutSpinner.className = 'spinner';
+        
+        logoutText.style.display = 'none';
+        logoutBtn.appendChild(logoutSpinner);
+        logoutBtn.disabled = true;
+
+        firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
+      } catch (error) {
+        console.error("Erro ao iniciar logout:", error.message);
+        showError("Erro ao fazer logout");
+      }
+    }
+
+    // Inicializar página
+    window.addEventListener('load', function() {
+      try {
+        const firebaseConfig = {
+          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+          authDomain: "facilita-479b3.firebaseapp.com",
+          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+          projectId: "facilita-479b3",
+          storageBucket: "facilita-479b3.appspot.com",
+          messagingSenderId: "385676676886",
+          appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+        };
+        
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        loadDashboardData();
+      } catch (error) {
+        console.error("Erro ao inicializar página:", error.message);
+        showError("Erro ao carregar página");
+      }
+    });
   </script>
 </body>
 </html>

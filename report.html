@@ -106,6 +106,12 @@
       left: 10%;
     }
     
+    .nav-link.disabled {
+      color: rgba(255, 255, 255, 0.5) !important;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+    
     .dropdown-menu {
       background: rgba(15, 23, 42, 0.95);
       border: 1px solid rgba(59, 130, 246, 0.2);
@@ -805,13 +811,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.html#features">Serviços</a>
+            <a class="nav-link" href="report.html">Mapa de Problemas</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html#stats">Estatísticas</a>
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="index.html#testimonials">Depoimentos</a>
+            <a class="nav-link disabled" href="#" title="Em desenvolvimento">Lista</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -951,7 +957,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0ologi/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
