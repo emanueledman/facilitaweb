@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Facilita 2.0 - Dashboard de Relatórios">
-  <meta name="keywords" content="facilita, angola, serviços públicos, relatórios">
-  <meta name="author" content="Facilita Team">
+  <meta name="description" content="FixABairro - Dashboard de Relatórios">
+  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, relatórios">
+  <meta name="author" content="FixABairro Team">
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
@@ -25,13 +25,16 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <title>Facilita 2.0 | Dashboard de Relatórios</title>
+  <title>FixABairro | Dashboard de Relatórios</title>
   <style>
     :root {
-      --primary-color: #3b82f6;
-      --primary-dark: #2563eb;
-      --dark-bg: #0f172a;
+      --primary-color: #22c55e;
+      --primary-dark: #16a34a;
+      --secondary-color: #f59e0b;
+      --dark-bg: #1f2937;
+      --dark-card: #2d3748;
       --light-text: #f3f4f6;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
       --accent-color: #10b981;
       --danger-color: #ef4444;
       --warning-color: #f59e0b;
@@ -47,13 +50,12 @@
     }
     
     .navbar {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(31, 41, 55, 0.95);
       backdrop-filter: blur(20px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 0.75rem 1.5rem;
       transition: all 0.3s ease;
       z-index: 1000;
-      border-bottom: 2px solid var(--primary-color);
     }
     
     .navbar.scrolled {
@@ -66,32 +68,30 @@
       font-weight: 700;
       font-size: 1.5rem;
       color: white;
-      text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
     }
     
     .logo {
       width: 36px;
       height: 36px;
       margin-right: 10px;
-      filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
     
     .navbar-brand:hover .logo {
-      transform: rotate(15deg) scale(1.1);
+      transform: scale(1.1);
     }
     
     .nav-link {
       font-weight: 500;
-      color: white !important;
       position: relative;
       margin: 0 0.4rem;
       padding: 0.4rem 0.8rem !important;
       transition: all 0.3s ease;
-      font-size: 0.9rem;
+      color: var(--light-text) !important;
     }
     
-    .nav-link::after {
+    .nav-link:not(.btn)::after {
       content: '';
       position: absolute;
       width: 0;
@@ -102,21 +102,39 @@
       transition: all 0.3s ease;
     }
     
-    .nav-link:hover::after {
+    .nav-link:not(.btn):hover::after {
       width: 80%;
       left: 10%;
     }
     
+    .nav-link.btn {
+      background-color: var(--primary-color);
+      border: none;
+      border-radius: 50px;
+      padding: 0.4rem 1.5rem !important;
+      font-weight: 600;
+      box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
+      color: white !important;
+    }
+    
+    .nav-link.btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
+    }
+    
     .dropdown-menu {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      background: var(--dark-card);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      box-shadow: var(--card-shadow);
+      border-radius: 8px;
     }
     
     .dropdown-item {
       color: var(--light-text);
-      font-size: 0.85rem;
       transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
     }
     
     .dropdown-item:hover {
@@ -136,15 +154,15 @@
       text-align: center;
       margin-bottom: 1.5rem;
       color: var(--primary-color);
-      text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
     }
     
     .metric-card {
-      background: rgba(15, 23, 42, 0.95);
+      background: var(--dark-card);
       border-radius: 10px;
       padding: 0.75rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
       max-width: 400px;
@@ -158,7 +176,7 @@
     
     .metric-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
     }
     
     .metric-icon {
@@ -180,11 +198,11 @@
     }
     
     .chart-container {
-      background: rgba(15, 23, 42, 0.95);
+      background: var(--dark-card);
       border-radius: 10px;
       padding: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease;
       height: 100%;
     }
@@ -196,6 +214,7 @@
     .chart-container h5 {
       font-size: 1rem;
       margin-bottom: 0.5rem;
+      color: var(--light-text);
     }
     
     .chart-container canvas {
@@ -203,11 +222,11 @@
     }
     
     .table-container {
-      background: rgba(15, 23, 42, 0.95);
+      background: var(--dark-card);
       border-radius: 10px;
       padding: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       overflow-x: auto;
       height: 100%;
     }
@@ -215,6 +234,7 @@
     .table-container h5 {
       font-size: 1rem;
       margin-bottom: 0.5rem;
+      color: var(--light-text);
     }
     
     .table-container table {
@@ -240,7 +260,7 @@
     }
     
     .table-container tr:hover {
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(34, 197, 94, 0.1);
     }
     
     .filter-group {
@@ -261,9 +281,9 @@
     }
     
     .filter-button {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      color: white;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--light-text);
       border-radius: 15px;
       padding: 0.3rem 0.8rem;
       font-size: 0.75rem;
@@ -272,15 +292,16 @@
     }
     
     .filter-button:hover {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.4));
+      background: rgba(34, 197, 94, 0.2);
+      border-color: var(--primary-color);
       transform: translateY(-1px);
     }
     
     .filter-button.active {
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+      background: var(--primary-color);
       border-color: var(--primary-dark);
       color: white;
-      box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 2px 5px rgba(34, 197, 94, 0.3);
     }
     
     .error-message {
@@ -288,11 +309,11 @@
       font-size: 0.9rem;
       text-align: center;
       padding: 1.5rem;
-      background: rgba(255, 75, 75, 0.1);
+      background: rgba(239, 68, 68, 0.1);
       border-radius: 8px;
       margin: 0.75rem;
-      border: 1px solid rgba(255, 75, 75, 0.3);
-      box-shadow: 0 4px 10px rgba(255, 75, 75, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.1);
     }
     
     .spinner {
@@ -434,11 +455,11 @@
     
     @media (max-width: 992px) {
       .navbar-collapse {
-        background: rgba(15, 23, 42, 0.98);
+        background: var(--dark-card);
         border-radius: 0 0 10px 10px;
         padding: 0.75rem;
         margin-top: 0.3rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--card-shadow);
       }
     }
   </style>
@@ -448,8 +469,8 @@
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
-        <img src="icons/Icon-192.png" alt="Logo Facilita" class="logo">
-        Facilita 2.0
+        <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
+        FixABairro
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -457,13 +478,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="report.html">Mapa de Problemas</a>
+            <a class="nav-link" href="map.html">Mapa de Problemas</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="list.html">Lista</a>
+            <a class="nav-link btn btn-primary" href="report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -551,6 +572,7 @@
               <button class="filter-button" data-filter="Iluminação">Iluminação</button>
               <button class="filter-button" data-filter="Água">Água</button>
               <button class="filter-button" data-filter="Segurança">Segurança</button>
+              <button class="filter-button" data-filter="Outros">Outros</button>
             </div>
           </div>
           <div class="filter-group">
@@ -581,10 +603,10 @@
   </div>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -608,14 +630,10 @@
     }
 
     // Navbar scroll effect
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', () => {
       try {
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
       } catch (error) {
         console.error("Erro no scroll da navbar:", error.message);
       }
@@ -625,7 +643,9 @@
     function showError(message) {
       try {
         const dashboardContainer = document.querySelector('.dashboard-container');
-        dashboardContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        if (dashboardContainer) {
+          dashboardContainer.innerHTML = `<div class="error-message">${message}</div>`;
+        }
       } catch (error) {
         console.error("Erro ao exibir mensagem de erro:", error.message);
       }
@@ -633,131 +653,170 @@
 
     // Função para formatar data
     function formatDate(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      try {
+        if (!timestamp || isNaN(timestamp)) return 'Data inválida';
+        const date = new Date(timestamp);
+        if (isNaN(date.getTime())) return 'Data inválida';
+        return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      } catch (error) {
+        console.error("Erro ao formatar data:", error.message);
+        return 'Data inválida';
+      }
     }
 
     // Função para inicializar gráficos
     function initCharts(problems) {
-      const categories = { Buraco: 0, Lixo: 0, Iluminação: 0, Água: 0, Segurança: 0 };
-      const urgencies = { Baixa: 0, Média: 0, Alta: 0 };
-      const timeData = {};
-      
-      problems.forEach(p => {
-        if (p.category) categories[p.category]++;
-        if (p.urgency) urgencies[p.urgency]++;
-        if (p.createdAt) {
-          const date = formatDate(p.createdAt).split('/').slice(0, 2).join('/');
-          timeData[date] = (timeData[date] || 0) + 1;
+      try {
+        if (!problems || !Array.isArray(problems)) {
+          console.warn("Dados de problemas inválidos ou vazios");
+          return;
         }
-      });
 
-      // Category Chart
-      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-      new Chart(categoryCtx, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(categories),
-          datasets: [{
-            label: 'Problemas por Categoria',
-            data: Object.values(categories),
-            backgroundColor: ['#FFA500', '#43A047', '#FFA000', '#1E88E5', '#FF5252'],
-            borderColor: ['#FFB84D', '#66BB6A', '#FFB300', '#42A5F5', '#FF8A80'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, ticks: { font: { size: 10 } } },
-            x: { ticks: { font: { size: 10 } } }
+        const categories = { Buraco: 0, Lixo: 0, Iluminação: 0, Água: 0, Segurança: 0, Outros: 0 };
+        const urgencies = { Baixa: 0, Média: 0, Alta: 0 };
+        const timeData = {};
+        
+        problems.forEach(p => {
+          const category = p.category || 'Outros';
+          categories[category] = (categories[category] || 0) + 1;
+          if (p.urgency) urgencies[p.urgency]++;
+          if (p.createdAt) {
+            const date = formatDate(p.createdAt).split('/').slice(0, 2).join('/');
+            timeData[date] = (timeData[date] || 0) + 1;
           }
-        }
-      });
+        });
 
-      // Urgency Chart
-      const urgencyCtx = document.getElementById('urgencyChart').getContext('2d');
-      new Chart(urgencyCtx, {
-        type: 'pie',
-        data: {
-          labels: Object.keys(urgencies),
-          datasets: [{
-            data: Object.values(urgencies),
-            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-            borderColor: ['#34d399', '#fbbf24', '#f87171'],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { font: { size: 10 }, color: '#f3f4f6' }
+        // Category Chart
+        const categoryCanvas = document.getElementById('categoryChart');
+        if (categoryCanvas) {
+          const categoryCtx = categoryCanvas.getContext('2d');
+          new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+              labels: Object.keys(categories),
+              datasets: [{
+                label: 'Problemas por Categoria',
+                data: Object.values(categories),
+                backgroundColor: ['#f59e0b', '#10b981', '#f59e0b', '#0ea5e9', '#ef4444', '#9ca3af'],
+                borderColor: ['#f59e0b', '#10b981', '#f59e0b', '#0ea5e9', '#ef4444', '#9ca3af'],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#f3f4f6' } },
+                x: { ticks: { font: { size: 10 }, color: '#f3f4f6' } }
+              }
             }
-          }
+          });
         }
-      });
 
-      // Time Chart
-      const timeCtx = document.getElementById('timeChart').getContext('2d');
-      new Chart(timeCtx, {
-        type: 'line',
-        data: {
-          labels: Object.keys(timeData).sort(),
-          datasets: [{
-            label: 'Problemas por Data',
-            data: Object.values(timeData),
-            borderColor: '#3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, ticks: { font: { size: 10 } } },
-            x: { ticks: { font: { size: 10 } } }
-          }
+        // Urgency Chart
+        const urgencyCanvas = document.getElementById('urgencyChart');
+        if (urgencyCanvas) {
+          const urgencyCtx = urgencyCanvas.getContext('2d');
+          new Chart(urgencyCtx, {
+            type: 'pie',
+            data: {
+              labels: Object.keys(urgencies),
+              datasets: [{
+                data: Object.values(urgencies),
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: { font: { size: 10 }, color: '#f3f4f6' }
+                }
+              }
+            }
+          });
         }
-      });
+
+        // Time Chart
+        const timeCanvas = document.getElementById('timeChart');
+        if (timeCanvas) {
+          const timeCtx = timeCanvas.getContext('2d');
+          new Chart(timeCtx, {
+            type: 'line',
+            data: {
+              labels: Object.keys(timeData).sort(),
+              datasets: [{
+                label: 'Problemas por Data',
+                data: Object.values(timeData),
+                borderColor: '#22c55e',
+                backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#f3f4f6' } },
+                x: { ticks: { font: { size: 10 }, color: '#f3f4f6' } }
+              }
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao inicializar gráficos:", error.message);
+        showError("Erro ao carregar gráficos");
+      }
     }
 
     // Função para atualizar tabela
     function updateTable(problems, categoryFilter, statusFilter) {
-      const tbody = document.getElementById('recentReportsTable');
-      tbody.innerHTML = '';
-      
-      let filteredProblems = problems;
-      if (categoryFilter !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+      try {
+        const tbody = document.getElementById('recentReportsTable');
+        if (!tbody) throw new Error("Tabela não encontrada");
+        tbody.innerHTML = '';
+        
+        let filteredProblems = problems || [];
+        if (categoryFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+        }
+        if (statusFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
+        }
+        
+        if (filteredProblems.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" class="text-center">Nenhum problema encontrado</td></tr>';
+          return;
+        }
+
+        filteredProblems.slice(0, 5).forEach(p => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${p.title || 'Sem título'}</td>
+            <td>${p.category || 'Desconhecida'}</td>
+            <td>${p.urgency || 'Desconhecida'}</td>
+            <td>${p.status || 'Desconhecido'}</td>
+            <td>${formatDate(p.createdAt)}</td>
+            <td>${p.neighborhood || 'Desconhecido'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Erro ao atualizar tabela:", error.message);
+        showError("Erro ao carregar tabela de relatórios");
       }
-      if (statusFilter !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
-      }
-      
-      filteredProblems.slice(0, 5).forEach(p => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${p.title}</td>
-          <td>${p.category}</td>
-          <td>${p.urgency}</td>
-          <td>${p.status}</td>
-          <td>${formatDate(p.createdAt)}</td>
-          <td>${p.neighborhood || 'Desconhecido'}</td>
-        `;
-        tbody.appendChild(row);
-      });
     }
 
     // Função para carregar dados do dashboard
-    function loadDashboardData() {
+    async function loadDashboardData() {
       try {
         firebase.auth().onAuthStateChanged(async user => {
           const dashboardContainer = document.querySelector('.dashboard-container');
+          if (!dashboardContainer) throw new Error("Container do dashboard não encontrado");
           
           if (!user) {
             dashboardContainer.innerHTML = `
@@ -798,23 +857,33 @@
 
                 // Handle filters
                 ['categoryFilters', 'statusFilters'].forEach(filterId => {
-                  document.getElementById(filterId).addEventListener('click', (e) => {
-                    if (e.target.classList.contains('filter-button')) {
-                      document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
-                      e.target.classList.add('active');
-                      const categoryFilter = document.querySelector('#categoryFilters .active').dataset.filter;
-                      const statusFilter = document.querySelector('#statusFilters .active').dataset.filter;
-                      updateTable(allProblems, categoryFilter, statusFilter);
-                    }
-                  });
+                  const filterContainer = document.getElementById(filterId);
+                  if (filterContainer) {
+                    filterContainer.addEventListener('click', (e) => {
+                      try {
+                        if (e.target.classList.contains('filter-button')) {
+                          document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
+                          e.target.classList.add('active');
+                          const categoryFilter = document.querySelector('#categoryFilters .active')?.dataset.filter || 'all';
+                          const statusFilter = document.querySelector('#statusFilters .active')?.dataset.filter || 'all';
+                          updateTable(allProblems, categoryFilter, statusFilter);
+                        }
+                      } catch (error) {
+                        console.error("Erro ao aplicar filtro:", error.message);
+                      }
+                    });
+                  }
                 });
               } catch (error) {
                 console.error("Erro ao carregar problemas:", error.message);
                 showError("Erro ao carregar dados do dashboard");
               }
+            }, (error) => {
+              console.error("Erro no listener do Realtime Database:", error.message);
+              showError("Erro ao conectar com o banco de dados");
             });
           } catch (error) {
-            console.error("Erro ao carregar dados:", error.message);
+            console.error("Erro ao carregar dados do usuário:", error.message);
             showError(`Erro ao carregar dados: ${error.message}`);
             dashboardContainer.insertAdjacentHTML('afterend', `
               <button class="btn btn-primary mt-2" onclick="loadDashboardData()">Tentar Novamente</button>
@@ -823,7 +892,7 @@
         });
       } catch (error) {
         console.error("Erro na inicialização do carregamento:", error.message);
-        showError("Erro ao iniciar carregamento");
+        showError("Erro ao iniciar carregamento do dashboard");
       }
     }
 
@@ -848,7 +917,7 @@
     }
 
     // Inicializar página
-    window.addEventListener('load', function() {
+    window.addEventListener('load', () => {
       try {
         const firebaseConfig = {
           apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
