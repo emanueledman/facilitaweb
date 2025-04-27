@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FixABairro - Reporte e resolva problemas no seu bairro em Angola de forma rápida e colaborativa.">
-  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, denúncias, melhorar bairro">
+  <meta name="description" content="FixABairro - Reporte e resolva problemas no seu bairro de forma rápida e colaborativa.">
+  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, denúncias">
   <meta name="author" content="FixABairro Team">
   
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="FixABairro">
+  <meta name="apple-mobile-web-app-title" content="fixabairro">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
@@ -31,14 +31,13 @@
   <title>FixABairro | Melhorando Bairros em Angola</title>
   <style>
     :root {
-      --primary-color: #22c55e;
+      --primary-color: #22c55e; /* Vibrant green for community focus */
       --primary-dark: #16a34a;
-      --secondary-color: #f59e0b;
+      --secondary-color: #f59e0b; /* Warm orange for action-oriented elements */
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
       --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-      --danger-color: #ef4444;
     }
     
     html, body {
@@ -60,27 +59,26 @@
       background: rgba(31, 41, 55, 0.95);
       backdrop-filter: blur(20px);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 0.75rem 1.5rem;
+      padding: 1rem 2rem;
       transition: all 0.3s ease;
-      z-index: 1000;
     }
     
     .navbar.scrolled {
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem 2rem;
     }
     
     .navbar-brand {
       display: flex;
       align-items: center;
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       color: white;
     }
     
     .logo {
-      width: 36px;
-      height: 36px;
-      margin-right: 10px;
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
       filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
@@ -92,8 +90,8 @@
     .nav-link {
       font-weight: 500;
       position: relative;
-      margin: 0 0.4rem;
-      padding: 0.4rem 0.8rem !important;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem !important;
       transition: all 0.3s ease;
       color: var(--light-text);
     }
@@ -118,11 +116,10 @@
       background-color: var(--primary-color);
       border: none;
       border-radius: 50px;
-      padding: 0.4rem 1.5rem !important;
+      padding: 0.6rem 1.75rem !important;
       font-weight: 600;
       box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
       color: white;
-      font-size: 0.9rem;
     }
     
     .nav-link.btn:hover {
@@ -135,7 +132,7 @@
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 6rem 0 4rem;
+      padding: 8rem 0 6rem;
       position: relative;
     }
     
@@ -146,7 +143,7 @@
     
     .hero-section h1 {
       font-weight: 800;
-      font-size: 3rem;
+      font-size: 3.5rem;
       line-height: 1.2;
       margin-bottom: 1.5rem;
       background: linear-gradient(to right, #ffffff, #86efac);
@@ -155,17 +152,17 @@
     }
     
     .hero-section p {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       opacity: 0.9;
       margin-bottom: 2rem;
-      max-width: 600px;
+      max-width: 650px;
     }
     
     .welcome-card {
       background: var(--dark-card);
       border-radius: 12px;
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
       box-shadow: var(--card-shadow);
       border-left: 4px solid var(--primary-color);
       transition: transform 0.3s ease;
@@ -176,36 +173,31 @@
     }
     
     .welcome-card h3 {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 600;
       color: var(--primary-color);
       margin-bottom: 0.5rem;
     }
     
     .welcome-card p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       opacity: 0.9;
       color: var(--light-text);
       margin: 0;
     }
     
     .error-message {
-      color: var(--danger-color);
-      font-size: 0.85rem;
+      color: #ef4444;
       text-align: center;
-      padding: 0.5rem;
-      background: rgba(239, 68, 68, 0.1);
-      border-radius: 6px;
-      margin-top: 0.5rem;
+      margin: 1rem 0;
     }
     
     .hero-section .btn {
-      padding: 0.6rem 2rem;
+      padding: 0.75rem 2.5rem;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-right: 0.75rem;
-      margin-bottom: 0.75rem;
+      margin-right: 1rem;
+      margin-bottom: 1rem;
       transition: all 0.3s ease;
     }
     
@@ -226,7 +218,6 @@
       border: 2px solid white;
       background: transparent;
       color: white;
-      font-size: 0.9rem;
     }
     
     .btn-outline-light:hover {
@@ -235,26 +226,26 @@
     }
     
     .features-section {
-      padding: 5rem 0;
+      padding: 6rem 0;
       background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 1));
     }
     
     .section-title {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
     }
     
     .section-title h2 {
       font-weight: 700;
-      font-size: 2.25rem;
-      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
       color: white;
     }
     
     .section-title p {
-      font-size: 1rem;
+      font-size: 1.1rem;
       opacity: 0.8;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
     }
     
@@ -265,47 +256,47 @@
       box-shadow: var(--card-shadow);
       height: 100%;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
       border: none;
     }
     
     .feature-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-10px);
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
     
     .feature-icon {
-      height: 80px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2rem;
+      font-size: 2.5rem;
       background: var(--primary-color);
       color: white;
-      clip-path: polygon(0 0, 100% 0, 100% 60%, 0 80%);
+      clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
     }
     
     .feature-content {
-      padding: 1.25rem;
+      padding: 1.5rem;
     }
     
     .feature-content h3 {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       color: var(--light-text);
     }
     
     .feature-content p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       opacity: 0.8;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     
     .feature-btn {
-      padding: 0.4rem 1.25rem;
+      padding: 0.5rem 1.5rem;
       border-radius: 50px;
       font-weight: 500;
-      font-size: 0.85rem;
       display: inline-flex;
       align-items: center;
       background: var(--secondary-color);
@@ -315,7 +306,7 @@
     }
     
     .feature-btn i {
-      margin-left: 0.4rem;
+      margin-left: 0.5rem;
       transition: transform 0.3s ease;
     }
     
@@ -329,17 +320,17 @@
     }
     
     .stats-section {
-      padding: 4rem 0;
+      padding: 5rem 0;
       background: linear-gradient(to bottom, var(--dark-bg), rgba(31, 41, 55, 0.9));
     }
     
     .stat-item {
       text-align: center;
-      padding: 1.5rem;
+      padding: 2rem;
     }
     
     .stat-number {
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: 800;
       margin-bottom: 0.5rem;
       background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
@@ -348,29 +339,19 @@
     }
     
     .stat-label {
-      font-size: 1rem;
+      font-size: 1.1rem;
       opacity: 0.8;
     }
     
-    .stat-spinner {
-      display: inline-block;
-      width: 30px;
-      height: 30px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--primary-color);
-      animation: spin 1s ease-in-out infinite;
-    }
-    
     .testimonials-section {
-      padding: 5rem 0;
+      padding: 6rem 0;
       background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), var(--dark-bg));
     }
     
     .testimonial-card {
       background: var(--dark-card);
       border-radius: 12px;
-      padding: 1.5rem;
+      padding: 2rem;
       box-shadow: var(--card-shadow);
       height: 100%;
       border-left: 4px solid var(--primary-color);
@@ -382,23 +363,19 @@
     }
     
     .testimonial-text {
-      font-size: 1rem;
-      line-height: 1.6;
-      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
       position: relative;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
     
     .testimonial-text::before {
       content: '"';
-      font-size: 3rem;
+      font-size: 4rem;
       opacity: 0.2;
       position: absolute;
-      top: -1rem;
-      left: -0.75rem;
+      top: -1.5rem;
+      left: -1rem;
     }
     
     .testimonial-author {
@@ -407,102 +384,95 @@
     }
     
     .author-avatar {
-      width: 40px;
-      height: 40px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       overflow: hidden;
-      margin-right: 0.75rem;
+      margin-right: 1rem;
       background: #ddd;
     }
     
-    .author-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
     .author-info h4 {
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-bottom: 0.2rem;
       color: white;
     }
     
     .author-info p {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       opacity: 0.7;
       margin: 0;
     }
     
     .cta-section {
-      padding: 5rem 0;
+      padding: 6rem 0;
       background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
       text-align: center;
     }
     
     .cta-content h2 {
-      font-size: 2.25rem;
+      font-size: 2.5rem;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: white;
     }
     
     .cta-content p {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto 1.5rem;
+      max-width: 700px;
+      margin: 0 auto 2rem;
     }
     
     .cta-btn {
-      padding: 0.75rem 2.5rem;
+      padding: 1rem 3rem;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 1.1rem;
       background: white;
       color: var(--primary-dark);
       border: none;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
       transition: all 0.3s ease;
     }
     
     .cta-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
       background: #f9fafb;
     }
     
     .footer {
       background: var(--dark-bg);
-      padding: 3rem 0 1rem;
+      padding: 4rem 0 1rem;
     }
     
     .footer-logo {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     
     .footer-logo img {
-      width: 36px;
-      height: 36px;
-      margin-right: 8px;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
     }
     
     .footer-logo span {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 700;
     }
     
     .footer-text {
-      font-size: 0.9rem;
       opacity: 0.7;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
     
     .footer h4 {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       color: white;
     }
     
@@ -512,12 +482,11 @@
     }
     
     .footer-links li {
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
     }
     
     .footer-links a {
       color: var(--light-text);
-      font-size: 0.9rem;
       opacity: 0.7;
       text-decoration: none;
       transition: all 0.3s ease;
@@ -530,53 +499,31 @@
     
     .social-links {
       display: flex;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
     
     .social-link {
-      width: 36px;
-      height: 36px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 0.75rem;
+      margin-right: 1rem;
       transition: all 0.3s ease;
     }
     
     .social-link:hover {
       background: var(--primary-color);
-      transform: translateY(-2px);
-    }
-    
-    .social-link i {
-      font-size: 1rem;
-    }
-    
-    .newsletter-form .form-control {
-      background: var(--dark-card);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      color: var(--light-text);
-      font-size: 0.9rem;
-      border-radius: 50px 0 0 50px;
-    }
-    
-    .newsletter-form .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-    
-    .newsletter-form .btn {
-      border-radius: 0 50px 50px 0;
-      padding: 0.5rem 1.25rem;
-      font-size: 0.9rem;
+      transform: translateY(-3px);
     }
     
     .copyright {
       text-align: center;
-      padding-top: 2rem;
+      padding-top: 3rem;
       opacity: 0.7;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
     
     .loading-container {
@@ -594,11 +541,11 @@
     }
     
     .spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
       border-radius: 50%;
-      border-top: 3px solid var(--primary-color);
+      border-top: 4px solid var(--primary-color);
       animation: spin 1s linear infinite;
     }
     
@@ -615,7 +562,7 @@
     /* Responsividade */
     @media (max-width: 1200px) {
       .hero-section h1 {
-        font-size: 2.75rem;
+        font-size: 3rem;
       }
     }
     
@@ -624,24 +571,19 @@
         font-size: 2.5rem;
       }
       .stat-number {
-        font-size: 2.75rem;
-      }
-      .stats-section .col-md-4 {
-        flex: 0 0 50%;
-        max-width: 50%;
+        font-size: 3rem;
       }
     }
     
     @media (max-width: 768px) {
       .navbar-collapse {
-        background: var(--dark-card);
-        padding: 0.75rem;
+        background: rgba(31, 41, 55, 0.95);
+        padding: 1rem;
         border-radius: 8px;
-        margin-top: 0.5rem;
-        box-shadow: var(--card-shadow);
+        margin-top: 1rem;
       }
       .hero-section {
-        padding: 5rem 0 3rem;
+        padding: 6rem 0 4rem;
       }
       .hero-section h1 {
         font-size: 2.25rem;
@@ -650,110 +592,32 @@
         font-size: 2rem;
       }
       .feature-card, .testimonial-card {
-        margin-bottom: 1.5rem;
-      }
-      .stats-section .col-md-4 {
-        flex: 0 0 100%;
-        max-width: 100%;
-      }
-      .stat-item {
-        padding: 1rem;
-      }
-      .testimonial-text {
-        font-size: 0.9rem;
-        -webkit-line-clamp: 2;
+        margin-bottom: 2rem;
       }
     }
     
     @media (max-width: 576px) {
-      .navbar {
-        padding: 0.5rem 1rem;
-      }
       .navbar-brand {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
       }
       .logo {
-        width: 30px;
-        height: 30px;
-      }
-      .nav-link.btn {
-        padding: 0.3rem 1.2rem !important;
-        font-size: 0.85rem;
+        width: 35px;
+        height: 35px;
       }
       .hero-section h1 {
         font-size: 2rem;
       }
       .hero-section p {
-        font-size: 1rem;
-      }
-      .welcome-card h3 {
         font-size: 1.1rem;
       }
-      .welcome-card p {
-        font-size: 0.85rem;
+      .welcome-card h3 {
+        font-size: 1.25rem;
       }
       .cta-content h2 {
         font-size: 2rem;
       }
       .cta-content p {
-        font-size: 1rem;
-      }
-      .cta-btn {
-        padding: 0.6rem 2rem;
-        font-size: 0.9rem;
-      }
-      .stat-number {
-        font-size: 2.5rem;
-      }
-      .feature-icon {
-        height: 70px;
-        font-size: 1.75rem;
-      }
-      .feature-content h3 {
         font-size: 1.1rem;
-      }
-      .feature-content p {
-        font-size: 0.85rem;
-      }
-      .feature-btn {
-        font-size: 0.8rem;
-        padding: 0.3rem 1rem;
-      }
-      .author-avatar {
-        width: 36px;
-        height: 36px;
-      }
-      .author-info h4 {
-        font-size: 0.9rem;
-      }
-      .author-info p {
-        font-size: 0.8rem;
-      }
-      .footer-logo span {
-        font-size: 1.1rem;
-      }
-      .footer-text {
-        font-size: 0.85rem;
-      }
-      .footer h4 {
-        font-size: 1rem;
-      }
-      .footer-links a {
-        font-size: 0.85rem;
-      }
-      .social-link {
-        width: 32px;
-        height: 32px;
-      }
-      .social-link i {
-        font-size: 0.9rem;
-      }
-      .newsletter-form .form-control {
-        font-size: 0.85rem;
-      }
-      .newsletter-form .btn {
-        font-size: 0.85rem;
-        padding: 0.4rem 1rem;
       }
     }
   </style>
@@ -761,7 +625,7 @@
 </head>
 <body>
   <!-- Homepage estática -->
-  <div id="homepage" class="homepage" style="display: none;">
+  <div id="homepage" class="homepage">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <div class="container">
@@ -787,7 +651,7 @@
               <a class="nav-link" href="profile.html">Perfil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn btn-primary" href="report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
+              <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
             </li>
             <li class="nav-item">
               <a class="nav-link btn btn-primary" id="authButton"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
@@ -810,7 +674,7 @@
             <h1>Transforme seu bairro com o FixABairro</h1>
             <p>Relate problemas na sua comunidade, acompanhe soluções em tempo real e contribua para um bairro melhor – tudo de forma simples e colaborativa.</p>
             <div>
-              <a href="report.html" class="btn btn-primary">Relatar Agora <i class="fas fa-arrow-right ms-2"></i></a>
+              <a href="new-report.html" class="btn btn-primary">Relatar Agora <i class="fas fa-arrow-right ms-2"></i></a>
               <a id="accountButton" href="login.html" class="btn btn-outline-light">Acessar Conta</a>
             </div>
           </div>
@@ -838,7 +702,7 @@
               <div class="feature-content">
                 <h3>Mapa de Problemas</h3>
                 <p>Visualize problemas reportados no seu bairro em um mapa interativo e acompanhe o progresso das soluções.</p>
-                <a href="#" class="feature-btn module-link" data-module="mapeamento">Explorar <i class="fas fa-arrow-right"></i></a>
+                <a href="report.html" class="feature-btn module-link" data-module="mapeamento">Explorar <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -851,7 +715,7 @@
               <div class="feature-content">
                 <h3>Relatar Problemas</h3>
                 <p>Denuncie buracos, iluminação pública quebrada, lixo acumulado e outros problemas com fotos e descrições.</p>
-                <a href="report.html" class="feature-btn module-link" data-module="relatar">Relatar <i class="fas fa-arrow-right"></i></a>
+                <a href="new-report.html" class="feature-btn module-link" data-module="relatar">Relatar <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -903,7 +767,7 @@
               <div class="feature-content">
                 <h3>Estatísticas Locais</h3>
                 <p>Acesse dados sobre problemas mais comuns no seu bairro e acompanhe melhorias ao longo do tempo.</p>
-                <a href="#" class="feature-btn module-link" data-module="estatisticas">Ver Dados <i class="fas fa-arrow-right"></i></a>
+                <a href="dashboard.html" class="feature-btn module-link" data-module="estatisticas">Ver Dados <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -917,19 +781,19 @@
         <div class="row">
           <div class="col-md-4" data-aos="fade-up">
             <div class="stat-item">
-              <div class="stat-number" id="users-count"><span class="stat-spinner"></span></div>
+              <div class="stat-number" id="users-count">50K+</div>
               <div class="stat-label">Usuários Ativos</div>
             </div>
           </div>
           <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
             <div class="stat-item">
-              <div class="stat-number" id="services-count"><span class="stat-spinner"></span></div>
+              <div class="stat-number" id="services-count">10K+</div>
               <div class="stat-label">Problemas Reportados</div>
             </div>
           </div>
           <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
             <div class="stat-item">
-              <div class="stat-number" id="cities-count"><span class="stat-spinner"></span></div>
+              <div class="stat-number" id="cities-count">18</div>
               <div class="stat-label">Províncias Atendidas</div>
             </div>
           </div>
@@ -945,8 +809,51 @@
           <p>Histórias reais de moradores que estão transformando seus bairros com o FixABairro.</p>
         </div>
         
-        <div class="row" id="testimonials-container">
-          <!-- Depoimentos serão carregados dinamicamente -->
+        <div class="row">
+          <div class="col-md-6 col-lg-4" data-aos="fade-up">
+            <div class="testimonial-card">
+              <div class="testimonial-text">
+                O FixABairro me ajudou a relatar um buraco perigoso na minha rua. Em poucos dias, a prefeitura resolveu o problema. Incrível!
+              </div>
+              <div class="testimonial-author">
+                <div class="author-avatar"></div>
+                <div class="author-info">
+                  <h4>Maria Joaquim</h4>
+                  <p>Luanda</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="testimonial-card">
+              <div class="testimonial-text">
+                Acompanhei a resolução de um problema de lixo no meu bairro em tempo real. O FixABairro realmente conecta a comunidade às soluções!
+              </div>
+              <div class="testimonial-author">
+                <div class="author-avatar"></div>
+                <div class="author-info">
+                  <h4>Pedro Santos</h4>
+                  <p>Benguela</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="400">
+            <div class="testimonial-card">
+              <div class="testimonial-text">
+                Como líder comunitário, o mapa de problemas me ajuda a priorizar questões e mobilizar moradores para melhorias locais.
+              </div>
+              <div class="testimonial-author">
+                <div class="author-avatar"></div>
+                <div class="author-info">
+                  <h4>Carlos Manuel</h4>
+                  <p>Huambo</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1003,7 +910,7 @@
           <div class="col-md-4 col-lg-4 mb-4">
             <h4>Newsletter</h4>
             <p class="footer-text">Assine para receber atualizações sobre novos recursos e melhorias.</p>
-            <div class="input-group mb-3 newsletter-form">
+            <div class="input-group mb-3">
               <input type="email" class="form-control" placeholder="Seu e-mail" aria-label="Seu e-mail">
               <button class="btn btn-primary" type="submit">Assinar</button>
             </div>
@@ -1023,9 +930,9 @@
   </div>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
   <!-- Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
@@ -1045,17 +952,69 @@
     } catch (error) {
       console.error("Erro ao inicializar AOS:", error);
     }
-
+  
     // Navbar scroll effect
-    window.addEventListener('scroll', () => {
+    window.addEventListener('scroll', function() {
       try {
         const navbar = document.querySelector('.navbar');
-        navbar.classList.toggle('scrolled', window.scrollY > 50);
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
       } catch (error) {
         console.error("Erro no efeito de scroll:", error);
       }
     });
-
+  
+    // Counter animation for stats
+    function animateCounters() {
+      try {
+        const usersCount = document.getElementById('users-count');
+        const servicesCount = document.getElementById('services-count');
+        const citiesCount = document.getElementById('cities-count');
+        
+        animateCounter(usersCount, 0, 50000, 2000);
+        animateCounter(servicesCount, 0, 10000, 1500);
+        animateCounter(citiesCount, 0, 18, 1000);
+      } catch (error) {
+        console.error("Erro ao animar contadores:", error);
+      }
+    }
+  
+    function animateCounter(element, start, end, duration) {
+      try {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          const value = Math.floor(progress * (end - start) + start);
+          element.textContent = value === end ? end + '+' : value;
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          }
+        };
+        window.requestAnimationFrame(step);
+      } catch (error) {
+        console.error("Erro na animação do contador:", error);
+      }
+    }
+  
+    // Intersection Observer for counter animation
+    try {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounters();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.5});
+      observer.observe(document.querySelector('.stats-section'));
+    } catch (error) {
+      console.error("Erro no Intersection Observer:", error);
+    }
+  
     // Função para exibir erro na UI
     function showError(message) {
       try {
@@ -1063,10 +1022,10 @@
         errorMessage.textContent = message;
         errorMessage.style.display = 'block';
       } catch (error) {
-        console.error("Erro ao exibir mensagem:", error);
+        console.error("Erro ao exibir mensagem de erro:", error);
       }
     }
-
+  
     // Função para atualizar a UI com base no estado de autenticação
     function updateUI(user, userData) {
       try {
@@ -1074,7 +1033,7 @@
         const accountButton = document.getElementById('accountButton');
         const welcomeMessage = document.getElementById('welcomeMessage');
         const ctaButton = document.getElementById('ctaButton');
-
+  
         if (user) {
           authButton.innerHTML = `<i class="fas fa-user me-1"></i> Perfil`;
           authButton.href = 'profile.html';
@@ -1097,139 +1056,7 @@
         showError("Erro ao carregar interface");
       }
     }
-
-    // Função para animar contadores
-    function animateCounter(element, start, end, duration) {
-      try {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-          if (!startTimestamp) startTimestamp = timestamp;
-          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-          const value = Math.floor(progress * (end - start) + start);
-          element.textContent = value >= 1000 ? `${Math.floor(value / 1000)}K+` : value;
-          if (progress < 1) {
-            window.requestAnimationFrame(step);
-          }
-        };
-        window.requestAnimationFrame(step);
-      } catch (error) {
-        console.error("Erro na animação do contador:", error);
-      }
-    }
-
-    // Função para carregar estatísticas do Firestore
-    async function loadStats() {
-      try {
-        const usersCount = document.getElementById('users-count');
-        const servicesCount = document.getElementById('services-count');
-        const citiesCount = document.getElementById('cities-count');
-
-        // Contagem de usuários
-        const usersSnapshot = await firebase.firestore().collection('usuarios').get();
-        const usersTotal = usersSnapshot.size;
-        usersCount.innerHTML = '';
-        animateCounter(usersCount, 0, usersTotal || 50000, 2000);
-
-        // Contagem de problemas reportados
-        const problemsSnapshot = await firebase.firestore().collection('relatorios_problemas').get();
-        const problemsTotal = problemsSnapshot.size;
-        servicesCount.innerHTML = '';
-        animateCounter(servicesCount, 0, problemsTotal || 10000, 1500);
-
-        // Contagem de províncias únicas
-        const provinces = new Set();
-        problemsSnapshot.forEach(doc => {
-          const province = doc.data().province;
-          if (province) provinces.add(province);
-        });
-        const provincesTotal = provinces.size;
-        citiesCount.innerHTML = '';
-        animateCounter(citiesCount, 0, provincesTotal || 18, 1000);
-      } catch (error) {
-        console.error("Erro ao carregar estatísticas:", error);
-        showError("Erro ao carregar estatísticas");
-        document.getElementById('users-count').textContent = '50K+';
-        document.getElementById('services-count').textContent = '10K+';
-        document.getElementById('cities-count').textContent = '18';
-      }
-    }
-
-    // Função para carregar depoimentos do Firestore
-    async function loadTestimonials() {
-      try {
-        const testimonialsContainer = document.getElementById('testimonials-container');
-        const snapshot = await firebase.firestore()
-          .collection('depoimentos')
-          .orderBy('createdAt', 'desc')
-          .limit(3)
-          .get();
-
-        testimonialsContainer.innerHTML = '';
-        if (snapshot.empty) {
-          // Fallback para depoimentos estáticos
-          const defaultTestimonials = [
-            {
-              text: "O FixABairro me ajudou a relatar um buraco perigoso na minha rua. Em poucos dias, a prefeitura resolveu o problema. Incrível!",
-              authorName: "Maria Joaquim",
-              location: "Luanda",
-              avatarUrl: ""
-            },
-            {
-              text: "Acompanhei a resolução de um problema de lixo no meu bairro em tempo real. O FixABairro realmente conecta a comunidade às soluções!",
-              authorName: "Pedro Santos",
-              location: "Benguela",
-              avatarUrl: ""
-            },
-            {
-              text: "Como líder comunitário, o mapa de problemas me ajuda a priorizar questões e mobilizar moradores para melhorias locais.",
-              authorName: "Carlos Manuel",
-              location: "Huambo",
-              avatarUrl: ""
-            }
-          ];
-
-          defaultTestimonials.forEach((testimonial, index) => {
-            testimonialsContainer.innerHTML += `
-              <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${100 * (index + 1)}">
-                <div class="testimonial-card">
-                  <div class="testimonial-text">${testimonial.text}</div>
-                  <div class="testimonial-author">
-                    <div class="author-avatar">${testimonial.avatarUrl ? `<img src="${testimonial.avatarUrl}" alt="Avatar">` : ''}</div>
-                    <div class="author-info">
-                      <h4>${testimonial.authorName}</h4>
-                      <p>${testimonial.location}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            `;
-          });
-          return;
-        }
-
-        snapshot.forEach((doc, index) => {
-          const data = doc.data();
-          testimonialsContainer.innerHTML += `
-            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${100 * (index + 1)}">
-              <div class="testimonial-card">
-                <div class="testimonial-text">${data.text}</div>
-                <div class="testimonial-author">
-                  <div class="author-avatar">${data.avatarUrl ? `<img src="${data.avatarUrl}" alt="Avatar">` : ''}</div>
-                  <div class="author-info">
-                    <h4>${data.authorName}</h4>
-                    <p>${data.location}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-      } catch (error) {
-        console.error("Erro ao carregar depoimentos:", error);
-        showError("Erro ao carregar depoimentos");
-      }
-    }
-
+  
     // Carregar dados do usuário e atualizar UI
     function loadUserData() {
       try {
@@ -1251,17 +1078,21 @@
         updateUI(null, null);
       }
     }
-
+  
     // Manipular cliques nos links de módulos
     function setupModuleLinks() {
       try {
         document.querySelectorAll('.module-link').forEach(link => {
           link.addEventListener('click', (e) => {
             const module = link.getAttribute('data-module');
-            if (module === 'relatar') return; // Deixa o href padrão para relatar
+            if (module === 'relatar') return; // Deixa o href padrão para relatar problemas
             e.preventDefault();
             firebase.auth().onAuthStateChanged(user => {
-              window.location.href = user ? `profile.html#${module}` : 'login.html';
+              if (user) {
+                window.location.href = `profile.html#${module}`;
+              } else {
+                window.location.href = 'login.html';
+              }
             });
           });
         });
@@ -1269,7 +1100,7 @@
         console.error("Erro ao configurar links de módulos:", error);
       }
     }
-
+  
     // Manipular clique no botão de autenticação
     function handleAuthClick(e) {
       try {
@@ -1282,16 +1113,16 @@
         window.location.href = 'login.html';
       }
     }
-
-    // Inicialização
-    window.addEventListener('load', () => {
-      setTimeout(() => {
+  
+    // Simulate loading screen
+    window.addEventListener('load', function() {
+      setTimeout(function() {
         try {
           document.getElementById('loadingScreen').classList.add('fade-out');
-          setTimeout(() => {
+          setTimeout(function() {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('homepage').style.display = 'block';
-
+            
             // Inicializa Firebase
             try {
               const firebaseConfig = {
@@ -1302,14 +1133,12 @@
                 messagingSenderId: "385676676886",
                 appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
               };
-
+              
               if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
               }
-
+              
               loadUserData();
-              loadStats();
-              loadTestimonials();
               setupModuleLinks();
               document.getElementById('authButton').addEventListener('click', handleAuthClick);
             } catch (error) {

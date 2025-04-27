@@ -25,12 +25,12 @@
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
-  <title>FixABairro | Mapa de Problemas</title>
+  <title>FixABairro | Problemas Relatados</title>
   <style>
     :root {
-      --primary-color: #22c55e;
+      --primary-color: #22c55e; /* Vibrant green for community focus */
       --primary-dark: #16a34a;
-      --secondary-color: #f59e0b;
+      --secondary-color: #f59e0b; /* Warm orange for action-oriented elements */
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
@@ -53,27 +53,27 @@
       background: rgba(31, 41, 55, 0.95);
       backdrop-filter: blur(20px);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 0.75rem 1.5rem;
+      padding: 1rem 2rem;
       transition: all 0.3s ease;
       z-index: 1000;
     }
     
     .navbar.scrolled {
-      padding: 0.5rem 1.5rem;
+      padding: 0.5rem 2rem;
     }
     
     .navbar-brand {
       display: flex;
       align-items: center;
       font-weight: 700;
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       color: white;
     }
     
     .logo {
-      width: 36px;
-      height: 36px;
-      margin-right: 10px;
+      width: 40px;
+      height: 40px;
+      margin-right: 12px;
       filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
@@ -85,10 +85,10 @@
     .nav-link {
       font-weight: 500;
       position: relative;
-      margin: 0 0.4rem;
-      padding: 0.4rem 0.8rem !important;
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem !important;
       transition: all 0.3s ease;
-      color: var(--light-text) !important;
+      color: var(--light-text);
     }
     
     .nav-link:not(.btn)::after {
@@ -111,10 +111,10 @@
       background-color: var(--primary-color);
       border: none;
       border-radius: 50px;
-      padding: 0.4rem 1.5rem !important;
+      padding: 0.6rem 1.75rem !important;
       font-weight: 600;
       box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
-      color: white !important;
+      color: white;
     }
     
     .nav-link.btn:hover {
@@ -134,7 +134,7 @@
       color: var(--light-text);
       transition: all 0.3s ease;
       padding: 0.5rem 1rem;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
     
     .dropdown-item:hover {
@@ -143,18 +143,19 @@
     }
     
     #map {
-      height: calc(100vh - 64px);
+      height: calc(100vh - 76px);
       width: 100vw;
       z-index: 1;
+      transition: filter 0.3s ease;
     }
     
     .btn-report {
       position: fixed;
-      bottom: 15px;
-      right: 15px;
+      bottom: 20px;
+      right: 20px;
       z-index: 1000;
-      padding: 0.6rem 1.2rem;
-      font-size: 0.9rem;
+      padding: 0.8rem 1.8rem;
+      font-size: 1rem;
       border-radius: 50px;
       background: var(--primary-color);
       box-shadow: var(--card-shadow);
@@ -162,18 +163,19 @@
       color: white;
       font-weight: 600;
       transition: all 0.3s ease;
-      animation: pulse 3s infinite;
+      animation: pulse 2s infinite;
     }
     
     @keyframes pulse {
       0% { transform: scale(1); box-shadow: var(--card-shadow); }
-      50% { transform: scale(1.03); box-shadow: 0 8px 20px rgba(34, 197, 94, 0.5); }
+      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(34, 197, 94, 0.7); }
       100% { transform: scale(1); box-shadow: var(--card-shadow); }
     }
     
     .btn-report:hover {
+      transform: translateY(-3px) scale(1.05);
       background: var(--primary-dark);
-      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(34, 197, 94, 0.6);
     }
     
     .btn-report i {
@@ -182,12 +184,12 @@
     
     .error-message {
       color: var(--danger-color);
-      font-size: 0.9rem;
+      font-size: 1rem;
       text-align: center;
-      padding: 1.5rem;
+      padding: 2rem;
       background: rgba(239, 68, 68, 0.1);
       border-radius: 8px;
-      margin: 0.75rem;
+      margin: 1rem;
       border: 1px solid rgba(239, 68, 68, 0.3);
       box-shadow: var(--card-shadow);
     }
@@ -200,16 +202,16 @@
       text-align: center;
       z-index: 1000;
       background: var(--dark-card);
-      padding: 1.5rem;
+      padding: 2rem;
       border-radius: 12px;
       box-shadow: var(--card-shadow);
     }
     
     .spinner {
       display: inline-block;
-      width: 30px;
-      height: 30px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       border-top-color: var(--primary-color);
       animation: spin 1s ease-in-out infinite;
@@ -222,14 +224,15 @@
     .leaflet-popup-content-wrapper {
       background: var(--dark-card);
       color: var(--light-text);
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
+      overflow: hidden;
     }
     
     .leaflet-popup-content {
-      margin: 10px;
-      max-width: 260px;
+      margin: 15px;
+      max-width: 300px;
       font-family: 'Inter', sans-serif;
     }
     
@@ -239,8 +242,8 @@
     
     .leaflet-popup-close-button {
       color: var(--light-text) !important;
-      font-size: 1rem;
-      padding: 4px;
+      font-size: 1.2rem;
+      padding: 5px;
     }
     
     .problem-popup {
@@ -249,102 +252,147 @@
     
     .problem-popup-header {
       background: var(--primary-dark);
-      margin: -10px -10px 10px -10px;
-      padding: 10px;
+      margin: -15px -15px 15px -15px;
+      padding: 15px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
     .problem-popup-title {
-      font-weight: 600;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 1.2rem;
       margin: 0;
       color: white;
     }
     
     .problem-popup-badge {
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.7rem;
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-size: 0.8rem;
       font-weight: 600;
+    }
+    
+    .problem-popup-content {
+      margin: 10px 0;
     }
     
     .problem-popup-info {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-bottom: 15px;
     }
     
     .problem-popup-item {
       display: flex;
       align-items: center;
-      font-size: 0.85rem;
-      line-height: 1.3;
+      font-size: 0.95rem;
     }
     
     .problem-popup-item i {
-      margin-right: 8px;
-      min-width: 16px;
+      margin-right: 10px;
+      min-width: 20px;
       text-align: center;
       color: var(--primary-color);
     }
     
     .problem-popup-img {
       width: 100%;
-      max-height: 120px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-top: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      margin-top: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease;
     }
     
-    .category-buraco { background-color: var(--warning-color); color: #111; }
-    .category-lixo { background-color: var(--accent-color); color: #111; }
-    .category-iluminacao { background-color: #f59e0b; color: #111; }
-    .category-agua { background-color: var(--info-color); color: #111; }
-    .category-seguranca { background-color: var(--danger-color); color: white; }
-    .status-aberto { background-color: var(--danger-color); color: white; }
-    .status-andamento { background-color: var(--warning-color); color: #111; }
-    .status-resolvido { background-color: var(--accent-color); color: #111; }
+    .problem-popup-img:hover {
+      transform: scale(1.03);
+    }
+    
+    .category-buraco {
+      background-color: var(--warning-color);
+      color: #111;
+    }
+    
+    .category-lixo {
+      background-color: var(--accent-color);
+      color: #111;
+    }
+    
+    .category-iluminacao {
+      background-color: #f59e0b;
+      color: #111;
+    }
+    
+    .category-agua {
+      background-color: var(--info-color);
+      color: #111;
+    }
+    
+    .category-seguranca {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .status-aberto {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .status-andamento {
+      background-color: var(--warning-color);
+      color: #111;
+    }
+    
+    .status-resolvido {
+      background-color: var(--accent-color);
+      color: #111;
+    }
     
     .map-legend {
       position: fixed;
-      bottom: 15px;
-      left: 15px;
+      bottom: 20px;
+      left: 20px;
       background: var(--dark-card);
-      padding: 8px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
       backdrop-filter: blur(10px);
-      max-width: 180px;
+      max-width: 220px;
+      transition: transform 0.3s ease;
+    }
+    
+    .map-legend:hover {
+      transform: translateY(-5px);
     }
     
     .legend-title {
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 8px;
-      padding-bottom: 4px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       color: var(--primary-color);
+      font-size: 0.9rem;
     }
     
     .legend-item {
       display: flex;
       align-items: center;
-      margin-bottom: 6px;
-      font-size: 0.8rem;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
     }
     
     .legend-icon {
-      width: 16px;
+      width: 20px;
       text-align: center;
-      margin-right: 8px;
+      margin-right: 10px;
     }
     
     .legend-text {
@@ -352,76 +400,92 @@
     }
     
     .map-controls {
+      position: fixed;
+      top: 100px;
+      right: 20px;
       background: var(--dark-card);
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 12px;
+      z-index: 1000;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
       backdrop-filter: blur(10px);
-      max-width: 250px;
+      max-width: 260px;
+      transition: transform 0.3s ease;
+    }
+    
+    .map-controls:hover {
+      transform: translateY(-5px);
     }
     
     .filter-title {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-      padding-bottom: 4px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       color: var(--primary-color);
+      font-size: 0.9rem;
     }
     
     .filter-group {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     
     .filter-label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       color: var(--light-text);
     }
     
     .filter-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
+      gap: 6px;
     }
     
     .filter-button {
       background: transparent;
       border: 1px solid rgba(34, 197, 94, 0.3);
       color: var(--light-text);
-      border-radius: 12px;
-      padding: 4px 10px;
-      font-size: 0.75rem;
+      border-radius: 18px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     
     .filter-button:hover {
-      background: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.4);
+      transform: translateY(-1px);
     }
     
     .filter-button.active {
       background: var(--primary-color);
       border-color: var(--primary-dark);
       color: white;
+      box-shadow: 0 2px 5px rgba(34, 197, 94, 0.3);
     }
     
     .problem-count {
       position: fixed;
-      bottom: 80px;
-      left: 15px;
+      top: 380px;
+      left: 20px;
       background: var(--dark-card);
-      padding: 6px 12px;
-      border-radius: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
       backdrop-filter: blur(10px);
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .problem-count:hover {
+      transform: translateY(-5px);
     }
     
     .problem-count-number {
@@ -431,23 +495,28 @@
     
     .map-view-toggle {
       position: fixed;
-      top: 80px;
-      right: 15px;
+      top: 440px;
+      left: 20px;
       background: var(--dark-card);
-      padding: 6px;
+      padding: 8px;
       border-radius: 50px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
       backdrop-filter: blur(10px);
       display: flex;
-      gap: 4px;
+      gap: 6px;
+      transition: transform 0.3s ease;
+    }
+    
+    .map-view-toggle:hover {
+      transform: translateY(-5px);
     }
     
     .view-option {
-      padding: 6px 12px;
+      padding: 8px 18px;
       border-radius: 50px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -459,6 +528,7 @@
     .view-option.active {
       background: var(--primary-color);
       color: white;
+      box-shadow: 0 2px 5px rgba(34, 197, 94, 0.3);
     }
     
     .view-option:hover:not(.active) {
@@ -467,23 +537,31 @@
     }
     
     .search-container {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
+      position: fixed;
+      top: 500px;
+      left: 20px;
+      z-index: 1000;
+      width: 260px;
       background: var(--dark-card);
       border-radius: 50px;
-      padding: 4px;
+      padding: 6px;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease;
+    }
+    
+    .search-container:hover {
+      transform: translateY(-5px);
     }
     
     .search-input {
       background: transparent;
       border: none;
       color: var(--light-text);
-      font-size: 0.85rem;
-      padding: 4px 10px;
-      flex: 1;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      width: 100%;
       outline: none;
     }
     
@@ -495,8 +573,8 @@
       background: var(--primary-color);
       border: none;
       border-radius: 50%;
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -505,186 +583,229 @@
     
     .search-button:hover {
       background: var(--primary-dark);
+      transform: scale(1.1);
     }
     
     .weather-overlay {
       position: fixed;
-      bottom: 120px;
-      left: 15px;
+      top: 560px;
+      left: 20px;
       background: var(--dark-card);
-      padding: 6px 12px;
-      border-radius: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(34, 197, 94, 0.2);
       backdrop-filter: blur(10px);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .weather-overlay:hover {
+      transform: translateY(-5px);
     }
     
     .weather-info {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
     }
     
     .weather-icon {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--primary-color);
     }
     
-    .modal-content {
+    .zoom-controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .zoom-button {
       background: var(--dark-card);
       border: 1px solid rgba(34, 197, 94, 0.2);
-      border-radius: 12px;
+      border-radius: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: var(--light-text);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
     }
     
-    .modal-header, .modal-footer {
-      border-color: rgba(34, 197, 94, 0.2);
-    }
-    
-    .modal-header .btn-close {
-      filter: invert(1);
+    .zoom-button:hover {
+      background: var(--primary-color);
+      border-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
     
     @keyframes markerPulse {
       0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.2); }
+      50% { opacity: 0.8; transform: scale(1.3); }
       100% { opacity: 1; transform: scale(1); }
     }
     
     .marker-urgent {
-      animation: markerPulse 2s infinite;
-    }
-    
-    @media (min-width: 992px) {
-      .map-controls {
-        position: fixed;
-        top: 80px;
-        left: 15px;
-        width: 250px;
-      }
-    }
-    
-    @media (max-width: 992px) {
-      .navbar-collapse {
-        background: var(--dark-card);
-        border-radius: 0 0 8px 8px;
-        padding: 0.75rem;
-        margin-top: 0.5rem;
-        box-shadow: var(--card-shadow);
-      }
+      animation: markerPulse 1.5s infinite;
     }
     
     @media (max-width: 768px) {
       .map-controls {
-        display: none;
-      }
-      
-      .map-view-toggle {
         top: auto;
-        bottom: 160px;
+        bottom: 240px;
         right: 10px;
-        padding: 5px;
-      }
-      
-      .problem-count {
-        bottom: 80px;
-        left: 10px;
-        padding: 5px 10px;
-        font-size: 0.75rem;
+        max-width: calc(100% - 20px);
+        padding: 10px;
       }
       
       .map-legend {
         bottom: 20px;
         left: 10px;
         max-width: calc(100% - 20px);
-        padding: 6px;
+        padding: 8px;
       }
       
-      .weather-overlay {
-        bottom: 120px;
+      .problem-count {
+        top: auto;
+        bottom: 180px;
         left: 10px;
-        padding: 5px 10px;
-        font-size: 0.75rem;
-      }
-      
-      .btn-report {
-        bottom: 10px;
-        right: 10px;
-        padding: 0.5rem 1rem;
+        padding: 8px 15px;
         font-size: 0.85rem;
       }
       
-      .problem-popup-content {
-        max-width: 220px;
+      .map-view-toggle {
+        top: auto;
+        bottom: 140px;
+        left: 10px;
+        padding: 6px;
       }
       
-      .problem-popup-title {
-        font-size: 0.9rem;
+      .search-container {
+        top: auto;
+        bottom: 100px;
+        left: 10px;
+        width: calc(100% - 20px);
+        padding: 5px;
       }
       
-      .problem-popup-item {
+      .weather-overlay {
+        top: auto;
+        bottom: 60px;
+        left: 10px;
+        padding: 8px 15px;
         font-size: 0.8rem;
       }
       
-      .problem-popup-img {
-        max-height: 100px;
+      .zoom-controls {
+        top: 10px;
+        right: 10px;
+      }
+      
+      .btn-report {
+        bottom: 15px;
+        right: 15px;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
       }
     }
     
     @media (max-width: 576px) {
       .navbar {
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1rem;
       }
       
       .navbar-brand {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
       }
       
       .logo {
-        width: 30px;
-        height: 30px;
+        width: 36px;
+        height: 36px;
+      }
+      
+      .btn-report {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
       }
       
       #map {
-        height: calc(100vh - 56px);
+        height: calc(100vh - 64px);
       }
       
-      .map-view-toggle {
-        bottom: 150px;
-        padding: 4px;
-      }
-      
-      .problem-count {
-        bottom: 70px;
-        padding: 4px 8px;
-        font-size: 0.7rem;
+      .map-controls {
+        bottom: 220px;
+        padding: 8px;
       }
       
       .map-legend {
-        bottom: 15px;
+        bottom: 20px;
+        padding: 6px;
+      }
+      
+      .problem-count {
+        bottom: 160px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+      }
+      
+      .map-view-toggle {
+        bottom: 120px;
         padding: 5px;
       }
       
+      .search-container {
+        bottom: 80px;
+        padding: 4px;
+      }
+      
       .weather-overlay {
-        bottom: 110px;
+        bottom: 40px;
+        padding: 6px 12px;
+      }
+      
+      .zoom-controls {
+        top: 8px;
+        right: 8px;
+      }
+      
+      .filter-button {
         padding: 4px 8px;
+        font-size: 0.75rem;
       }
       
       .view-option {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+      }
+      
+      .search-input {
+        font-size: 0.85rem;
         padding: 5px 10px;
-        font-size: 0.75rem;
       }
       
-      .legend-item {
-        font-size: 0.75rem;
-        margin-bottom: 4px;
+      .search-button {
+        width: 28px;
+        height: 28px;
       }
-      
-      .legend-icon {
-        width: 14px;
-        margin-right: 6px;
+    }
+    
+    @media (max-width: 992px) {
+      .navbar-collapse {
+        background: var(--dark-card);
+        border-radius: 0 0 10px 10px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: var(--card-shadow);
       }
     }
   </style>
@@ -703,13 +824,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="map.html">Mapa de Problemas</a>
+            <a class="nav-link" href="report.html">Mapa de Problemas</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="dashboard.html">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="list.html">Lista</a>
           </li>
           <li class="nav-item">
             <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
@@ -731,13 +849,10 @@
   <!-- Map Section -->
   <div id="map"></div>
   
-  <!-- Map Controls (Desktop) -->
-  <div class="map-controls d-none d-lg-block" id="mapControls">
-    <div class="search-container">
-      <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição...">
-      <button class="search-button" id="searchBtn"><i class="fas fa-search"></i></button>
-    </div>
+  <!-- Map Controls -->
+  <div class="map-controls">
     <div class="filter-title">Filtrar Problemas</div>
+    
     <div class="filter-group">
       <div class="filter-label">Categoria:</div>
       <div class="filter-options" id="categoryFilters">
@@ -749,6 +864,7 @@
         <button class="filter-button" data-filter="Segurança">Segurança</button>
       </div>
     </div>
+    
     <div class="filter-group">
       <div class="filter-label">Status:</div>
       <div class="filter-options" id="statusFilters">
@@ -758,6 +874,7 @@
         <button class="filter-button" data-filter="Resolvido">Resolvido</button>
       </div>
     </div>
+    
     <div class="filter-group">
       <div class="filter-label">Urgência:</div>
       <div class="filter-options" id="urgencyFilters">
@@ -767,6 +884,7 @@
         <button class="filter-button" data-filter="Alta">Alta</button>
       </div>
     </div>
+    
     <div class="filter-group">
       <div class="filter-label">Data:</div>
       <div class="filter-options" id="dateFilters">
@@ -776,7 +894,6 @@
         <button class="filter-button" data-filter="last30d">Últimos 30 dias</button>
       </div>
     </div>
-    <button class="filter-button clear-filters" onclick="clearFilters()">Limpar Filtros</button>
   </div>
   
   <!-- Map Legend -->
@@ -810,8 +927,26 @@
   
   <!-- Problem Count -->
   <div class="problem-count">
-    <i class="fas fa-exclamation-circle me-1"></i>
+    <i class="fas fa-exclamation-circle me-2"></i>
     Total: <span id="totalProblems" class="problem-count-number">0</span> problemas
+  </div>
+  
+  <!-- View Toggle -->
+  <div class="map-view-toggle">
+    <button class="view-option active" data-view="markers">
+      <i class="fas fa-map-marker-alt me-1"></i> Marcadores
+    </button>
+    <button class="view-option" data-view="heat">
+      <i class="fas fa-fire me-1"></i> Mapa de Calor
+    </button>
+  </div>
+  
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição...">
+    <button class="search-button" id="searchBtn">
+      <i class="fas fa-search"></i>
+    </button>
   </div>
   
   <!-- Weather Overlay -->
@@ -822,82 +957,21 @@
     </div>
   </div>
 
-  <!-- Filter Modal (Mobile) -->
-  <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="filterModalLabel">Filtros</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="map-controls">
-            <div class="search-container">
-              <input type="text" id="modalSearchInput" class="search-input" placeholder="Pesquisar por título ou descrição...">
-              <button class="search-button" id="modalSearchBtn"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="filter-title">Filtrar Problemas</div>
-            <div class="filter-group">
-              <div class="filter-label">Categoria:</div>
-              <div class="filter-options" id="modalCategoryFilters">
-                <button class="filter-button active" data-filter="all">Todos</button>
-                <button class="filter-button" data-filter="Buraco">Buracos</button>
-                <button class="filter-button" data-filter="Lixo">Lixo</button>
-                <button class="filter-button" data-filter="Iluminação">Iluminação</button>
-                <button class="filter-button" data-filter="Água">Água</button>
-                <button class="filter-button" data-filter="Segurança">Segurança</button>
-              </div>
-            </div>
-            <div class="filter-group">
-              <div class="filter-label">Status:</div>
-              <div class="filter-options" id="modalStatusFilters">
-                <button class="filter-button active" data-filter="all">Todos</button>
-                <button class="filter-button" data-filter="Aguardando">Aberto</button>
-                <button class="filter-button" data-filter="Em andamento">Em andamento</button>
-                <button class="filter-button" data-filter="Resolvido">Resolvido</button>
-              </div>
-            </div>
-            <div class="filter-group">
-              <div class="filter-label">Urgência:</div>
-              <div class="filter-options" id="modalUrgencyFilters">
-                <button class="filter-button active" data-filter="all">Todos</button>
-                <button class="filter-button" data-filter="Baixa">Baixa</button>
-                <button class="filter-button" data-filter="Média">Média</button>
-                <button class="filter-button" data-filter="Alta">Alta</button>
-              </div>
-            </div>
-            <div class="filter-group">
-              <div class="filter-label">Data:</div>
-              <div class="filter-options" id="modalDateFilters">
-                <button class="filter-button active" data-filter="all">Todas</button>
-                <button class="filter-button" data-filter="last24h">Últimas 24h</button>
-                <button class="filter-button" data-filter="last7d">Últimos 7 dias</button>
-                <button class="filter-button" data-filter="last30d">Últimos 30 dias</button>
-              </div>
-            </div>
-            <button class="filter-button clear-filters" onclick="clearFilters()">Limpar Filtros</button>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aplicar</button>
-        </div>
-      </div>
-    </div>
+  <!-- Zoom Controls -->
+  <div class="zoom-controls">
+    <button class="zoom-button" id="zoomIn"><i class="fas fa-plus"></i></button>
+    <button class="zoom-button" id="zoomOut"><i class="fas fa-minus"></i></button>
   </div>
 
-  <!-- Filter Button (Mobile) -->
-  <button class="btn btn-primary d-lg-none" style="position: fixed; top: 80px; right: 15px; z-index: 1000; padding: 0.5rem 1rem; border-radius: 50px;" data-bs-toggle="modal" data-bs-target="#filterModal">
-    <i class="fas fa-filter me-1"></i> Filtros
-  </button>
-
   <button class="btn btn-primary btn-report" id="newReportBtn">
-    <i class="fas fa-plus me-1"></i> Novo
+    <i class="fas fa-plus me-2"></i> Reportar Novo Problema
   </button>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -915,379 +989,454 @@
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    AOS.init({ duration: 600, easing: 'ease-in-out', once: true });
+    // Initialize AOS animation library
+    try {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+      });
+    } catch (error) {
+      console.error("Erro ao inicializar AOS:", error.message);
+    }
 
-    window.addEventListener('scroll', () => {
-      document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      try {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      } catch (error) {
+        console.error("Erro no scroll da navbar:", error.message);
+      }
     });
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-    };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    let map, markersLayer, heatLayer, allProblems = [], userLocation = null;
-    const filters = {
-      category: 'all',
-      status: 'all',
-      urgency: 'all',
-      date: 'all',
-      search: ''
-    };
-
+    // Função para exibir erro na UI
     function showError(message) {
-      document.getElementById('map').innerHTML = `
-        <div class="error-message">${message}</div>
-      `;
+      try {
+        const mapContainer = document.getElementById('map');
+        mapContainer.innerHTML = `<div class="error-message">${message}</div>`;
+      } catch (error) {
+        console.error("Erro ao exibir mensagem de erro:", error.message);
+      }
     }
 
+    // Função para obter ícone baseado na categoria
     function getProblemIcon(category) {
       switch (category) {
-        case 'Buraco': return { icon: 'exclamation-triangle', color: '#f59e0b' };
-        case 'Lixo': return { icon: 'trash', color: '#10b981' };
-        case 'Iluminação': return { icon: 'lightbulb', color: '#f59e0b' };
-        case 'Água': return { icon: 'tint', color: '#0ea5e9' };
-        case 'Segurança': return { icon: 'shield-alt', color: '#ef4444' };
-        default: return { icon: 'map-pin', color: '#808080' };
+        case 'Buraco':
+          return { icon: 'exclamation-triangle', color: '#f59e0b' };
+        case 'Lixo':
+          return { icon: 'trash', color: '#10b981' };
+        case 'Iluminação':
+          return { icon: 'lightbulb', color: '#f59e0b' };
+        case 'Água':
+          return { icon: 'tint', color: '#0ea5e9' };
+        case 'Segurança':
+          return { icon: 'shield-alt', color: '#ef4444' };
+        default:
+          return { icon: 'map-pin', color: '#808080' };
       }
     }
 
+    // Função para obter classe de status
     function getStatusClass(status) {
       switch (status) {
-        case 'Aguardando': return 'status-aberto';
-        case 'Em andamento': return 'status-andamento';
-        case 'Resolvido': return 'status-resolvido';
-        default: return '';
+        case 'Aguardando':
+          return 'status-aberto';
+        case 'Em andamento':
+          return 'status-andamento';
+        case 'Resolvido':
+          return 'status-resolvido';
+        default:
+          return '';
       }
     }
 
+    // Função para obter classe de categoria
     function getCategoryClass(category) {
       switch (category) {
-        case 'Buraco': return 'category-buraco';
-        case 'Lixo': return 'category-lixo';
-        case 'Iluminação': return 'category-iluminacao';
-        case 'Água': return 'category-agua';
-        case 'Segurança': return 'category-seguranca';
-        default: return '';
+        case 'Buraco':
+          return 'category-buraco';
+        case 'Lixo':
+          return 'category-lixo';
+        case 'Iluminação':
+          return 'category-iluminacao';
+        case 'Água':
+          return 'category-agua';
+        case 'Segurança':
+          return 'category-seguranca';
+        default:
+          return '';
       }
     }
 
+    // Função para buscar clima
     async function fetchWeather(lat, lon) {
       try {
-        const apiKey = 'your_openweathermap_api_key'; // Substitua pela sua chave
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`);
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=your_openweathermap_api_key&units=metric&lang=pt_br`);
         if (!response.ok) throw new Error('Erro ao buscar clima');
         const data = await response.json();
         const temp = Math.round(data.main.temp);
         const description = data.weather[0].description;
+        const icon = data.weather[0].icon;
         document.getElementById('weatherText').innerHTML = `${temp}°C, ${description}`;
-        document.querySelector('.weather-icon').className = `fas fa-${data.weather[0].icon.includes('d') ? 'sun' : 'moon'} weather-icon`;
+        document.querySelector('.weather-icon').className = `fas fa-${icon.includes('d') ? 'sun' : 'moon'} weather-icon`;
       } catch (error) {
         console.error("Erro ao carregar clima:", error.message);
         document.getElementById('weatherText').innerHTML = 'Clima indisponível';
-        document.querySelector('.weather-icon').className = 'fas fa-cloud weather-icon';
       }
     }
 
-    function initMap() {
-      map = L.map('map', {
-        zoomControl: true,
-        attributionControl: true
-      }).setView([-8.838333, 13.234444], 13);
+    // Função para mostrar mapa com problemas relatados
+    function showProblemsMap(user) {
+      try {
+        // Initialize Leaflet map
+        let map, markersLayer, heatLayer;
+        try {
+          map = L.map('map', {
+            zoomControl: false,
+            attributionControl: true
+          }).setView([-8.838333, 13.234444], 13); // Default: Luanda
+          
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+          }).addTo(map);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19
-      }).addTo(map);
+          // Initialize layers
+          markersLayer = L.layerGroup().addTo(map);
+          heatLayer = L.heatLayer([], {
+            radius: 25,
+            blur: 15,
+            maxZoom: 17
+          });
 
-      markersLayer = L.layerGroup().addTo(map);
-      heatLayer = L.heatLayer([], { radius: 20, blur: 15, maxZoom: 17 });
+          // Zoom controls
+          document.getElementById('zoomIn').addEventListener('click', () => {
+            map.setZoom(map.getZoom() + 1);
+          });
+          document.getElementById('zoomOut').addEventListener('click', () => {
+            map.setZoom(map.getZoom() - 1);
+          });
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            userLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
-            map.setView([userLocation.latitude, userLocation.longitude], 13);
-            L.marker([userLocation.latitude, userLocation.longitude], {
-              icon: L.divIcon({
-                className: 'user-location',
-                html: '<i class="fas fa-user-circle" style="color: #22c55e; font-size: 24px;"></i>',
-                iconSize: [24, 24],
-                iconAnchor: [12, 12]
-              })
-            }).addTo(markersLayer);
-            fetchWeather(userLocation.latitude, userLocation.longitude);
-          },
-          () => {
-            console.warn("Não foi possível obter localização.");
+          // Try to get user's location
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                const { latitude, longitude } = position.coords;
+                map.setView([latitude, longitude], 13);
+                L.marker([latitude, longitude], {
+                  icon: L.divIcon({
+                    className: 'user-location',
+                    html: '<i class="fas fa-user-circle" style="color: #22c55e; font-size: 32px;"></i>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                  })
+                }).addTo(markersLayer);
+                fetchWeather(latitude, longitude);
+              },
+              () => {
+                console.warn("Não foi possível obter localização do usuário.");
+                fetchWeather(-8.838333, 13.234444);
+              }
+            );
+          } else {
             fetchWeather(-8.838333, 13.234444);
           }
-        );
-      } else {
-        fetchWeather(-8.838333, 13.234444);
-      }
-    }
-
-    function updateMap(viewMode) {
-      markersLayer.clearLayers();
-      heatLayer.setLatLngs([]);
-
-      let filteredProblems = allProblems;
-
-      if (filters.category !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.category === filters.category);
-      }
-      if (filters.status !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.status === filters.status);
-      }
-      if (filters.urgency !== 'all') {
-        filteredProblems = filteredProblems.filter(p => p.urgency === filters.urgency);
-      }
-      if (filters.date !== 'all') {
-        const now = Date.now();
-        let timeThreshold;
-        switch (filters.date) {
-          case 'last24h': timeThreshold = now - 24 * 60 * 60 * 1000; break;
-          case 'last7d': timeThreshold = now - 7 * 24 * 60 * 60 * 1000; break;
-          case 'last30d': timeThreshold = now - 30 * 24 * 60 * 60 * 1000; break;
+        } catch (error) {
+          console.error("Erro ao inicializar mapa:", error.message);
+          showError("Erro ao carregar mapa");
+          return;
         }
-        filteredProblems = filteredProblems.filter(p => p.createdAt >= timeThreshold);
-      }
-      if (filters.search) {
-        const searchTerm = filters.search.toLowerCase();
-        filteredProblems = filteredProblems.filter(p => 
-          (p.title || '').toLowerCase().includes(searchTerm) || 
-          (p.description || '').toLowerCase().includes(searchTerm)
-        );
-      }
 
-      document.getElementById('totalProblems').textContent = filteredProblems.length;
+        // Fetch problems from Realtime Database
+        const problemsRef = firebase.database().ref('problems');
+        let allProblems = [];
+        
+        function updateMap(viewMode, filters) {
+          try {
+            markersLayer.clearLayers();
+            heatLayer.setLatLngs([]);
+            
+            let filteredProblems = allProblems;
+            
+            // Apply filters
+            if (filters.category && filters.category !== 'all') {
+              filteredProblems = filteredProblems.filter(p => p.category === filters.category);
+            }
+            if (filters.status && filters.status !== 'all') {
+              filteredProblems = filteredProblems.filter(p => p.status === filters.status);
+            }
+            if (filters.urgency && filters.urgency !== 'all') {
+              filteredProblems = filteredProblems.filter(p => p.urgency === filters.urgency);
+            }
+            if (filters.date && filters.date !== 'all') {
+              const now = Date.now();
+              let timeThreshold;
+              switch (filters.date) {
+                case 'last24h':
+                  timeThreshold = now - 24 * 60 * 60 * 1000;
+                  break;
+                case 'last7d':
+                  timeThreshold = now - 7 * 24 * 60 * 60 * 1000;
+                  break;
+                case 'last30d':
+                  timeThreshold = now - 30 * 24 * 60 * 60 * 1000;
+                  break;
+              }
+              filteredProblems = filteredProblems.filter(p => p.createdAt >= timeThreshold);
+            }
+            if (filters.search) {
+              const searchTerm = filters.search.toLowerCase();
+              filteredProblems = filteredProblems.filter(p => 
+                p.title.toLowerCase().includes(searchTerm) || 
+                p.description.toLowerCase().includes(searchTerm)
+              );
+            }
 
-      filteredProblems.forEach(problem => {
-        if (problem.location?.latitude && problem.location?.longitude) {
-          const { icon, color } = getProblemIcon(problem.category);
-          const markerIcon = L.divIcon({
-            className: `problem-marker ${problem.urgency === 'Alta' ? 'marker-urgent' : ''}`,
-            html: `<i class="fas fa-${icon}" style="color: ${color}; font-size: 24px;"></i>`,
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
-          });
-          const marker = L.marker([problem.location.latitude, problem.location.longitude], { 
-            icon: markerIcon,
-            data: problem
-          });
+            // Update problem count
+            document.getElementById('totalProblems').textContent = filteredProblems.length;
 
-          const popupContent = `
-            <div class="problem-popup" data-aos="fade-up">
-              <div class="problem-popup-header">
-                <h3 class="problem-popup-title">${problem.title || 'Sem título'}</h3>
-                <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status || 'Desconhecido'}</span>
-              </div>
-              <div class="problem-popup-info">
-                <div class="problem-popup-item">
-                  <i class="fas fa-tag"></i>
-                  <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category || 'N/A'}</span></span>
-                </div>
-                <div class="problem-popup-item">
-                  <i class="fas fa-exclamation-circle"></i>
-                  <span>Urgência: ${problem.urgency || 'N/A'}</span>
-                </div>
-                <div class="problem-popup-item">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>Bairro: ${problem.neighborhood || 'Desconhecido'}</span>
-                </div>
-                <div class="problem-popup-item">
-                  <i class="fas fa-comment"></i>
-                  <span>Descrição: ${problem.description || 'Sem descrição'}</span>
-                </div>
-                ${problem.suggestion ? `
-                  <div class="problem-popup-item">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Sugestão: ${problem.suggestion}</span>
+            // Add markers based on view mode
+            filteredProblems.forEach(problem => {
+              if (problem.location && problem.location.latitude && problem.location.longitude) {
+                const { icon, color } = getProblemIcon(problem.category);
+                const markerIcon = L.divIcon({
+                  className: `problem-marker ${problem.urgency === 'Alta' ? 'marker-urgent' : ''}`,
+                  html: `<i class="fas fa-${icon}" style="color: ${color}; font-size: 32px;"></i>`,
+                  iconSize: [32, 32],
+                  iconAnchor: [16, 16]
+                });
+                const marker = L.marker([problem.location.latitude, problem.location.longitude], { 
+                  icon: markerIcon,
+                  data: problem
+                });
+                
+                const popupContent = `
+                  <div class="problem-popup">
+                    <div class="problem-popup-header">
+                      <h3 class="problem-popup-title">${problem.title}</h3>
+                      <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status}</span>
+                    </div>
+                    <div class="problem-popup-content">
+                      <div class="problem-popup-info">
+                        <div class="problem-popup-item">
+                          <i class="fas fa-tag"></i>
+                          <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category}</span></span>
+                        </div>
+                        <div class="problem-popup-item">
+                          <i class="fas fa-exclamation-circle"></i>
+                          <span>Urgência: ${problem.urgency}</span>
+                        </div>
+                        <div class="problem-popup-item">
+                          <i class="fas fa-map-marker-alt"></i>
+                          <span>Bairro: ${problem.neighborhood || 'Desconhecido'}</span>
+                        </div>
+                        <div class="problem-popup-item">
+                          <i class="fas fa-comment"></i>
+                          <span>Descrição: ${problem.description}</span>
+                        </div>
+                        ${problem.suggestion ? `
+                          <div class="problem-popup-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Sugestão: ${problem.suggestion}</span>
+                          </div>
+                        ` : ''}
+                      </div>
+                      ${problem.imageUrl ? `
+                        <img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img">
+                      ` : ''}
+                    </div>
                   </div>
-                ` : ''}
-              </div>
-              ${problem.imageUrl ? `
-                <img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img">
-              ` : ''}
-            </div>
-          `;
-          marker.bindPopup(popupContent, { maxWidth: 260 });
+                `;
+                marker.bindPopup(popupContent, { maxWidth: 300 });
 
-          if (viewMode === 'markers') {
-            marker.addTo(markersLayer);
-          } else if (viewMode === 'heat') {
-            const intensity = problem.urgency === 'Alta' ? 1 : problem.urgency === 'Média' ? 0.6 : 0.3;
-            heatLayer.addLatLng([problem.location.latitude, problem.location.longitude, intensity]);
+                if (viewMode === 'markers') {
+                  marker.addTo(markersLayer);
+                } else if (viewMode === 'heat') {
+                  const intensity = problem.urgency === 'Alta' ? 1 : problem.urgency === 'Média' ? 0.6 : 0.3;
+                  heatLayer.addLatLng([problem.location.latitude, problem.location.longitude, intensity]);
+                }
+              }
+            });
+
+            if (viewMode === 'heat') {
+              map.addLayer(heatLayer);
+            }
+          } catch (error) {
+            console.error("Erro ao atualizar mapa:", error.message);
           }
         }
-      });
 
-      if (viewMode === 'heat') {
-        map.addLayer(heatLayer);
-      }
-    }
-
-    function setupFilters() {
-      const filterGroups = ['categoryFilters', 'statusFilters', 'urgencyFilters', 'dateFilters'];
-      const modalFilterGroups = ['modalCategoryFilters', 'modalStatusFilters', 'modalUrgencyFilters', 'modalDateFilters'];
-
-      filterGroups.forEach(group => {
-        document.getElementById(group).addEventListener('click', (e) => {
-          if (e.target.classList.contains('filter-button')) {
-            document.querySelectorAll(`#${group} .filter-button`).forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            filters[group.replace('Filters', '')] = e.target.dataset.filter;
-            updateMap(document.querySelector('.view-option.active').dataset.view);
-            syncModalFilters();
+        problemsRef.on('value', (snapshot) => {
+          try {
+            const problems = snapshot.val();
+            allProblems = [];
+            if (problems) {
+              Object.entries(problems).forEach(([id, problem]) => {
+                if (problem.location && problem.location.latitude && problem.location.longitude) {
+                  allProblems.push({ id, ...problem });
+                }
+              });
+            }
+            updateMap('markers', {
+              category: 'all',
+              status: 'all',
+              urgency: 'all',
+              date: 'all',
+              search: ''
+            });
+          } catch (error) {
+            console.error("Erro ao carregar problemas:", error.message);
+            showError("Erro ao carregar problemas");
           }
         });
-      });
 
-      modalFilterGroups.forEach(group => {
-        document.getElementById(group).addEventListener('click', (e) => {
-          if (e.target.classList.contains('filter-button')) {
-            document.querySelectorAll(`#${group} .filter-button`).forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            filters[group.replace('modal', '').replace('Filters', '')] = e.target.dataset.filter;
-            updateMap(document.querySelector('.view-option.active').dataset.view);
-            syncMainFilters();
+        // Handle view toggles
+        document.querySelectorAll('.view-option').forEach(button => {
+          button.addEventListener('click', () => {
+            document.querySelectorAll('.view-option').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            const viewMode = button.dataset.view;
+            updateMap(viewMode, {
+              category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+              status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+              urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
+              date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+              search: document.getElementById('searchInput').value
+            });
+          });
+        });
+
+        // Handle filters
+        ['categoryFilters', 'statusFilters', 'urgencyFilters', 'dateFilters'].forEach(filterId => {
+          document.getElementById(filterId).addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-button')) {
+              document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
+              e.target.classList.add('active');
+              updateMap(
+                document.querySelector('.view-option.active').dataset.view,
+                {
+                  category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+                  status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+                  urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
+                  date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+                  search: document.getElementById('searchInput').value
+                }
+              );
+            }
+          });
+        });
+
+        // Handle search
+        document.getElementById('searchBtn').addEventListener('click', () => {
+          updateMap(
+            document.querySelector('.view-option.active').dataset.view,
+            {
+              category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+              status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+              urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
+              date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+              search: document.getElementById('searchInput').value
+            }
+          );
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            document.getElementById('searchBtn').click();
           }
         });
-      });
 
-      function syncModalFilters() {
-        modalFilterGroups.forEach(group => {
-          const type = group.replace('modal', '').replace('Filters', '');
-          document.querySelectorAll(`#${group} .filter-button`).forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === filters[type]);
-          });
+        // Handle new report button click
+        document.getElementById('newReportBtn').addEventListener('click', () => {
+          window.location.href = 'report.html';
         });
+      } catch (error) {
+        console.error("Erro ao mostrar mapa de problemas:", error.message);
+        showError("Erro ao carregar visualização de problemas");
       }
-
-      function syncMainFilters() {
-        filterGroups.forEach(group => {
-          const type = group.replace('Filters', '');
-          document.querySelectorAll(`#${group} .filter-button`).forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === filters[type]);
-          });
-        });
-      }
-
-      document.getElementById('searchBtn').addEventListener('click', () => {
-        filters.search = document.getElementById('searchInput').value;
-        updateMap(document.querySelector('.view-option.active').dataset.view);
-        document.getElementById('modalSearchInput').value = filters.search;
-      });
-
-      document.getElementById('modalSearchBtn').addEventListener('click', () => {
-        filters.search = document.getElementById('modalSearchInput').value;
-        updateMap(document.querySelector('.view-option.active').dataset.view);
-        document.getElementById('searchInput').value = filters.search;
-      });
-
-      document.getElementById('searchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('searchBtn').click();
-      });
-
-      document.getElementById('modalSearchInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') document.getElementById('modalSearchBtn').click();
-      });
     }
 
-    function clearFilters() {
-      filters.category = 'all';
-      filters.status = 'all';
-      filters.urgency = 'all';
-      filters.date = 'all';
-      filters.search = '';
-      document.getElementById('searchInput').value = '';
-      document.getElementById('modalSearchInput').value = '';
-      ['categoryFilters', 'statusFilters', 'urgencyFilters', 'dateFilters', 'modalCategoryFilters', 'modalStatusFilters', 'modalUrgencyFilters', 'modalDateFilters']
-        .forEach(group => {
-          document.querySelectorAll(`#${group} .filter-button`).forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.filter === 'all');
-          });
-        });
-      updateMap(document.querySelector('.view-option.active').dataset.view);
-    }
-
-    async function loadData() {
+    // Carregar dados da página
+    function loadReportData() {
       try {
-        document.getElementById('map').innerHTML = `
-          <div class="loading-container">
-            <div class="spinner"></div>
-            <p class="mt-2">Carregando mapa...</p>
-          </div>
-        `;
-
         firebase.auth().onAuthStateChanged(async user => {
+          const mapContainer = document.getElementById('map');
+          
           if (!user) {
-            showError('Por favor, faça login para visualizar problemas.');
+            mapContainer.innerHTML = `
+              <div class="error-message">Por favor, faça login para visualizar problemas.</div>
+            `;
             setTimeout(() => window.location.href = 'login.html', 2000);
             return;
           }
 
-          initMap();
-
-          const snapshot = await firebase.firestore().collection('relatorios_problemas').get();
-          allProblems = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            location: doc.data().location || { latitude: 0, longitude: 0 },
-            createdAt: doc.data().createdAt || Date.now(),
-            title: doc.data().title || '',
-            description: doc.data().description || '',
-            status: doc.data().status || 'Aguardando',
-            category: doc.data().category || '',
-            urgency: doc.data().urgency || '',
-            neighborhood: doc.data().neighborhood || '',
-            imageUrl: doc.data().imageUrl || ''
-          }));
-
-          updateMap('markers');
-
-          document.querySelectorAll('.view-option').forEach(button => {
-            button.addEventListener('click', () => {
-              document.querySelectorAll('.view-option').forEach(btn => btn.classList.remove('active'));
-              button.classList.add('active');
-              updateMap(button.dataset.view);
-            });
-          });
-
-          setupFilters();
+          try {
+            const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+            showProblemsMap(user);
+          } catch (error) {
+            console.error("Erro ao carregar dados:", error.message);
+            showError(`Erro ao carregar dados: ${error.message}`);
+            mapContainer.insertAdjacentHTML('afterend', `
+              <button class="btn btn-primary mt-2" onclick="loadReportData()">Tentar Novamente</button>
+            `);
+          }
         });
       } catch (error) {
-        console.error('Erro ao carregar dados:', error.message);
-        showError('Erro ao carregar mapa. Tente novamente.');
+        console.error("Erro na inicialização do carregamento:", error.message);
+        showError("Erro ao iniciar carregamento");
       }
     }
 
-    window.addEventListener('load', () => {
-      document.getElementById('logoutLink').addEventListener('click', (e) => {
+    // Manipular logout
+    function handleLogout(e) {
+      try {
         e.preventDefault();
         const logoutBtn = document.getElementById('logoutLink');
         const logoutText = logoutBtn.querySelector('span') || logoutBtn;
         const logoutSpinner = document.createElement('span');
         logoutSpinner.className = 'spinner';
+        
         logoutText.style.display = 'none';
         logoutBtn.appendChild(logoutSpinner);
         logoutBtn.disabled = true;
+
         firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
-      });
+      } catch (error) {
+        console.error("Erro ao iniciar logout:", error.message);
+        showError("Erro ao fazer logout");
+      }
+    }
 
-      document.getElementById('newReportBtn').addEventListener('click', () => {
-        window.location.href = 'new-report.html';
-      });
+    // Inicializar página
+    window.addEventListener('load', function() {
+      try {
+        const firebaseConfig = {
+          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+          authDomain: "facilita-479b3.firebaseapp.com",
+          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+          projectId: "facilita-479b3",
+          storageBucket: "facilita-479b3.appspot.com",
+          messagingSenderId: "385676676886",
+          appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+        };
+        
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
 
-      loadData();
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        loadReportData();
+      } catch (error) {
+        console.error("Erro ao inicializar página:", error.message);
+        showError("Erro ao carregar página");
+      }
     });
   </script>
 </body>
