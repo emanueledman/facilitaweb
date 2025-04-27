@@ -22,14 +22,6 @@
   <!-- AOS Animation Library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- React and ReactDOM -->
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-
   <title>Facilita 2.0 | Lista de Casos</title>
   <style>
     :root {
@@ -129,6 +121,81 @@
       color: white;
     }
     
+    .app-bar {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 64px; /* Ajustar conforme altura da navbar */
+      z-index: 900;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .app-bar input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--light-text);
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      width: 100%;
+    }
+    
+    .app-bar input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+    
+    .filter-panel {
+      background: var(--dark-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .filter-panel button {
+      padding: 0.4rem 0.8rem;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      margin: 0.2rem;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-panel button.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+    
+    .problem-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .problem-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .problem-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    
+    .status-badge {
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
     .error-message {
       color: var(--danger-color);
       font-size: 0.9rem;
@@ -155,6 +222,19 @@
       to { transform: rotate(360deg); }
     }
     
+    .empty-view, .empty-filter-view, .error-view {
+      text-align: center;
+      padding: 2rem;
+      color: var(--light-text);
+      opacity: 0.7;
+    }
+    
+    .empty-view i, .empty-filter-view i, .error-view i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    /* Responsividade */
     @media (max-width: 768px) {
       .navbar {
         padding: 0.5rem 1rem;
@@ -173,15 +253,58 @@
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem !important;
       }
+      
+      .app-bar {
+        padding: 0.5rem;
+      }
+      
+      .app-bar input {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .filter-panel {
+        padding: 0.75rem;
+      }
+      
+      .filter-panel button {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+      }
+      
+      .problem-card {
+        padding: 0.5rem;
+      }
+      
+      .problem-card img {
+        width: 48px;
+        height: 48px;
+      }
+      
+      .status-badge {
+        font-size: 0.7rem;
+      }
     }
     
-    @media (max-width: 992px) {
-      .navbar-collapse {
-        background: rgba(15, 23, 42, 0.98);
-        border-radius: 0 0 10px 10px;
-        padding: 0.75rem;
-        margin-top: 0.3rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    @media (max-width: 576px) {
+      .app-bar h1 {
+        font-size: 1rem;
+      }
+      
+      .filter-panel h3 {
+        font-size: 0.8rem;
+      }
+      
+      .problem-card h3 {
+        font-size: 0.9rem;
+      }
+      
+      .problem-card p {
+        font-size: 0.75rem;
+      }
+      
+      .empty-view h2, .empty-filter-view h2, .error-view h2 {
+        font-size: 1rem;
       }
     }
   </style>
@@ -223,7 +346,7 @@
   </nav>
 
   <!-- Main Content -->
-  <div id="root" class="min-h-screen pt-16"></div>
+  <div id="root" class="min-h-screen pt-16 max-w-3xl mx-auto px-4"></div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
@@ -252,9 +375,11 @@
 
     // Utility functions
     const formatTimeAgo = (timestamp) => {
+      if (!timestamp) return 'Desconhecido';
       const now = new Date();
       const date = new Date(timestamp);
       const diff = (now - date) / 1000; // seconds
+      if (isNaN(diff)) return 'Desconhecido';
       if (diff < 60) return 'Agora mesmo';
       if (diff < 3600) return `${Math.floor(diff / 60)} ${diff < 120 ? 'minuto' : 'minutos'}`;
       if (diff < 86400) return `${Math.floor(diff / 3600)} ${diff < 7200 ? 'hora' : 'horas'}`;
@@ -263,12 +388,12 @@
     };
 
     const calculateDistance = (userLocation, problem) => {
-      if (!userLocation) return Infinity;
+      if (!userLocation || !problem?.location?.latitude || !problem?.location?.longitude) return Infinity;
       const R = 6371; // Earth's radius in km
       const lat1 = userLocation.latitude * Math.PI / 180;
-      const lat2 = (problem.location?.latitude || 0) * Math.PI / 180;
+      const lat2 = problem.location.latitude * Math.PI / 180;
       const lon1 = userLocation.longitude * Math.PI / 180;
-      const lon2 = (problem.location?.longitude || 0) * Math.PI / 180;
+      const lon2 = problem.location.longitude * Math.PI / 180;
       const dLat = lat2 - lat1;
       const dLon = lon2 - lon1;
       const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -281,15 +406,15 @@
     // React Components
     const AppBar = ({ showSearch, setShowSearch, searchTerm, setSearchTerm, toggleFilters }) => {
       return (
-        <div className="bg-indigo-900 text-white p-4 flex items-center justify-between">
+        <div className="app-bar flex items-center justify-between">
           {showSearch ? (
-            <div className="flex-1 flex items-center">
+            <div className="flex-1 flex items-center gap-2">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Pesquisar casos..."
-                className="w-full bg-transparent border-none text-white placeholder-white placeholder-opacity-70 focus:outline-none"
+                className="flex-1"
                 autoFocus
               />
               <button onClick={() => { setShowSearch(false); setSearchTerm(''); }}>
@@ -299,10 +424,10 @@
           ) : (
             <>
               <button onClick={() => window.history.back()}>
-                <i className="fas fa-arrow-left text-white mr-4"></i>
+                <i className="fas fa-arrow-left text-white mr-3"></i>
               </button>
-              <h1 className="text-lg font-semibold flex-1">Casos Reportados</h1>
-              <div className="flex space-x-2">
+              <h1 className="text-base font-semibold flex-1">Casos Reportados</h1>
+              <div className="flex gap-3">
                 <button onClick={() => setShowSearch(true)}>
                   <i className="fas fa-search text-white"></i>
                 </button>
@@ -332,47 +457,47 @@
       const urgencies = ['Baixa', 'Média', 'Alta'];
 
       return (
-        <div className="bg-white text-gray-900 p-4 shadow-md">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-sm font-bold">Filtros</h2>
-            <button onClick={clearFilters} className="text-blue-500 text-sm">Limpar</button>
+        <div className="filter-panel">
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-sm font-semibold">Filtros</h2>
+            <button onClick={clearFilters} className="text-primary-color text-sm hover:underline">Limpar</button>
           </div>
-          <div className="mb-2">
+          <div className="mb-3">
             <h3 className="text-xs font-semibold mb-1">Status</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
               {statuses.map(status => (
                 <button
                   key={status}
                   onClick={() => toggleStatus(status)}
-                  className={`px-3 py-1 rounded-full text-xs border ${selectedStatuses.includes(status) ? 'bg-blue-100 border-blue-500 text-blue-500' : 'bg-gray-100 border-gray-300'}`}
+                  className={`border border-white/20 ${selectedStatuses.includes(status) ? 'active' : ''}`}
                 >
                   {status}
                 </button>
               ))}
             </div>
           </div>
-          <div className="mb-2">
+          <div className="mb-3">
             <h3 className="text-xs font-semibold mb-1">Categoria</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
               {categories.map(category => (
                 <button
                   key={category}
                   onClick={() => toggleCategory(category)}
-                  className={`px-3 py-1 rounded-full text-xs border ${selectedCategories.includes(category) ? 'bg-blue-100 border-blue-500 text-blue-500' : 'bg-gray-100 border-gray-300'}`}
+                  className={`border border-white/20 ${selectedCategories.includes(category) ? 'active' : ''}`}
                 >
                   {category}
                 </button>
               ))}
             </div>
           </div>
-          <div className="mb-2">
+          <div className="mb-3">
             <h3 className="text-xs font-semibold mb-1">Urgência</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
               {urgencies.map(urgency => (
                 <button
                   key={urgency}
                   onClick={() => toggleUrgency(urgency)}
-                  className={`px-3 py-1 rounded-full text-xs border ${selectedUrgencies.includes(urgency) ? 'bg-blue-100 border-blue-500 text-blue-500' : 'bg-gray-100 border-gray-300'}`}
+                  className={`border border-white/20 ${selectedUrgencies.includes(urgency) ? 'active' : ''}`}
                 >
                   {urgency}
                 </button>
@@ -387,7 +512,7 @@
               max="100"
               value={maxDistance === Infinity ? 100 : maxDistance}
               onChange={(e) => setMaxDistance(e.target.value >= 100 ? Infinity : Number(e.target.value))}
-              className="w-full"
+              className="w-full accent-primary-color"
             />
             <span className="text-xs">{maxDistance === Infinity ? 'Sem limite' : `${Math.round(maxDistance)} km`}</span>
           </div>
@@ -398,32 +523,37 @@
     const ProblemCard = ({ problem, userLocation }) => {
       const distance = calculateDistance(userLocation, problem);
       const statusColor = {
-        'Aguardando': 'blue-500',
-        'Em andamento': 'orange-500',
-        'Resolvido': 'green-500'
+        'Aguardando': 'info-color',
+        'Em andamento': 'warning-color',
+        'Resolvido': 'accent-color'
       }[problem.status] || 'gray-500';
 
       return (
         <div
-          className="bg-gray-800 rounded-lg shadow-md p-4 mb-4 flex cursor-pointer hover:bg-gray-700 transition"
-          onClick={() => alert('Detalhes do problema: ' + problem.title)} // Placeholder for navigation
+          className="problem-card flex cursor-pointer"
+          onClick={() => alert('Detalhes do problema: ' + (problem.title || 'Sem título'))}
           data-aos="fade-up"
         >
-          <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
+          <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-600 flex-shrink-0">
             {problem.imageUrl ? (
-              <img src={problem.imageUrl} alt="Problema" className="w-full h-full object-cover" onError={(e) => e.target.outerHTML = '<i class="fas fa-broken-image text-gray-500 h-full flex items-center justify-center"></i>'} />
+              <img
+                src={problem.imageUrl}
+                alt="Problema"
+                className="w-full h-full object-cover"
+                onError={(e) => e.target.outerHTML = '<i class="fas fa-image text-gray-400 h-full flex items-center justify-center"></i>'}
+              />
             ) : (
-              <i className="fas fa-camera text-gray-500 h-full flex items-center justify-center"></i>
+              <i className="fas fa-camera text-gray-400 h-full flex items-center justify-center"></i>
             )}
           </div>
-          <div className="ml-4 flex-1">
-            <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold bg-${statusColor}/20 text-${statusColor}`}>
-              {problem.status.toUpperCase()}
+          <div className="ml-3 flex-1">
+            <span className={`status-badge bg-${statusColor}/20 text-${statusColor}`}>
+              {problem.status?.toUpperCase() || 'DESCONHECIDO'}
             </span>
-            <h3 className="text-sm font-semibold mt-2">{problem.title}</h3>
+            <h3 className="text-sm font-semibold mt-1">{problem.title || 'Sem título'}</h3>
             <p className="text-xs text-gray-400">{problem.neighborhood || 'Local não especificado'}</p>
-            <p className="text-xs text-gray-300 mt-1 line-clamp-2">{problem.description}</p>
-            <div className="flex justify-between mt-2 text-xs text-gray-400">
+            <p className="text-xs text-gray-300 mt-1 line-clamp-2">{problem.description || 'Sem descrição'}</p>
+            <div className="flex justify-between mt-1 text-xs text-gray-400">
               <span><i className="fas fa-clock mr-1"></i>{formatTimeAgo(problem.createdAt)}</span>
               <span><i className="fas fa-map-marker-alt mr-1"></i>{distance === Infinity ? 'Distância desconhecida' : `${distance.toFixed(1)} km`}</span>
             </div>
@@ -433,26 +563,26 @@
     };
 
     const EmptyView = () => (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <i className="fas fa-file-alt text-6xl mb-4"></i>
-        <h2 className="text-lg font-semibold">Nenhum caso encontrado</h2>
-        <p className="text-sm text-center">Quando novos casos forem reportados, eles aparecerão aqui.</p>
+      <div className="empty-view">
+        <i className="fas fa-file-alt"></i>
+        <h2 className="text-base font-semibold">Nenhum caso encontrado</h2>
+        <p className="text-sm">Quando novos casos forem reportados, eles aparecerão aqui.</p>
       </div>
     );
 
     const EmptyFilterView = ({ clearFilters }) => (
-      <div className="flex flex-col items-center justify-center h-full text-gray-400">
-        <i className="fas fa-filter text-6xl mb-4"></i>
-        <h2 className="text-lg font-semibold">Nenhum caso com esses filtros</h2>
-        <button onClick={clearFilters} className="mt-2 text-blue-500">Limpar filtros</button>
+      <div className="empty-filter-view">
+        <i className="fas fa-filter"></i>
+        <h2 className="text-base font-semibold">Nenhum caso com esses filtros</h2>
+        <button onClick={clearFilters} className="mt-2 text-primary-color hover:underline">Limpar filtros</button>
       </div>
     );
 
     const ErrorView = ({ retry }) => (
-      <div className="flex flex-col items-center justify-center h-full text-red-400">
-        <i className="fas fa-exclamation-circle text-6xl mb-4"></i>
-        <h2 className="text-lg font-semibold">Ocorreu um erro</h2>
-        <button onClick={retry} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded">Tentar novamente</button>
+      <div className="error-view">
+        <i className="fas fa-exclamation-circle text-danger-color"></i>
+        <h2 className="text-base font-semibold">Ocorreu um erro</h2>
+        <button onClick={retry} className="mt-2 px-3 py-1 bg-primary-color text-white rounded hover:bg-primary-dark">Tentar novamente</button>
       </div>
     );
 
@@ -471,50 +601,83 @@
       const [maxDistance, setMaxDistance] = React.useState(Infinity);
 
       React.useEffect(() => {
-        // Initialize Firebase
-        const firebaseConfig = {
-          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-          authDomain: "facilita-479b3.firebaseapp.com",
-          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
-          projectId: "facilita-479b3",
-          storageBucket: "facilita-479b3.appspot.com",
-          messagingSenderId: "385676676886",
-          appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-        };
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-
-        // Check authentication
-        firebase.auth().onAuthStateChanged((u) => {
-          if (!u) {
-            window.location.href = 'login.html';
-          } else {
-            setUser(u);
+        try {
+          // Initialize Firebase
+          const firebaseConfig = {
+            apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+            authDomain: "facilita-479b3.firebaseapp.com",
+            databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+            projectId: "facilita-479b3",
+            storageBucket: "facilita-479b3.appspot.com",
+            messagingSenderId: "385676676886",
+            appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+          };
+          if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
           }
-        });
 
-        // Get user location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude }),
-            (err) => console.error('Location error:', err)
-          );
+          // Check authentication
+          firebase.auth().onAuthStateChanged((u) => {
+            if (!u) {
+              console.warn("Nenhum usuário autenticado. Redirecionando para login.");
+              window.location.href = 'login.html';
+            } else {
+              setUser(u);
+            }
+          });
+
+          // Get user location
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+                console.log("Localização obtida:", position.coords);
+              },
+              (err) => console.error('Erro ao obter localização:', err.message)
+            );
+          } else {
+            console.warn("Geolocalização não suportada pelo navegador.");
+          }
+
+          // Load problems
+          const problemsRef = firebase.database().ref('problems');
+          problemsRef.on('value', (snapshot) => {
+            try {
+              const data = snapshot.val();
+              const problemList = data
+                ? Object.entries(data).map(([id, p]) => ({
+                    id,
+                    title: p.title || '',
+                    description: p.description || '',
+                    status: p.status || 'Aguardando',
+                    category: p.category || '',
+                    urgency: p.urgency || '',
+                    neighborhood: p.neighborhood || '',
+                    location: p.location || { latitude: 0, longitude: 0 },
+                    createdAt: p.createdAt || Date.now(),
+                    imageUrl: p.imageUrl || ''
+                  }))
+                : [];
+              setProblems(problemList);
+              setLoading(false);
+              console.log("Problemas carregados:", problemList);
+            } catch (err) {
+              setError(err.message);
+              setLoading(false);
+              console.error("Erro ao processar dados:", err.message);
+            }
+          }, (err) => {
+            setError(err.message);
+            setLoading(false);
+            console.error("Erro ao carregar problemas:", err.message);
+          });
+
+          return () => problemsRef.off();
+        } catch (err) {
+          setError("Erro ao inicializar a página.");
+          setLoading(false);
+          console.error("Erro no useEffect:", err.message);
         }
-
-        // Load problems
-        const problemsRef = firebase.database().ref('problems');
-        problemsRef.on('value', (snapshot) => {
-          const data = snapshot.val();
-          const problemList = data ? Object.entries(data).map(([id, p]) => ({ id, ...p })) : [];
-          setProblems(problemList);
-          setLoading(false);
-        }, (err) => {
-          setError(err.message);
-          setLoading(false);
-        });
-
-        return () => problemsRef.off();
       }, []);
 
       const toggleStatus = (status) => {
@@ -534,25 +697,31 @@
         setSelectedCategories([]);
         setSelectedUrgencies([]);
         setMaxDistance(Infinity);
+        setSearchTerm('');
       };
 
       const filteredProblems = problems
         .filter(p => {
-          const searchLower = searchTerm.toLowerCase();
-          const matchesSearch = !searchTerm ||
-            p.title.toLowerCase().includes(searchLower) ||
-            p.description.toLowerCase().includes(searchLower) ||
-            (p.neighborhood || '').toLowerCase().includes(searchLower);
-          const matchesDistance = calculateDistance(userLocation, p) <= maxDistance;
-          const matchesStatus = !selectedStatuses.length || selectedStatuses.includes(p.status);
-          const matchesCategory = !selectedCategories.length || selectedCategories.includes(p.category);
-          const matchesUrgency = !selectedUrgencies.length || selectedUrgencies.includes(p.urgency);
-          return matchesSearch && matchesDistance && matchesStatus && matchesCategory && matchesUrgency;
+          try {
+            const searchLower = searchTerm.toLowerCase();
+            const matchesSearch = !searchTerm ||
+              (p.title || '').toLowerCase().includes(searchLower) ||
+              (p.description || '').toLowerCase().includes(searchLower) ||
+              (p.neighborhood || '').toLowerCase().includes(searchLower);
+            const matchesDistance = calculateDistance(userLocation, p) <= maxDistance;
+            const matchesStatus = !selectedStatuses.length || selectedStatuses.includes(p.status);
+            const matchesCategory = !selectedCategories.length || selectedCategories.includes(p.category);
+            const matchesUrgency = !selectedUrgencies.length || selectedUrgencies.includes(p.urgency);
+            return matchesSearch && matchesDistance && matchesStatus && matchesCategory && matchesUrgency;
+          } catch (err) {
+            console.error("Erro ao filtrar problema:", p, err.message);
+            return false;
+          }
         })
-        .sort((a, b) => b.createdAt - a.createdAt);
+        .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
       return (
-        <div className="px-4 pb-4">
+        <div className="pt-4 pb-4">
           <AppBar
             showSearch={showSearch}
             setShowSearch={setShowSearch}
@@ -585,7 +754,7 @@
                   clearFilters={clearFilters}
                 />
               )}
-              <div className="mt-4">
+              <div className="mt-3">
                 {filteredProblems.map(p => (
                   <ProblemCard key={p.id} problem={p} userLocation={userLocation} />
                 ))}
@@ -597,7 +766,16 @@
     };
 
     // Render React app
-    ReactDOM.render(<CasosScreen />, document.getElementById('root'));
+    try {
+      ReactDOM.render(<CasosScreen />, document.getElementById('root'));
+    } catch (err) {
+      console.error("Erro ao renderizar React:", err.message);
+      document.getElementById('root').innerHTML = `
+        <div class="error-message">
+          Erro ao carregar a página. Por favor, recarregue.
+        </div>
+      `;
+    }
 
     // Handle logout
     document.getElementById('logoutLink').addEventListener('click', (e) => {
@@ -609,7 +787,14 @@
       logoutText.style.display = 'none';
       logoutBtn.appendChild(logoutSpinner);
       logoutBtn.disabled = true;
-      firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
+      try {
+        firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
+      } catch (err) {
+        console.error("Erro ao fazer logout:", err.message);
+        logoutText.style.display = 'block';
+        logoutSpinner.remove();
+        logoutBtn.disabled = false;
+      }
     });
   </script>
 </body>

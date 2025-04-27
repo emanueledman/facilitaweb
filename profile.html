@@ -115,9 +115,9 @@
     }
     
     .profile-container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 2rem auto;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
     }
     
     .profile-header {
@@ -205,6 +205,7 @@
     
     .stats-grid {
       display: flex;
+      justify-content: space-between;
       flex-wrap: wrap;
       gap: 1rem;
     }
@@ -213,6 +214,8 @@
       display: flex;
       align-items: center;
       padding: 0.5rem;
+      flex: 1;
+      min-width: 150px;
     }
     
     .stat-item i {
@@ -242,29 +245,53 @@
       text-transform: uppercase;
     }
     
-    .modules-list .module-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
-      margin-bottom: 0.75rem;
-      padding: 1rem;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
     }
     
-    .modules-list .module-item:hover {
+    .module-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--card-shadow);
+      display: flex;
+      align-items: center;
+      min-height: 150px;
+      cursor: pointer;
+    }
+    
+    .module-card:hover {
       background: rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
     }
     
-    .modules-list .module-item.active {
+    .module-card.active {
       background: var(--primary-color);
       color: white;
     }
     
-    .modules-list .module-item i {
-      margin-right: 0.75rem;
+    .module-card i {
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+    
+    .module-card .module-info {
+      flex: 1;
+    }
+    
+    .module-card .module-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .module-card .module-data {
+      font-size: 0.85rem;
+      opacity: 0.8;
     }
     
     .spinner {
@@ -293,10 +320,21 @@
     }
     
     /* Responsividade */
+    @media (max-width: 992px) {
+      .modules-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      
+      .module-card {
+        padding: 1rem;
+        min-height: 120px;
+      }
+    }
+    
     @media (max-width: 768px) {
       .profile-container {
         margin: 1.5rem auto;
-        padding: 0 1rem;
+        padding: 0 0.75rem;
       }
       
       .profile-header {
@@ -332,6 +370,7 @@
       
       .stat-item {
         padding: 0.4rem;
+        min-width: 100%;
       }
       
       .stat-number {
@@ -340,6 +379,10 @@
       
       .profile-card {
         padding: 1rem;
+      }
+      
+      .modules-grid {
+        grid-template-columns: 1fr;
       }
     }
     
@@ -388,8 +431,20 @@
         font-size: 1rem;
       }
       
-      .module-item {
+      .module-card {
         padding: 0.75rem;
+      }
+      
+      .module-card i {
+        font-size: 1.25rem;
+      }
+      
+      .module-card .module-title {
+        font-size: 0.9rem;
+      }
+      
+      .module-card .module-data {
+        font-size: 0.75rem;
       }
     }
   </style>
@@ -540,30 +595,48 @@
           </div>
           <div class="modules-section">
             <h3>Meus Dados nos Módulos</h3>
-            <div class="modules-list">
-              <a href="#recursos" class="module-item" data-module="recursos">
-                <div><i class="fas fa-location-dot text-primary"></i> Recursos Locais</div>
-                <span>Acessados: 2</span>
+            <div class="modules-grid">
+              <a href="#recursos" class="module-card" data-module="recursos" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-location-dot text-primary"></i>
+                <div class="module-info">
+                  <div class="module-title">Recursos Locais</div>
+                  <div class="module-data">Acessados: 2</div>
+                </div>
               </a>
-              <a href="#agendamentos" class="module-item" data-module="agendamentos">
-                <div><i class="fas fa-calendar-alt text-success"></i> Agendamentos</div>
-                <span>Pendentes: ${stats.agendamentos}</span>
+              <a href="#agendamentos" class="module-card" data-module="agendamentos" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-calendar-alt text-success"></i>
+                <div class="module-info">
+                  <div class="module-title">Agendamentos</div>
+                  <div class="module-data">Pendentes: ${stats.agendamentos}</div>
+                </div>
               </a>
-              <a href="#matriculas" class="module-item" data-module="matriculas">
-                <div><i class="fas fa-graduation-cap text-warning"></i> Matrículas</div>
-                <span>Registradas: ${stats.matriculas}</span>
+              <a href="#matriculas" class="module-card" data-module="matriculas" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-graduation-cap text-warning"></i>
+                <div class="module-info">
+                  <div class="module-title">Matrículas</div>
+                  <div class="module-data">Registradas: ${stats.matriculas}</div>
+                </div>
               </a>
-              <a href="#relatorios" class="module-item" data-module="relatorios">
-                <div><i class="fas fa-exclamation-triangle text-danger"></i> Relatórios</div>
-                <span>Enviados: ${stats.reportedProblems}</span>
+              <a href="#relatorios" class="module-card" data-module="relatorios" data-aos="fade-up" data-aos-delay="400">
+                <i class="fas fa-exclamation-triangle text-danger"></i>
+                <div class="module-info">
+                  <div class="module-title">Relatórios</div>
+                  <div class="module-data">Enviados: ${stats.reportedProblems}</div>
+                </div>
               </a>
-              <a href="#documentos" class="module-item" data-module="documentos">
-                <div><i class="fas fa-file-alt text-purple"></i> Documentos</div>
-                <span>Válidos: 2</span>
+              <a href="#documentos" class="module-card" data-module="documentos" data-aos="fade-up" data-aos-delay="500">
+                <i class="fas fa-file-alt text-purple"></i>
+                <div class="module-info">
+                  <div class="module-title">Documentos</div>
+                  <div class="module-data">Válidos: 2</div>
+                </div>
               </a>
-              <a href="#doacoes" class="module-item" data-module="doacoes">
-                <div><i class="fas fa-hand-holding-heart text-teal"></i> Doações</div>
-                <span>Necessidades: ${stats.doacoes}</span>
+              <a href="#doacoes" class="module-card" data-module="doacoes" data-aos="fade-up" data-aos-delay="600">
+                <i class="fas fa-hand-holding-heart text-teal"></i>
+                <div class="module-info">
+                  <div class="module-title">Doações</div>
+                  <div class="module-data">Necessidades: ${stats.doacoes}</div>
+                </div>
               </a>
             </div>
           </div>
@@ -572,7 +645,7 @@
         // Destacar módulo ativo
         const module = window.location.hash.substring(1);
         if (module) {
-          const activeItem = document.querySelector(`.module-item[data-module="${module}"]`);
+          const activeItem = document.querySelector(`.module-card[data-module="${module}"]`);
           if (activeItem) {
             activeItem.classList.add('active');
             console.log(`Módulo ativo: ${module}`);
@@ -580,14 +653,14 @@
         }
 
         // Manipular cliques nos módulos
-        document.querySelectorAll('.module-item').forEach(item => {
+        document.querySelectorAll('.module-card').forEach(item => {
           item.addEventListener('click', (e) => {
             e.preventDefault();
             const module = item.getAttribute('data-module');
             console.log(`Módulo clicado: ${module}`);
             alert(`Módulo ${module} selecionado. Funcionalidade em desenvolvimento.`);
             window.location.hash = module;
-            document.querySelectorAll('.module-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.module-card').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
           });
         });
