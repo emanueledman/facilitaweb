@@ -885,7 +885,7 @@
       <div class="filter-options" id="urgencyFilters">
         <button class="filter-button active" data-filter="all">Todos</button>
         <button class="filter-button" data-filter="Baixa">Baixa</button>
-        <button class="filter-button" data-filter="Média">Média</button>
+        <button class="filter-button" data-filter="Médiaivant">Média</button>
         <button class="filter-button" data-filter="Alta">Alta</button>
       </div>
     </div>
@@ -948,14 +948,16 @@
   
   <!-- Search Bar -->
   <div class="search-container">
-    <input type="text" id="searchInput" class=" grok://search-input" placeholder="Pesquisar por título ou descrição...">
+    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição...">
     <button class="search-button" id="searchBtn">
       <i class="fas fa-search"></i>
     </button>
   </div>
   
   <!-- Weather Overlay -->
-  <div class="weather-overlay" id="weatherOverlay">
+  <div class="weather-overlay" id="weatherOverlay
+
+  ">
     <div class="weather-info">
       <i class="fas fa-cloud weather-icon"></i>
       <span id="weatherText">Carregando clima...</span>
@@ -1190,7 +1192,7 @@
                   timeThreshold = now - 7 * 24 * 60 * 60 * 1000;
                   break;
                 case 'last30d':
-                  timeThreshold = now - 30 * 24 * 60 * 1000;
+                  timeThreshold = now - 30 * 24 * 60 * 60 * 1000;
                   break;
               }
               filteredProblems = filteredProblems.filter(p => p.createdAt >= timeThreshold);
@@ -1206,80 +1208,83 @@
             // Update problem count
             document.getElementById('totalProblems').textContent = filteredProblems.length;
 
-            // Verificar se não há problemas
+            // Verificar se não há problemas para exibir mensagem e ocultar mapa
             if (filteredProblems.length === 0) {
               document.getElementById('map').style.display = 'none';
               document.getElementById('noProblemsMessage').style.display = 'block';
-            } else {
-              document.getElementById('map').style.display = 'block';
-              document.getElementById('noProblemsMessage').style.display = 'none';
-              map.invalidateSize(); // Garantir que o mapa redimensione corretamente se estava oculto
-              // Adicionar marcadores com base no modo de visualização
-              filteredProblems.forEach(problem => {
-                if (problem.location && problem.location.latitude && problem.location.longitude) {
-                  const { icon, color } = getProblemIcon(problem.category);
-                  const markerIcon = L.divIcon({
-                    className: `problem-marker ${problem.urgency === 'Alta' ? 'marker-urgent' : ''}`,
-                    html: `<i class="fas fa-${icon}" style="color: ${color}; font-size: 32px;"></i>`,
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                  });
-                  const marker = L.marker([problem.location.latitude, problem.location.longitude], { 
-                    icon: markerIcon,
-                    data: problem
-                  });
-                  
-                  const popupContent = `
-                    <div class="problem-popup">
-                      <div class="problem-popup-header">
-                        <h3 class="problem-popup-title">${problem.title}</h3>
-                        <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status}</span>
-                      </div>
-                      <div class="problem-popup-content">
-                        <div class="problem-popup-info">
-                          <div class="problem-popup-item">
-                            <i class="fas fa-tag"></i>
-                            <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category}</span></span>
-                          </div>
-                          <div class="problem-popup-item">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span>Urgência: ${problem.urgency}</span>
-                          </div>
-                          <div class="problem-popup-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Bairro: ${problem.neighborhood || 'Desconhecido'}</span>
-                          </div>
-                          <div class="problem-popup-item">
-                            <i class="fas fa-comment"></i>
-                            <span>Descrição: ${problem.description}</span>
-                          </div>
-                          ${problem.suggestion ? `
-                            <div class="problem-popup-item">
-                              <i class="fas fa-lightbulb"></i>
-                              <span>Sugestão: ${problem.suggestion}</span>
-                            </div>
-                          ` : ''}
+              return; // Sai da função para não processar marcadores desnecessariamente
+            }
+
+            // Mostrar mapa e ocultar mensagem quando há problemas
+            document.getElementById('map').style.display = 'block';
+            document.getElementById('noProblemsMessage').style.display = 'none';
+            map.invalidateSize(); // Garantir que o mapa redimensione corretamente
+
+            // Add markers based on view mode
+            filteredProblems.forEach(problem => {
+              if (problem.location && problem.location.latitude && problem.location.longitude) {
+                const { icon, color } = getProblemIcon(problem.category);
+                const markerIcon = L.divIcon({
+                  className: `problem-marker ${problem.urgency === 'Alta' ? 'marker-urgent' : ''}`,
+                  html: `<i class="fas fa-${icon}" style="color: ${color}; font-size: 32px;"></i>`,
+                  iconSize: [32, 32],
+                  iconAnchor: [16, 16]
+                });
+                const marker = L.marker([problem.location.latitude, problem.location.longitude], { 
+                  icon: markerIcon,
+                  data: problem
+                });
+                
+                const popupContent = `
+                  <div class="problem-popup">
+                    <div class="problem-popup-header">
+                      <h3 class="problem-popup-title">${problem.title}</h3>
+                      <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status}</span>
+                    </div>
+                    <div class="problem-popup-content">
+                      <div class="problem-popup-info">
+                        <div class="problem-popup-item">
+                          <i class="fas fa-tag"></i>
+                          <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category}</span></span>
                         </div>
-                        ${problem.imageUrl ? `
-                          <img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img">
+                        <div class="problem-popup-item">
+                          <i class="fas fa-exclamation-circle"></i>
+                          <span>Urgência: ${problem.urgency}</span>
+                        </div>
+                        <div class="problem-popup-item">
+                          <i class="fas fa-map-marker-alt"></i>
+                          <span>Bairro: ${problem.neighborhood || 'Desconhecido'}</span>
+                        </div>
+                        <div class="problem-popup-item">
+                          <i class="fas fa-comment"></i>
+                          <span>Descrição: ${problem.description}</span>
+                        </div>
+                        ${problem.suggestion ? `
+                          <div class="problem-popup-item">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Sugestão: ${problem.suggestion}</span>
+                          </div>
                         ` : ''}
                       </div>
+                      ${problem.imageUrl ? `
+                        <img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img">
+                      ` : ''}
                     </div>
-                  `;
-                  marker.bindPopup(popupContent, { maxWidth: 300 });
+                  </div>
+                `;
+                marker.bindPopup(popupContent, { maxWidth: 300 });
 
-                  if (viewMode === 'markers') {
-                    marker.addTo(markersLayer);
-                  } else if (viewMode === 'heat') {
-                    const intensity = problem.urgency === 'Alta' ? 1 : problem.urgency === 'Média' ? 0.6 : 0.3;
-                    heatLayer.addLatLng([problem.location.latitude, problem.location.longitude, intensity]);
-                  }
+                if (viewMode === 'markers') {
+                  marker.addTo(markersLayer);
+                } else if (viewMode === 'heat') {
+                  const intensity = problem.urgency === 'Alta' ? 1 : problem.urgency === 'Média' ? 0.6 : 0.3;
+                  heatLayer.addLatLng([problem.location.latitude, problem.location.longitude, intensity]);
                 }
-              });
-
-              if (viewMode === 'heat') {
-                map.addLayer(heatLayer);
               }
+            });
+
+            if (viewMode === 'heat') {
+              map.addLayer(heatLayer);
             }
           } catch (error) {
             console.error("Erro ao atualizar mapa:", error.message);
@@ -1403,7 +1408,7 @@
           }
         });
       } catch (error) {
-        console.error("Erro na inicialização do carregamento:", error.message);
+        console.error("Erro na Lecturer inicialização do carregamento:", error.message);
         showError("Erro ao iniciar carregamento");
       }
     }
