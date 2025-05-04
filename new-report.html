@@ -505,6 +505,27 @@
       padding: 3rem;
     }
     
+    .select-container {
+      position: relative;
+    }
+    
+    select.form-control {
+      appearance: none;
+      padding-right: 2.5rem;
+    }
+    
+    .select-container::after {
+      content: '\f078';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+    }
+    
     @media (max-width: 768px) {
       .form-header {
         padding: 2rem 1.5rem;
@@ -652,7 +673,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
   <!-- Firebase Auth Module -->
-  <script src="js/firebaseAuth.js"></script>
+  <script>
+    // Firebase Auth Module (assumed to be in js/firebaseAuth.js)
+    const firebaseAuth = {
+      logout: function(logoutBtn, logoutText, logoutSpinner) {
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch(error => {
+          console.error("Erro ao fazer logout:", error.message);
+          logoutText.style.display = 'inline-block';
+          logoutSpinner.remove();
+          logoutBtn.disabled = false;
+          alert('Erro ao fazer logout: ' + error.message);
+        });
+      }
+    };
+  </script>
 
   <script>
     // Initialize AOS animation library
@@ -687,9 +723,78 @@
       image: null,
       latitude: null,
       longitude: null,
+      municipality: '',
       neighborhood: ''
     };
     let map, marker;
+
+    // Municipalities and neighborhoods
+    const municipalitiesAndNeighborhoods = {
+      'Belas': [
+        'Morro Bento', 'Benfica', 'Vila Estoril', 'Talatona', 'Kilamba', 'Barra do Kwanza', 'Quilamba',
+        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros',
+        'Vila Verde', 'Zango 1', 'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7',
+        'Zango 8', 'Zango 9', 'Zango 0'
+      ],
+      'Cacuaco': [
+        'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
+        'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
+        'Quixinge', 'Quilómetro 44', 'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe',
+        'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45',
+        'Quilómetro 50'
+      ],
+      'Cazenga': [
+        'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady', 'Cazenga Popular',
+        'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa', 'Kicolo', 'Kilemba', 'Kimbamba',
+        'Kimbango', 'Kinda', 'Kintambi', 'Kipata', 'Kuanza', 'Kueio', 'Luanda Sul', 'Mabubas',
+        'Maculusso', 'Mabor', 'Maianga', 'Makulusu', 'Malangino', 'Marçal', 'Ngola Kiluange',
+        'Palmeirinhas', 'Rocha Pinto', 'Rangel', 'Sambizanga', 'São Paulo', 'Uíge', 'Vila Alice',
+        'Vila Estoril', 'Vila Flor', 'Vila Verde'
+      ],
+      'Ícolo e Bengo': [
+        'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe', 'Kicabo',
+        'Kifangondo', 'Kikabo', 'Kilemba', 'Kixico', 'Luanda', 'Muxima', 'Panguila', 'Quiminha',
+        'Quixinge', 'Tabi', 'Zenza do Itombe'
+      ],
+      'Luanda': [
+        'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
+        'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Bairro dos Musseques', 'Bairro da Samba',
+        'Bairro do Cazenga', 'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge',
+        'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde',
+        'Bairro do Marçal', 'Bairro do Ngola Kiluange', 'Bairro do Kuanza', 'Bairro do Kilemba',
+        'Bairro do Kintambi', 'Bairro do Kimbamba', 'Bairro do Kimbango', 'Bairro do Kinda',
+        'Bairro do Kipata', 'Bairro do Kueio', 'Bairro do Luanda Sul', 'Bairro do Mabubas',
+        'Bairro do Mabor', 'Bairro do Makulusu', 'Bairro do Malangino', 'Bairro do Palmeirinhas',
+        'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge', 'Bairro da Vila Alice',
+        'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'
+      ],
+      'Quiçama': [
+        'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quiminha', 'Quixinge',
+        'Zenza do Itombe'
+      ],
+      'Kilamba Kiaxi': [
+        'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária', 'Vila de Viana',
+        'Bairro da Paz', 'Bairro da Boavista', 'Bairro da Camama', 'Bairro da Cidade Universitária',
+        'Bairro da Golfe', 'Bairro da Palanca', 'Bairro da Sapú', 'Bairro da Vila de Viana',
+        'Bairro do Cassequel', 'Bairro do Prenda', 'Bairro do Kinaxixi', 'Bairro do Maculusso',
+        'Bairro do Rangel', 'Bairro do Sambizanga', 'Bairro do São Paulo', 'Bairro do Uíge',
+        'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'
+      ],
+      'Talatona': [
+        'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril', 'Talatona',
+        'Kilamba', 'Barra do Kwanza', 'Quilamba', 'Cabolombo', 'Quifica', 'Gamek',
+        'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros', 'Vila Verde', 'Zango 1',
+        'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7', 'Zango 8',
+        'Zango 9', 'Zango 0'
+      ],
+      'Viana': [
+        'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Kikolo', 'Sequele', 'Mulenvos',
+        'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo',
+        'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo', 'Quixinge', 'Quilómetro 44',
+        'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe', 'Quilómetro 30',
+        'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45', 'Quilómetro 50'
+      ]
+    };
 
     // Cloudinary configuration
     const cloudinaryConfig = {
@@ -738,6 +843,27 @@
         }
       } catch (error) {
         console.error("Erro ao ocultar mensagem de erro:", error.message);
+      }
+    }
+
+    // Get responsible ID for municipality
+    async function getResponsibleIdForMunicipality(municipality) {
+      try {
+        const querySnapshot = await firebase.firestore()
+          .collection('usuarios')
+          .where('municipality', '==', municipality)
+          .where('isResponsible', '==', true)
+          .limit(1)
+          .get();
+        
+        if (!querySnapshot.empty) {
+          return querySnapshot.docs[0].id;
+        }
+        console.log(`Nenhum responsável encontrado para o município: ${municipality}`);
+        return null;
+      } catch (error) {
+        console.error("Erro ao buscar responsável:", error.message);
+        return null;
       }
     }
 
@@ -888,6 +1014,32 @@
                 <div class="error-message" id="titleError"></div>
               </div>
               <div class="form-group">
+                <label for="municipality">Município</label>
+                <div class="select-container">
+                  <select class="form-control" id="municipality">
+                    <option value="">Selecione um município</option>
+                    ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
+                      <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
+                    `).join('')}
+                  </select>
+                </div>
+                <div class="error-message" id="municipalityError"></div>
+              </div>
+              <div class="form-group">
+                <label for="neighborhood">Bairro</label>
+                <div class="select-container">
+                  <select class="form-control" id="neighborhood" ${formData.municipality ? '' : 'disabled'}>
+                    <option value="">Selecione um bairro</option>
+                    ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ? 
+                      municipalitiesAndNeighborhoods[formData.municipality].map(nb => `
+                        <option value="${nb}" ${formData.neighborhood === nb ? 'selected' : ''}>${nb}</option>
+                      `).join('') : ''
+                    }
+                  </select>
+                </div>
+                <div class="error-message" id="neighborhoodError"></div>
+              </div>
+              <div class="form-group">
                 <label>Tipo de Problema</label>
                 <div class="category-grid">
                   ${categories.map(cat => `
@@ -954,11 +1106,6 @@
                 <div class="error-message" id="mapError"></div>
               </div>
               <div class="form-group">
-                <label for="neighborhood">Bairro</label>
-                <input type="text" class="form-control" id="neighborhood" placeholder="Ex.: Cazenga" value="${formData.neighborhood}">
-                <div class="error-message" id="neighborhoodError"></div>
-              </div>
-              <div class="form-group">
                 <label for="suggestion">Sugestão de Solução (opcional)</label>
                 <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema">${formData.suggestion}</textarea>
                 <div class="error-message" id="suggestionError"></div>
@@ -986,6 +1133,28 @@
           document.getElementById('title').addEventListener('input', (e) => {
             formData.title = e.target.value.trim();
             hideError('titleError');
+          });
+
+          document.getElementById('municipality').addEventListener('change', (e) => {
+            formData.municipality = e.target.value;
+            formData.neighborhood = '';
+            const neighborhoodSelect = document.getElementById('neighborhood');
+            neighborhoodSelect.disabled = !formData.municipality;
+            neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+            if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
+              municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
+                const option = document.createElement('option');
+                option.value = nb;
+                option.textContent = nb;
+                neighborhoodSelect.appendChild(option);
+              });
+            }
+            hideError('municipalityError');
+          });
+
+          document.getElementById('neighborhood').addEventListener('change', (e) => {
+            formData.neighborhood = e.target.value;
+            hideError('neighborhoodError');
           });
 
           document.querySelectorAll('.category-chip').forEach(chip => {
@@ -1058,11 +1227,6 @@
             }
           });
 
-          document.getElementById('neighborhood').addEventListener('input', (e) => {
-            formData.neighborhood = e.target.value.trim();
-            hideError('neighborhoodError');
-          });
-
           document.getElementById('suggestion').addEventListener('input', (e) => {
             formData.suggestion = e.target.value.trim();
           });
@@ -1081,6 +1245,14 @@
           if (currentStep === 0) {
             if (!formData.title) {
               showError('titleError', 'Por favor, insira um título');
+              isValid = false;
+            }
+            if (!formData.municipality) {
+              showError('municipalityError', 'Por favor, selecione um município');
+              isValid = false;
+            }
+            if (!formData.neighborhood) {
+              showError('neighborhoodError', 'Por favor, selecione um bairro');
               isValid = false;
             }
             if (!formData.category) {
@@ -1109,10 +1281,6 @@
               showError('mapError', 'Por favor, selecione uma localização');
               isValid = false;
             }
-            if (!formData.neighborhood) {
-              showError('neighborhoodError', 'Por favor, insira o nome do bairro');
-              isValid = false;
-            }
           }
 
           if (!isValid) return;
@@ -1130,10 +1298,11 @@
 
             try {
               const user = firebase.auth().currentUser;
-              const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
-              const userData = userDoc.exists ? userDoc.data() : { province: 'Desconhecida' };
+              if (!user) throw new Error('Usuário não autenticado');
 
               const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
+              const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
+
               await firebase.firestore().collection('relatorios_problemas').add({
                 usuarioId: user.uid,
                 title: formData.title,
@@ -1149,7 +1318,8 @@
                 status: 'Aguardando',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 neighborhood: formData.neighborhood,
-                province: userData.province || 'Desconhecida'
+                municipality: formData.municipality,
+                responsibleId: responsibleId || null
               });
 
               alert('Problema relatado com sucesso!');
@@ -1187,6 +1357,7 @@
           try {
             const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
             const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+            formData.municipality = userData.municipality || Object.keys(municipalitiesAndNeighborhoods)[0];
             loadStep();
           } catch (error) {
             console.error("Erro ao carregar dados:", error.message);
