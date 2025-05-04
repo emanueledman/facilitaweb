@@ -659,6 +659,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -1300,10 +1301,15 @@
               const user = firebase.auth().currentUser;
               if (!user) throw new Error('Usuário não autenticado');
 
+              console.log('Iniciando upload da imagem para Cloudinary...');
               const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
-              const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
+              console.log('Imagem enviada com sucesso:', imageUrl);
 
-              await firebase.firestore().collection('relatorios_problemas').add({
+              console.log('Buscando responsável para o município:', formData.municipality);
+              const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
+              console.log('Responsible ID:', responsibleId);
+
+              const problemData = {
                 usuarioId: user.uid,
                 title: formData.title,
                 category: formData.category,
@@ -1316,11 +1322,15 @@
                   longitude: formData.longitude
                 },
                 status: 'Aguardando',
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: Date.now(),
                 neighborhood: formData.neighborhood,
                 municipality: formData.municipality,
                 responsibleId: responsibleId || null
-              });
+              };
+
+              console.log('Gravando problema no Realtime Database:', problemData);
+              await firebase.database().ref('problems').push(problemData);
+              console.log('Problema salvo com sucesso no Realtime Database');
 
               alert('Problema relatado com sucesso!');
               window.location.href = 'map.html';
@@ -1402,7 +1412,8 @@
           projectId: "facilita-479b3",
           storageBucket: "facilita-479b3.appspot.com",
           messagingSenderId: "385676676886",
-          appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+          appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
         };
         
         if (!firebase.apps.length) {
