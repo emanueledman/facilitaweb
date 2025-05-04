@@ -162,29 +162,117 @@
       max-width: 650px;
     }
     
-    .carousel-inner img {
-      height: 450px;
-      object-fit: cover;
+    .carousel-inner .carousel-item {
+      transition: transform 0.6s ease-in-out;
+    }
+    
+    .case-card {
+      background: linear-gradient(135deg, var(--dark-card), #374151);
       border-radius: 12px;
+      overflow: hidden;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      margin: 1rem auto;
+      max-width: 500px;
+      position: relative;
+      transform-style: preserve-3d;
     }
     
-    .carousel-caption {
-      background: rgba(31, 41, 55, 0.8);
-      border-radius: 8px;
-      padding: 1rem;
-      bottom: 20px;
+    .case-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
     }
     
-    .carousel-caption h5 {
-      font-size: 1.25rem;
+    .case-placeholder {
+      width: 100%;
+      height: 200px;
+      background: var(--dark-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--light-text);
+      opacity: 0.7;
+    }
+    
+    .case-card:hover .case-image {
+      transform: scale(1.1);
+    }
+    
+    .case-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
       font-weight: 600;
+      color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      animation: blink 2s infinite;
     }
     
-    .carousel-caption p {
-      font-size: 1rem;
-      opacity: 0.9;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .badge-aguardando {
+      background: linear-gradient(45deg, var(--secondary-color), #ea580c);
+    }
+    
+    .badge-resolvido {
+      background: linear-gradient(45deg, var(--highlight-color), #059669);
+    }
+    
+    .case-content {
+      padding: 1.5rem;
+    }
+    
+    .case-content h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: white;
+      display: flex;
+      align-items: center;
+    }
+    
+    .case-content h3 i {
+      margin-right: 0.5rem;
+      color: var(--primary-color);
+    }
+    
+    .case-content p {
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 1rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .case-meta {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+    
+    .case-btn {
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 500;
+      background: linear-gradient(45deg, var(--highlight-color), var(--primary-color));
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .case-btn:hover {
+      background: linear-gradient(45deg, #0d9488, var(--primary-dark));
+      transform: translateY(-2px);
     }
     
     .btn-primary {
@@ -235,9 +323,9 @@
       transform: translateY(-2px);
     }
     
-    .recent-cases-section {
+    .features-section {
       padding: 5rem 0;
-      background: var(--dark-bg);
+      background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 1));
     }
     
     .section-title {
@@ -258,108 +346,6 @@
       opacity: 0.8;
       max-width: 700px;
       margin: 0 auto;
-    }
-    
-    .recent-case-card {
-      background: linear-gradient(135deg, var(--dark-card), #374151);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .recent-case-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(34, 197, 94, 0.3);
-    }
-    
-    .recent-case-image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-    
-    .recent-case-placeholder {
-      width: 100%;
-      height: 200px;
-      background: var(--dark-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: var(--light-text);
-      opacity: 0.7;
-    }
-    
-    .recent-case-card:hover .recent-case-image {
-      transform: scale(1.1);
-    }
-    
-    .recent-case-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: white;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-    
-    .badge-aguardando {
-      background: linear-gradient(45deg, var(--secondary-color), #ea580c);
-    }
-    
-    .badge-resolvido {
-      background: linear-gradient(45deg, var(--highlight-color), #059669);
-    }
-    
-    .recent-case-content {
-      padding: 1.5rem;
-    }
-    
-    .recent-case-content h3 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: white;
-    }
-    
-    .recent-case-content p {
-      font-size: 0.95rem;
-      opacity: 0.8;
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    
-    .recent-case-meta {
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    
-    .recent-case-btn {
-      padding: 0.5rem 1.5rem;
-      border-radius: 50px;
-      font-weight: 500;
-      background: linear-gradient(45deg, var(--highlight-color), var(--primary-color));
-      color: white;
-      border: none;
-      transition: all 0.3s ease;
-    }
-    
-    .recent-case-btn:hover {
-      background: linear-gradient(45deg, #0d9488, var(--primary-dark));
-      transform: translateY(-2px);
-    }
-    
-    .features-section {
-      padding: 5rem 0;
-      background: linear-gradient(to bottom, rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 1));
     }
     
     .feature-card {
@@ -486,10 +472,10 @@
     }
     
     .cta-btn {
-      padding: 1.2rem 4rem;
+      padding: 1.4rem 4.5rem;
       border-radius: 50px;
       font-weight: 600;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       background: white;
       color: var(--primary-dark);
       border: none;
@@ -497,7 +483,13 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
-      animation: pulse 2s infinite;
+      animation: glow 2s infinite;
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 8px 15px rgba(34, 197, 94, 0.5); }
+      50% { box-shadow: 0 12px 20px rgba(34, 197, 94, 0.8); }
+      100% { box-shadow: 0 8px 15px rgba(34, 197, 94, 0.5); }
     }
     
     .cta-btn::before {
@@ -522,12 +514,6 @@
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
       background: #f9fafb;
-    }
-    
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
     }
     
     .footer {
@@ -658,8 +644,8 @@
       .hero-content h1 {
         font-size: 3rem;
       }
-      .carousel-inner img {
-        height: 400px;
+      .case-card {
+        max-width: 450px;
       }
     }
     
@@ -667,8 +653,11 @@
       .hero-content h1 {
         font-size: 2.5rem;
       }
-      .carousel-inner img {
-        height: 350px;
+      .case-card {
+        max-width: 400px;
+      }
+      .case-image, .case-placeholder {
+        height: 180px;
       }
       .stat-number {
         font-size: 3rem;
@@ -691,8 +680,11 @@
       .section-title h2 {
         font-size: 2rem;
       }
-      .carousel-inner img {
-        height: 300px;
+      .case-card {
+        max-width: 350px;
+      }
+      .case-image, .case-placeholder {
+        height: 160px;
       }
       .cta-content h2 {
         font-size: 2.5rem;
@@ -713,10 +705,26 @@
       .hero-content p {
         font-size: 1rem;
       }
-      .carousel-inner img {
-        height: 250px;
+      .case-card {
+        max-width: 300px;
       }
-      .recent-case-card, .feature-card {
+      .case-image, .case-placeholder {
+        height: 140px;
+      }
+      .case-content h3 {
+        font-size: 1.2rem;
+      }
+      .case-content p {
+        font-size: 0.85rem;
+      }
+      .case-meta {
+        font-size: 0.8rem;
+      }
+      .case-btn {
+        padding: 0.4rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      .feature-card {
         margin-bottom: 2rem;
       }
       .cta-content h2 {
@@ -751,9 +759,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#recent-cases">Casos Recentes</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="#features">Serviços</a>
             </li>
             <li class="nav-item">
@@ -784,29 +789,7 @@
           </div>
           <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-              <div class="carousel-inner">
-                <div class="carousel-item active">
-                  <img src="images/slide1.jpg" class="d-block w-100" alt="Problema urbano em bairro angolano">
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>Identifique o Problema</h5>
-                    <p>Buracos, lixo ou iluminação? Denuncie agora!</p>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <img src="images/slide2.jpg" class="d-block w-100" alt="Comunidade colaborando em Angola">
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>Colabore com a Comunidade</h5>
-                    <p>Juntos, transformamos nossos bairros.</p>
-                  </div>
-                </div>
-                <div class="carousel-item">
-                  <img src="images/slide3.jpg" class="d-block w-100" alt="Solução implementada em bairro angolano">
-                  <div class="carousel-caption d-none d-md-block">
-                    <h5>Veja os Resultados</h5>
-                    <p>Soluções reais para problemas reais.</p>
-                  </div>
-                </div>
-              </div>
+              <div class="carousel-inner" id="carouselCases"></div>
               <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Slide anterior">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
@@ -818,17 +801,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Recent Cases Section -->
-    <section class="recent-cases-section" id="recent-cases">
-      <div class="container">
-        <div class="section-title" data-aos="fade-up">
-          <h2>Casos Recentes</h2>
-          <p>Veja os problemas mais recentes relatados pela comunidade.</p>
-        </div>
-        <div class="row g-4" id="recentCases"></div>
       </div>
     </section>
 
@@ -965,7 +937,6 @@
           <div class="col-md-4 col-lg-2 mb-4">
             <h4>Links Úteis</h4>
             <ul class="footer-links">
-              <li><a href="#recent-cases" aria-label="Casos recentes">Casos Recentes</a></li>
               <li><a href="#features" aria-label="Serviços">Serviços</a></li>
               <li><a href="#stats" aria-label="Estatísticas">Estatísticas</a></li>
               <li><a href="#" aria-label="Perguntas frequentes">FAQ</a></li>
@@ -1011,6 +982,9 @@
 
   <!-- Typed.js -->
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+  <!-- VanillaTilt.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 
   <script>
     // Initialize AOS animation library
@@ -1080,35 +1054,48 @@
       firebase.initializeApp(firebaseConfig);
     }
 
-    // Load recent cases
-    function loadRecentCases() {
-      const recentCasesContainer = document.getElementById('recentCases');
+    // Load recent cases into carousel
+    function loadCarouselCases() {
+      const carouselCasesContainer = document.getElementById('carouselCases');
       firebase.database().ref('problems').orderByChild('createdAt').limitToLast(4).once('value', (snapshot) => {
         let html = '';
+        let isFirst = true;
         snapshot.forEach((childSnapshot) => {
           const problem = childSnapshot.val();
           const imageHtml = problem.imageUrl 
-            ? `<img src="${problem.imageUrl}" alt="${problem.title}" class="recent-case-image" loading="lazy">`
-            : `<div class="recent-case-placeholder"><i class="fas fa-image"></i></div>`;
+            ? `<img src="${problem.imageUrl}" alt="${problem.title}" class="case-image" loading="lazy">`
+            : `<div class="case-placeholder"><i class="fas fa-image"></i></div>`;
+          const statusIcon = problem.status.toLowerCase() === 'resolvido' ? 'fa-check-circle' : 'fa-tools';
           html += `
-            <div class="col-md-6 col-lg-3" data-aos="zoom-in">
-              <div class="recent-case-card">
+            <div class="carousel-item ${isFirst ? 'active' : ''}">
+              <div class="case-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000">
                 ${imageHtml}
-                <span class="recent-case-badge badge-${problem.status.toLowerCase()}">${problem.status}</span>
-                <div class="recent-case-content">
-                  <h3>${problem.title}</h3>
+                <span class="case-badge badge-${problem.status.toLowerCase()}">${problem.status}</span>
+                <div class="case-content">
+                  <h3><i class="fas ${statusIcon}"></i> ${problem.title}</h3>
                   <p>${problem.description.substring(0, 100)}...</p>
-                  <div class="recent-case-meta">
+                  <div class="case-meta">
                     <span>Bairro: ${problem.neighborhood}</span>
                     <span>${problem.municipality}</span>
                   </div>
-                  <a href="case-details.html?caseId=${childSnapshot.key}" class="recent-case-btn" aria-label="Ver detalhes do caso ${problem.title}">Ver Detalhes</a>
+                  <a href="case-details.html?caseId=${childSnapshot.key}" class="case-btn" aria-label="Ver detalhes do caso ${problem.title}">Ver Detalhes</a>
                 </div>
               </div>
             </div>
           `;
+          isFirst = false;
         });
-        recentCasesContainer.innerHTML = html || '<p class="error-message">Nenhum caso recente encontrado.</p>';
+        carouselCasesContainer.innerHTML = html || '<div class="carousel-item active"><p class="error-message">Nenhum caso recente encontrado.</p></div>';
+        
+        // Initialize VanillaTilt.js
+        VanillaTilt.init(document.querySelectorAll('.case-card'), {
+          max: 10,
+          speed: 400,
+          perspective: 1000,
+          glare: true,
+          'max-glare': 0.3
+        });
+        
         AOS.refresh();
       });
     }
@@ -1221,7 +1208,7 @@
           document.getElementById('loadingScreen').style.display = 'none';
           document.getElementById('homepage').style.display = 'block';
           
-          loadRecentCases();
+          loadCarouselCases();
           loadStatistics();
           loadUserData();
           setupModuleLinks();
