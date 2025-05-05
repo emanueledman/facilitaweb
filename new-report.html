@@ -402,7 +402,7 @@
       margin-bottom: 2rem;
       position: relative;
       background: rgba(255, 255, 255, 0.05);
-      padding: 1.5rem;
+      padding: 1rem;
       border-radius: 8px;
     }
     
@@ -416,12 +416,12 @@
     .step::after {
       content: '';
       position: absolute;
-      top: 30px;
+      top: 20px;
       left: 50%;
       width: 100%;
       height: 4px;
       background: rgba(255, 255, 255, 0.2);
-      z-index: 1;
+      z-index: -1;
     }
     
     .step:last-child::after {
@@ -429,8 +429,8 @@
     }
     
     .step-circle {
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       display: flex;
@@ -754,6 +754,7 @@
           </div>
         </div>
 
+        <!-- Step 1: Informações Básicas -->
         <div class="step-one-container">
           <h3 class="section-title">Informações Básicas</h3>
           <div class="form-group">
@@ -818,7 +819,8 @@
           </div>
         </div>
 
-        <div class="step-two-container content">
+        <!-- Step 2: Detalhes -->
+        <div class="step-two-container content" style="display: none;">
           <h3 class="section-title">Detalhes do Problema</h3>
           <div class="form-group">
             <label for="description">Descrição Detalhada</label>
@@ -840,7 +842,8 @@
           </div>
         </div>
 
-        <div class="step-three-container content">
+        <!-- Step 3: Localização -->
+        <div class="step-three-container content" style="display: none;">
           <h3 class="section-title">Localização do Problema</h3>
           <div class="form-group">
             <label>Localização</label>
@@ -905,7 +908,7 @@
     let formData = {
       title: '',
       category: 'Buraco',
-      urgency: 'Média',
+      urgency: 'Baixa',
       description: '',
       suggestion: '',
       image: null,
