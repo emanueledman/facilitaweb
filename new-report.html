@@ -28,15 +28,15 @@
   <title>FixABairro | Novo Relato</title>
   <style>
     :root {
-      --primary-color: #1e40af; /* Azul escuro */
-      --secondary-color: #22c55e; /* Verde */
-      --highlight-color: #f59e0b; /* Amarelo-alaranjado */
+      --primary-color: #1e40af;
+      --secondary-color: #22c55e;
+      --highlight-color: #f59e0b;
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
       --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       --border-radius: 12px;
-      --accent-color: #3b82f6; /* Azul claro */
+      --accent-color: #3b82f6;
       --danger-color: #ef4444;
       --warning-color: #f59e0b;
       --info-color: #0ea5e9;
@@ -161,7 +161,7 @@
     }
     
     .form-container {
-      max-width: 700px;
+      max-width: 900px;
       margin: 2rem auto;
       padding: 0 1.5rem;
       display: flex;
@@ -173,7 +173,7 @@
     }
     
     .form-sidebar {
-      width: 300px;
+      width: 350px;
       background: var(--dark-card);
       border-radius: var(--border-radius);
       padding: 1.5rem;
@@ -232,7 +232,7 @@
     .form-card {
       background: linear-gradient(135deg, var(--dark-card), #374151);
       border-radius: var(--border-radius);
-      padding: 2rem;
+      padding: 2.5rem;
       box-shadow: var(--card-shadow);
       border: 1px solid rgba(30, 64, 175, 0.2);
       transition: transform 0.3s ease;
@@ -254,6 +254,9 @@
     .form-group {
       margin-bottom: 1.5rem;
       position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     
     .form-control {
@@ -263,6 +266,8 @@
       border-radius: 8px;
       padding: 0.75rem;
       transition: all 0.3s ease;
+      flex: 1;
+      min-width: 200px;
     }
     
     .form-control:focus {
@@ -360,7 +365,12 @@
       color: var(--danger-color);
       font-size: 0.9rem;
       margin-top: 0.25rem;
+      text-align: center;
+      padding: 0.5rem;
+      background: rgba(239, 68, 68, 0.1);
+      border-radius: 4px;
       display: none;
+      width: 100%;
     }
     
     .image-preview-container {
@@ -392,7 +402,7 @@
       margin-bottom: 2rem;
       position: relative;
       background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
+      padding: 1.5rem;
       border-radius: 8px;
     }
     
@@ -406,7 +416,7 @@
     .step::after {
       content: '';
       position: absolute;
-      top: 25px;
+      top: 30px;
       left: 50%;
       width: 100%;
       height: 4px;
@@ -419,8 +429,8 @@
     }
     
     .step-circle {
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       display: flex;
@@ -460,7 +470,7 @@
     
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -574,18 +584,16 @@
       transform: translateY(-2px);
     }
     
-    .loading-container {
-      text-align: center;
-      padding: 3rem;
-    }
-    
     .select-container {
       position: relative;
+      flex: 1;
+      min-width: 200px;
     }
     
     select.form-control {
       appearance: none;
       padding-right: 2.5rem;
+      width: 100%;
     }
     
     .select-container::after {
@@ -620,6 +628,9 @@
     }
     
     @media (max-width: 768px) {
+      .form-container {
+        max-width: 100%;
+      }
       .form-header {
         padding: 2rem 1.5rem;
       }
@@ -675,6 +686,9 @@
       .form-control, .form-group label, .section-title {
         font-size: 0.85rem;
       }
+      .select-container {
+        min-width: 100%;
+      }
     }
   </style>
 </head>
@@ -724,12 +738,7 @@
         <p>Descreva o problema em detalhes para ajudar na resolução.</p>
       </div>
       
-      <div class="form-card" id="formContent" data-aos="fade-up">
-        <div class="loading-container">
-          <span class="spinner"></span>
-          <p>Carregando formulário...</p>
-        </div>
-      </div>
+      <div class="form-card" id="formContent" data-aos="fade-up"></div>
     </div>
     
     <div class="form-sidebar" data-aos="fade-left" data-aos-delay="200">
@@ -767,7 +776,6 @@
 
   <!-- Firebase Auth Module -->
   <script>
-    // Firebase Auth Module (assumed to be in js/firebaseAuth.js)
     const firebaseAuth = {
       logout: function(logoutBtn, logoutText, logoutSpinner) {
         firebase.auth().signOut().then(() => {
@@ -1061,7 +1069,6 @@
         case 0:
           stepContent += `
             <h3 class="section-title">Informações Básicas</h3>
-            < SDP: 6
             <div class="form-group">
               <label for="title">Título do Problema</label>
               <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="${formData.title}">
@@ -1111,7 +1118,7 @@
                 ${urgencies.map(urg => `
                   <input type="radio" name="urgency" id="urgency-${urg.level}" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
                   <label for="urgency-${urg.level}">
-                    <i class="fas ${urg.icon}" style="color: ${cat.color}"></i>
+                    <i class="fas ${urg.icon}" style="color: ${urg.color}"></i>
                     ${urg.level}
                   </label>
                 `).join('')}
@@ -1383,7 +1390,7 @@
             window.location.href = 'map.html';
           } catch (error) {
             console.error('Erro ao relatar problema:', error.message);
-            showError('formContent', 'Erro ao relatar problema. Tente novamente.');
+            showError('formContent', 'Erro ao relatar problema.');
           } finally {
             nextText.style.display = 'inline-block';
             nextSpinner.style.display = 'none';
@@ -1414,8 +1421,7 @@
         } catch (error) {
           console.error("Erro ao carregar dados:", error.message);
           formContent.innerHTML = `
-            <div class="error-message">Erro ao carregar dados: ${error.message}</div>
-            <button class="btn btn-primary mt-2" onclick="loadFormData(firebase)">Tentar Novamente</button>
+            <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
           `;
         }
       });
@@ -1497,7 +1503,6 @@
         const formContent = document.getElementById('formContent');
         formContent.innerHTML = `
           <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
-          <button class="btn btn-primary mt-2" onclick="window.location.reload()">Tentar Novamente</button>
         `;
       }
 
