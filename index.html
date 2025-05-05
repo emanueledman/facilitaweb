@@ -31,14 +31,14 @@
   <title>FixABairro | Melhorando Bairros em Angola</title>
   <style>
     :root {
-      --primary-color: #22c55e;
-      --primary-dark: #16a34a;
-      --secondary-color: #f59e0b;
-      --highlight-color: #10b981;
+      --primary-color: #1e40af; /* Azul escuro */
+      --secondary-color: #22c55e; /* Verde */
+      --highlight-color: #f59e0b; /* Amarelo-alaranjado */
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
       --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      --border-radius: 12px;
     }
     
     html, body {
@@ -90,7 +90,7 @@
       width: 40px;
       height: 40px;
       margin-right: 12px;
-      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
+      filter: drop-shadow(0 0 8px rgba(30, 64, 175, 0.5));
       transition: transform 0.3s ease;
     }
     
@@ -129,14 +129,14 @@
       border-radius: 50px;
       padding: 0.6rem 1.75rem !important;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.5);
       color: white !important;
       transition: all 0.3s ease;
     }
     
     .nav-link.btn:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.7);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 8px 16px rgba(30, 64, 175, 0.7);
     }
     
     .hero-section {
@@ -150,7 +150,7 @@
       font-size: 3.5rem;
       line-height: 1.2;
       margin-bottom: 1.5rem;
-      background: linear-gradient(to right, #ffffff, #86efac);
+      background: linear-gradient(to right, #ffffff, #60a5fa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -168,7 +168,7 @@
     
     .case-card {
       background: linear-gradient(135deg, var(--dark-card), #374151);
-      border-radius: 12px;
+      border-radius: var(--border-radius);
       overflow: hidden;
       box-shadow: var(--card-shadow);
       margin: 1rem auto;
@@ -182,6 +182,18 @@
       height: 200px;
       object-fit: cover;
       transition: transform 0.3s ease;
+      position: relative;
+    }
+    
+    .case-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(30, 64, 175, 0.3);
+      z-index: 1;
     }
     
     .case-placeholder {
@@ -211,6 +223,7 @@
       color: white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       animation: blink 2s infinite;
+      z-index: 2;
     }
     
     @keyframes blink {
@@ -219,11 +232,11 @@
     }
     
     .badge-aguardando {
-      background: linear-gradient(45deg, var(--secondary-color), #ea580c);
+      background: linear-gradient(45deg, var(--highlight-color), #ea580c);
     }
     
     .badge-resolvido {
-      background: linear-gradient(45deg, var(--highlight-color), #059669);
+      background: linear-gradient(45deg, var(--secondary-color), #059669);
     }
     
     .case-content {
@@ -264,14 +277,14 @@
       padding: 0.5rem 1.5rem;
       border-radius: 50px;
       font-weight: 500;
-      background: linear-gradient(45deg, var(--highlight-color), var(--primary-color));
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: white;
       border: none;
       transition: all 0.3s ease;
     }
     
     .case-btn:hover {
-      background: linear-gradient(45deg, #0d9488, var(--primary-dark));
+      background: linear-gradient(45deg, #1e3a8a, var(--secondary-color));
       transform: translateY(-2px);
     }
     
@@ -281,7 +294,7 @@
       font-weight: 600;
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       border: none;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.5);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
@@ -306,8 +319,8 @@
     }
     
     .btn-primary:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 16px rgba(34, 197, 94, 0.7);
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 8px 16px rgba(30, 64, 175, 0.7);
     }
     
     .btn-outline-light {
@@ -350,14 +363,14 @@
     
     .feature-card {
       background: var(--dark-card);
-      border-radius: 12px;
+      border-radius: var(--border-radius);
       box-shadow: var(--card-shadow);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .feature-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 12px 24px rgba(34, 197, 94, 0.3);
+      box-shadow: 0 12px 24px rgba(30, 64, 175, 0.3);
     }
     
     .feature-icon {
@@ -395,7 +408,7 @@
       padding: 0.5rem 1.5rem;
       border-radius: 50px;
       font-weight: 500;
-      background: linear-gradient(45deg, var(--secondary-color), #ea580c);
+      background: linear-gradient(45deg, var(--highlight-color), #ea580c);
       color: white;
       border: none;
       transition: all 0.3s ease;
@@ -415,7 +428,7 @@
       text-align: center;
       padding: 2rem;
       background: rgba(31, 41, 55, 0.8);
-      border-radius: 12px;
+      border-radius: var(--border-radius);
       transition: transform 0.3s ease;
     }
     
@@ -449,6 +462,45 @@
       opacity: 0.8;
     }
     
+    .stories-section {
+      padding: 5rem 0;
+      background: linear-gradient(135deg, var(--primary-color), #2563eb);
+    }
+    
+    .story-card {
+      background: var(--dark-card);
+      border-radius: var(--border-radius);
+      box-shadow: var(--card-shadow);
+      padding: 2rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .story-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .story-card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 2px solid var(--secondary-color);
+    }
+    
+    .story-card h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+    
+    .story-card p {
+      font-size: 1rem;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+    
     .cta-section {
       padding: 6rem 0;
       background: linear-gradient(120deg, var(--primary-color), var(--secondary-color));
@@ -477,7 +529,7 @@
       font-weight: 600;
       font-size: 1.3rem;
       background: white;
-      color: var(--primary-dark);
+      color: var(--primary-color);
       border: none;
       box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
       transition: all 0.3s ease;
@@ -487,9 +539,9 @@
     }
     
     @keyframes glow {
-      0% { box-shadow: 0 8px 15px rgba(34, 197, 94, 0.5); }
-      50% { box-shadow: 0 12px 20px rgba(34, 197, 94, 0.8); }
-      100% { box-shadow: 0 8px 15px rgba(34, 197, 94, 0.5); }
+      0% { box-shadow: 0 8px 15px rgba(30, 64, 175, 0.5); }
+      50% { box-shadow: 0 12px 20px rgba(30, 64, 175, 0.8); }
+      100% { box-shadow: 0 8px 15px rgba(30, 64, 175, 0.5); }
     }
     
     .cta-btn::before {
@@ -511,7 +563,7 @@
     }
     
     .cta-btn:hover {
-      transform: translateY(-5px) scale(1.05);
+      transform: translateY(-5px) scale(1.1);
       box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
       background: #f9fafb;
     }
@@ -539,7 +591,7 @@
     }
     
     .footer-text {
-      opacity: 0.7;
+      opacity: 0.9;
       margin-bottom: 2rem;
     }
     
@@ -561,7 +613,7 @@
     
     .footer-links a {
       color: var(--light-text);
-      opacity: 0.7;
+      opacity: 0.9;
       text-decoration: none;
       transition: all 0.3s ease;
     }
@@ -596,7 +648,7 @@
     .copyright {
       text-align: center;
       padding-top: 2rem;
-      opacity: 0.7;
+      opacity: 0.9;
       font-size: 0.9rem;
     }
     
@@ -727,6 +779,10 @@
       .feature-card {
         margin-bottom: 2rem;
       }
+      .story-card img {
+        width: 60px;
+        height: 60px;
+      }
       .cta-content h2 {
         font-size: 2rem;
       }
@@ -745,30 +801,30 @@
   <div id="particles-js"></div>
   
   <!-- Homepage -->
-  <div id="homepage" class="homepage">
+  <div id="homepage" class="homepage" style="display: none;">
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="#" aria-label="Página inicial do FixABairro">
           <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
           FixABairro
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menu de navegação">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="#features">Serviços</a>
+              <a class="nav-link" href="#features" aria-label="Nossos serviços">Serviços</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#stats">Estatísticas</a>
+              <a class="nav-link" href="#stats" aria-label="Estatísticas de impacto">Estatísticas</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
+              <a class="nav-link btn btn-primary" href="new-report.html" aria-label="Relatar um problema"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn btn-primary" id="authButton" href="login.html"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
+              <a class="nav-link btn btn-primary" id="authButton" href="login.html" aria-label="Entrar na conta"><i class="fas fa-sign-in-alt me-1"></i> Entrar</a>
             </li>
           </ul>
         </div>
@@ -782,7 +838,7 @@
           <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
             <h1><span id="typed"></span></h1>
             <p>Relate problemas na sua comunidade, acompanhe soluções em tempo real e contribua para um bairro melhor.</p>
-            <div>
+            <div class="d-flex gap-3">
               <a href="new-report.html" class="btn btn-primary" aria-label="Relatar um problema agora">Relatar Agora <i class="fas fa-arrow-right ms-2"></i></a>
               <a id="accountButton" href="login.html" class="btn btn-outline-light" aria-label="Acessar sua conta">Acessar Conta</a>
             </div>
@@ -792,11 +848,11 @@
               <div class="carousel-inner" id="carouselCases"></div>
               <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Slide anterior">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
+                <span class="visually-hidden">Anterior</span>
               </button>
               <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Próximo slide">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
+                <span class="visually-hidden">Próximo</span>
               </button>
             </div>
           </div>
@@ -897,6 +953,39 @@
       </div>
     </section>
 
+    <!-- Stories Section -->
+    <section class="stories-section" id="stories">
+      <div class="container">
+        <div class="section-title" data-aos="fade-up">
+          <h2>Histórias de Impacto</h2>
+          <p>Conheça as histórias de moradores que transformaram seus bairros com o FixABairro.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="story-card">
+              <img src="https://via.placeholder.com/80" alt="Foto de Maria">
+              <h3>Maria, Talatona</h3>
+              <p>"Reportei um buraco na minha rua, e em uma semana foi consertado! O FixABairro realmente funciona."</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="story-card">
+              <img src="https://via.placeholder.com/80" alt="Foto de João">
+              <h3>João, Cazenga</h3>
+              <p>"A comunidade se uniu para limpar um terreno abandonado. O FixABairro nos deu voz!"</p>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="story-card">
+              <img src="https://via.placeholder.com/80" alt="Foto de Ana">
+              <h3>Ana, Kilamba</h3>
+              <p>"Graças ao mapa interativo, descobri outros problemas no meu bairro e ajudei a resolvê-los."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
       <div class="container">
@@ -966,34 +1055,27 @@
   </div>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <!-- AOS Animation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
   <!-- Particles.js -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
   <!-- Typed.js -->
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
   <!-- VanillaTilt.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
 
   <script>
-    // Initialize AOS animation library
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out',
-      once: true
-    });
-
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
@@ -1007,55 +1089,8 @@
       bg.style.backgroundPositionY = `${scrollPosition * 0.5}px`;
     });
 
-    // Initialize Particles.js
-    particlesJS('particles-js', {
-      particles: {
-        number: { value: 50, density: { enable: true, value_area: 1000 } },
-        color: { value: ['#22c55e', '#f59e0b', '#10b981'] },
-        shape: { type: 'circle' },
-        opacity: { value: 0.4, random: true },
-        size: { value: 3, random: true },
-        line_linked: { enable: false },
-        move: { enable: true, speed: 1.5, direction: 'none', random: true }
-      },
-      interactivity: {
-        detect_on: 'canvas',
-        events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-        modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-      },
-      retina_detect: true
-    });
-
-    // Initialize Typed.js
-    const typed = new Typed('#typed', {
-      strings: [
-        'Melhore seu bairro!',
-        'Denuncie problemas!',
-        'Faça a diferença!'
-      ],
-      typeSpeed: 60,
-      backSpeed: 40,
-      loop: true,
-      backDelay: 1500
-    });
-
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-      databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
-    };
-    
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
     // Load recent cases into carousel
-    function loadCarouselCases() {
+    function loadCarouselCases(firebase) {
       const carouselCasesContainer = document.getElementById('carouselCases');
       firebase.database().ref('problems').orderByChild('createdAt').limitToLast(4).once('value', (snapshot) => {
         let html = '';
@@ -1088,20 +1123,27 @@
         carouselCasesContainer.innerHTML = html || '<div class="carousel-item active"><p class="error-message">Nenhum caso recente encontrado.</p></div>';
         
         // Initialize VanillaTilt.js
-        VanillaTilt.init(document.querySelectorAll('.case-card'), {
-          max: 10,
-          speed: 400,
-          perspective: 1000,
-          glare: true,
-          'max-glare': 0.3
-        });
+        if (typeof VanillaTilt !== 'undefined') {
+          VanillaTilt.init(document.querySelectorAll('.case-card'), {
+            max: 10,
+            speed: 400,
+            perspective: 1000,
+            glare: true,
+            'max-glare': 0.3
+          });
+        } else {
+          console.warn('VanillaTilt.js library not loaded');
+        }
         
-        AOS.refresh();
+        // Refresh AOS animations
+        if (typeof AOS !== 'undefined') {
+          AOS.refresh();
+        }
       });
     }
 
     // Load statistics
-    function loadStatistics() {
+    function loadStatistics(firebase) {
       const problemsCount = document.getElementById('problems-count');
       const resolvedCount = document.getElementById('resolved-count');
       const usersCount = document.getElementById('users-count');
@@ -1150,7 +1192,7 @@
         accountButton.textContent = 'Ver Perfil';
         accountButton.href = 'profile.html';
         accountButton.setAttribute('aria-label', 'Ver perfil');
-        ctaButton.textContent = 'Acessar Perfil';
+        ctaButton.innerHTML = `Acessar Perfil <i class="fas fa-arrow-right ms-2"></i>`;
         ctaButton.href = 'profile.html';
         ctaButton.setAttribute('aria-label', 'Acessar perfil');
       } else {
@@ -1160,14 +1202,14 @@
         accountButton.textContent = 'Acessar Conta';
         accountButton.href = 'login.html';
         accountButton.setAttribute('aria-label', 'Acessar conta');
-        ctaButton.textContent = 'Comece Agora';
+        ctaButton.innerHTML = `Comece Agora <i class="fas fa-arrow-right ms-2"></i>`;
         ctaButton.href = 'new-report.html';
         ctaButton.setAttribute('aria-label', 'Começar a relatar problemas agora');
       }
     }
 
     // Load user data
-    function loadUserData() {
+    function loadUserData(firebase) {
       firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
           const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
@@ -1179,7 +1221,7 @@
     }
 
     // Handle module links
-    function setupModuleLinks() {
+    function setupModuleLinks(firebase) {
       document.querySelectorAll('.module-link').forEach(link => {
         link.addEventListener('click', (e) => {
           const module = link.getAttribute('data-module');
@@ -1193,28 +1235,108 @@
     }
 
     // Handle auth button click
-    function handleAuthClick(e) {
-      e.preventDefault();
-      firebase.auth().onAuthStateChanged(user => {
-        window.location.href = user ? 'profile.html' : 'login.html';
-      });
+    function handleAuthClick(firebase) {
+      return function(e) {
+        e.preventDefault();
+        firebase.auth().onAuthStateChanged(user => {
+          window.location.href = user ? 'profile.html' : 'login.html';
+        });
+      };
     }
 
     // Initialize page
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('loadingScreen').classList.add('fade-out');
+      // Initialize AOS animation library
+      if (typeof AOS !== 'undefined') {
+        AOS.init({
+          duration: 800,
+          easing: 'ease-in-out',
+          once: true
+        });
+      } else {
+        console.warn('AOS library not loaded');
+      }
+
+      // Initialize Particles.js
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 20, density: { enable: true, value_area: 1000 } },
+            color: { value: ['#1e40af', '#22c55e', '#f59e0b'] },
+            shape: { type: 'circle' },
+            opacity: { value: 0.4, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: false },
+            move: { enable: true, speed: 0.8, direction: 'none', random: true }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
+            modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
+          },
+          retina_detect: true
+        });
+      } else {
+        console.warn('Particles.js library not loaded');
+      }
+
+      // Initialize Typed.js
+      if (typeof Typed !== 'undefined') {
+        new Typed('#typed', {
+          strings: [
+            'Melhore seu bairro!',
+            'Denuncie problemas!',
+            'Faça a diferença!'
+          ],
+          typeSpeed: 50,
+          backSpeed: 30,
+          loop: true,
+          backDelay: 2000
+        });
+      } else {
+        console.warn('Typed.js library not loaded');
+      }
+
+      // Initialize Firebase and related functionality
+      if (typeof firebase !== 'undefined') {
+        const firebaseConfig = {
+          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+          authDomain: "facilita-479b3.firebaseapp.com",
+          projectId: "facilita-479b3",
+          storageBucket: "facilita-479b3.appspot.com",
+          messagingSenderId: "385676676886",
+          appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
+        };
+        
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+
         setTimeout(() => {
-          document.getElementById('loadingScreen').style.display = 'none';
-          document.getElementById('homepage').style.display = 'block';
-          
-          loadCarouselCases();
-          loadStatistics();
-          loadUserData();
-          setupModuleLinks();
-          document.getElementById('authButton').addEventListener('click', handleAuthClick);
-        }, 500);
-      }, 1500);
+          document.getElementById('loadingScreen').classList.add('fade-out');
+          setTimeout(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('homepage').style.display = 'block';
+            
+            loadCarouselCases(firebase);
+            loadStatistics(firebase);
+            loadUserData(firebase);
+            setupModuleLinks(firebase);
+            document.getElementById('authButton').addEventListener('click', handleAuthClick(firebase));
+          }, 500);
+        }, 1500);
+      } else {
+        console.warn('Firebase SDK not loaded');
+        setTimeout(() => {
+          document.getElementById('loadingScreen').classList.add('fade-out');
+          setTimeout(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('homepage').style.display = 'block';
+            document.getElementById('carouselCases').innerHTML = '<div class="carousel-item active"><p class="error-message">Erro ao carregar casos. Verifique sua conexão.</p></div>';
+          }, 500);
+        }, 1500);
+      }
     });
   </script>
 </body>
