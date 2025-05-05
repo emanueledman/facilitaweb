@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -28,43 +28,26 @@
   <title>FixABairro | Novo Relato</title>
   <style>
     :root {
-      --primary-color: #1e40af;
-      --secondary-color: #22c55e;
-      --highlight-color: #f59e0b;
+      --primary-color: #22c55e;
+      --primary-dark: #16a34a;
+      --secondary-color: #f59e0b;
       --dark-bg: #1f2937;
       --dark-card: #2d3748;
       --light-text: #f3f4f6;
-      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      --border-radius: 12px;
-      --accent-color: #3b82f6;
+      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      --accent-color: #10b981;
       --danger-color: #ef4444;
       --warning-color: #f59e0b;
       --info-color: #0ea5e9;
     }
     
-    html, body {
-      font-family: 'Inter', sans-serif;
-      color: var(--light-text);
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-    
     body {
-      background: linear-gradient(rgba(31, 41, 55, 0.85), rgba(31, 41, 55, 0.95)), url('https://images.trustinnews.pt/uploads/sites/5/2021/03/30631487-1600x1067.jpg') no-repeat center center fixed;
-      background-size: cover;
+      font-family: 'Inter', sans-serif;
+      background: var(--dark-bg);
+      color: var(--light-text);
       min-height: 100vh;
-      position: relative;
-    }
-    
-    #particles-js {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
+      margin: 0;
+      overflow-x: hidden;
     }
     
     .navbar {
@@ -92,18 +75,18 @@
       width: 40px;
       height: 40px;
       margin-right: 12px;
-      filter: drop-shadow(0 0 8px rgba(30, 64, 175, 0.5));
+      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
     
     .navbar-brand:hover .logo {
-      transform: scale(1.1) rotate(10deg);
+      transform: scale(1.1);
     }
     
     .nav-link {
       font-weight: 500;
       position: relative;
-      margin: 0 0.75rem;
+      margin: 0 0.5rem;
       padding: 0.5rem 1rem !important;
       transition: all 0.3s ease;
       color: var(--light-text) !important;
@@ -126,24 +109,24 @@
     }
     
     .nav-link.btn {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      background-color: var(--primary-color);
       border: none;
       border-radius: 50px;
       padding: 0.6rem 1.75rem !important;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(30, 64, 175, 0.5);
+      box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
       color: white !important;
-      transition: all 0.3s ease;
     }
     
     .nav-link.btn:hover {
-      transform: translateY(-2px) scale(1.1);
-      box-shadow: 0 8px 16px rgba(30, 64, 175, 0.7);
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
     }
     
     .dropdown-menu {
       background: var(--dark-card);
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       box-shadow: var(--card-shadow);
       border-radius: 8px;
     }
@@ -160,120 +143,17 @@
       color: white;
     }
     
-    /* Novo Layout */
     .form-container {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 2rem;
-      max-width: 1400px;
+      max-width: 800px;
       margin: 2rem auto;
       padding: 0 1.5rem;
     }
     
-    .form-sidebar-left {
-      background: linear-gradient(135deg, var(--dark-card), #374151);
-      border-radius: var(--border-radius);
-      padding: 2rem;
-      box-shadow: var(--card-shadow);
-      height: fit-content;
-      position: sticky;
-      top: 100px;
-    }
-    
-    .form-main {
-      flex: 1;
-    }
-    
-    .form-map-container {
-      display: none;
-      position: sticky;
-      top: 100px;
-      height: calc(100vh - 150px);
-    }
-    
-    .form-map-container.active {
-      display: block;
-      animation: fadeIn 0.5s ease;
-    }
-    
-    .map-container-full {
-      height: 100%;
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-      border: 1px solid rgba(30, 64, 175, 0.2);
-    }
-    
-    .stepper-vertical {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      margin-top: 2rem;
-    }
-    
-    .stepper-vertical .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      position: relative;
-    }
-    
-    .stepper-vertical .step::after {
-      content: '';
-      position: absolute;
-      left: 29px;
-      top: 50px;
-      height: calc(100% - 40px);
-      width: 2px;
-      background: rgba(255, 255, 255, 0.2);
-      z-index: 1;
-    }
-    
-    .stepper-vertical .step:last-child::after {
-      display: none;
-    }
-    
-    .stepper-vertical .step-circle {
-      width: 60px;
-      height: 60px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      z-index: 2;
-      position: relative;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(30, 64, 175, 0.2);
-    }
-    
-    .stepper-vertical .step.active .step-circle {
-      background: var(--primary-color);
-      box-shadow: 0 0 15px rgba(30, 64, 175, 0.5);
-      border-color: var(--accent-color);
-    }
-    
-    .stepper-vertical .step-content {
-      padding-top: 0.5rem;
-    }
-    
-    .stepper-vertical .step-title {
-      font-weight: 600;
-      color: var(--light-text);
-      margin-bottom: 0.25rem;
-    }
-    
-    .stepper-vertical .step-description {
-      font-size: 0.85rem;
-      opacity: 0.7;
-    }
-    
     .form-header {
-      background: linear-gradient(120deg, var(--primary-color), var(--accent-color));
-      padding: 2.5rem 2rem;
+      background: linear-gradient(120deg, #14532d, var(--primary-color));
+      padding: 3rem 2rem;
       text-align: center;
-      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      border-radius: 16px 16px 0 0;
       box-shadow: var(--card-shadow);
     }
     
@@ -292,11 +172,11 @@
     }
     
     .form-card {
-      background: linear-gradient(135deg, var(--dark-card), #374151);
-      border-radius: var(--border-radius);
-      padding: 2.5rem;
+      background: var(--dark-card);
+      border-radius: 16px;
+      padding: 2rem;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease;
     }
     
@@ -309,39 +189,31 @@
       font-weight: 600;
       color: var(--primary-color);
       margin-bottom: 1.5rem;
-      border-left: 4px solid var(--secondary-color);
-      padding-left: 0.75rem;
     }
     
     .form-group {
       margin-bottom: 1.5rem;
       position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
     }
     
     .form-control {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       color: var(--light-text);
       border-radius: 8px;
       padding: 0.75rem;
       transition: all 0.3s ease;
-      flex: 1;
-      min-width: 200px;
     }
     
     .form-control:focus {
       background: rgba(255, 255, 255, 0.1);
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.25);
+      box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
       color: var(--light-text);
     }
     
     .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-      opacity: 1;
+      color: rgba(255, 255, 255, 0.5);
     }
     
     .map-container {
@@ -349,46 +221,27 @@
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 1.5rem;
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       box-shadow: var(--card-shadow);
     }
     
     .btn-primary {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      background-color: var(--primary-color);
       border: none;
       padding: 0.75rem 2rem;
       border-radius: 50px;
       font-weight: 600;
       transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn-primary::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.6s ease, height 0.6s ease;
-    }
-    
-    .btn-primary:hover::before {
-      width: 300px;
-      height: 300px;
     }
     
     .btn-primary:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 12px rgba(30, 64, 175, 0.5);
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
     }
     
     .btn-primary:disabled {
-      background: #6b7280;
+      background-color: #6b7280;
       cursor: not-allowed;
       box-shadow: none;
     }
@@ -396,13 +249,13 @@
     .btn-outline-light {
       border-radius: 50px;
       padding: 0.75rem 2rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       color: var(--light-text);
       transition: all 0.3s ease;
     }
     
     .btn-outline-light:hover {
-      background: rgba(30, 64, 175, 0.2);
+      background-color: rgba(34, 197, 94, 0.2);
       border-color: var(--primary-color);
       transform: translateY(-2px);
       color: white;
@@ -427,12 +280,7 @@
       color: var(--danger-color);
       font-size: 0.9rem;
       margin-top: 0.25rem;
-      text-align: center;
-      padding: 0.5rem;
-      background: rgba(239, 68, 68, 0.1);
-      border-radius: 4px;
       display: none;
-      width: 100%;
     }
     
     .image-preview-container {
@@ -443,7 +291,7 @@
       margin-top: 1rem;
       overflow: hidden;
       display: none;
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       box-shadow: var(--card-shadow);
     }
     
@@ -458,16 +306,94 @@
       transform: scale(1.03);
     }
     
+    .dropdown-menu {
+      background: var(--dark-card);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      box-shadow: var(--card-shadow);
+      border-radius: 8px;
+    }
+    
+    .dropdown-item {
+      color: var(--light-text);
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+    }
+    
+    .dropdown-item:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    
+    .step::after {
+      content: '';
+      position: absolute;
+      top: 25px;
+      left: 50%;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 1;
+    }
+    
+    .step:last-child::after {
+      display: none;
+    }
+    
+    .step-circle {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.5rem;
+      font-weight: 600;
+      z-index: 2;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    
+    .step.active .step-circle {
+      background: var(--primary-color);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.5);
+      border-color: var(--primary-dark);
+    }
+    
+    .step.completed .step-circle {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .step-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
     .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
     
     .category-chip {
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       padding: 0.75rem;
       text-align: center;
@@ -480,16 +406,16 @@
     }
     
     .category-chip:hover {
-      background: rgba(30, 64, 175, 0.2);
+      background: rgba(34, 197, 94, 0.2);
       border-color: var(--primary-color);
       transform: translateY(-2px);
     }
     
     .category-chip.selected {
       background: var(--primary-color);
-      border-color: var(--accent-color);
+      border-color: var(--primary-dark);
       color: white;
-      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
     
     .urgency-radio {
@@ -501,7 +427,7 @@
     .urgency-radio label {
       flex: 1;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       padding: 0.75rem;
       text-align: center;
@@ -518,20 +444,20 @@
     }
     
     .urgency-radio label:hover {
-      background: rgba(30, 64, 175, 0.2);
+      background: rgba(34, 197, 94, 0.2);
       border-color: var(--primary-color);
     }
     
     .urgency-radio input:checked + label {
       background: var(--primary-color);
-      border-color: var(--accent-color);
+      border-color: var(--primary-dark);
       color: white;
-      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
     }
     
     .image-upload-container {
       position: relative;
-      border: 2px dashed rgba(30, 64, 175, 0.3);
+      border: 2px dashed rgba(34, 197, 94, 0.3);
       border-radius: 8px;
       padding: 2rem;
       text-align: center;
@@ -542,7 +468,7 @@
     
     .image-upload-container:hover {
       border-color: var(--primary-color);
-      background: rgba(30, 64, 175, 0.1);
+      background: rgba(34, 197, 94, 0.1);
       transform: translateY(-2px);
     }
     
@@ -558,7 +484,7 @@
     
     .map-control-btn {
       background: var(--dark-card);
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       border-radius: 8px;
       padding: 0.5rem;
       cursor: pointer;
@@ -569,21 +495,23 @@
     
     .map-control-btn:hover {
       background: var(--primary-color);
-      border-color: var(--accent-color);
+      border-color: var(--primary-dark);
       color: white;
       transform: translateY(-2px);
     }
     
+    .loading-container {
+      text-align: center;
+      padding: 3rem;
+    }
+    
     .select-container {
       position: relative;
-      flex: 1;
-      min-width: 200px;
     }
     
     select.form-control {
       appearance: none;
       padding-right: 2.5rem;
-      width: 100%;
     }
     
     .select-container::after {
@@ -594,140 +522,117 @@
       right: 1rem;
       top: 50%;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.5);
       pointer-events: none;
     }
     
-    @media (min-width: 1200px) {
-      .form-container {
-        grid-template-columns: 300px 1fr 400px;
-      }
-      
-      .form-map-container {
-        display: block;
-        opacity: 0.3;
-        transition: all 0.3s ease;
-      }
-      
-      .form-map-container.active {
-        opacity: 1;
-      }
-    }
-    
-    @media (max-width: 1199px) {
-      .form-container {
-        grid-template-columns: 250px 1fr;
-      }
-    }
-    
-    @media (max-width: 992px) {
-      .form-container {
-        grid-template-columns: 1fr;
-      }
-      
-      .form-sidebar-left {
-        position: static;
-      }
-      
-      .form-map-container {
-        height: 400px;
-        position: static;
-      }
-    }
-    
     @media (max-width: 768px) {
-      .form-container {
-        max-width: 100%;
-      }
       .form-header {
         padding: 2rem 1.5rem;
       }
+      
       .form-header h1 {
         font-size: 1.75rem;
       }
+      
       .form-card {
         padding: 1.5rem;
       }
+      
       .map-container {
         height: 250px;
       }
+      
       .category-grid {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       }
     }
     
     @media (max-width: 576px) {
-      .form-container {
-        padding: 0 1rem;
-      }
       .form-header {
         padding: 1.5rem 1rem;
       }
+      
       .form-header h1 {
         font-size: 1.5rem;
       }
+      
       .form-card {
         padding: 1rem;
       }
+      
       .map-container {
         height: 200px;
       }
+      
+      .stepper {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .step::after {
+        display: none;
+      }
+      
       .category-grid {
         grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
       }
+      
       .category-chip {
         padding: 0.5rem;
         font-size: 0.85rem;
       }
+      
       .urgency-radio label {
         padding: 0.5rem;
         font-size: 0.85rem;
       }
+      
       .form-control, .form-group label, .section-title {
         font-size: 0.85rem;
       }
-      .select-container {
-        min-width: 100%;
-      }
     }
     
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to { opacity: 1; transform: translateX(0); }
+    @media (max-width: 992px) {
+      .navbar-collapse {
+        background: var(--dark-card);
+        border-radius: 0 0 10px 10px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        box-shadow: var(--card-shadow);
+      }
     }
   </style>
 </head>
 <body>
-  <div id="particles-js"></div>
-  
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="index.html" aria-label="Página inicial do FixABairro">
+      <a class="navbar-brand" href="index.html">
         <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
         FixABairro
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Abrir menu de navegação">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="report.html" aria-label="Mapa de problemas">Mapa de Problemas</a>
+            <a class="nav-link" href="report.html">Mapa de Problemas</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="dashboard.html" aria-label="Dashboard">Dashboard</a>
+            <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn btn-primary" href="new-report.html" aria-label="Relatar um problema"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
+            <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu de perfil">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Perfil
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="profile.html" aria-label="Ver perfil">Ver Perfil</a></li>
-              <li><a class="dropdown-item" href="#" id="logoutLink" aria-label="Sair">Sair</a></li>
+              <li><a class="dropdown-item" href="profile.html">Ver Perfil</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutLink">Sair</a></li>
             </ul>
           </li>
         </ul>
@@ -737,52 +642,40 @@
 
   <!-- Report Form Section -->
   <div class="form-container">
-    <div class="form-container">
-      <!-- Coluna Esquerda (Cabeçalho + Stepper) -->
-      <div class="form-sidebar-left" data-aos="fade-right">
-        <div class="form-header">
-          <h1>Novo Relato</h1>
-          <p>Descreva o problema em detalhes para ajudar na resolução.</p>
-        </div>
-      
-      <div class="form-card" id="formContent" data-aos="fade-up"></div>
+    <div class="form-header" data-aos="fade-down">
+      <h1>Novo Relato</h1>
+      <p>Descreva o problema em detalhes para ajudar na resolução.</p>
     </div>
     
-    <div class="form-sidebar" data-aos="fade-left" data-aos-delay="200">
-      <h3>Dicas para Relatar</h3>
-      <ul>
-        <li><i class="fas fa-check"></i> Forneça um título claro e descritivo.</li>
-        <li><i class="fas fa-check"></i> Inclua detalhes específicos na descrição.</li>
-        <li><i class="fas fa-check"></i> Adicione uma foto nítida do problema.</li>
-        <li><i class="fas fa-check"></i> Marque a localização exata no mapa.</li>
-        <li><i class="fas fa-check"></i> Escolha a urgência apropriada.</li>
-      </ul>
+    <div class="form-card" id="formContent" data-aos="fade-up">
+      <div class="loading-container">
+        <span class="spinner"></span>
+        <p>Carregando formulário...</p>
+      </div>
     </div>
   </div>
 
   <!-- Firebase SDK -->
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <!-- Bootstrap JS -->
-  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
   <!-- AOS Animation -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-  <!-- Particles.js -->
-  <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
   <!-- Leaflet JS -->
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <!-- CryptoJS for SHA1 -->
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
   <!-- Firebase Auth Module -->
   <script>
+    // Firebase Auth Module (assumed to be in js/firebaseAuth.js)
     const firebaseAuth = {
       logout: function(logoutBtn, logoutText, logoutSpinner) {
         firebase.auth().signOut().then(() => {
@@ -799,6 +692,27 @@
   </script>
 
   <script>
+    // Initialize AOS animation library
+    try {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+      });
+    } catch (error) {
+      console.error("Erro ao inicializar AOS:", error.message);
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      try {
+        const navbar = document.querySelector('.navbar');
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+      } catch (error) {
+        console.error("Erro no scroll da navbar:", error.message);
+      }
+    });
+
     // Form state
     let currentStep = 0;
     let formData = {
@@ -895,7 +809,7 @@
     // Categories and urgencies
     const categories = [
       { name: 'Buraco', icon: 'fa-exclamation-circle', color: '#f59e0b' },
-      { name: 'Lixo', icon: 'fa-trash', color: '#22c55e' },
+      { name: 'Lixo', icon: 'fa-trash', color: '#10b981' },
       { name: 'Iluminação', icon: 'fa-lightbulb', color: '#f59e0b' },
       { name: 'Água', icon: 'fa-tint', color: '#0ea5e9' },
       { name: 'Segurança', icon: 'fa-shield-alt', color: '#ef4444' },
@@ -903,30 +817,38 @@
     ];
 
     const urgencies = [
-      { level: 'Baixa', icon: 'fa-tachometer-alt', color: '#22c55e' },
+      { level: 'Baixa', icon: 'fa-tachometer-alt', color: '#10b981' },
       { level: 'Média', icon: 'fa-exclamation-triangle', color: '#f59e0b' },
       { level: 'Alta', icon: 'fa-exclamation-circle', color: '#ef4444' }
     ];
 
     // Show error message
     function showError(elementId, message) {
-      const errorElement = document.getElementById(elementId);
-      if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
+      try {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        }
+      } catch (error) {
+        console.error("Erro ao exibir mensagem de erro:", error.message);
       }
     }
 
     // Hide error message
     function hideError(elementId) {
-      const errorElement = document.getElementById(elementId);
-      if (errorElement) {
-        errorElement.style.display = 'none';
+      try {
+        const errorElement = document.getElementById(elementId);
+        if (errorElement) {
+          errorElement.style.display = 'none';
+        }
+      } catch (error) {
+        console.error("Erro ao ocultar mensagem de erro:", error.message);
       }
     }
 
     // Get responsible ID for municipality
-    async function getResponsibleIdForMunicipality(firebase, municipality) {
+    async function getResponsibleIdForMunicipality(municipality) {
       try {
         const querySnapshot = await firebase.firestore()
           .collection('usuarios')
@@ -948,495 +870,522 @@
 
     // Upload to Cloudinary
     async function uploadToCloudinary(file, neighborhood) {
-      const timestamp = Math.floor(Date.now() / 1000);
-      const folder = neighborhood ? `fixa/${neighborhood}` : cloudinaryConfig.folder;
-      const paramsToSign = {
-        timestamp,
-        upload_preset: cloudinaryConfig.uploadPreset,
-        folder
-      };
+      try {
+        const timestamp = Math.floor(Date.now() / 1000);
+        const folder = neighborhood ? `fixa/${neighborhood}` : cloudinaryConfig.folder;
+        const paramsToSign = {
+          timestamp,
+          upload_preset: cloudinaryConfig.uploadPreset,
+          folder
+        };
 
-      const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
-        obj[key] = paramsToSign[key];
-        return obj;
-      }, {});
-      let signatureString = '';
-      for (const [key, value] of Object.entries(sortedParams)) {
-        if (key !== 'file' && key !== 'api_key') {
-          signatureString += `${key}=${value}&`;
+        const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
+          obj[key] = paramsToSign[key];
+          return obj;
+        }, {});
+        let signatureString = '';
+        for (const [key, value] of Object.entries(sortedParams)) {
+          if (key !== 'file' && key !== 'api_key') {
+            signatureString += `${key}=${value}&`;
+          }
         }
+        signatureString = signatureString.slice(0, -1) + cloudinaryConfig.apiSecret;
+        const signature = CryptoJS.SHA1(signatureString).toString();
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', cloudinaryConfig.apiKey);
+        formData.append('timestamp', timestamp);
+        formData.append('signature', signature);
+        formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+        formData.append('folder', folder);
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Falha no upload: ${response.status} - ${errorData.error.message}`);
+        }
+
+        const data = await response.json();
+        return data.secure_url;
+      } catch (error) {
+        console.error("Erro ao fazer upload para Cloudinary:", error.message);
+        throw error;
       }
-      signatureString = signatureString.slice(0, -1) + cloudinaryConfig.apiSecret;
-      const signature = CryptoJS.SHA1(signatureString).toString();
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('api_key', cloudinaryConfig.apiKey);
-      formData.append('timestamp', timestamp);
-      formData.append('signature', signature);
-      formData.append('upload_preset', cloudinaryConfig.uploadPreset);
-      formData.append('folder', folder);
-
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Falha no upload: ${response.status} - ${errorData.error.message}`);
-      }
-
-      const data = await response.json();
-      return data.secure_url;
     }
 
     // Initialize map
     function initializeMap() {
-      if (map) map.remove();
-      map = L.map('formMap').setView([-8.838333, 13.234444], 15);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-      }).addTo(map);
+      try {
+        if (map) map.remove();
+        map = L.map('formMap').setView([-8.838333, 13.234444], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          maxZoom: 19
+        }).addTo(map);
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            map.setView([latitude, longitude], 15);
-            formData.latitude = latitude;
-            formData.longitude = longitude;
-            marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
-            marker.on('dragend', () => {
-              formData.latitude = marker.getLatLng().lat;
-              formData.longitude = marker.getLatLng().lng;
-            });
-          },
-          () => {
-            marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map);
-            formData.latitude = -8.838333;
-            formData.longitude = 13.234444;
-            marker.on('dragend', () => {
-              formData.latitude = marker.getLatLng().lat;
-              formData.longitude = marker.getLatLng().lng;
-            });
-          }
-        );
-      } else {
-        marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map);
-        formData.latitude = -8.838333;
-        formData.longitude = 13.234444;
-        marker.on('dragend', () => {
-          formData.latitude = marker.getLatLng().lat;
-          formData.longitude = marker.getLatLng().lng;
-        });
-      }
-
-      map.on('click', (e) => {
-        if (marker) {
-          marker.setLatLng(e.latlng);
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords;
+              map.setView([latitude, longitude], 15);
+              formData.latitude = latitude;
+              formData.longitude = longitude;
+              marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+              marker.on('dragend', () => {
+                formData.latitude = marker.getLatLng().lat;
+                formData.longitude = marker.getLatLng().lng;
+              });
+            },
+            () => {
+              marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map);
+              formData.latitude = -8.838333;
+              formData.longitude = 13.234444;
+              marker.on('dragend', () => {
+                formData.latitude = marker.getLatLng().lat;
+                formData.longitude = marker.getLatLng().lng;
+              });
+            }
+          );
         } else {
-          marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+          marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map);
+          formData.latitude = -8.838333;
+          formData.longitude = 13.234444;
+          marker.on('dragend', () => {
+            formData.latitude = marker.getLatLng().lat;
+            formData.longitude = marker.getLatLng().lng;
+          });
         }
-        formData.latitude = e.latlng.lat;
-        formData.longitude = e.latlng.lng;
-        marker.on('dragend', () => {
-          formData.latitude = marker.getLatLng().lat;
-          formData.longitude = marker.getLatLng().lng;
+
+        map.on('click', (e) => {
+          if (marker) {
+            marker.setLatLng(e.latlng);
+          } else {
+            marker = L.marker(e.latlng, { draggable: true }).addTo(map);
+          }
+          formData.latitude = e.latlng.lat;
+          formData.longitude = e.latlng.lng;
+          marker.on('dragend', () => {
+            formData.latitude = marker.getLatLng().lat;
+            formData.longitude = marker.getLatLng().lng;
+          });
         });
-      });
+      } catch (error) {
+        console.error("Erro ao inicializar mapa:", error.message);
+        showError('mapError', 'Erro ao carregar mapa');
+      }
     }
 
     // Load form step
     function loadStep() {
-      const formContent = document.getElementById('formContent');
-      let stepContent = '';
+      try {
+        const formContent = document.getElementById('formContent');
+        let stepContent = '';
 
-      // Stepper
-      const steps = [
-        { title: 'Informações Básicas', completed: currentStep > 0 },
-        { title: 'Detalhes', completed: currentStep > 1 },
-        { title: 'Localização', completed: false }
-      ];
+        // Stepper
+        const steps = [
+          { title: 'Informações Básicas', completed: currentStep > 0 },
+          { title: 'Detalhes', completed: currentStep > 1 },
+          { title: 'Localização', completed: false }
+        ];
 
-      stepContent += `
-        <div class="stepper">
-          ${steps.map((step, index) => `
-            <div class="step ${index === currentStep ? 'active' : ''} ${step.completed ? 'completed' : ''}">
-              <div class="step-circle">${index + 1}</div>
-              <div class="step-title">${step.title}</div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+        stepContent += `
+          <div class="stepper">
+            ${steps.map((step, index) => `
+              <div class="step ${index === currentStep ? 'active' : ''} ${step.completed ? 'completed' : ''}">
+                <div class="step-circle">${index + 1}</div>
+                <div class="step-title">${step.title}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
 
-      // Form content
-      switch (currentStep) {
-        case 0:
-          stepContent += `
-            <h3 class="section-title">Informações Básicas</h3>
-            <div class="form-group">
-              <label for="title">Título do Problema</label>
-              <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="${formData.title}">
-              <div class="error-message" id="titleError"></div>
-            </div>
-            <div class="form-group">
-              <label for="municipality">Município</label>
-              <div class="select-container">
-                <select class="form-control" id="municipality">
-                  <option value="">Selecione um município</option>
-                  ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
-                    <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
-                  `).join('')}
-                </select>
+        // Form content
+        switch (currentStep) {
+          case 0:
+            stepContent += `
+              <h3 class="section-title">Informações Básicas</h3>
+              <div class="form-group">
+                <label for="title">Título do Problema</label>
+                <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="${formData.title}">
+                <div class="error-message" id="titleError"></div>
               </div>
-              <div class="error-message" id="municipalityError"></div>
-            </div>
-            <div class="form-group">
-              <label for="neighborhood">Bairro</label>
-              <div class="select-container">
-                <select class="form-control" id="neighborhood" ${formData.municipality ? '' : 'disabled'}>
-                  <option value="">Selecione um bairro</option>
-                  ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ? 
-                    municipalitiesAndNeighborhoods[formData.municipality].map(nb => `
-                      <option value="${nb}" ${formData.neighborhood === nb ? 'selected' : ''}>${nb}</option>
-                    `).join('') : ''
-                  }
-                </select>
-              </div>
-              <div class="error-message" id="neighborhoodError"></div>
-            </div>
-            <div class="form-group">
-              <label>Tipo de Problema</label>
-              <div class="category-grid">
-                ${categories.map(cat => `
-                  <div class="category-chip ${formData.category === cat.name ? 'selected' : ''}" data-category="${cat.name}">
-                    <i class="fas ${cat.icon}" style="color: ${cat.color}"></i>
-                    ${cat.name}
-                  </div>
-                `).join('')}
-              </div>
-              <div class="error-message" id="categoryError"></div>
-            </div>
-            <div class="form-group">
-              <label>Nível de Urgência</label>
-              <div class="urgency-radio">
-                ${urgencies.map(urg => `
-                  <input type="radio" name="urgency" id="urgency-${urg.level}" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
-                  <label for="urgency-${urg.level}">
-                    <i class="fas ${urg.icon}" style="color: ${urg.color}"></i>
-                    ${urg.level}
-                  </label>
-                `).join('')}
-              </div>
-              <div class="error-message" id="urgencyError"></div>
-            </div>
-          `;
-          break;
-        case 1:
-          stepContent += `
-            <h3 class="section-title">Detalhes do Problema</h3>
-            <div class="form-group">
-              <label for="description">Descrição Detalhada</label>
-              <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema em detalhes">${formData.description}</textarea>
-              <div class="error-message" id="descriptionError"></div>
-            </div>
-            <div class="form-group">
-              <label for="image">Adicione uma Foto</label>
-              <div class="image-upload-container" id="imageUpload">
-                ${formData.image ? `
-                  <div class="image-preview-container" id="imagePreviewContainer" style="display: block;">
-                    <img id="imagePreview" class="image-preview" alt="Prévia da imagem">
-                  </div>
-                ` : `
-                  <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.6);"></i>
-                  <p>Clique para selecionar uma imagem</p>
-                `}
-                <input type="file" id="image" accept="image/*" style="display: none;">
-              </div>
-              <div class="error-message" id="imageError"></div>
-            </div>
-          `;
-          break;
-        case 2:
-          stepContent += `
-            <h3 class="section-title">Localização do Problema</h3>
-            <div class="form-group">
-              <label>Localização</label>
-              <div class="map-container" id="formMap">
-                <div class="map-controls">
-                  <button class="map-control-btn" id="zoomIn"><i class="fas fa-plus"></i></button>
-                  <button class="map-control-btn" id="zoomOut"><i class="fas fa-minus"></i></button>
-                  <button class="map-control-btn" id="myLocation"><i class="fas fa-crosshairs"></i></button>
+              <div class="form-group">
+                <label for="municipality">Município</label>
+                <div class="select-container">
+                  <select class="form-control" id="municipality">
+                    <option value="">Selecione um município</option>
+                    ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
+                      <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
+                    `).join('')}
+                  </select>
                 </div>
+                <div class="error-message" id="municipalityError"></div>
               </div>
-              <div class="error-message" id="mapError"></div>
-            </div>
-            <div class="form-group">
-              <label for="suggestion">Sugestão de Solução (opcional)</label>
-              <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema">${formData.suggestion}</textarea>
-              <div class="error-message" id="suggestionError"></div>
-            </div>
-          `;
-          break;
-      }
-
-      // Navigation buttons
-      stepContent += `
-        <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-outline-light" id="prevBtn" ${currentStep === 0 ? 'style="visibility: hidden;"' : ''}>Voltar</button>
-          <button class="btn btn-primary" id="nextBtn">
-            <span id="nextText">${currentStep === 2 ? 'Enviar' : 'Próximo'}</span>
-            <span id="nextSpinner" class="spinner" style="display: none;"></span>
-          </button>
-        </div>
-      `;
-
-      formContent.innerHTML = stepContent;
-      if (typeof AOS !== 'undefined') {
-        AOS.refresh();
-      }
-
-      // Event listeners
-      if (currentStep === 0) {
-        document.getElementById('title').addEventListener('input', (e) => {
-          formData.title = e.target.value.trim();
-          hideError('titleError');
-        });
-
-        document.getElementById('municipality').addEventListener('change', (e) => {
-          formData.municipality = e.target.value;
-          formData.neighborhood = '';
-          const neighborhoodSelect = document.getElementById('neighborhood');
-          neighborhoodSelect.disabled = !formData.municipality;
-          neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
-          if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
-            municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
-              const option = document.createElement('option');
-              option.value = nb;
-              option.textContent = nb;
-              neighborhoodSelect.appendChild(option);
-            });
-          }
-          hideError('municipalityError');
-        });
-
-        document.getElementById('neighborhood').addEventListener('change', (e) => {
-          formData.neighborhood = e.target.value;
-          hideError('neighborhoodError');
-        });
-
-        document.querySelectorAll('.category-chip').forEach(chip => {
-          chip.addEventListener('click', () => {
-            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-            chip.classList.add('selected');
-            formData.category = chip.dataset.category;
-            hideError('categoryError');
-          });
-        });
-
-        document.querySelectorAll('input[name="urgency"]').forEach(radio => {
-          radio.addEventListener('change', (e) => {
-            formData.urgency = e.target.value;
-            hideError('urgencyError');
-          });
-        });
-      }
-
-      if (currentStep === 1) {
-        document.getElementById('description').addEventListener('input', (e) => {
-          formData.description = e.target.value.trim();
-          hideError('descriptionError');
-        });
-
-        const imageUpload = document.getElementById('imageUpload');
-        const imageInput = document.getElementById('image');
-        imageUpload.addEventListener('click', () => imageInput.click());
-        imageInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            formData.image = file;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const previewContainer = document.createElement('div');
-              previewContainer.className = 'image-preview-container';
-              previewContainer.id = 'imagePreviewContainer';
-              previewContainer.style.display = 'block';
-              previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
-              imageUpload.innerHTML = '';
-              imageUpload.appendChild(previewContainer);
-            };
-            reader.readAsDataURL(file);
-            hideError('imageError');
-          }
-        });
-      }
-
-      if (currentStep === 2) {
-        initializeMap();
-        document.getElementById('zoomIn').addEventListener('click', () => {
-          map.setZoom(map.getZoom() + 1);
-        });
-        document.getElementById('zoomOut').addEventListener('click', () => {
-          map.setZoom(map.getZoom() - 1);
-        });
-        document.getElementById('myLocation').addEventListener('click', () => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-              const { latitude, longitude } = position.coords;
-              map.setView([latitude, longitude], 15);
-              if (marker) {
-                marker.setLatLng([latitude, longitude]);
-              } else {
-                marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
-              }
-              formData.latitude = latitude;
-              formData.longitude = longitude;
-            });
-          }
-        });
-
-        document.getElementById('suggestion').addEventListener('input', (e) => {
-          formData.suggestion = e.target.value.trim();
-        });
-      }
-
-      document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentStep > 0) {
-          currentStep--;
-          loadStep();
+              <div class="form-group">
+                <label for="neighborhood">Bairro</label>
+                <div class="select-container">
+                  <select class="form-control" id="neighborhood" ${formData.municipality ? '' : 'disabled'}>
+                    <option value="">Selecione um bairro</option>
+                    ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ? 
+                      municipalitiesAndNeighborhoods[formData.municipality].map(nb => `
+                        <option value="${nb}" ${formData.neighborhood === nb ? 'selected' : ''}>${nb}</option>
+                      `).join('') : ''
+                    }
+                  </select>
+                </div>
+                <div class="error-message" id="neighborhoodError"></div>
+              </div>
+              <div class="form-group">
+                <label>Tipo de Problema</label>
+                <div class="category-grid">
+                  ${categories.map(cat => `
+                    <div class="category-chip ${formData.category === cat.name ? 'selected' : ''}" data-category="${cat.name}">
+                      <i class="fas ${cat.icon}" style="color: ${cat.color}"></i>
+                      ${cat.name}
+                    </div>
+                  `).join('')}
+                </div>
+                <div class="error-message" id="categoryError"></div>
+              </div>
+              <div class="form-group">
+                <label>Nível de Urgência</label>
+                <div class="urgency-radio">
+                  ${urgencies.map(urg => `
+                    <input type="radio" name="urgency" id="urgency-${urg.level}" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
+                    <label for="urgency-${urg.level}">
+                      <i class="fas ${urg.icon}" style="color: ${urg.color}"></i>
+                      ${urg.level}
+                    </label>
+                  `).join('')}
+                </div>
+                <div class="error-message" id="urgencyError"></div>
+              </div>
+            `;
+            break;
+          case 1:
+            stepContent += `
+              <h3 class="section-title">Detalhes do Problema</h3>
+              <div class="form-group">
+                <label for="description">Descrição Detalhada</label>
+                <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema em detalhes">${formData.description}</textarea>
+                <div class="error-message" id="descriptionError"></div>
+              </div>
+              <div class="form-group">
+                <label for="image">Adicione uma Foto</label>
+                <div class="image-upload-container" id="imageUpload">
+                  ${formData.image ? `
+                    <div class="image-preview-container" id="imagePreviewContainer" style="display: block;">
+                      <img id="imagePreview" class="image-preview" alt="Prévia da imagem">
+                    </div>
+                  ` : `
+                    <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.5);"></i>
+                    <p>Clique para selecionar uma imagem</p>
+                  `}
+                  <input type="file" id="image" accept="image/*" style="display: none;">
+                </div>
+                <div class="error-message" id="imageError"></div>
+              </div>
+            `;
+            break;
+          case 2:
+            stepContent += `
+              <h3 class="section-title">Localização do Problema</h3>
+              <div class="form-group">
+                <label>Localização</label>
+                <div class="map-container" id="formMap">
+                  <div class="map-controls">
+                    <button class="map-control-btn" id="zoomIn"><i class="fas fa-plus"></i></button>
+                    <button class="map-control-btn" id="zoomOut"><i class="fas fa-minus"></i></button>
+                    <button class="map-control-btn" id="myLocation"><i class="fas fa-crosshairs"></i></button>
+                  </div>
+                </div>
+                <div class="error-message" id="mapError"></div>
+              </div>
+              <div class="form-group">
+                <label for="suggestion">Sugestão de Solução (opcional)</label>
+                <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema">${formData.suggestion}</textarea>
+                <div class="error-message" id="suggestionError"></div>
+              </div>
+            `;
+            break;
         }
-      });
 
-      document.getElementById('nextBtn').addEventListener('click', async () => {
-        let isValid = true;
+        // Navigation buttons
+        stepContent += `
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-light" id="prevBtn" ${currentStep === 0 ? 'style="visibility: hidden;"' : ''}>Voltar</button>
+            <button class="btn btn-primary" id="nextBtn">
+              <span id="nextText">${currentStep === 2 ? 'Enviar' : 'Próximo'}</span>
+              <span id="nextSpinner" class="spinner" style="display: none;"></span>
+            </button>
+          </div>
+        `;
 
+        formContent.innerHTML = stepContent;
+        AOS.refresh();
+
+        // Event listeners
         if (currentStep === 0) {
-          if (!formData.title) {
-            showError('titleError', 'Por favor, insira um título');
-            isValid = false;
-          }
-          if (!formData.municipality) {
-            showError('municipalityError', 'Por favor, selecione um município');
-            isValid = false;
-          }
-          if (!formData.neighborhood) {
-            showError('neighborhoodError', 'Por favor, selecione um bairro');
-            isValid = false;
-          }
-          if (!formData.category) {
-            showError('categoryError', 'Por favor, selecione uma categoria');
-            isValid = false;
-          }
-          if (!formData.urgency) {
-            showError('urgencyError', 'Por favor, selecione o nível de urgência');
-            isValid = false;
-          }
+          document.getElementById('title').addEventListener('input', (e) => {
+            formData.title = e.target.value.trim();
+            hideError('titleError');
+          });
+
+          document.getElementById('municipality').addEventListener('change', (e) => {
+            formData.municipality = e.target.value;
+            formData.neighborhood = '';
+            const neighborhoodSelect = document.getElementById('neighborhood');
+            neighborhoodSelect.disabled = !formData.municipality;
+            neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+            if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
+              municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
+                const option = document.createElement('option');
+                option.value = nb;
+                option.textContent = nb;
+                neighborhoodSelect.appendChild(option);
+              });
+            }
+            hideError('municipalityError');
+          });
+
+          document.getElementById('neighborhood').addEventListener('change', (e) => {
+            formData.neighborhood = e.target.value;
+            hideError('neighborhoodError');
+          });
+
+          document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+              document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+              chip.classList.add('selected');
+              formData.category = chip.dataset.category;
+              hideError('categoryError');
+            });
+          });
+
+          document.querySelectorAll('input[name="urgency"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+              formData.urgency = e.target.value;
+              hideError('urgencyError');
+            });
+          });
         }
 
         if (currentStep === 1) {
-          if (!formData.description) {
-            showError('descriptionError', 'Por favor, insira uma descrição');
-            isValid = false;
-          }
-          if (!formData.image) {
-            showError('imageError', 'Por favor, adicione uma imagem');
-            isValid = false;
-          }
+          document.getElementById('description').addEventListener('input', (e) => {
+            formData.description = e.target.value.trim();
+            hideError('descriptionError');
+          });
+
+          const imageUpload = document.getElementById('imageUpload');
+          const imageInput = document.getElementById('image');
+          imageUpload.addEventListener('click', () => imageInput.click());
+          imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+              formData.image = file;
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const previewContainer = document.createElement('div');
+                previewContainer.className = 'image-preview-container';
+                previewContainer.id = 'imagePreviewContainer';
+                previewContainer.style.display = 'block';
+                previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
+                imageUpload.innerHTML = '';
+                imageUpload.appendChild(previewContainer);
+              };
+              reader.readAsDataURL(file);
+              hideError('imageError');
+            }
+          });
         }
 
         if (currentStep === 2) {
-          if (!formData.latitude || !formData.longitude) {
-            showError('mapError', 'Por favor, selecione uma localização');
-            isValid = false;
-          }
+          initializeMap();
+          document.getElementById('zoomIn').addEventListener('click', () => {
+            map.setZoom(map.getZoom() + 1);
+          });
+          document.getElementById('zoomOut').addEventListener('click', () => {
+            map.setZoom(map.getZoom() - 1);
+          });
+          document.getElementById('myLocation').addEventListener('click', () => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+                map.setView([latitude, longitude], 15);
+                if (marker) {
+                  marker.setLatLng([latitude, longitude]);
+                } else {
+                  marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+                }
+                formData.latitude = latitude;
+                formData.longitude = longitude;
+              });
+            }
+          });
+
+          document.getElementById('suggestion').addEventListener('input', (e) => {
+            formData.suggestion = e.target.value.trim();
+          });
         }
 
-        if (!isValid) return;
-
-        if (currentStep < 2) {
-          currentStep++;
-          loadStep();
-        } else {
-          const nextBtn = document.getElementById('nextBtn');
-          const nextText = document.getElementById('nextText');
-          const nextSpinner = document.getElementById('nextSpinner');
-          nextText.style.display = 'none';
-          nextSpinner.style.display = 'inline-block';
-          nextBtn.disabled = true;
-
-          try {
-            const user = firebase.auth().currentUser;
-            if (!user) throw new Error('Usuário não autenticado');
-
-            const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
-            const responsibleId = await getResponsibleIdForMunicipality(firebase, formData.municipality);
-
-            const problemData = {
-              usuarioId: user.uid,
-              title: formData.title,
-              category: formData.category,
-              urgency: formData.urgency,
-              description: formData.description,
-              suggestion: formData.suggestion || '',
-              imageUrl,
-              location: {
-                latitude: formData.latitude,
-                longitude: formData.longitude
-              },
-              status: 'Aguardando',
-              createdAt: Date.now(),
-              neighborhood: formData.neighborhood,
-              municipality: formData.municipality,
-              responsibleId: responsibleId || null
-            };
-
-            await firebase.database().ref('problems').push(problemData);
-            alert('Problema relatado com sucesso!');
-            window.location.href = 'map.html';
-          } catch (error) {
-            console.error('Erro ao relatar problema:', error.message);
-            showError('formContent', 'Erro ao relatar problema.');
-          } finally {
-            nextText.style.display = 'inline-block';
-            nextSpinner.style.display = 'none';
-            nextBtn.disabled = false;
+        document.getElementById('prevBtn').addEventListener('click', () => {
+          if (currentStep > 0) {
+            currentStep--;
+            loadStep();
           }
-        }
-      });
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', async () => {
+          let isValid = true;
+
+          if (currentStep === 0) {
+            if (!formData.title) {
+              showError('titleError', 'Por favor, insira um título');
+              isValid = false;
+            }
+            if (!formData.municipality) {
+              showError('municipalityError', 'Por favor, selecione um município');
+              isValid = false;
+            }
+            if (!formData.neighborhood) {
+              showError('neighborhoodError', 'Por favor, selecione um bairro');
+              isValid = false;
+            }
+            if (!formData.category) {
+              showError('categoryError', 'Por favor, selecione uma categoria');
+              isValid = false;
+            }
+            if (!formData.urgency) {
+              showError('urgencyError', 'Por favor, selecione o nível de urgência');
+              isValid = false;
+            }
+          }
+
+          if (currentStep === 1) {
+            if (!formData.description) {
+              showError('descriptionError', 'Por favor, insira uma descrição');
+              isValid = false;
+            }
+            if (!formData.image) {
+              showError('imageError', 'Por favor, adicione uma imagem');
+              isValid = false;
+            }
+          }
+
+          if (currentStep === 2) {
+            if (!formData.latitude || !formData.longitude) {
+              showError('mapError', 'Por favor, selecione uma localização');
+              isValid = false;
+            }
+          }
+
+          if (!isValid) return;
+
+          if (currentStep < 2) {
+            currentStep++;
+            loadStep();
+          } else {
+            const nextBtn = document.getElementById('nextBtn');
+            const nextText = document.getElementById('nextText');
+            const nextSpinner = document.getElementById('nextSpinner');
+            nextText.style.display = 'none';
+            nextSpinner.style.display = 'inline-block';
+            nextBtn.disabled = true;
+
+            try {
+              const user = firebase.auth().currentUser;
+              if (!user) throw new Error('Usuário não autenticado');
+
+              console.log('Iniciando upload da imagem para Cloudinary...');
+              const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
+              console.log('Imagem enviada com sucesso:', imageUrl);
+
+              console.log('Buscando responsável para o município:', formData.municipality);
+              const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
+              console.log('Responsible ID:', responsibleId);
+
+              const problemData = {
+                usuarioId: user.uid,
+                title: formData.title,
+                category: formData.category,
+                urgency: formData.urgency,
+                description: formData.description,
+                suggestion: formData.suggestion || '',
+                imageUrl,
+                location: {
+                  latitude: formData.latitude,
+                  longitude: formData.longitude
+                },
+                status: 'Aguardando',
+                createdAt: Date.now(),
+                neighborhood: formData.neighborhood,
+                municipality: formData.municipality,
+                responsibleId: responsibleId || null
+              };
+
+              console.log('Gravando problema no Realtime Database:', problemData);
+              await firebase.database().ref('problems').push(problemData);
+              console.log('Problema salvo com sucesso no Realtime Database');
+
+              alert('Problema relatado com sucesso!');
+              window.location.href = 'map.html';
+            } catch (error) {
+              console.error('Erro ao relatar problema:', error.message);
+              showError('formContent', 'Erro ao relatar problema. Tente novamente.');
+            } finally {
+              nextText.style.display = 'inline-block';
+              nextSpinner.style.display = 'none';
+              nextBtn.disabled = false;
+            }
+          }
+        });
+      } catch (error) {
+        console.error("Erro ao carregar etapa do formulário:", error.message);
+        showError('formContent', 'Erro ao carregar formulário');
+      }
     }
 
     // Load form data
-    function loadFormData(firebase) {
-      firebase.auth().onAuthStateChanged(async user => {
-        const formContent = document.getElementById('formContent');
-        
-        if (!user) {
-          formContent.innerHTML = `
-            <div class="error-message">Por favor, faça login para relatar um problema.</div>
-          `;
-          setTimeout(() => window.location.href = 'login.html', 2000);
-          return;
-        }
+    function loadFormData() {
+      try {
+        firebase.auth().onAuthStateChanged(async user => {
+          const formContent = document.getElementById('formContent');
+          
+          if (!user) {
+            formContent.innerHTML = `
+              <div class="error-message">Por favor, faça login para relatar um problema.</div>
+            `;
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
+          }
 
-        try {
-          const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
-          const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
-          formData.municipality = userData.municipality || Object.keys(municipalitiesAndNeighborhoods)[0];
-          loadStep();
-        } catch (error) {
-          console.error("Erro ao carregar dados:", error.message);
-          formContent.innerHTML = `
-            <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
-          `;
-        }
-      });
+          try {
+            const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+            formData.municipality = userData.municipality || Object.keys(municipalitiesAndNeighborhoods)[0];
+            loadStep();
+          } catch (error) {
+            console.error("Erro ao carregar dados:", error.message);
+            formContent.innerHTML = `
+              <div class="error-message">Erro ao carregar dados: ${error.message}</div>
+              <button class="btn btn-primary mt-2" onclick="loadFormData()">Tentar Novamente</button>
+            `;
+          }
+        });
+      } catch (error) {
+        console.error("Erro na inicialização do carregamento:", error.message);
+        showError('formContent', 'Erro ao iniciar carregamento');
+      }
     }
 
     // Handle logout
-    function handleLogout(firebase) {
-      return function(e) {
+    function handleLogout(e) {
+      try {
         e.preventDefault();
         const logoutBtn = document.getElementById('logoutLink');
         const logoutText = logoutBtn.querySelector('span') || logoutBtn;
@@ -1448,47 +1397,15 @@
         logoutBtn.disabled = true;
 
         firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
-      };
+      } catch (error) {
+        console.error("Erro ao iniciar logout:", error.message);
+        showError('formContent', 'Erro ao fazer logout');
+      }
     }
 
     // Initialize page
     window.addEventListener('load', () => {
-      // Initialize AOS animation library
-      if (typeof AOS !== 'undefined') {
-        AOS.init({
-          duration: 800,
-          easing: 'ease-in-out',
-          once: true
-        });
-      } else {
-        console.warn('AOS library not loaded');
-      }
-
-      // Initialize Particles.js
-      if (typeof particlesJS !== 'undefined') {
-        particlesJS('particles-js', {
-          particles: {
-            number: { value: 20, density: { enable: true, value_area: 1000 } },
-            color: { value: ['#1e40af', '#22c55e', '#f59e0b'] },
-            shape: { type: 'circle' },
-            opacity: { value: 0.4, random: true },
-            size: { value: 3, random: true },
-            line_linked: { enable: false },
-            move: { enable: true, speed: 0.8, direction: 'none', random: true }
-          },
-          interactivity: {
-            detect_on: 'canvas',
-            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } },
-            modes: { repulse: { distance: 100 }, push: { particles_nb: 4 } }
-          },
-          retina_detect: true
-        });
-      } else {
-        console.warn('Particles.js library not loaded');
-      }
-
-      // Initialize Firebase and related functionality
-      if (typeof firebase !== 'undefined') {
+      try {
         const firebaseConfig = {
           apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
           authDomain: "facilita-479b3.firebaseapp.com",
@@ -1503,21 +1420,12 @@
           firebase.initializeApp(firebaseConfig);
         }
 
-        loadFormData(firebase);
-        document.getElementById('logoutLink').addEventListener('click', handleLogout(firebase));
-      } else {
-        console.warn('Firebase SDK not loaded');
-        const formContent = document.getElementById('formContent');
-        formContent.innerHTML = `
-          <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
-        `;
+        document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        loadFormData();
+      } catch (error) {
+        console.error("Erro ao inicializar página:", error.message);
+        showError('formContent', 'Erro ao carregar página');
       }
-
-      // Navbar scroll effect
-      window.addEventListener('scroll', () => {
-        const navbar = document.querySelector('.navbar');
-        navbar.classList.toggle('scrolled', window.scrollY > 50);
-      });
     });
   </script>
 </body>
