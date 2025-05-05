@@ -738,7 +738,132 @@
         <p>Descreva o problema em detalhes para ajudar na resolução.</p>
       </div>
       
-      <div class="form-card" id="formContent" data-aos="fade-up"></div>
+      <div class="form-card" id="formContent" data-aos="fade-up">
+        <div class="stepper">
+          <div class="step active">
+            <div class="step-circle">1</div>
+            <div class="step-title">Informações Básicas</div>
+          </div>
+          <div class="step">
+            <div class="step-circle">2</div>
+            <div class="step-title">Detalhes</div>
+          </div>
+          <div class="step">
+            <div class="step-circle">3</div>
+            <div class="step-title">Localização</div>
+          </div>
+        </div>
+
+        <div class="step-one-container">
+          <h3 class="section-title">Informações Básicas</h3>
+          <div class="form-group">
+            <label for="title">Título do Problema</label>
+            <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="">
+            <div class="error-message" id="titleError"></div>
+          </div>
+          <div class="form-group">
+            <label for="municipality">Município</label>
+            <div class="select-container">
+              <select class="form-control" id="municipality">
+                <option value="">Selecione um município</option>
+                <option value="Belas">Belas</option>
+                <option value="Cacuaco">Cacuaco</option>
+                <option value="Cazenga">Cazenga</option>
+                <option value="Ícolo e Bengo">Ícolo e Bengo</option>
+                <option value="Luanda">Luanda</option>
+                <option value="Quiçama">Quiçama</option>
+                <option value="Kilamba Kiaxi">Kilamba Kiaxi</option>
+                <option value="Talatona">Talatona</option>
+                <option value="Viana">Viana</option>
+              </select>
+            </div>
+            <div class="error-message" id="municipalityError"></div>
+          </div>
+          <div class="form-group">
+            <label for="neighborhood">Bairro</label>
+            <div class="select-container">
+              <select class="form-control" id="neighborhood" disabled>
+                <option value="">Selecione um bairro</option>
+              </select>
+            </div>
+            <div class="error-message" id="neighborhoodError"></div>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Problema</label>
+            <div class="category-grid">
+              <div class="category-chip selected" data-category="Buraco"><i class="fas fa-exclamation-circle" style="color: #f59e0b"></i> Buraco</div>
+              <div class="category-chip" data-category="Lixo"><i class="fas fa-trash" style="color: #22c55e"></i> Lixo</div>
+              <div class="category-chip" data-category="Iluminação"><i class="fas fa-lightbulb" style="color: #f59e0b"></i> Iluminação</div>
+              <div class="category-chip" data-category="Água"><i class="fas fa-tint" style="color: #0ea5e9"></i> Água</div>
+              <div class="category-chip" data-category="Segurança"><i class="fas fa-shield-alt" style="color: #ef4444"></i> Segurança</div>
+              <div class="category-chip" data-category="Outros"><i class="fas fa-ellipsis-h" style="color: #9ca3af"></i> Outros</div>
+            </div>
+            <div class="error-message" id="categoryError"></div>
+          </div>
+          <div class="form-group">
+            <label>Nível de Urgência</label>
+            <div class="urgency-radio">
+              <input type="radio" name="urgency" id="urgency-Baixa" value="Baixa" checked>
+              <label for="urgency-Baixa"><i class="fas fa-tachometer-alt" style="color: #22c55e"></i> Baixa</label>
+              <input type="radio" name="urgency" id="urgency-Média" value="Média">
+              <label for="urgency-Média"><i class="fas fa-exclamation-triangle" style="color: #f59e0b"></i> Média</label>
+              <input type="radio" name="urgency" id="urgency-Alta" value="Alta">
+              <label for="urgency-Alta"><i class="fas fa-exclamation-circle" style="color: #ef4444"></i> Alta</label>
+            </div>
+            <div class="error-message" id="urgencyError"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-light" id="prevBtn" style="visibility: hidden;">Voltar</button>
+            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
+          </div>
+        </div>
+
+        <div class="step-two-container content">
+          <h3 class="section-title">Detalhes do Problema</h3>
+          <div class="form-group">
+            <label for="description">Descrição Detalhada</label>
+            <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema em detalhes"></textarea>
+            <div class="error-message" id="descriptionError"></div>
+          </div>
+          <div class="form-group">
+            <label for="image">Adicione uma Foto</label>
+            <div class="image-upload-container" id="imageUpload">
+              <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.6);"></i>
+              <p>Clique para selecionar uma imagem</p>
+              <input type="file" id="image" accept="image/*" style="display: none;">
+            </div>
+            <div class="error-message" id="imageError"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-light" id="prevBtn">Voltar</button>
+            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
+          </div>
+        </div>
+
+        <div class="step-three-container content">
+          <h3 class="section-title">Localização do Problema</h3>
+          <div class="form-group">
+            <label>Localização</label>
+            <div class="map-container" id="formMap">
+              <div class="map-controls">
+                <button class="map-control-btn" id="zoomIn"><i class="fas fa-plus"></i></button>
+                <button class="map-control-btn" id="zoomOut"><i class="fas fa-minus"></i></button>
+                <button class="map-control-btn" id="myLocation"><i class="fas fa-crosshairs"></i></button>
+              </div>
+            </div>
+            <div class="error-message" id="mapError"></div>
+          </div>
+          <div class="form-group">
+            <label for="suggestion">Sugestão de Solução (opcional)</label>
+            <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema"></textarea>
+            <div class="error-message" id="suggestionError"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-outline-light" id="prevBtn">Voltar</button>
+            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Enviar</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
+          </div>
+        </div>
+      </div>
     </div>
     
     <div class="form-sidebar" data-aos="fade-left" data-aos-delay="200">
@@ -774,23 +899,6 @@
   <!-- CryptoJS for SHA1 -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
-  <!-- Firebase Auth Module -->
-  <script>
-    const firebaseAuth = {
-      logout: function(logoutBtn, logoutText, logoutSpinner) {
-        firebase.auth().signOut().then(() => {
-          window.location.href = 'login.html';
-        }).catch(error => {
-          console.error("Erro ao fazer logout:", error.message);
-          logoutText.style.display = 'inline-block';
-          logoutSpinner.remove();
-          logoutBtn.disabled = false;
-          alert('Erro ao fazer logout: ' + error.message);
-        });
-      }
-    };
-  </script>
-
   <script>
     // Form state
     let currentStep = 0;
@@ -810,70 +918,15 @@
 
     // Municipalities and neighborhoods
     const municipalitiesAndNeighborhoods = {
-      'Belas': [
-        'Morro Bento', 'Benfica', 'Vila Estoril', 'Talatona', 'Kilamba', 'Barra do Kwanza', 'Quilamba',
-        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros',
-        'Vila Verde', 'Zango 1', 'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7',
-        'Zango 8', 'Zango 9', 'Zango 0'
-      ],
-      'Cacuaco': [
-        'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
-        'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
-        'Quixinge', 'Quilómetro 44', 'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe',
-        'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45',
-        'Quilómetro 50'
-      ],
-      'Cazenga': [
-        'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady', 'Cazenga Popular',
-        'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa', 'Kicolo', 'Kilemba', 'Kimbamba',
-        'Kimbango', 'Kinda', 'Kintambi', 'Kipata', 'Kuanza', 'Kueio', 'Luanda Sul', 'Mabubas',
-        'Maculusso', 'Mabor', 'Maianga', 'Makulusu', 'Malangino', 'Marçal', 'Ngola Kiluange',
-        'Palmeirinhas', 'Rocha Pinto', 'Rangel', 'Sambizanga', 'São Paulo', 'Uíge', 'Vila Alice',
-        'Vila Estoril', 'Vila Flor', 'Vila Verde'
-      ],
-      'Ícolo e Bengo': [
-        'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe', 'Kicabo',
-        'Kifangondo', 'Kikabo', 'Kilemba', 'Kixico', 'Luanda', 'Muxima', 'Panguila', 'Quiminha',
-        'Quixinge', 'Tabi', 'Zenza do Itombe'
-      ],
-      'Luanda': [
-        'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
-        'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Bairro dos Musseques', 'Bairro da Samba',
-        'Bairro do Cazenga', 'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge',
-        'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde',
-        'Bairro do Marçal', 'Bairro do Ngola Kiluange', 'Bairro do Kuanza', 'Bairro do Kilemba',
-        'Bairro do Kintambi', 'Bairro do Kimbamba', 'Bairro do Kimbango', 'Bairro do Kinda',
-        'Bairro do Kipata', 'Bairro do Kueio', 'Bairro do Luanda Sul', 'Bairro do Mabubas',
-        'Bairro do Mabor', 'Bairro do Makulusu', 'Bairro do Malangino', 'Bairro do Palmeirinhas',
-        'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge', 'Bairro da Vila Alice',
-        'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'
-      ],
-      'Quiçama': [
-        'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quiminha', 'Quixinge',
-        'Zenza do Itombe'
-      ],
-      'Kilamba Kiaxi': [
-        'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária', 'Vila de Viana',
-        'Bairro da Paz', 'Bairro da Boavista', 'Bairro da Camama', 'Bairro da Cidade Universitária',
-        'Bairro da Golfe', 'Bairro da Palanca', 'Bairro da Sapú', 'Bairro da Vila de Viana',
-        'Bairro do Cassequel', 'Bairro do Prenda', 'Bairro do Kinaxixi', 'Bairro do Maculusso',
-        'Bairro do Rangel', 'Bairro do Sambizanga', 'Bairro do São Paulo', 'Bairro do Uíge',
-        'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'
-      ],
-      'Talatona': [
-        'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril', 'Talatona',
-        'Kilamba', 'Barra do Kwanza', 'Quilamba', 'Cabolombo', 'Quifica', 'Gamek',
-        'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros', 'Vila Verde', 'Zango 1',
-        'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7', 'Zango 8',
-        'Zango 9', 'Zango 0'
-      ],
-      'Viana': [
-        'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Kikolo', 'Sequele', 'Mulenvos',
-        'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo',
-        'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo', 'Quixinge', 'Quilómetro 44',
-        'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe', 'Quilómetro 30',
-        'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45', 'Quilómetro 50'
-      ]
+      'Belas': ['Morro Bento', 'Benfica', 'Vila Estoril', 'Talatona', 'Kilamba', 'Barra do Kwanza', 'Quilamba', 'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros', 'Vila Verde', 'Zango 1', 'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7', 'Zango 8', 'Zango 9', 'Zango 0'],
+      'Cacuaco': ['Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo', 'Quixinge', 'Quilómetro 44', 'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45', 'Quilómetro 50'],
+      'Cazenga': ['Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady', 'Cazenga Popular', 'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa', 'Kicolo', 'Kilemba', 'Kimbamba', 'Kimbango', 'Kinda', 'Kintambi', 'Kipata', 'Kuanza', 'Kueio', 'Luanda Sul', 'Mabubas', 'Maculusso', 'Mabor', 'Maianga', 'Makulusu', 'Malangino', 'Marçal', 'Ngola Kiluange', 'Palmeirinhas', 'Rocha Pinto', 'Rangel', 'Sambizanga', 'São Paulo', 'Uíge', 'Vila Alice', 'Vila Estoril', 'Vila Flor', 'Vila Verde'],
+      'Ícolo e Bengo': ['Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe', 'Kicabo', 'Kifangondo', 'Kikabo', 'Kilemba', 'Kixico', 'Luanda', 'Muxima', 'Panguila', 'Quiminha', 'Quixinge', 'Tabi', 'Zenza do Itombe'],
+      'Luanda': ['Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda', 'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Bairro dos Musseques', 'Bairro da Samba', 'Bairro do Cazenga', 'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge', 'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde', 'Bairro do Marçal', 'Bairro do Ngola Kiluange', 'Bairro do Kuanza', 'Bairro do Kilemba', 'Bairro do Kintambi', 'Bairro do Kimbamba', 'Bairro do Kimbango', 'Bairro do Kinda', 'Bairro do Kipata', 'Bairro do Kueio', 'Bairro do Luanda Sul', 'Bairro do Mabubas', 'Bairro do Mabor', 'Bairro do Makulusu', 'Bairro do Malangino', 'Bairro do Palmeirinhas', 'Bairro do Rocha Pinto', 'Bairro do São Paulo', 'Bairro do Uíge', 'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'],
+      'Quiçama': ['Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quiminha', 'Quixinge', 'Zenza do Itombe'],
+      'Kilamba Kiaxi': ['Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária', 'Vila de Viana', 'Bairro da Paz', 'Bairro da Boavista', 'Bairro da Camama', 'Bairro da Cidade Universitária', 'Bairro da Golfe', 'Bairro da Palanca', 'Bairro da Sapú', 'Bairro da Vila de Viana', 'Bairro do Cassequel', 'Bairro do Prenda', 'Bairro do Kinaxixi', 'Bairro do Maculusso', 'Bairro do Rangel', 'Bairro do Sambizanga', 'Bairro do São Paulo', 'Bairro do Uíge', 'Bairro da Vila Alice', 'Bairro da Vila Estoril', 'Bairro da Vila Flor', 'Bairro da Vila Verde'],
+      'Talatona': ['Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril', 'Talatona', 'Kilamba', 'Barra do Kwanza', 'Quilamba', 'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros', 'Vila Verde', 'Zango 1', 'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7', 'Zango 8', 'Zango 9', 'Zango 0'],
+      'Viana': ['Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila']
     };
 
     // Cloudinary configuration
@@ -1039,266 +1092,129 @@
           formData.longitude = marker.getLatLng().lng;
         });
       });
+
+      document.getElementById('zoomIn').addEventListener('click', () => {
+        map.setZoom(map.getZoom() + 1);
+      });
+      document.getElementById('zoomOut').addEventListener('click', () => {
+        map.setZoom(map.getZoom() - 1);
+      });
+      document.getElementById('myLocation').addEventListener('click', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(position => {
+            const { latitude, longitude } = position.coords;
+            map.setView([latitude, longitude], 15);
+            if (marker) {
+              marker.setLatLng([latitude, longitude]);
+            } else {
+              marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+            }
+            formData.latitude = latitude;
+            formData.longitude = longitude;
+          });
+        }
+      });
     }
 
     // Load form step
     function loadStep() {
-      const formContent = document.getElementById('formContent');
-      let stepContent = '';
+      const stepContainers = document.querySelectorAll('.step-one-container, .step-two-container, .step-three-container');
+      stepContainers.forEach((container, index) => {
+        container.style.display = index === currentStep ? 'block' : 'none';
+      });
 
-      // Stepper
-      const steps = [
-        { title: 'Informações Básicas', completed: currentStep > 0 },
-        { title: 'Detalhes', completed: currentStep > 1 },
-        { title: 'Localização', completed: false }
-      ];
+      if (currentStep === 2) initializeMap();
+    }
 
-      stepContent += `
-        <div class="stepper">
-          ${steps.map((step, index) => `
-            <div class="step ${index === currentStep ? 'active' : ''} ${step.completed ? 'completed' : ''}">
-              <div class="step-circle">${index + 1}</div>
-              <div class="step-title">${step.title}</div>
-            </div>
-          `).join('')}
-        </div>
-      `;
+    // Update step
+    function updateStep() {
+      const steps = document.querySelectorAll('.step');
+      steps.forEach((step, index) => {
+        step.classList.toggle('active', index === currentStep);
+        step.classList.toggle('completed', index < currentStep);
+      });
+      loadStep();
+    }
 
-      // Form content
-      switch (currentStep) {
-        case 0:
-          stepContent += `
-            <h3 class="section-title">Informações Básicas</h3>
-            <div class="form-group">
-              <label for="title">Título do Problema</label>
-              <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="${formData.title}">
-              <div class="error-message" id="titleError"></div>
-            </div>
-            <div class="form-group">
-              <label for="municipality">Município</label>
-              <div class="select-container">
-                <select class="form-control" id="municipality">
-                  <option value="">Selecione um município</option>
-                  ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
-                    <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
-                  `).join('')}
-                </select>
-              </div>
-              <div class="error-message" id="municipalityError"></div>
-            </div>
-            <div class="form-group">
-              <label for="neighborhood">Bairro</label>
-              <div class="select-container">
-                <select class="form-control" id="neighborhood" ${formData.municipality ? '' : 'disabled'}>
-                  <option value="">Selecione um bairro</option>
-                  ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ? 
-                    municipalitiesAndNeighborhoods[formData.municipality].map(nb => `
-                      <option value="${nb}" ${formData.neighborhood === nb ? 'selected' : ''}>${nb}</option>
-                    `).join('') : ''
-                  }
-                </select>
-              </div>
-              <div class="error-message" id="neighborhoodError"></div>
-            </div>
-            <div class="form-group">
-              <label>Tipo de Problema</label>
-              <div class="category-grid">
-                ${categories.map(cat => `
-                  <div class="category-chip ${formData.category === cat.name ? 'selected' : ''}" data-category="${cat.name}">
-                    <i class="fas ${cat.icon}" style="color: ${cat.color}"></i>
-                    ${cat.name}
-                  </div>
-                `).join('')}
-              </div>
-              <div class="error-message" id="categoryError"></div>
-            </div>
-            <div class="form-group">
-              <label>Nível de Urgência</label>
-              <div class="urgency-radio">
-                ${urgencies.map(urg => `
-                  <input type="radio" name="urgency" id="urgency-${urg.level}" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
-                  <label for="urgency-${urg.level}">
-                    <i class="fas ${urg.icon}" style="color: ${urg.color}"></i>
-                    ${urg.level}
-                  </label>
-                `).join('')}
-              </div>
-              <div class="error-message" id="urgencyError"></div>
-            </div>
-          `;
-          break;
-        case 1:
-          stepContent += `
-            <h3 class="section-title">Detalhes do Problema</h3>
-            <div class="form-group">
-              <label for="description">Descrição Detalhada</label>
-              <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema em detalhes">${formData.description}</textarea>
-              <div class="error-message" id="descriptionError"></div>
-            </div>
-            <div class="form-group">
-              <label for="image">Adicione uma Foto</label>
-              <div class="image-upload-container" id="imageUpload">
-                ${formData.image ? `
-                  <div class="image-preview-container" id="imagePreviewContainer" style="display: block;">
-                    <img id="imagePreview" class="image-preview" alt="Prévia da imagem">
-                  </div>
-                ` : `
-                  <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.6);"></i>
-                  <p>Clique para selecionar uma imagem</p>
-                `}
-                <input type="file" id="image" accept="image/*" style="display: none;">
-              </div>
-              <div class="error-message" id="imageError"></div>
-            </div>
-          `;
-          break;
-        case 2:
-          stepContent += `
-            <h3 class="section-title">Localização do Problema</h3>
-            <div class="form-group">
-              <label>Localização</label>
-              <div class="map-container" id="formMap">
-                <div class="map-controls">
-                  <button class="map-control-btn" id="zoomIn"><i class="fas fa-plus"></i></button>
-                  <button class="map-control-btn" id="zoomOut"><i class="fas fa-minus"></i></button>
-                  <button class="map-control-btn" id="myLocation"><i class="fas fa-crosshairs"></i></button>
-                </div>
-              </div>
-              <div class="error-message" id="mapError"></div>
-            </div>
-            <div class="form-group">
-              <label for="suggestion">Sugestão de Solução (opcional)</label>
-              <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema">${formData.suggestion}</textarea>
-              <div class="error-message" id="suggestionError"></div>
-            </div>
-          `;
-          break;
-      }
+    // Event listeners
+    window.addEventListener('load', () => {
+      document.getElementById('title').addEventListener('input', (e) => {
+        formData.title = e.target.value.trim();
+        hideError('titleError');
+      });
 
-      // Navigation buttons
-      stepContent += `
-        <div class="d-flex justify-content-between mt-4">
-          <button class="btn btn-outline-light" id="prevBtn" ${currentStep === 0 ? 'style="visibility: hidden;"' : ''}>Voltar</button>
-          <button class="btn btn-primary" id="nextBtn">
-            <span id="nextText">${currentStep === 2 ? 'Enviar' : 'Próximo'}</span>
-            <span id="nextSpinner" class="spinner" style="display: none;"></span>
-          </button>
-        </div>
-      `;
-
-      formContent.innerHTML = stepContent;
-      if (typeof AOS !== 'undefined') {
-        AOS.refresh();
-      }
-
-      // Event listeners
-      if (currentStep === 0) {
-        document.getElementById('title').addEventListener('input', (e) => {
-          formData.title = e.target.value.trim();
-          hideError('titleError');
-        });
-
-        document.getElementById('municipality').addEventListener('change', (e) => {
-          formData.municipality = e.target.value;
-          formData.neighborhood = '';
-          const neighborhoodSelect = document.getElementById('neighborhood');
-          neighborhoodSelect.disabled = !formData.municipality;
-          neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
-          if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
-            municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
-              const option = document.createElement('option');
-              option.value = nb;
-              option.textContent = nb;
-              neighborhoodSelect.appendChild(option);
-            });
-          }
-          hideError('municipalityError');
-        });
-
-        document.getElementById('neighborhood').addEventListener('change', (e) => {
-          formData.neighborhood = e.target.value;
-          hideError('neighborhoodError');
-        });
-
-        document.querySelectorAll('.category-chip').forEach(chip => {
-          chip.addEventListener('click', () => {
-            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-            chip.classList.add('selected');
-            formData.category = chip.dataset.category;
-            hideError('categoryError');
+      document.getElementById('municipality').addEventListener('change', (e) => {
+        formData.municipality = e.target.value;
+        const neighborhoodSelect = document.getElementById('neighborhood');
+        neighborhoodSelect.disabled = !formData.municipality;
+        neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+        if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
+          municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
+            const option = document.createElement('option');
+            option.value = nb;
+            option.textContent = nb;
+            neighborhoodSelect.appendChild(option);
           });
-        });
+        }
+        hideError('municipalityError');
+      });
 
-        document.querySelectorAll('input[name="urgency"]').forEach(radio => {
-          radio.addEventListener('change', (e) => {
-            formData.urgency = e.target.value;
-            hideError('urgencyError');
-          });
-        });
-      }
+      document.getElementById('neighborhood').addEventListener('change', (e) => {
+        formData.neighborhood = e.target.value;
+        hideError('neighborhoodError');
+      });
 
-      if (currentStep === 1) {
-        document.getElementById('description').addEventListener('input', (e) => {
-          formData.description = e.target.value.trim();
-          hideError('descriptionError');
+      document.querySelectorAll('.category-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          formData.category = chip.dataset.category;
+          hideError('categoryError');
         });
+      });
 
-        const imageUpload = document.getElementById('imageUpload');
-        const imageInput = document.getElementById('image');
-        imageUpload.addEventListener('click', () => imageInput.click());
-        imageInput.addEventListener('change', (e) => {
-          const file = e.target.files[0];
-          if (file) {
-            formData.image = file;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              const previewContainer = document.createElement('div');
-              previewContainer.className = 'image-preview-container';
-              previewContainer.id = 'imagePreviewContainer';
-              previewContainer.style.display = 'block';
-              previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
-              imageUpload.innerHTML = '';
-              imageUpload.appendChild(previewContainer);
-            };
-            reader.readAsDataURL(file);
-            hideError('imageError');
-          }
+      document.querySelectorAll('input[name="urgency"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          formData.urgency = e.target.value;
+          hideError('urgencyError');
         });
-      }
+      });
 
-      if (currentStep === 2) {
-        initializeMap();
-        document.getElementById('zoomIn').addEventListener('click', () => {
-          map.setZoom(map.getZoom() + 1);
-        });
-        document.getElementById('zoomOut').addEventListener('click', () => {
-          map.setZoom(map.getZoom() - 1);
-        });
-        document.getElementById('myLocation').addEventListener('click', () => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-              const { latitude, longitude } = position.coords;
-              map.setView([latitude, longitude], 15);
-              if (marker) {
-                marker.setLatLng([latitude, longitude]);
-              } else {
-                marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
-              }
-              formData.latitude = latitude;
-              formData.longitude = longitude;
-            });
-          }
-        });
+      document.getElementById('description').addEventListener('input', (e) => {
+        formData.description = e.target.value.trim();
+        hideError('descriptionError');
+      });
 
-        document.getElementById('suggestion').addEventListener('input', (e) => {
-          formData.suggestion = e.target.value.trim();
-        });
-      }
+      const imageUpload = document.getElementById('imageUpload');
+      const imageInput = document.getElementById('image');
+      imageUpload.addEventListener('click', () => imageInput.click());
+      imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          formData.image = file;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const previewContainer = document.createElement('div');
+            previewContainer.className = 'image-preview-container';
+            previewContainer.id = 'imagePreviewContainer';
+            previewContainer.style.display = 'block';
+            previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
+            imageUpload.innerHTML = '';
+            imageUpload.appendChild(previewContainer);
+          };
+          reader.readAsDataURL(file);
+          hideError('imageError');
+        }
+      });
+
+      document.getElementById('suggestion').addEventListener('input', (e) => {
+        formData.suggestion = e.target.value.trim();
+      });
 
       document.getElementById('prevBtn').addEventListener('click', () => {
         if (currentStep > 0) {
           currentStep--;
-          loadStep();
+          updateStep();
         }
       });
 
@@ -1350,7 +1266,7 @@
 
         if (currentStep < 2) {
           currentStep++;
-          loadStep();
+          updateStep();
         } else {
           const nextBtn = document.getElementById('nextBtn');
           const nextText = document.getElementById('nextText');
@@ -1398,7 +1314,7 @@
           }
         }
       });
-    }
+    });
 
     // Load form data
     function loadFormData(firebase) {
@@ -1417,7 +1333,7 @@
           const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
           const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
           formData.municipality = userData.municipality || Object.keys(municipalitiesAndNeighborhoods)[0];
-          loadStep();
+          updateStep();
         } catch (error) {
           console.error("Erro ao carregar dados:", error.message);
           formContent.innerHTML = `
@@ -1440,13 +1356,20 @@
         logoutBtn.appendChild(logoutSpinner);
         logoutBtn.disabled = true;
 
-        firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch(error => {
+          console.error("Erro ao fazer logout:", error.message);
+          logoutText.style.display = 'inline-block';
+          logoutSpinner.remove();
+          logoutBtn.disabled = false;
+          alert('Erro ao fazer logout: ' + error.message);
+        });
       };
     }
 
     // Initialize page
     window.addEventListener('load', () => {
-      // Initialize AOS animation library
       if (typeof AOS !== 'undefined') {
         AOS.init({
           duration: 800,
@@ -1457,7 +1380,6 @@
         console.warn('AOS library not loaded');
       }
 
-      // Initialize Particles.js
       if (typeof particlesJS !== 'undefined') {
         particlesJS('particles-js', {
           particles: {
@@ -1480,7 +1402,6 @@
         console.warn('Particles.js library not loaded');
       }
 
-      // Initialize Firebase and related functionality
       if (typeof firebase !== 'undefined') {
         const firebaseConfig = {
           apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
@@ -1506,7 +1427,6 @@
         `;
       }
 
-      // Navbar scroll effect
       window.addEventListener('scroll', () => {
         const navbar = document.querySelector('.navbar');
         navbar.classList.toggle('scrolled', window.scrollY > 50);
