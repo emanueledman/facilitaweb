@@ -6,23 +6,11 @@
   <meta name="description" content="FixABairro - Relatar Novo Problema">
   <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, denúncias">
   <meta name="author" content="FixABairro Team">
-  
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- AOS Animation Library -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
   <title>FixABairro | Novo Relato</title>
@@ -41,7 +29,7 @@
       --warning-color: #f59e0b;
       --info-color: #0ea5e9;
     }
-    
+
     html, body {
       font-family: 'Inter', sans-serif;
       color: var(--light-text);
@@ -50,14 +38,14 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
-    
+
     body {
       background: linear-gradient(rgba(31, 41, 55, 0.85), rgba(31, 41, 55, 0.95)), url('https://images.trustinnews.pt/uploads/sites/5/2021/03/30631487-1600x1067.jpg') no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
       position: relative;
     }
-    
+
     #particles-js {
       position: absolute;
       top: 0;
@@ -66,7 +54,7 @@
       height: 100%;
       z-index: -1;
     }
-    
+
     .navbar {
       background: rgba(31, 41, 55, 0.95);
       backdrop-filter: blur(20px);
@@ -75,11 +63,11 @@
       transition: all 0.3s ease;
       z-index: 1000;
     }
-    
+
     .navbar.scrolled {
       padding: 0.5rem 2rem;
     }
-    
+
     .navbar-brand {
       display: flex;
       align-items: center;
@@ -87,7 +75,7 @@
       font-size: 1.75rem;
       color: white;
     }
-    
+
     .logo {
       width: 40px;
       height: 40px;
@@ -95,11 +83,11 @@
       filter: drop-shadow(0 0 8px rgba(30, 64, 175, 0.5));
       transition: transform 0.3s ease;
     }
-    
+
     .navbar-brand:hover .logo {
       transform: scale(1.1) rotate(10deg);
     }
-    
+
     .nav-link {
       font-weight: 500;
       position: relative;
@@ -108,7 +96,7 @@
       transition: all 0.3s ease;
       color: var(--light-text) !important;
     }
-    
+
     .nav-link:not(.btn)::after {
       content: '';
       position: absolute;
@@ -119,12 +107,12 @@
       background-color: var(--primary-color);
       transition: all 0.3s ease;
     }
-    
+
     .nav-link:not(.btn):hover::after {
       width: 80%;
       left: 10%;
     }
-    
+
     .nav-link.btn {
       background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       border: none;
@@ -135,567 +123,381 @@
       color: white !important;
       transition: all 0.3s ease;
     }
-    
+
     .nav-link.btn:hover {
       transform: translateY(-2px) scale(1.1);
       box-shadow: 0 8px 16px rgba(30, 64, 175, 0.7);
     }
-    
-    .dropdown-menu {
-      background: var(--dark-card);
-      border: 1px solid rgba(30, 64, 175, 0.2);
-      box-shadow: var(--card-shadow);
-      border-radius: 8px;
-    }
-    
-    .dropdown-item {
-      color: var(--light-text);
-      transition: all 0.3s ease;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
-    }
-    
-    .dropdown-item:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-    
-    .form-container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-      display: flex;
-      gap: 2rem;
-    }
-    
-    .form-main {
-      flex: 1;
-    }
-    
-    .form-sidebar {
-      width: 350px;
-      background: var(--dark-card);
-      border-radius: var(--border-radius);
-      padding: 1.5rem;
-      box-shadow: var(--card-shadow);
-      display: none;
-    }
-    
-    .form-sidebar h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-    }
-    
-    .form-sidebar ul {
-      list-style: none;
-      padding: 0;
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-    
-    .form-sidebar li {
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    
-    .form-sidebar i {
-      color: var(--secondary-color);
-      margin-top: 0.2rem;
-    }
-    
-    .form-header {
-      background: linear-gradient(120deg, var(--primary-color), var(--accent-color));
-      padding: 2.5rem 2rem;
-      text-align: center;
-      border-radius: var(--border-radius) var(--border-radius) 0 0;
-      box-shadow: var(--card-shadow);
-    }
-    
-    .form-header h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-    
-    .form-header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      margin: 0;
-      color: var(--light-text);
-    }
-    
-    .form-card {
-      background: linear-gradient(135deg, var(--dark-card), #374151);
-      border-radius: var(--border-radius);
-      padding: 2.5rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid rgba(30, 64, 175, 0.2);
-      transition: transform 0.3s ease;
-    }
-    
-    .form-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--primary-color);
-      margin-bottom: 1.5rem;
-      border-left: 4px solid var(--secondary-color);
-      padding-left: 0.75rem;
-    }
-    
-    .form-group {
-      margin-bottom: 1.5rem;
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    
-    .form-control {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--light-text);
-      border-radius: 8px;
-      padding: 0.75rem;
-      transition: all 0.3s ease;
-      flex: 1;
-      min-width: 200px;
-    }
-    
-    .form-control:focus {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.25);
-      color: var(--light-text);
-    }
-    
-    .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-      opacity: 1;
-    }
-    
-    .map-container {
-      height: 300px;
-      border-radius: 8px;
+
+    .container {
+      max-width: 80%;
+      width: 58%;
+      height: 550px;
+      background-color: var(--dark-card);
       overflow: hidden;
-      margin-bottom: 1.5rem;
-      border: 1px solid rgba(30, 64, 175, 0.2);
-      box-shadow: var(--card-shadow);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      border: none;
-      padding: 0.75rem 2rem;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn-primary::before {
-      content: '';
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
+      padding: 10px;
       transform: translate(-50%, -50%);
-      transition: width 0.6s ease, height 0.6s ease;
-    }
-    
-    .btn-primary:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 12px rgba(30, 64, 175, 0.5);
-    }
-    
-    .btn-primary:disabled {
-      background: #6b7280;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-    
-    .btn-outline-light {
-      border-radius: 50px;
-      padding: 0.75rem 2rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: var(--light-text);
-      transition: all 0.3s ease;
-    }
-    
-    .btn-outline-light:hover {
-      background: rgba(30, 64, 175, 0.2);
-      border-color: var(--primary-color);
-      transform: translateY(-2px);
-      color: white;
-    }
-    
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-      margin-left: 0.5rem;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .error-message {
-      color: var(--danger-color);
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-      text-align: center;
-      padding: 0.5rem;
-      background: rgba(239, 68, 68, 0.1);
-      border-radius: 4px;
-      display: none;
-      width: 100%;
-    }
-    
-    .image-preview-container {
-      position: relative;
-      max-width: 100%;
-      max-height: 200px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      overflow: hidden;
-      display: none;
-      border: 1px solid rgba(30, 64, 175, 0.2);
+      display: flex;
+      justify-content: left;
+      align-items: top;
+      border-radius: var(--border-radius);
       box-shadow: var(--card-shadow);
     }
-    
-    .image-preview {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      transition: transform 0.3s ease;
+
+    .sidebar {
+      width: 30%;
+      background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+      border-radius: var(--border-radius);
+      color: var(--light-text);
     }
-    
-    .image-preview:hover {
-      transform: scale(1.03);
-    }
-    
-    .stepper {
+
+    .sidebar ul {
+      list-style: none;
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      position: relative;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 1rem;
-      border-radius: 8px;
+      flex-direction: column;
+      padding: 1.5rem;
     }
-    
-    .step {
-      flex: 1;
-      text-align: center;
-      position: relative;
-      z-index: 2;
+
+    .sidebar ul li {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0;
     }
-    
-    .step::after {
-      content: '';
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.2);
-      z-index: -1;
-    }
-    
-    .step:last-child::after {
-      display: none;
-    }
-    
-    .step-circle {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
+
+    .list-num {
+      width: 30px;
+      height: 30px;
+      margin-right: 1rem;
+      font-size: 1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 0.5rem;
-      font-weight: 600;
-      z-index: 2;
-      position: relative;
+      border: 2px solid var(--accent-color);
+      border-radius: 50%;
       transition: all 0.3s ease;
-      border: 1px solid rgba(30, 64, 175, 0.2);
     }
-    
-    .step.active .step-circle {
-      background: var(--primary-color);
-      box-shadow: 0 0 15px rgba(30, 64, 175, 0.5);
-      border-color: var(--accent-color);
-      animation: pulse 2s infinite;
-    }
-    
-    .step.completed .step-circle {
-      background: var(--secondary-color);
+
+    .lists-active {
+      background-color: var(--secondary-color);
       border-color: var(--secondary-color);
+      color: var(--dark-bg);
     }
-    
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(30, 64, 175, 0.5); }
-      50% { box-shadow: 0 0 0 10px rgba(30, 64, 175, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(30, 64, 175, 0); }
+
+    .side-content {
+      display: flex;
+      flex-direction: column;
     }
-    
-    .step-title {
+
+    .side-content p {
+      font-size: 0.875rem;
+      color: rgba(243, 244, 246, 0.7);
+      text-transform: uppercase;
+    }
+
+    .side-content .info {
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    @media screen and (max-width: 900px) {
+      .container {
+        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: 0px 0px 0px;
+        border-radius: 0;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(135deg, var(--primary-color), var(--dark-bg));
+        display: flex;
+        border-radius: 0px;
+        justify-content: center;
+      }
+
+      .sidebar ul {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: -25px;
+      }
+
+      .sidebar ul li .side-content {
+        display: none;
+      }
+
+      .sidebar .list-num {
+        margin: 0 20px;
+        margin-top: -100px;
+      }
+
+      .step-one-container, .step-two-container, .step-three-container {
+        max-width: 90%;
+        width: 85%;
+        height: 70vh;
+        background-color: var(--dark-card);
+        padding: 10px 20px;
+        margin: 0 auto;
+        margin-top: -100px;
+        border-radius: 10px;
+        box-shadow: var(--card-shadow);
+      }
+
+      .btns {
+        width: 100%;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+      }
+    }
+
+    .step-one-container, .step-two-container, .step-three-container {
+      width: 60%;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 70px;
+      position: relative;
+    }
+
+    .header-sec {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-sec .title {
+      color: var(--primary-color);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .header-sec .info-p {
+      color: rgba(243, 244, 246, 0.9);
+      font-size: 1.1rem;
+    }
+
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .input-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      margin: 1rem 0;
+    }
+
+    .input-content label {
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      color: var(--light-text);
+    }
+
+    .input-content input, .input-content select, .input-content textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--light-text);
+      transition: all 0.3s ease;
+    }
+
+    .input-content input:focus, .input-content select:focus, .input-content textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(30, 64, 175, 0.25);
+    }
+
+    .input-content .input-error {
+      border-color: var(--danger-color);
+    }
+
+    .error-feild {
       font-size: 0.9rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--danger-color);
+      margin-top: 0.25rem;
+      display: none;
     }
-    
+
     .category-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
-    
+
     .category-chip {
-      background: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
-      padding: 0.75rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
     }
-    
+
     .category-chip:hover {
       background: rgba(30, 64, 175, 0.2);
       border-color: var(--primary-color);
-      transform: translateY(-2px);
     }
-    
+
     .category-chip.selected {
       background: var(--primary-color);
       border-color: var(--accent-color);
-      color: white;
-      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+      color: var(--light-text);
     }
-    
+
     .urgency-radio {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
     }
-    
+
     .urgency-radio label {
       flex: 1;
-      background: rgba(255, 255, 255, 0.05);
+      padding: 0.75rem;
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
-      padding: 0.75rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
     }
-    
-    .urgency-radio input {
-      display: none;
-    }
-    
-    .urgency-radio label:hover {
-      background: rgba(30, 64, 175, 0.2);
-      border-color: var(--primary-color);
-    }
-    
+
     .urgency-radio input:checked + label {
       background: var(--primary-color);
       border-color: var(--accent-color);
-      color: white;
-      box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+      color: var(--light-text);
     }
-    
+
     .image-upload-container {
-      position: relative;
+      width: 100%;
+      padding: 1.5rem;
       border: 2px dashed rgba(30, 64, 175, 0.3);
       border-radius: 8px;
-      padding: 2rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
       background: rgba(255, 255, 255, 0.02);
     }
-    
+
     .image-upload-container:hover {
       border-color: var(--primary-color);
       background: rgba(30, 64, 175, 0.1);
-      transform: translateY(-2px);
     }
-    
+
+    .image-preview-container {
+      width: 100%;
+      margin-top: 1rem;
+      border: 1px solid rgba(30, 64, 175, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .image-preview {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .map-container {
+      width: 100%;
+      height: 200px;
+      border: 1px solid rgba(30, 64, 175, 0.2);
+      border-radius: 8px;
+      margin: 1rem 0;
+      position: relative;
+    }
+
     .map-controls {
       position: absolute;
       top: 10px;
       right: 10px;
-      z-index: 1000;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 5px;
+      z-index: 1000;
     }
-    
-    .map-control-btn {
+
+    .map-controls button {
       background: var(--dark-card);
-      border: 1px solid rgba(30, 64, 175, 0.2);
-      border-radius: 8px;
-      padding: 0.5rem;
-      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: var(--light-text);
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: var(--card-shadow);
     }
-    
-    .map-control-btn:hover {
+
+    .map-controls button:hover {
       background: var(--primary-color);
-      border-color: var(--accent-color);
-      color: white;
-      transform: translateY(-2px);
     }
-    
-    .select-container {
-      position: relative;
-      flex: 1;
-      min-width: 200px;
+
+    .btns button {
+      outline: none;
+      border: none;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--light-text);
+      font-weight: 600;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
-    
-    select.form-control {
-      appearance: none;
-      padding-right: 2.5rem;
-      width: 100%;
+
+    .btns button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
-    
-    .select-container::after {
-      content: '\f078';
-      font-family: 'Font Awesome 6 Free';
-      font-weight: 900;
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.6);
-      pointer-events: none;
+
+    .btns button:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 12px rgba(30, 64, 175, 0.5);
     }
-    
-    @media (min-width: 992px) {
-      .form-sidebar {
-        display: block;
-      }
+
+    .btns .prev-btn {
+      background: none;
+      border: 1px solid var(--light-text);
+      color: var(--light-text);
     }
-    
-    @media (max-width: 992px) {
-      .form-container {
-        flex-direction: column;
-      }
-      .navbar-collapse {
-        background: var(--dark-card);
-        border-radius: 0 0 10px 10px;
-        padding: 1rem;
-        margin-top: 0.5rem;
-        box-shadow: var(--card-shadow);
-      }
+
+    .btns .prev-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary-color);
+      color: var(--primary-color);
     }
-    
-    @media (max-width: 768px) {
-      .form-container {
-        max-width: 100%;
-      }
-      .form-header {
-        padding: 2rem 1.5rem;
-      }
-      .form-header h1 {
-        font-size: 1.75rem;
-      }
-      .form-card {
-        padding: 1.5rem;
-      }
-      .map-container {
-        height: 250px;
-      }
-      .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      }
+
+    .spinner {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--light-text);
+      animation: spin 1s ease-in-out infinite;
     }
-    
-    @media (max-width: 576px) {
-      .form-container {
-        padding: 0 1rem;
-      }
-      .form-header {
-        padding: 1.5rem 1rem;
-      }
-      .form-header h1 {
-        font-size: 1.5rem;
-      }
-      .form-card {
-        padding: 1rem;
-      }
-      .map-container {
-        height: 200px;
-      }
-      .stepper {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 0.75rem;
-      }
-      .step::after {
-        display: none;
-      }
-      .category-grid {
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-      }
-      .category-chip {
-        padding: 0.5rem;
-        font-size: 0.85rem;
-      }
-      .urgency-radio label {
-        padding: 0.5rem;
-        font-size: 0.85rem;
-      }
-      .form-control, .form-group label, .section-title {
-        font-size: 0.85rem;
-      }
-      .select-container {
-        min-width: 100%;
-      }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div id="particles-js"></div>
-  
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
       <a class="navbar-brand" href="index.html" aria-label="Página inicial do FixABairro">
@@ -730,180 +532,165 @@
     </div>
   </nav>
 
-  <!-- Report Form Section -->
-  <div class="form-container">
-    <div class="form-main">
-      <div class="form-header" data-aos="fade-down">
-        <h1>Novo Relato</h1>
-        <p>Descreva o problema em detalhes para ajudar na resolução.</p>
+  <div class="container">
+    <div class="sidebar">
+      <ul>
+        <li>
+          <span class="list-num lists-active">1</span>
+          <div class="side-content">
+            <p>STEP 1</p>
+            <span class="info">Informações Básicas</span>
+          </div>
+        </li>
+        <li>
+          <span class="list-num">2</span>
+          <div class="side-content">
+            <p>STEP 2</p>
+            <span class="info">Detalhes</span>
+          </div>
+        </li>
+        <li>
+          <span class="list-num">3</span>
+          <div class="side-content">
+            <p>STEP 3</p>
+            <span class="info">Localização</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="step-one-container" data-aos="fade-up">
+      <div class="header-sec">
+        <h2 class="title">Novo Relato</h2>
+        <p class="info-p">Descreva o problema em detalhes para ajudar na resolução.</p>
       </div>
-      
-      <div class="form-card" id="formContent" data-aos="fade-up">
-        <div class="stepper">
-          <div class="step active">
-            <div class="step-circle">1</div>
-            <div class="step-title">Informações Básicas</div>
-          </div>
-          <div class="step">
-            <div class="step-circle">2</div>
-            <div class="step-title">Detalhes</div>
-          </div>
-          <div class="step">
-            <div class="step-circle">3</div>
-            <div class="step-title">Localização</div>
-          </div>
+      <div class="input-container">
+        <div class="input-content">
+          <label for="title">Título do Problema</label>
+          <input type="text" id="title" placeholder="Ex.: Buraco na rua principal">
+          <div class="error-feild" id="titleError"></div>
         </div>
-
-        <!-- Step 1: Informações Básicas -->
-        <div class="step-one-container">
-          <h3 class="section-title">Informações Básicas</h3>
-          <div class="form-group">
-            <label for="title">Título do Problema</label>
-            <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="">
-            <div class="error-message" id="titleError"></div>
-          </div>
-          <div class="form-group">
-            <label for="municipality">Município</label>
-            <div class="select-container">
-              <select class="form-control" id="municipality">
-                <option value="">Selecione um município</option>
-                <option value="Belas">Belas</option>
-                <option value="Cacuaco">Cacuaco</option>
-                <option value="Cazenga">Cazenga</option>
-                <option value="Ícolo e Bengo">Ícolo e Bengo</option>
-                <option value="Luanda">Luanda</option>
-                <option value="Quiçama">Quiçama</option>
-                <option value="Kilamba Kiaxi">Kilamba Kiaxi</option>
-                <option value="Talatona">Talatona</option>
-                <option value="Viana">Viana</option>
-              </select>
-            </div>
-            <div class="error-message" id="municipalityError"></div>
-          </div>
-          <div class="form-group">
-            <label for="neighborhood">Bairro</label>
-            <div class="select-container">
-              <select class="form-control" id="neighborhood" disabled>
-                <option value="">Selecione um bairro</option>
-              </select>
-            </div>
-            <div class="error-message" id="neighborhoodError"></div>
-          </div>
-          <div class="form-group">
-            <label>Tipo de Problema</label>
-            <div class="category-grid">
-              <div class="category-chip selected" data-category="Buraco"><i class="fas fa-exclamation-circle" style="color: #f59e0b"></i> Buraco</div>
-              <div class="category-chip" data-category="Lixo"><i class="fas fa-trash" style="color: #22c55e"></i> Lixo</div>
-              <div class="category-chip" data-category="Iluminação"><i class="fas fa-lightbulb" style="color: #f59e0b"></i> Iluminação</div>
-              <div class="category-chip" data-category="Água"><i class="fas fa-tint" style="color: #0ea5e9"></i> Água</div>
-              <div class="category-chip" data-category="Segurança"><i class="fas fa-shield-alt" style="color: #ef4444"></i> Segurança</div>
-              <div class="category-chip" data-category="Outros"><i class="fas fa-ellipsis-h" style="color: #9ca3af"></i> Outros</div>
-            </div>
-            <div class="error-message" id="categoryError"></div>
-          </div>
-          <div class="form-group">
-            <label>Nível de Urgência</label>
-            <div class="urgency-radio">
-              <input type="radio" name="urgency" id="urgency-Baixa" value="Baixa" checked>
-              <label for="urgency-Baixa"><i class="fas fa-tachometer-alt" style="color: #22c55e"></i> Baixa</label>
-              <input type="radio" name="urgency" id="urgency-Média" value="Média">
-              <label for="urgency-Média"><i class="fas fa-exclamation-triangle" style="color: #f59e0b"></i> Média</label>
-              <input type="radio" name="urgency" id="urgency-Alta" value="Alta">
-              <label for="urgency-Alta"><i class="fas fa-exclamation-circle" style="color: #ef4444"></i> Alta</label>
-            </div>
-            <div class="error-message" id="urgencyError"></div>
-          </div>
-          <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-outline-light" id="prevBtn" style="visibility: hidden;">Voltar</button>
-            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
-          </div>
+        <div class="input-content">
+          <label for="municipality">Município</label>
+          <select id="municipality">
+            <option value="">Selecione um município</option>
+            <option value="Belas">Belas</option>
+            <option value="Cacuaco">Cacuaco</option>
+            <option value="Cazenga">Cazenga</option>
+            <option value="Ícolo e Bengo">Ícolo e Bengo</option>
+            <option value="Luanda">Luanda</option>
+            <option value="Quiçama">Quiçama</option>
+            <option value="Kilamba Kiaxi">Kilamba Kiaxi</option>
+            <option value="Talatona">Talatona</option>
+            <option value="Viana">Viana</option>
+          </select>
+          <div class="error-feild" id="municipalityError"></div>
         </div>
-
-        <!-- Step 2: Detalhes -->
-        <div class="step-two-container content" style="display: none;">
-          <h3 class="section-title">Detalhes do Problema</h3>
-          <div class="form-group">
-            <label for="description">Descrição Detalhada</label>
-            <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema em detalhes"></textarea>
-            <div class="error-message" id="descriptionError"></div>
-          </div>
-          <div class="form-group">
-            <label for="image">Adicione uma Foto</label>
-            <div class="image-upload-container" id="imageUpload">
-              <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.6);"></i>
-              <p>Clique para selecionar uma imagem</p>
-              <input type="file" id="image" accept="image/*" style="display: none;">
-            </div>
-            <div class="error-message" id="imageError"></div>
-          </div>
-          <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-outline-light" id="prevBtn">Voltar</button>
-            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
-          </div>
+        <div class="input-content">
+          <label for="neighborhood">Bairro</label>
+          <select id="neighborhood" disabled>
+            <option value="">Selecione um bairro</option>
+          </select>
+          <div class="error-feild" id="neighborhoodError"></div>
         </div>
-
-        <!-- Step 3: Localização -->
-        <div class="step-three-container content" style="display: none;">
-          <h3 class="section-title">Localização do Problema</h3>
-          <div class="form-group">
-            <label>Localização</label>
-            <div class="map-container" id="formMap">
-              <div class="map-controls">
-                <button class="map-control-btn" id="zoomIn"><i class="fas fa-plus"></i></button>
-                <button class="map-control-btn" id="zoomOut"><i class="fas fa-minus"></i></button>
-                <button class="map-control-btn" id="myLocation"><i class="fas fa-crosshairs"></i></button>
-              </div>
-            </div>
-            <div class="error-message" id="mapError"></div>
+        <div class="input-content">
+          <label>Tipo de Problema</label>
+          <div class="category-grid">
+            <div class="category-chip selected" data-category="Buraco"><i class="fas fa-exclamation-circle" style="color: var(--warning-color)"></i> Buraco</div>
+            <div class="category-chip" data-category="Lixo"><i class="fas fa-trash" style="color: var(--secondary-color)"></i> Lixo</div>
+            <div class="category-chip" data-category="Iluminação"><i class="fas fa-lightbulb" style="color: var(--warning-color)"></i> Iluminação</div>
+            <div class="category-chip" data-category="Água"><i class="fas fa-tint" style="color: var(--info-color)"></i> Água</div>
+            <div class="category-chip" data-category="Segurança"><i class="fas fa-shield-alt" style="color: var(--danger-color)"></i> Segurança</div>
+            <div class="category-chip" data-category="Outros"><i class="fas fa-ellipsis-h" style="color: var(--light-text)"></i> Outros</div>
           </div>
-          <div class="form-group">
-            <label for="suggestion">Sugestão de Solução (opcional)</label>
-            <textarea class="form-control" id="suggestion" rows="2" placeholder="Sugira uma solução para o problema"></textarea>
-            <div class="error-message" id="suggestionError"></div>
-          </div>
-          <div class="d-flex justify-content-between mt-4">
-            <button class="btn btn-outline-light" id="prevBtn">Voltar</button>
-            <button class="btn btn-primary" id="nextBtn"><span id="nextText">Enviar</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
-          </div>
+          <div class="error-feild" id="categoryError"></div>
         </div>
+        <div class="input-content">
+          <label>Nível de Urgência</label>
+          <div class="urgency-radio">
+            <input type="radio" name="urgency" id="urgency-Baixa" value="Baixa" checked>
+            <label for="urgency-Baixa"><i class="fas fa-tachometer-alt" style="color: var(--secondary-color)"></i> Baixa</label>
+            <input type="radio" name="urgency" id="urgency-Média" value="Média">
+            <label for="urgency-Média"><i class="fas fa-exclamation-triangle" style="color: var(--warning-color)"></i> Média</label>
+            <input type="radio" name="urgency" id="urgency-Alta" value="Alta">
+            <label for="urgency-Alta"><i class="fas fa-exclamation-circle" style="color: var(--danger-color)"></i> Alta</label>
+          </div>
+          <div class="error-feild" id="urgencyError"></div>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
       </div>
     </div>
-    
-    <div class="form-sidebar" data-aos="fade-left" data-aos-delay="200">
-      <h3>Dicas para Relatar</h3>
-      <ul>
-        <li><i class="fas fa-check"></i> Forneça um título claro e descritivo.</li>
-        <li><i class="fas fa-check"></i> Inclua detalhes específicos na descrição.</li>
-        <li><i class="fas fa-check"></i> Adicione uma foto nítida do problema.</li>
-        <li><i class="fas fa-check"></i> Marque a localização exata no mapa.</li>
-        <li><i class="fas fa-check"></i> Escolha a urgência apropriada.</li>
-      </ul>
+
+    <div class="step-two-container" data-aos="fade-up">
+      <div class="header-sec">
+        <h2 class="title">Detalhes</h2>
+        <p class="info-p">Forneça mais informações sobre o problema.</p>
+      </div>
+      <div class="input-container">
+        <div class="input-content">
+          <label for="description">Descrição Detalhada</label>
+          <textarea id="description" rows="5" placeholder="Descreva o problema em detalhes"></textarea>
+          <div class="error-feild" id="descriptionError"></div>
+        </div>
+        <div class="input-content">
+          <label for="image">Adicione uma Foto</label>
+          <div class="image-upload-container" id="imageUpload">
+            <i class="fas fa-camera fa-2x" style="color: rgba(255, 255, 255, 0.6)"></i>
+            <p>Clique para selecionar uma imagem</p>
+            <input type="file" id="image" accept="image/*" style="display: none;">
+          </div>
+          <div class="error-feild" id="imageError"></div>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="prevBtn" class="prev-btn">Voltar</button>
+        <button id="nextBtn"><span id="nextText">Próximo</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
+      </div>
+    </div>
+
+    <div class="step-three-container" data-aos="fade-up">
+      <div class="header-sec">
+        <h2 class="title">Localização</h2>
+        <p class="info-p">Marque a localização do problema no mapa.</p>
+      </div>
+      <div class="input-container">
+        <div class="input-content">
+          <label>Localização</label>
+          <div class="map-container" id="formMap">
+            <div class="map-controls">
+              <button id="zoomIn" title="Aumentar zoom"><i class="fas fa-plus"></i></button>
+              <button id="zoomOut" title="Diminuir zoom"><i class="fas fa-minus"></i></button>
+              <button id="myLocation" title="Minha localização"><i class="fas fa-crosshairs"></i></button>
+            </div>
+          </div>
+          <div class="error-feild" id="mapError"></div>
+        </div>
+        <div class="input-content">
+          <label for="suggestion">Sugestão de Solução (opcional)</label>
+          <textarea id="suggestion" rows="2" placeholder="Sugira uma solução"></textarea>
+          <div class="error-feild" id="suggestionError"></div>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="prevBtn" class="prev-btn">Voltar</button>
+        <button id="nextBtn"><span id="nextText">Enviar</span><span id="nextSpinner" class="spinner" style="display: none;"></span></button>
+      </div>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-  <!-- Bootstrap JS -->
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-  <!-- AOS Animation -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-  <!-- Particles.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-
-  <!-- Leaflet JS -->
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-  <!-- CryptoJS for SHA1 -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
   <script>
-    // Form state
     let currentStep = 0;
     let formData = {
       title: '',
@@ -919,7 +706,6 @@
     };
     let map, marker;
 
-    // Municipalities and neighborhoods
     const municipalitiesAndNeighborhoods = {
       'Belas': ['Morro Bento', 'Benfica', 'Vila Estoril', 'Talatona', 'Kilamba', 'Barra do Kwanza', 'Quilamba', 'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quiminha', 'Quenguela', 'Ramiros', 'Vila Verde', 'Zango 1', 'Zango 2', 'Zango 3', 'Zango 4', 'Zango 5', 'Zango 6', 'Zango 7', 'Zango 8', 'Zango 9', 'Zango 0'],
       'Cacuaco': ['Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo', 'Quixinge', 'Quilómetro 44', 'Bom Jesus', 'Cabeleira', 'Caxito', 'Mabubas', 'Quiangombe', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 45', 'Quilómetro 50'],
@@ -932,7 +718,6 @@
       'Viana': ['Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro', 'Baía do Bengo', 'Kicolo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila']
     };
 
-    // Cloudinary configuration
     const cloudinaryConfig = {
       cloudName: 'dlfukiusa',
       apiKey: '438687859144979',
@@ -941,7 +726,6 @@
       folder: 'fixa/Desconhecido'
     };
 
-    // Categories and urgencies
     const categories = [
       { name: 'Buraco', icon: 'fa-exclamation-circle', color: '#f59e0b' },
       { name: 'Lixo', icon: 'fa-trash', color: '#22c55e' },
@@ -957,7 +741,6 @@
       { level: 'Alta', icon: 'fa-exclamation-circle', color: '#ef4444' }
     ];
 
-    // Show error message
     function showError(elementId, message) {
       const errorElement = document.getElementById(elementId);
       if (errorElement) {
@@ -966,7 +749,6 @@
       }
     }
 
-    // Hide error message
     function hideError(elementId) {
       const errorElement = document.getElementById(elementId);
       if (errorElement) {
@@ -974,7 +756,6 @@
       }
     }
 
-    // Get responsible ID for municipality
     async function getResponsibleIdForMunicipality(firebase, municipality) {
       try {
         const querySnapshot = await firebase.firestore()
@@ -983,7 +764,6 @@
           .where('isResponsible', '==', true)
           .limit(1)
           .get();
-        
         if (!querySnapshot.empty) {
           return querySnapshot.docs[0].id;
         }
@@ -995,7 +775,6 @@
       }
     }
 
-    // Upload to Cloudinary
     async function uploadToCloudinary(file, neighborhood) {
       const timestamp = Math.floor(Date.now() / 1000);
       const folder = neighborhood ? `fixa/${neighborhood}` : cloudinaryConfig.folder;
@@ -1040,7 +819,6 @@
       return data.secure_url;
     }
 
-    // Initialize map
     function initializeMap() {
       if (map) map.remove();
       map = L.map('formMap').setView([-8.838333, 13.234444], 15);
@@ -1119,214 +897,32 @@
       });
     }
 
-    // Load form step
     function loadStep() {
       const stepContainers = document.querySelectorAll('.step-one-container, .step-two-container, .step-three-container');
+      const stepNumbers = document.querySelectorAll('.list-num');
       stepContainers.forEach((container, index) => {
         container.style.display = index === currentStep ? 'block' : 'none';
       });
-
+      stepNumbers.forEach((num, index) => {
+        num.classList.toggle('lists-active', index === currentStep);
+      });
       if (currentStep === 2) initializeMap();
     }
 
-    // Update step
     function updateStep() {
-      const steps = document.querySelectorAll('.step');
-      steps.forEach((step, index) => {
-        step.classList.toggle('active', index === currentStep);
-        step.classList.toggle('completed', index < currentStep);
+      const stepNumbers = document.querySelectorAll('.list-num');
+      stepNumbers.forEach((num, index) => {
+        num.classList.toggle('lists-active', index === currentStep);
       });
       loadStep();
     }
 
-    // Event listeners
-    window.addEventListener('load', () => {
-      document.getElementById('title').addEventListener('input', (e) => {
-        formData.title = e.target.value.trim();
-        hideError('titleError');
-      });
-
-      document.getElementById('municipality').addEventListener('change', (e) => {
-        formData.municipality = e.target.value;
-        const neighborhoodSelect = document.getElementById('neighborhood');
-        neighborhoodSelect.disabled = !formData.municipality;
-        neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
-        if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
-          municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
-            const option = document.createElement('option');
-            option.value = nb;
-            option.textContent = nb;
-            neighborhoodSelect.appendChild(option);
-          });
-        }
-        hideError('municipalityError');
-      });
-
-      document.getElementById('neighborhood').addEventListener('change', (e) => {
-        formData.neighborhood = e.target.value;
-        hideError('neighborhoodError');
-      });
-
-      document.querySelectorAll('.category-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-          chip.classList.add('selected');
-          formData.category = chip.dataset.category;
-          hideError('categoryError');
-        });
-      });
-
-      document.querySelectorAll('input[name="urgency"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          formData.urgency = e.target.value;
-          hideError('urgencyError');
-        });
-      });
-
-      document.getElementById('description').addEventListener('input', (e) => {
-        formData.description = e.target.value.trim();
-        hideError('descriptionError');
-      });
-
-      const imageUpload = document.getElementById('imageUpload');
-      const imageInput = document.getElementById('image');
-      imageUpload.addEventListener('click', () => imageInput.click());
-      imageInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          formData.image = file;
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const previewContainer = document.createElement('div');
-            previewContainer.className = 'image-preview-container';
-            previewContainer.id = 'imagePreviewContainer';
-            previewContainer.style.display = 'block';
-            previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
-            imageUpload.innerHTML = '';
-            imageUpload.appendChild(previewContainer);
-          };
-          reader.readAsDataURL(file);
-          hideError('imageError');
-        }
-      });
-
-      document.getElementById('suggestion').addEventListener('input', (e) => {
-        formData.suggestion = e.target.value.trim();
-      });
-
-      document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentStep > 0) {
-          currentStep--;
-          updateStep();
-        }
-      });
-
-      document.getElementById('nextBtn').addEventListener('click', async () => {
-        let isValid = true;
-
-        if (currentStep === 0) {
-          if (!formData.title) {
-            showError('titleError', 'Por favor, insira um título');
-            isValid = false;
-          }
-          if (!formData.municipality) {
-            showError('municipalityError', 'Por favor, selecione um município');
-            isValid = false;
-          }
-          if (!formData.neighborhood) {
-            showError('neighborhoodError', 'Por favor, selecione um bairro');
-            isValid = false;
-          }
-          if (!formData.category) {
-            showError('categoryError', 'Por favor, selecione uma categoria');
-            isValid = false;
-          }
-          if (!formData.urgency) {
-            showError('urgencyError', 'Por favor, selecione o nível de urgência');
-            isValid = false;
-          }
-        }
-
-        if (currentStep === 1) {
-          if (!formData.description) {
-            showError('descriptionError', 'Por favor, insira uma descrição');
-            isValid = false;
-          }
-          if (!formData.image) {
-            showError('imageError', 'Por favor, adicione uma imagem');
-            isValid = false;
-          }
-        }
-
-        if (currentStep === 2) {
-          if (!formData.latitude || !formData.longitude) {
-            showError('mapError', 'Por favor, selecione uma localização');
-            isValid = false;
-          }
-        }
-
-        if (!isValid) return;
-
-        if (currentStep < 2) {
-          currentStep++;
-          updateStep();
-        } else {
-          const nextBtn = document.getElementById('nextBtn');
-          const nextText = document.getElementById('nextText');
-          const nextSpinner = document.getElementById('nextSpinner');
-          nextText.style.display = 'none';
-          nextSpinner.style.display = 'inline-block';
-          nextBtn.disabled = true;
-
-          try {
-            const user = firebase.auth().currentUser;
-            if (!user) throw new Error('Usuário não autenticado');
-
-            const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
-            const responsibleId = await getResponsibleIdForMunicipality(firebase, formData.municipality);
-
-            const problemData = {
-              usuarioId: user.uid,
-              title: formData.title,
-              category: formData.category,
-              urgency: formData.urgency,
-              description: formData.description,
-              suggestion: formData.suggestion || '',
-              imageUrl,
-              location: {
-                latitude: formData.latitude,
-                longitude: formData.longitude
-              },
-              status: 'Aguardando',
-              createdAt: Date.now(),
-              neighborhood: formData.neighborhood,
-              municipality: formData.municipality,
-              responsibleId: responsibleId || null
-            };
-
-            await firebase.database().ref('problems').push(problemData);
-            alert('Problema relatado com sucesso!');
-            window.location.href = 'report.html';
-          } catch (error) {
-            console.error('Erro ao relatar problema:', error.message);
-            showError('formContent', 'Erro ao relatar problema.');
-          } finally {
-            nextText.style.display = 'inline-block';
-            nextSpinner.style.display = 'none';
-            nextBtn.disabled = false;
-          }
-        }
-      });
-    });
-
-    // Load form data
     function loadFormData(firebase) {
       firebase.auth().onAuthStateChanged(async user => {
-        const formContent = document.getElementById('formContent');
-        
+        const container = document.querySelector('.container');
         if (!user) {
-          formContent.innerHTML = `
-            <div class="error-message">Por favor, faça login para relatar um problema.</div>
+          container.innerHTML = `
+            <div style="color: var(--danger-color); text-align: center; padding: 2rem;">Por favor, faça login para relatar um problema.</div>
           `;
           setTimeout(() => window.location.href = 'login.html', 2000);
           return;
@@ -1336,17 +932,19 @@
           const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
           const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
           formData.municipality = userData.municipality || Object.keys(municipalitiesAndNeighborhoods)[0];
-          updateStep();
+          const municipalitySelect = document.getElementById('municipality');
+          municipalitySelect.value = formData.municipality;
+          municipalitySelect.dispatchEvent(new Event('change'));
+          loadStep();
         } catch (error) {
           console.error("Erro ao carregar dados:", error.message);
-          formContent.innerHTML = `
-            <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
+          container.innerHTML = `
+            <div style="color: var(--danger-color); text-align: center; padding: 2rem;">Erro ao carregar formulário. Verifique sua conexão.</div>
           `;
         }
       });
     }
 
-    // Handle logout
     function handleLogout(firebase) {
       return function(e) {
         e.preventDefault();
@@ -1354,7 +952,6 @@
         const logoutText = logoutBtn.querySelector('span') || logoutBtn;
         const logoutSpinner = document.createElement('span');
         logoutSpinner.className = 'spinner';
-        
         logoutText.style.display = 'none';
         logoutBtn.appendChild(logoutSpinner);
         logoutBtn.disabled = true;
@@ -1371,7 +968,6 @@
       };
     }
 
-    // Initialize page
     window.addEventListener('load', () => {
       if (typeof AOS !== 'undefined') {
         AOS.init({
@@ -1415,18 +1011,197 @@
           appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
           databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
         };
-        
         if (!firebase.apps.length) {
           firebase.initializeApp(firebaseConfig);
         }
+
+        document.getElementById('title').addEventListener('input', (e) => {
+          formData.title = e.target.value.trim();
+          hideError('titleError');
+        });
+
+        document.getElementById('municipality').addEventListener('change', (e) => {
+          formData.municipality = e.target.value;
+          const neighborhoodSelect = document.getElementById('neighborhood');
+          neighborhoodSelect.disabled = !formData.municipality;
+          neighborhoodSelect.innerHTML = '<option value="">Selecione um bairro</option>';
+          if (formData.municipality && municipalitiesAndNeighborhoods[formData.municipality]) {
+            municipalitiesAndNeighborhoods[formData.municipality].forEach(nb => {
+              const option = document.createElement('option');
+              option.value = nb;
+              option.textContent = nb;
+              neighborhoodSelect.appendChild(option);
+            });
+          }
+          hideError('municipalityError');
+        });
+
+        document.getElementById('neighborhood').addEventListener('change', (e) => {
+          formData.neighborhood = e.target.value;
+          hideError('neighborhoodError');
+        });
+
+        document.querySelectorAll('.category-chip').forEach(chip => {
+          chip.addEventListener('click', () => {
+            document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+            chip.classList.add('selected');
+            formData.category = chip.dataset.category;
+            hideError('categoryError');
+          });
+        });
+
+        document.querySelectorAll('input[name="urgency"]').forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            formData.urgency = e.target.value;
+            hideError('urgencyError');
+          });
+        });
+
+        document.getElementById('description').addEventListener('input', (e) => {
+          formData.description = e.target.value.trim();
+          hideError('descriptionError');
+        });
+
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('image');
+        imageUpload.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            formData.image = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const previewContainer = document.createElement('div');
+              previewContainer.className = 'image-preview-container';
+              previewContainer.id = 'imagePreviewContainer';
+              previewContainer.style.display = 'block';
+              previewContainer.innerHTML = `<img id="imagePreview" class="image-preview" src="${e.target.result}" alt="Prévia da imagem">`;
+              imageUpload.innerHTML = '';
+              imageUpload.appendChild(previewContainer);
+            };
+            reader.readAsDataURL(file);
+            hideError('imageError');
+          }
+        });
+
+        document.getElementById('suggestion').addEventListener('input', (e) => {
+          formData.suggestion = e.target.value.trim();
+        });
+
+        document.querySelectorAll('#prevBtn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (currentStep > 0) {
+              currentStep--;
+              updateStep();
+            }
+          });
+        });
+
+        document.querySelectorAll('#nextBtn').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            let isValid = true;
+            const nextText = btn.querySelector('#nextText');
+            const nextSpinner = btn.querySelector('#nextSpinner');
+
+            if (currentStep === 0) {
+              if (!formData.title) {
+                showError('titleError', 'Por favor, insira um título');
+                isValid = false;
+              }
+              if (!formData.municipality) {
+                showError('municipalityError', 'Por favor, selecione um município');
+                isValid = false;
+              }
+              if (!formData.neighborhood) {
+                showError('neighborhoodError', 'Por favor, selecione um bairro');
+                isValid = false;
+              }
+              if (!formData.category) {
+                showError('categoryError', 'Por favor, selecione uma categoria');
+                isValid = false;
+              }
+              if (!formData.urgency) {
+                showError('urgencyError', 'Por favor, selecione o nível de urgência');
+                isValid = false;
+              }
+            }
+
+            if (currentStep === 1) {
+              if (!formData.description) {
+                showError('descriptionError', 'Por favor, insira uma descrição');
+                isValid = false;
+              }
+              if (!formData.image) {
+                showError('imageError', 'Por favor, adicione uma imagem');
+                isValid = false;
+              }
+            }
+
+            if (currentStep === 2) {
+              if (!formData.latitude || !formData.longitude) {
+                showError('mapError', 'Por favor, selecione uma localização');
+                isValid = false;
+              }
+            }
+
+            if (!isValid) return;
+
+            if (currentStep < 2) {
+              currentStep++;
+              updateStep();
+            } else {
+              nextText.style.display = 'none';
+              nextSpinner.style.display = 'inline-block';
+              btn.disabled = true;
+
+              try {
+                const user = firebase.auth().currentUser;
+                if (!user) throw new Error('Usuário não autenticado');
+
+                const imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
+                const responsibleId = await getResponsibleIdForMunicipality(firebase, formData.municipality);
+
+                const problemData = {
+                  usuarioId: user.uid,
+                  title: formData.title,
+                  category: formData.category,
+                  urgency: formData.urgency,
+                  description: formData.description,
+                  suggestion: formData.suggestion || '',
+                  imageUrl,
+                  location: {
+                    latitude: formData.latitude,
+                    longitude: formData.longitude
+                  },
+                  status: 'Aguardando',
+                  createdAt: Date.now(),
+                  neighborhood: formData.neighborhood,
+                  municipality: formData.municipality,
+                  responsibleId: responsibleId || null
+                };
+
+                await firebase.database().ref('problems').push(problemData);
+                alert('Problema relatado com sucesso!');
+                window.location.href = 'report.html';
+              } catch (error) {
+                console.error('Erro ao relatar problema:', error.message);
+                showError('mapError', 'Erro ao relatar problema.');
+              } finally {
+                nextText.style.display = 'inline-block';
+                nextSpinner.style.display = 'none';
+                btn.disabled = false;
+              }
+            }
+          });
+        });
 
         loadFormData(firebase);
         document.getElementById('logoutLink').addEventListener('click', handleLogout(firebase));
       } else {
         console.warn('Firebase SDK not loaded');
-        const formContent = document.getElementById('formContent');
-        formContent.innerHTML = `
-          <div class="error-message">Erro ao carregar formulário. Verifique sua conexão.</div>
+        const container = document.querySelector('.container');
+        container.innerHTML = `
+          <div style="color: var(--danger-color); text-align: center; padding: 2rem;">Erro ao carregar formulário. Verifique sua conexão.</div>
         `;
       }
 
