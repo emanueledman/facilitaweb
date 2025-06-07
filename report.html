@@ -28,66 +28,72 @@
   <title>FixABairro | Problemas Relatados</title>
   <style>
     :root {
-      --primary-color: #1e40af; /* Azul escuro */
-      --secondary-color: #22c55e; /* Verde */
-      --highlight-color: #f59e0b; /* Amarelo-alaranjado */
-      --dark-bg: #1f2937;
-      --dark-card: #2d3748;
-      --light-text: #f3f4f6;
+      --primary-red: #f39200;
+      --primary-black: #1a1a1a;
+      --accent-yellow: #ffcd00;
+      --light-gray: #f8f9fa;
+      --medium-gray: #6c757d;
+      --dark-gray: #343a40;
+      --white: #ffffff;
+      --border-color: #e9ecef;
+      --text-dark: #212529;
+      --text-muted: #6c757d;
       --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       --border-radius: 12px;
     }
-    
+
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--dark-bg);
-      color: var(--light-text);
+      background: var(--light-gray);
+      color: var(--text-dark);
       margin: 0;
-      overflow: hidden;
+      overflow-x: hidden;
     }
-    
+
+    /* Navbar */
     .navbar {
-      background: rgba(31, 41, 55, 0.95);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: var(--white);
+      border-bottom: 1px solid var(--border-color);
       padding: 1rem 2rem;
-      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: padding 0.3s ease;
       z-index: 1000;
     }
-    
+
     .navbar.scrolled {
       padding: 0.5rem 2rem;
     }
-    
+
     .navbar-brand {
       display: flex;
       align-items: center;
       font-weight: 700;
       font-size: 1.75rem;
-      color: white;
+      color: var(--primary-black);
+      text-decoration: none;
     }
-    
+
     .logo {
       width: 40px;
       height: 40px;
       margin-right: 12px;
-      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
       transition: transform 0.3s ease;
     }
-    
+
     .navbar-brand:hover .logo {
       transform: scale(1.1);
     }
-    
+
     .nav-link {
       font-weight: 500;
-      position: relative;
-      margin: 0 0.5rem;
+      font-size: 0.95rem;
+      color: var(--text-muted);
       padding: 0.5rem 1rem !important;
-      transition: all 0.3s ease;
-      color: var(--light-text);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
     }
-    
+
     .nav-link:not(.btn)::after {
       content: '';
       position: absolute;
@@ -95,57 +101,61 @@
       height: 2px;
       bottom: 0;
       left: 50%;
-      background-color: var(--primary-color);
+      background-color: var(--primary-red);
       transition: all 0.3s ease;
     }
-    
+
     .nav-link:not(.btn):hover::after {
       width: 80%;
       left: 10%;
     }
-    
+
+    .nav-link:not(.btn):hover {
+      color: var(--primary-red);
+    }
+
     .nav-link.btn {
-      background-color: var(--primary-color);
-      border: none;
-      border-radius: 50px;
+      background-color: var(--primary-red);
+      color: var(--white);
+      border-radius: 6px;
       padding: 0.6rem 1.75rem !important;
       font-weight: 600;
-      box-shadow: 0 4px 6px rgba(34, 197, 94, 0.5);
-      color: white;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
     }
-    
+
     .nav-link.btn:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
+      background-color: #b30e20;
     }
-    
+
     .dropdown-menu {
-      background: var(--dark-card);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      background: var(--white);
+      border: 1px solid var(--border-color);
       box-shadow: var(--card-shadow);
       border-radius: 8px;
     }
-    
+
     .dropdown-item {
-      color: var(--light-text);
+      color: var(--text-dark);
       transition: all 0.3s ease;
       padding: 0.5rem 1rem;
       font-size: 0.9rem;
     }
-    
+
     .dropdown-item:hover {
-      background: var(--primary-color);
-      color: white;
+      background: var(--light-gray);
+      color: var(--primary-red);
     }
-    
+
+    /* Map */
     #map {
       height: calc(100vh - 76px);
       width: 100vw;
       z-index: 1;
-      transition: filter 0.3s ease;
+      background: var(--light-gray);
     }
-    
+
+    /* Button Report */
     .btn-report {
       position: fixed;
       bottom: 20px;
@@ -153,44 +163,46 @@
       z-index: 1000;
       padding: 0.8rem 1.8rem;
       font-size: 1rem;
-      border-radius: 50px;
-      background: var(--primary-color);
+      border-radius: 6px;
+      background: var(--primary-red);
       box-shadow: var(--card-shadow);
       border: none;
-      color: white;
+      color: var(--white);
       font-weight: 600;
       transition: all 0.3s ease;
       animation: pulse 2s infinite;
     }
-    
+
     @keyframes pulse {
       0% { transform: scale(1); box-shadow: var(--card-shadow); }
-      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(34, 197, 94, 0.7); }
+      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(243, 146, 0, 0.7); }
       100% { transform: scale(1); box-shadow: var(--card-shadow); }
     }
-    
+
     .btn-report:hover {
+      background: #b30e20;
       transform: translateY(-3px) scale(1.05);
-      background: var(--primary-dark);
-      box-shadow: 0 12px 25px rgba(34, 197, 94, 0.6);
+      box-shadow: 0 12px 25px rgba(243, 146, 0, 0.6);
     }
-    
+
     .btn-report i {
       margin-right: 0.5rem;
     }
-    
+
+    /* Error Message */
     .error-message {
-      color: var(--danger-color);
+      color: #dc3545;
       font-size: 1rem;
       text-align: center;
       padding: 2rem;
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(220, 53, 69, 0.1);
       border-radius: 8px;
       margin: 1rem;
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      border: 1px solid rgba(220, 53, 69, 0.3);
       box-shadow: var(--card-shadow);
     }
-    
+
+    /* Loading Container */
     .loading-container {
       position: fixed;
       top: 50%;
@@ -198,73 +210,74 @@
       transform: translate(-50%, -50%);
       text-align: center;
       z-index: 1000;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 2rem;
       border-radius: 12px;
       box-shadow: var(--card-shadow);
+      border: 1px solid var(--border-color);
     }
-    
+
     .spinner {
       display: inline-block;
       width: 40px;
       height: 40px;
-      border: 4px solid rgba(255, 255, 255, 0.3);
+      border: 4px solid var(--border-color);
       border-radius: 50%;
-      border-top-color: var(--primary-color);
+      border-top-color: var(--primary-red);
       animation: spin 1s ease-in-out infinite;
     }
-    
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    
+
+    /* Leaflet Popup */
     .leaflet-popup-content-wrapper {
-      background: var(--dark-card);
-      color: var(--light-text);
+      background: var(--white);
+      color: var(--text-dark);
       border-radius: 10px;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      border: 1px solid var(--border-color);
       overflow: hidden;
     }
-    
+
     .leaflet-popup-content {
       margin: 15px;
       max-width: 300px;
       font-family: 'Inter', sans-serif;
     }
-    
+
     .leaflet-popup-tip {
-      background: var(--dark-card);
+      background: var(--white);
     }
-    
+
     .leaflet-popup-close-button {
-      color: var(--light-text) !important;
+      color: var(--text-dark) !important;
       font-size: 1.2rem;
       padding: 5px;
     }
-    
+
     .problem-popup {
       padding: 0;
     }
-    
+
     .problem-popup-header {
-      background: var(--primary-dark);
+      background: var(--light-gray);
       margin: -15px -15px 15px -15px;
       padding: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .problem-popup-title {
       font-weight: 700;
       font-size: 1.2rem;
       margin: 0;
-      color: white;
+      color: var(--text-dark);
     }
-    
+
     .problem-popup-badge {
       display: inline-block;
       padding: 4px 10px;
@@ -272,244 +285,248 @@
       font-size: 0.8rem;
       font-weight: 600;
     }
-    
+
     .problem-popup-content {
       margin: 10px 0;
     }
-    
+
     .problem-popup-info {
       display: flex;
       flex-direction: column;
       gap: 8px;
       margin-bottom: 15px;
     }
-    
+
     .problem-popup-item {
       display: flex;
       align-items: center;
       font-size: 0.95rem;
     }
-    
+
     .problem-popup-item i {
       margin-right: 10px;
       min-width: 20px;
       text-align: center;
-      color: var(--primary-color);
+      color: var(--primary-red);
     }
-    
+
     .problem-popup-img {
       width: 100%;
       border-radius: 8px;
       margin-top: 10px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      border: 2px solid var(--border-color);
       box-shadow: var(--card-shadow);
       transition: transform 0.3s ease;
     }
-    
+
     .problem-popup-img:hover {
       transform: scale(1.03);
     }
-    
+
+    /* Category and Status Classes */
     .category-buraco {
-      background-color: var(--warning-color);
-      color: #111;
+      background-color: var(--accent-yellow);
+      color: var(--primary-black);
     }
-    
+
     .category-lixo {
-      background-color: var(--accent-color);
-      color: #111;
+      background-color: #10b981;
+      color: var(--primary-black);
     }
-    
+
     .category-iluminacao {
       background-color: #f59e0b;
-      color: #111;
+      color: var(--primary-black);
     }
-    
+
     .category-agua {
-      background-color: var(--info-color);
-      color: #111;
+      background-color: #0ea5e9;
+      color: var(--primary-black);
     }
-    
+
     .category-seguranca {
-      background-color: var(--danger-color);
-      color: white;
+      background-color: #dc3545;
+      color: var(--white);
     }
-    
+
     .status-aberto {
-      background-color: var(--danger-color);
-      color: white;
+      background-color: #dc3545;
+      color: var(--white);
     }
-    
+
     .status-andamento {
-      background-color: var(--warning-color);
-      color: #111;
+      background-color: var(--accent-yellow);
+      color: var(--primary-black);
     }
-    
+
     .status-resolvido {
-      background-color: var(--accent-color);
-      color: #111;
+      background-color: #28a745;
+      color: var(--white);
     }
-    
+
+    /* Map Legend */
     .map-legend {
       position: fixed;
       bottom: 20px;
       left: 20px;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 12px;
       border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       max-width: 220px;
       transition: transform 0.3s ease;
     }
-    
+
     .map-legend:hover {
       transform: translateY(-5px);
     }
-    
+
     .legend-title {
       font-weight: 700;
       margin-bottom: 10px;
       padding-bottom: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-color);
       text-align: center;
-      color: var(--primary-color);
+      color: var(--primary-red);
       font-size: 0.9rem;
     }
-    
+
     .legend-item {
       display: flex;
       align-items: center;
       margin-bottom: 8px;
       font-size: 0.85rem;
+      color: var(--text-muted);
     }
-    
+
     .legend-icon {
       width: 20px;
       text-align: center;
       margin-right: 10px;
     }
-    
+
     .legend-text {
       font-weight: 500;
     }
-    
+
+    /* Map Controls */
     .map-controls {
       position: fixed;
       top: 100px;
       right: 20px;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 12px;
       border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       max-width: 260px;
       transition: transform 0.3s ease;
     }
-    
+
     .map-controls:hover {
       transform: translateY(-5px);
     }
-    
+
     .filter-title {
       font-weight: 700;
       margin-bottom: 10px;
       padding-bottom: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-color);
       text-align: center;
-      color: var(--primary-color);
+      color: var(--primary-red);
       font-size: 0.9rem;
     }
-    
+
     .filter-group {
       margin-bottom: 12px;
     }
-    
+
     .filter-label {
       font-size: 0.9rem;
       font-weight: 600;
       margin-bottom: 6px;
-      color: var(--light-text);
+      color: var(--text-dark);
     }
-    
+
     .filter-options {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
     }
-    
+
     .filter-button {
-      background: transparent;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      color: var(--light-text);
+      background: var(--light-gray);
+      border: 1px solid var(--medium-gray);
+      color: var(--text-dark);
       border-radius: 18px;
       padding: 5px 12px;
       font-size: 0.8rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     .filter-button:hover {
-      background: rgba(34, 197, 94, 0.4);
-      transform: translateY(-1px);
+      background: var(--primary-red);
+      color: var(--white);
+      border-color: var(--primary-red);
     }
-    
+
     .filter-button.active {
-      background: var(--primary-color);
-      border-color: var(--primary-dark);
-      color: white;
-      box-shadow: 0 2px 5px rgba(34, 197, 94, 0.3);
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      color: var(--white);
+      box-shadow: 0 2px 5px rgba(243, 146, 0, 0.3);
     }
-    
+
+    /* Problem Count */
     .problem-count {
       position: fixed;
       top: 380px;
       left: 20px;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 10px 18px;
       border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       font-weight: 600;
       font-size: 0.9rem;
       transition: transform 0.3s ease;
+      color: var(--text-muted);
     }
-    
+
     .problem-count:hover {
       transform: translateY(-5px);
     }
-    
+
     .problem-count-number {
-      color: var(--primary-color);
+      color: var(--primary-red);
       font-weight: 700;
     }
-    
+
+    /* Map View Toggle */
     .map-view-toggle {
       position: fixed;
       top: 440px;
       left: 20px;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 8px;
       border-radius: 50px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       display: flex;
       gap: 6px;
       transition: transform 0.3s ease;
     }
-    
+
     .map-view-toggle:hover {
       transform: translateY(-5px);
     }
-    
+
     .view-option {
       padding: 8px 18px;
       border-radius: 50px;
@@ -518,56 +535,56 @@
       cursor: pointer;
       transition: all 0.3s ease;
       border: none;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.7);
+      background: var(--light-gray);
+      color: var(--text-muted);
     }
-    
+
     .view-option.active {
-      background: var(--primary-color);
-      color: white;
-      box-shadow: 0 2px 5px rgba(34, 197, 94, 0.3);
+      background: var(--primary-red);
+      color: var(--white);
+      box-shadow: 0 2px 5px rgba(243, 146, 0, 0.3);
     }
-    
+
     .view-option:hover:not(.active) {
-      background: rgba(34, 197, 94, 0.3);
-      color: white;
+      background: var(--primary-red);
+      color: var(--white);
     }
-    
+
+    /* Search Container */
     .search-container {
       position: fixed;
       top: 500px;
       left: 20px;
       z-index: 1000;
       width: 260px;
-      background: var(--dark-card);
+      background: var(--white);
       border-radius: 50px;
       padding: 6px;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       transition: transform 0.3s ease;
     }
-    
+
     .search-container:hover {
       transform: translateY(-5px);
     }
-    
+
     .search-input {
       background: transparent;
       border: none;
-      color: var(--light-text);
+      color: var(--text-dark);
       font-size: 0.9rem;
       padding: 6px 12px;
       width: 100%;
       outline: none;
     }
-    
+
     .search-input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+      color: var(--text-muted);
     }
-    
+
     .search-button {
-      background: var(--primary-color);
+      background: var(--primary-red);
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -577,42 +594,44 @@
       justify-content: center;
       transition: all 0.3s ease;
     }
-    
+
     .search-button:hover {
-      background: var(--primary-dark);
+      background: #b30e20;
       transform: scale(1.1);
     }
-    
+
+    /* Weather Overlay */
     .weather-overlay {
       position: fixed;
       top: 560px;
       left: 20px;
-      background: var(--dark-card);
+      background: var(--white);
       padding: 10px 18px;
       border-radius: 12px;
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      backdrop-filter: blur(10px);
+      border: 1px solid var(--medium-gray);
       font-size: 0.85rem;
       transition: transform 0.3s ease;
+      color: var(--text-muted);
     }
-    
+
     .weather-overlay:hover {
       transform: translateY(-5px);
     }
-    
+
     .weather-info {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    
+
     .weather-icon {
       font-size: 1.1rem;
-      color: var(--primary-color);
+      color: var(--primary-red);
     }
-    
+
+    /* Zoom Controls */
     .zoom-controls {
       position: fixed;
       top: 20px;
@@ -622,40 +641,114 @@
       flex-direction: column;
       gap: 8px;
     }
-    
+
     .zoom-button {
-      background: var(--dark-card);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      background: var(--white);
+      border: 1px solid var(--medium-gray);
       border-radius: 8px;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--light-text);
+      color: var(--text-dark);
       font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: var(--card-shadow);
     }
-    
+
     .zoom-button:hover {
-      background: var(--primary-color);
-      border-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      color: var(--white);
     }
-    
+
+    /* Stats Overlay */
+    .stats-overlay {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      background: var(--light-gray);
+      padding: 12px;
+      border-radius: 12px;
+      z-index: 1000;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--medium-gray);
+      max-width: 300px;
+      transition: transform 0.3s ease;
+    }
+
+    .stats-overlay:hover {
+      transform: translateY(-5px);
+    }
+
+    .stats-toggle {
+      background: var(--primary-red);
+      color: var(--white);
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .stats-toggle:hover {
+      background: #b30e20;
+    }
+
+    .stats-title {
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--primary-red);
+      font-size: 0.9rem;
+    }
+
+    .stat-item {
+      background: var(--white);
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-red);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--medium-gray);
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+
+    /* Marker Animation */
     @keyframes markerPulse {
       0% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.8; transform: scale(1.3); }
       100% { opacity: 1; transform: scale(1); }
     }
-    
+
     .marker-urgent {
       animation: markerPulse 1.5s infinite;
     }
-    
+
+    /* Responsive Design */
     @media (max-width: 768px) {
       .map-controls {
         top: auto;
@@ -664,14 +757,14 @@
         max-width: calc(100% - 20px);
         padding: 10px;
       }
-      
+
       .map-legend {
         bottom: 20px;
         left: 10px;
         max-width: calc(100% - 20px);
         padding: 8px;
       }
-      
+
       .problem-count {
         top: auto;
         bottom: 180px;
@@ -679,14 +772,14 @@
         padding: 8px 15px;
         font-size: 0.85rem;
       }
-      
+
       .map-view-toggle {
         top: auto;
         bottom: 140px;
         left: 10px;
         padding: 6px;
       }
-      
+
       .search-container {
         top: auto;
         bottom: 100px;
@@ -694,7 +787,7 @@
         width: calc(100% - 20px);
         padding: 5px;
       }
-      
+
       .weather-overlay {
         top: auto;
         bottom: 60px;
@@ -702,12 +795,20 @@
         padding: 8px 15px;
         font-size: 0.8rem;
       }
-      
+
+      .stats-overlay {
+        top: auto;
+        bottom: 300px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+        padding: 10px;
+      }
+
       .zoom-controls {
         top: 10px;
         right: 10px;
       }
-      
+
       .btn-report {
         bottom: 15px;
         right: 15px;
@@ -715,90 +816,95 @@
         font-size: 0.9rem;
       }
     }
-    
+
     @media (max-width: 576px) {
       .navbar {
         padding: 0.75rem 1rem;
       }
-      
+
       .navbar-brand {
         font-size: 1.5rem;
       }
-      
+
       .logo {
         width: 36px;
         height: 36px;
       }
-      
+
       .btn-report {
         padding: 0.6rem 1.2rem;
         font-size: 0.85rem;
       }
-      
+
       #map {
         height: calc(100vh - 64px);
       }
-      
+
       .map-controls {
         bottom: 220px;
         padding: 8px;
       }
-      
+
       .map-legend {
         bottom: 20px;
         padding: 6px;
       }
-      
+
       .problem-count {
         bottom: 160px;
         padding: 6px 12px;
         font-size: 0.8rem;
       }
-      
+
       .map-view-toggle {
         bottom: 120px;
         padding: 5px;
       }
-      
+
       .search-container {
         bottom: 80px;
         padding: 4px;
       }
-      
+
       .weather-overlay {
         bottom: 40px;
         padding: 6px 12px;
       }
-      
+
+      .stats-overlay {
+        bottom: 280px;
+        padding: 8px;
+      }
+
       .zoom-controls {
         top: 8px;
         right: 8px;
       }
-      
+
       .filter-button {
         padding: 4px 8px;
         font-size: 0.75rem;
       }
-      
+
       .view-option {
         padding: 6px 14px;
         font-size: 0.8rem;
       }
-      
+
       .search-input {
         font-size: 0.85rem;
         padding: 5px 10px;
       }
-      
+
       .search-button {
         width: 28px;
         height: 28px;
       }
     }
-    
+
     @media (max-width: 992px) {
       .navbar-collapse {
-        background: var(--dark-card);
+        background: var(--white);
         border-radius: 0 0 10px 10px;
         padding: 1rem;
         margin-top: 0.5rem;
@@ -809,17 +915,17 @@
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">
         <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
         FixABairro
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
             <a class="nav-link" href="report.html">Mapa de Problemas</a>
           </li>
@@ -827,13 +933,13 @@
             <a class="nav-link" href="dashboard.html">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="list.html">Lista dos Caso</a>
+            <a class="nav-link" href="list.html">Lista dos Casos</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn btn-primary" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
+            <a class="nav-link btn" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do perfil">
               Perfil
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
@@ -847,62 +953,84 @@
   </nav>
 
   <!-- Map Section -->
-  <div id="map"></div>
+  <div id="map" role="region" aria-label="Mapa interativo de problemas relatados"></div>
   <!-- Mensagem para quando não houver problemas -->
   <div id="noProblemsMessage" class="error-message" style="display: none;">Nenhum problema encontrado com os filtros selecionados.</div>
   
+  <!-- Stats Overlay -->
+  <div class="stats-overlay" id="statsOverlay" role="complementary" aria-label="Estatísticas de problemas">
+    <button class="stats-toggle" id="statsToggle" aria-label="Alternar visibilidade das estatísticas" aria-expanded="true">
+      <i class="fas fa-chevron-up"></i>
+    </button>
+    <div class="stats-content" id="statsContent">
+      <div class="stats-title">Estatísticas</div>
+      <div class="stat-item">
+        <span class="stat-number" id="totalReports">0</span>
+        <div class="stat-label">Problemas Reportados</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="solvedReports">0</span>
+        <div class="stat-label">Problemas Resolvidos</div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="activeUsers">0</span>
+        <div class="stat-label">Usuários Ativos</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Map Controls -->
-  <div class="map-controls">
+  <div class="map-controls" role="complementary" aria-label="Filtros de problemas">
     <div class="filter-title">Filtrar Problemas</div>
     
     <div class="filter-group">
       <div class="filter-label">Categoria:</div>
       <div class="filter-options" id="categoryFilters">
-        <button class="filter-button active" data-filter="all">Todos</button>
-        <button class="filter-button" data-filter="Buraco">Buracos</button>
-        <button class="filter-button" data-filter="Lixo">Lixo</button>
-        <button class="filter-button" data-filter="Iluminação">Iluminação</button>
-        <button class="filter-button" data-filter="Água">Água</button>
-        <button class="filter-button" data-filter="Segurança">Segurança</button>
+        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todos os problemas">Todos</button>
+        <button class="filter-button" data-filter="Buraco" aria-label="Filtrar por buracos">Buracos</button>
+        <button class="filter-button" data-filter="Lixo" aria-label="Filtrar por lixo">Lixo</button>
+        <button class="filter-button" data-filter="Iluminação" aria-label="Filtrar por iluminação">Iluminação</button>
+        <button class="filter-button" data-filter="Água" aria-label="Filtrar por água">Água</button>
+        <button class="filter-button" data-filter="Segurança" aria-label="Filtrar por segurança">Segurança</button>
       </div>
     </div>
     
     <div class="filter-group">
       <div class="filter-label">Status:</div>
       <div class="filter-options" id="statusFilters">
-        <button class="filter-button active" data-filter="all">Todos</button>
-        <button class="filter-button" data-filter="Aguardando">Aberto</button>
-        <button class="filter-button" data-filter="Em andamento">Em andamento</button>
-        <button class="filter-button" data-filter="Resolvido">Resolvido</button>
+        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todos os status">Todos</button>
+        <button class="filter-button" data-filter="Aguardando" aria-label="Filtrar por status aberto">Aberto</button>
+        <button class="filter-button" data-filter="Em andamento" aria-label="Filtrar por status em andamento">Em andamento</button>
+        <button class="filter-button" data-filter="Resolvido" aria-label="Filtrar por status resolvido">Resolvido</button>
       </div>
     </div>
     
     <div class="filter-group">
       <div class="filter-label">Urgência:</div>
       <div class="filter-options" id="urgencyFilters">
-        <button class="filter-button active" data-filter="all">Todos</button>
-        <button class="filter-button" data-filter="Baixa">Baixa</button>
-        <button class="filter-button" data-filter="Médiaivant">Média</button>
-        <button class="filter-button" data-filter="Alta">Alta</button>
+        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todas as urgências">Todos</button>
+        <button class="filter-button" data-filter="Baixa" aria-label="Filtrar por urgência baixa">Baixa</button>
+        <button class="filter-button" data-filter="Média" aria-label="Filtrar por urgência média">Média</button>
+        <button class="filter-button" data-filter="Alta" aria-label="Filtrar por urgência alta">Alta</button>
       </div>
     </div>
     
     <div class="filter-group">
       <div class="filter-label">Data:</div>
       <div class="filter-options" id="dateFilters">
-        <button class="filter-button active" data-filter="all">Todas</button>
-        <button class="filter-button" data-filter="last24h">Últimas 24h</button>
-        <button class="filter-button" data-filter="last7d">Últimos 7 dias</button>
-        <button class="filter-button" data-filter="last30d">Últimos 30 dias</button>
+        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todas as datas">Todas</button>
+        <button class="filter-button" data-filter="last24h" aria-label="Filtrar por últimas 24 horas">Últimas 24h</button>
+        <button class="filter-button" data-filter="last7d" aria-label="Filtrar por últimos 7 dias">Últimos 7 dias</button>
+        <button class="filter-button" data-filter="last30d" aria-label="Filtrar por últimos 30 dias">Últimos 30 dias</button>
       </div>
     </div>
   </div>
   
   <!-- Map Legend -->
-  <div class="map-legend">
+  <div class="map-legend" role="complementary" aria-label="Legenda do mapa">
     <div class="legend-title">Legenda</div>
     <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i></div>
+      <div class="legend-icon"><i class="fas fa-exclamation-triangle" style="color: var(--accent-yellow);"></i></div>
       <div class="legend-text">Buracos</div>
     </div>
     <div class="legend-item">
@@ -918,43 +1046,41 @@
       <div class="legend-text">Água</div>
     </div>
     <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-shield-alt" style="color: #ef4444;"></i></div>
+      <div class="legend-icon"><i class="fas fa-shield-alt" style="color: #dc3545;"></i></div>
       <div class="legend-text">Segurança</div>
     </div>
     <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-user-circle" style="color: #22c55e;"></i></div>
+      <div class="legend-icon"><i class="fas fa-user-circle" style="color: #28a745;"></i></div>
       <div class="legend-text">Sua localização</div>
     </div>
   </div>
   
   <!-- Problem Count -->
-  <div class="problem-count">
+  <div class="problem-count" role="status" aria-label="Contagem total de problemas">
     <i class="fas fa-exclamation-circle me-2"></i>
     Total: <span id="totalProblems" class="problem-count-number">0</span> problemas
   </div>
   
   <!-- View Toggle -->
-  <div class="map-view-toggle">
-    <button class="view-option active" data-view="markers">
+  <div class="map-view-toggle" role="tablist" aria-label="Alternar visualização do mapa">
+    <button class="view-option active" data-view="markers" role="tab" aria-selected="true" aria-label="Visualizar como marcadores">
       <i class="fas fa-map-marker-alt me-1"></i> Marcadores
     </button>
-    <button class="view-option" data-view="heat">
+    <button class="view-option" data-view="heat" role="tab" aria-selected="false" aria-label="Visualizar como mapa de calor">
       <i class="fas fa-fire me-1"></i> Mapa de Calor
     </button>
   </div>
   
   <!-- Search Bar -->
-  <div class="search-container">
-    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição...">
-    <button class="search-button" id="searchBtn">
+  <div class="search-container" role="search" aria-label="Pesquisar problemas">
+    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição..." aria-label="Pesquisar por título ou descrição">
+    <button class="search-button" id="searchBtn" aria-label="Executar pesquisa">
       <i class="fas fa-search"></i>
     </button>
   </div>
   
   <!-- Weather Overlay -->
-  <div class="weather-overlay" id="weatherOverlay
-
-  ">
+  <div class="weather-overlay" id="weatherOverlay" role="complementary" aria-label="Informações do clima">
     <div class="weather-info">
       <i class="fas fa-cloud weather-icon"></i>
       <span id="weatherText">Carregando clima...</span>
@@ -962,20 +1088,20 @@
   </div>
 
   <!-- Zoom Controls -->
-  <div class="zoom-controls">
-    <button class="zoom-button" id="zoomIn"><i class="fas fa-plus"></i></button>
-    <button class="zoom-button" id="zoomOut"><i class="fas fa-minus"></i></button>
+  <div class="zoom-controls" role="complementary" aria-label="Controles de zoom">
+    <button class="zoom-button" id="zoomIn" aria-label="Aumentar zoom"><i class="fas fa-plus"></i></button>
+    <button class="zoom-button" id="zoomOut" aria-label="Diminuir zoom"><i class="fas fa-minus"></i></button>
   </div>
 
-  <button class="btn btn-primary btn-report" id="newReportBtn">
+  <button class="btn-report" id="newReportBtn" aria-label="Reportar novo problema">
     <i class="fas fa-plus me-2"></i> Reportar Novo Problema
   </button>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -988,9 +1114,6 @@
   
   <!-- Leaflet Heat -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
-
-  <!-- Firebase Auth Module -->
-  <script src="js/firebaseAuth.js"></script>
 
   <script>
     // Initialize AOS animation library
@@ -1032,7 +1155,7 @@
     function getProblemIcon(category) {
       switch (category) {
         case 'Buraco':
-          return { icon: 'exclamation-triangle', color: '#f59e0b' };
+          return { icon: 'exclamation-triangle', color: 'var(--accent-yellow)' };
         case 'Lixo':
           return { icon: 'trash', color: '#10b981' };
         case 'Iluminação':
@@ -1040,9 +1163,9 @@
         case 'Água':
           return { icon: 'tint', color: '#0ea5e9' };
         case 'Segurança':
-          return { icon: 'shield-alt', color: '#ef4444' };
+          return { icon: 'shield-alt', color: '#dc3545' };
         default:
-          return { icon: 'map-pin', color: '#808080' };
+          return { icon: 'map-pin', color: 'var(--medium-gray)' };
       }
     }
 
@@ -1095,8 +1218,55 @@
       }
     }
 
+    // Função para carregar estatísticas
+    function loadStats(firebase) {
+      const db = firebase.database();
+      
+      // Count total problems
+      db.ref('problems').once('value', (snapshot) => {
+        const total = snapshot.numChildren();
+        animateCounter(document.getElementById('totalReports'), total);
+      }).catch(error => {
+        console.error('Erro ao carregar total de problemas:', error);
+        document.getElementById('totalReports').textContent = 'Erro';
+      });
+
+      // Count solved problems
+      db.ref('problems').orderByChild('status').equalTo('Resolvido').once('value', (snapshot) => {
+        const solved = snapshot.numChildren();
+        animateCounter(document.getElementById('solvedReports'), solved);
+      }).catch(error => {
+        console.error('Erro ao carregar problemas resolvidos:', error);
+        document.getElementById('solvedReports').textContent = 'Erro';
+      });
+
+      // Count users
+      db.ref('users').once('value', (snapshot) => {
+        const users = snapshot.numChildren();
+        animateCounter(document.getElementById('activeUsers'), users);
+      }).catch(error => {
+        console.error('Erro ao carregar usuários ativos:', error);
+        document.getElementById('activeUsers').textContent = 'Erro';
+      });
+    }
+
+    // Animate counter
+    function animateCounter(element, target, duration = 2000) {
+      let start = 0;
+      const increment = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          element.textContent = target;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(start);
+        }
+      }, 16);
+    }
+
     // Função para mostrar mapa com problemas relatados
-    function showProblemsMap(user) {
+    function showProblemsMap(user, firebase) {
       try {
         // Initialize Leaflet map
         let map, markersLayer, heatLayer;
@@ -1136,7 +1306,7 @@
                 L.marker([latitude, longitude], {
                   icon: L.divIcon({
                     className: 'user-location',
-                    html: '<i class="fas fa-user-circle" style="color: #22c55e; font-size: 32px;"></i>',
+                    html: '<i class="fas fa-user-circle" style="color: #28a745; font-size: 32px;"></i>',
                     iconSize: [32, 32],
                     iconAnchor: [16, 16]
                   })
@@ -1209,13 +1379,13 @@
             if (filteredProblems.length === 0) {
               document.getElementById('map').style.display = 'none';
               document.getElementById('noProblemsMessage').style.display = 'block';
-              return; // Sai da função para não processar marcadores desnecessariamente
+              return;
             }
 
             // Mostrar mapa e ocultar mensagem quando há problemas
             document.getElementById('map').style.display = 'block';
             document.getElementById('noProblemsMessage').style.display = 'none';
-            map.invalidateSize(); // Garantir que o mapa redimensione corretamente
+            map.invalidateSize();
 
             // Add markers based on view mode
             filteredProblems.forEach(problem => {
@@ -1315,13 +1485,17 @@
         // Handle view toggles
         document.querySelectorAll('.view-option').forEach(button => {
           button.addEventListener('click', () => {
-            document.querySelectorAll('.view-option').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view-option').forEach(btn => {
+              btn.classList.remove('active');
+              btn.setAttribute('aria-selected', 'false');
+            });
             button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
             const viewMode = button.dataset.view;
             updateMap(viewMode, {
               category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
               status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
-              urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
+              urgency: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
               date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
               search: document.getElementById('searchInput').value
             });
@@ -1370,8 +1544,11 @@
 
         // Handle new report button click
         document.getElementById('newReportBtn').addEventListener('click', () => {
-          window.location.href = 'report.html';
+          window.location.href = 'new-report.html';
         });
+
+        // Load stats
+        loadStats(firebase);
       } catch (error) {
         console.error("Erro ao mostrar mapa de problemas:", error.message);
         showError("Erro ao carregar visualização de problemas");
@@ -1395,7 +1572,7 @@
           try {
             const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
             const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
-            showProblemsMap(user);
+            showProblemsMap(user, firebase);
           } catch (error) {
             console.error("Erro ao carregar dados:", error.message);
             showError(`Erro ao carregar dados: ${error.message}`);
@@ -1405,7 +1582,7 @@
           }
         });
       } catch (error) {
-        console.error("Erro na Lecturer inicialização do carregamento:", error.message);
+        console.error("Erro na inicialização do carregamento:", error.message);
         showError("Erro ao iniciar carregamento");
       }
     }
@@ -1423,12 +1600,37 @@
         logoutBtn.appendChild(logoutSpinner);
         logoutBtn.disabled = true;
 
-        firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch(error => {
+          console.error("Erro ao fazer logout:", error.message);
+          showError("Erro ao fazer logout");
+          logoutText.style.display = 'inline';
+          logoutBtn.removeChild(logoutSpinner);
+          logoutBtn.disabled = false;
+        });
       } catch (error) {
         console.error("Erro ao iniciar logout:", error.message);
         showError("Erro ao fazer logout");
       }
     }
+
+    // Toggle stats overlay
+    document.addEventListener('DOMContentLoaded', () => {
+      const statsToggle = document.getElementById('statsToggle');
+      const statsContent = document.getElementById('statsContent');
+      statsToggle.addEventListener('click', () => {
+        if (statsContent.style.display === 'none') {
+          statsContent.style.display = 'block';
+          statsToggle.innerHTML = '<i class="fas fa-chevron-up"></i>';
+          statsToggle.setAttribute('aria-expanded', 'true');
+        } else {
+          statsContent.style.display = 'none';
+          statsToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
+          statsToggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
 
     // Inicializar página
     window.addEventListener('load', function() {
