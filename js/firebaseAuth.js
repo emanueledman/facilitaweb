@@ -18,7 +18,7 @@
 
   const validatePhone = (phone) => {
     const normalizedPhone = normalizePhone(phone);
-    const phoneRegex = /^\+2449\d{8}$/;
+    const phoneRegex = /^\+244(9[1-6]{1}|99)\d{7}$/;
     if (!phoneRegex.test(normalizedPhone)) {
       console.log(`Telefone inválido: ${normalizedPhone}`);
       return "Número inválido. Use +2449 seguido de 8 dígitos (ex.: +244912345678).";
@@ -29,30 +29,13 @@
 
   const validatePassword = (password) => {
     const trimmedPassword = password.trim();
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.,\-_=+~#])[A-Za-z\d!@#$%^&*.,\-_=+~#]{8,}$/;
     if (!trimmedPassword) {
       console.log(`Senha inválida: vazia`);
       return "A senha não pode estar vazia.";
     }
-    if (trimmedPassword.length < 8) {
-      console.log(`Senha inválida: ${trimmedPassword} (menos de 8 caracteres)`);
-      return "A senha deve ter 8 ou mais caracteres.";
-    }
-    if (!/[A-Z]/.test(trimmedPassword)) {
-      console.log(`Senha inválida: ${trimmedPassword} (sem maiúsculas)`);
-      return "A senha deve conter pelo menos uma letra maiúscula.";
-    }
-    if (!/\d/.test(trimmedPassword)) {
-      console.log(`Senha inválida: ${trimmedPassword} (sem números)`);
-      return "A senha deve conter pelo menos um número.";
-    }
-    if (!/[!@#$%^&*.,\-_=+~#]/.test(trimmedPassword)) {
-      console.log(`Senha inválida: ${trimmedPassword} (sem símbolos permitidos)`);
-      return "A senha deve conter pelo menos um símbolo (!@#$%^&*.,-_=+~#).";
-    }
-    if (!passwordRegex.test(trimmedPassword)) {
-      console.log(`Senha inválida: ${trimmedPassword} (não corresponde à regex)`);
-      return "A senha deve ter 8+ caracteres, com maiúsculas, números e símbolos (!@#$%^&*.,-_=+~#).";
+    if (trimmedPassword.length < 6) {
+      console.log(`Senha inválida: ${trimmedPassword} (menos de 6 caracteres)`);
+      return "A senha deve ter 6 ou mais caracteres.";
     }
     console.log(`Senha válida: ${trimmedPassword}`);
     return null;
@@ -62,7 +45,7 @@
   const errorMessages = {
     'auth/email-already-in-use': 'Este email já está registrado. Tente fazer login.',
     'auth/invalid-email': 'Email inválido. Verifique o formato.',
-    'auth/weak-password': 'A senha é muito fraca. Use pelo menos 8 caracteres com maiúsculas, números e símbolos.',
+    'auth/weak-password': 'A senha é muito fraca. Use pelo menos 6 caracteres.',
     'auth/invalid-phone-number': 'Número de telefone inválido. Use +2449XXXXXXXX.',
     'auth/invalid-verification-code': 'Código OTP inválido. Tente novamente.',
     'auth/code-expired': 'O código OTP expirou. Solicite um novo.',
