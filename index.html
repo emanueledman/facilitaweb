@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Metadados essenciais -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FixABairro | Melhorando Bairros em Angola</title>
+  <title>FixABairro | Juntos, Transformamos.</title>
 
-  <!-- Metadados descritivos -->
-  <meta name="description" content="FixABairro - Reporte e resolva problemas no seu bairro de forma rápida e colaborativa em Angola.">
-  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, denúncias">
+  <meta name="description" content="FixABairro - Sua plataforma para reportar, acompanhar e resolver problemas urbanos em Angola. Junte-se à comunidade e veja a diferença!">
+  <meta name="keywords" content="fixabairro, angola, problemas urbanos, comunidade, cidadania, reportar, soluções, bairro, antes e depois, transformação, impacto, cookies">
   <meta name="author" content="FixABairro Team">
 
-  <!-- Favicon e ícones -->
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="favicon.png"> <link rel="apple-touch-icon" href="icons/Icon-192.png"> <link rel="manifest" href="manifest.json">
 
-  <!-- Metadados para dispositivos móveis -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="fixabairro">
+  <meta name="apple-mobile-web-app-title" content="FixABairro">
 
-  <!-- Estilos externos -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 
   <style>
-    /* Variáveis globais */
+    /* Variáveis globais - Nova Paleta de Cores e Fontes */
     :root {
-      --primary-red: #f39200;
-      --primary-black: #1a1a1a;
-      --accent-yellow: #ffcd00;
-      --light-gray: #f8f9fa;
-      --medium-gray: #6c757d;
-      --dark-gray: #343a40;
-      --white: #ffffff;
-      --border-color: #e9ecef;
-      --text-dark: #212529;
-      --text-muted: #6c757d;
+      --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
+      --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
+      --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
+      --success-green: #4CAF50; /* Verde para status de sucesso */
+      --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
+      --info-blue: #2196F3; /* Azul para status de informação/progresso */
+
+      --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
+      --bg-white: #FFFFFF; /* Fundo branco puro para cards */
+      --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
+
+      --text-main: #34495E; /* Azul escuro para texto principal */
+      --text-secondary: #7F8C8D; /* Cinza para texto secundário */
+      --text-white: #FFFFFF; /* Texto branco */
+
+      --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
+      --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
     }
 
     /* Reset e estilos base */
@@ -49,374 +51,650 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--light-gray);
-      color: var(--text-dark);
-      line-height: 1.6;
+      font-family: var(--font-body);
+      background: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    /* Componentes de navegação */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+    }
+
+    /* Scrollbar estilizada */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-light);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-accent);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #E64A19;
+    }
+
+    /* Navbar */
     .navbar {
-      background: var(--white);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 0;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      background: transparent;
+      padding: 1.2rem 0;
+      transition: all 0.4s ease-in-out;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .navbar.scrolled {
+        background: var(--bg-white);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 0.8rem 0;
     }
 
     .navbar-brand {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      color: var(--primary-black);
+      color: var(--text-white);
       display: flex;
       align-items: center;
       text-decoration: none;
+      transition: color 0.3s ease-in-out;
     }
 
-    .navbar-brand:hover {
-      color: var(--primary-black);
+    .navbar.scrolled .navbar-brand {
+        color: var(--secondary-dark);
     }
 
     .logo {
-      width: 32px;
-      height: 32px;
-      margin-right: 12px;
-      background: var(--primary-red);
-      border-radius: 6px;
+      width: 40px; /* Mais robusto */
+      height: 40px;
+      margin-right: 10px;
+      background: var(--primary-accent);
+      border-radius: 50%; /* Completamente redondo */
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--white);
-      font-size: 1rem;
+      color: var(--text-white);
+      font-size: 1.5rem;
       font-weight: 700;
+      box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
     }
 
     .nav-link {
-      font-size: 0.95rem;
-      color: var(--text-muted);
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.9);
       font-weight: 500;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.2rem;
       text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .navbar.scrolled .nav-link {
+        color: var(--text-main);
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 3px;
+        background: var(--primary-accent);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+        width: 70%;
     }
 
     .nav-link:hover {
-      color: var(--primary-red);
+      color: var(--primary-accent);
     }
 
-    /* Botões */
-    .btn-primary-custom {
-      background: var(--primary-red);
-      color: var(--white);
-      padding: 0.625rem 1.5rem;
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 0.95rem;
+    /* Botões Globais */
+    .btn-main {
+      background: var(--primary-accent);
+      color: var(--text-white);
+      padding: 0.9rem 2.5rem;
+      border-radius: 30px; /* Mais arredondado */
+      font-weight: 600;
+      font-size: 1.1rem;
       text-decoration: none;
       border: none;
       display: inline-block;
+      box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+      transition: all 0.3s ease;
     }
 
-    .btn-primary-custom:hover {
-      background: #b30e20;
-      color: var(--white);
+    .btn-main:hover {
+      background: #E64A19;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
     }
 
-    .btn-outline-custom {
+    .btn-outline-secondary-dark {
       background: transparent;
-      color: var(--primary-black);
-      padding: 0.625rem 1.5rem;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 0.95rem;
+      color: var(--text-white);
+      padding: 0.9rem 2.5rem;
+      border: 2px solid rgba(255,255,255,0.7);
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1.1rem;
       text-decoration: none;
       display: inline-block;
+      transition: all 0.3s ease;
     }
 
-    .btn-outline-custom:hover {
-      background: var(--light-gray);
-      color: var(--primary-black);
+    .navbar.scrolled .btn-outline-secondary-dark {
+        color: var(--secondary-dark);
+        border-color: var(--secondary-dark);
     }
 
-    /* Seção Hero */
+    .btn-outline-secondary-dark:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--text-white);
+      color: var(--text-white);
+      transform: translateY(-3px);
+    }
+
+    .navbar.scrolled .btn-outline-secondary-dark:hover {
+        background: var(--secondary-dark);
+        color: var(--text-white);
+        border-color: var(--secondary-dark);
+    }
+
+    /* Hero Section */
     .hero-section {
-      background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://ecoangola.com/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-22-at-11.48.20.jpeg') no-repeat center center/cover;
-      padding: 4rem 0 5rem;
-      border-bottom: 1px solid var(--border-color);
-      color: var(--white);
+      background: linear-gradient(to right, var(--bg-dark-overlay), rgba(44, 62, 80, 0.8)), url('https://ecoangola.com/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-22-at-11.48.20.jpeg') no-repeat center center/cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-white);
+      padding: 6rem 0;
+      position: relative;
     }
 
     .hero-content {
-      max-width: 640px;
+      max-width: 900px;
       margin: 0 auto;
-      text-align: center;
+      padding: 0 1.5rem;
     }
 
     .hero-title {
-      font-size: 3rem;
+      font-size: 5rem;
       font-weight: 700;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-      letter-spacing: -0.02em;
+      line-height: 1.05;
+      margin-bottom: 2rem;
+      letter-spacing: -0.06em;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+      color: var(--text-white);
     }
 
     .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--white);
-      margin-bottom: 2.5rem;
+      font-size: 1.8rem;
+      margin-bottom: 3.5rem;
+      opacity: 0.98;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.4;
       font-weight: 400;
-      line-height: 1.5;
-      opacity: 0.9;
     }
 
     .hero-actions {
       display: flex;
-      gap: 1rem;
+      gap: 1.8rem;
       justify-content: center;
       flex-wrap: wrap;
+      margin-bottom: 2rem;
     }
 
-    /* Seção de Funcionalidades */
-    .features-section {
-      padding: 4rem 0;
-      background: var(--primary-red);
-      color: var(--white);
+    .hero-footer-text {
+        font-size: 1.15rem;
+        opacity: 0.9;
+        font-weight: 500;
     }
 
+    /* Section Header */
     .section-header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 5rem;
     }
 
     .section-title {
-      font-size: 2.25rem;
+      font-size: 3.5rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--secondary-dark);
       margin-bottom: 1rem;
+      letter-spacing: -0.04em;
     }
 
     .section-subtitle {
-      font-size: 1.1rem;
-      color: var(--white);
-      max-width: 600px;
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 800px;
       margin: 0 auto;
-      opacity: 0.9;
+      line-height: 1.6;
     }
 
-    .feature-card {
-      background: var(--white);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 2rem;
-      height: 100%;
-      text-align: center;
-      color: var(--text-dark);
+    /* Stats Section */
+    .stats-section {
+        background: var(--bg-light);
+        padding: 6rem 0;
     }
 
-    .feature-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .stats-grid {
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 5rem;
     }
 
-    .feature-icon {
-      width: 64px;
-      height: 64px;
-      background: var(--light-gray);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1.5rem;
+    .stat-card {
+        background: var(--bg-white);
+        border-radius: 15px;
+        padding: 2.5rem;
+        text-align: center;
+        flex: 1;
+        min-width: 280px;
+        max-width: 350px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        border-bottom: 5px solid var(--primary-accent); /* Borda de destaque */
     }
 
-    .feature-icon i {
-      font-size: 1.5rem;
-      color: var(--primary-red);
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 45px rgba(0,0,0,0.15);
     }
 
-    .feature-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--primary-black);
-      margin-bottom: 0.75rem;
+    .stat-icon {
+        font-size: 3rem;
+        color: var(--primary-accent);
+        margin-bottom: 1.5rem;
     }
 
-    .feature-description {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
+    .stat-number {
+        font-size: 4rem;
+        font-weight: 700;
+        color: var(--secondary-dark);
+        line-height: 1;
+        margin-bottom: 0.8rem;
     }
 
-    .feature-link {
-      color: var(--primary-red);
-      font-weight: 500;
-      text-decoration: none;
-      font-size: 0.95rem;
+    .stat-label {
+        font-size: 1.2rem;
+        color: var(--text-secondary);
+        font-weight: 500;
     }
 
-    .feature-link:hover {
-      color: #b30e20;
-      text-decoration: underline;
+    /* Before After Gallery */
+    .transformations-section {
+        background: var(--bg-white);
+        padding: 6rem 0;
+        border-top: 1px solid #ECEFF1;
     }
 
-    /* Seção de Problemas Recentes */
-    .recent-section {
-      padding: 4rem 0;
-      background: var(--medium-gray);
+    .before-after-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .before-after-card {
+        background: var(--bg-white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        border: 1px solid #E0E0E0; /* Borda mais fina */
+    }
+
+    .before-after-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+    }
+
+    .image-comparison {
+        position: relative;
+        height: 280px; /* Maior altura para as imagens */
+        overflow: hidden;
+    }
+
+    .image-comparison img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 0.6s ease-in-out;
+    }
+
+    .image-comparison .after-image {
+        opacity: 0;
+    }
+
+    .before-after-card:hover .after-image {
+        opacity: 1;
+    }
+
+    .card-content {
+        padding: 1.8rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--secondary-dark);
+        margin-bottom: 0.8rem;
+    }
+
+    .card-location {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin-bottom: 1.2rem;
+    }
+
+    .card-link {
+        color: var(--primary-accent);
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .card-link:hover {
+        color: #E64A19;
+    }
+
+    /* How It Works Section */
+    .how-it-works-section {
+        background: var(--secondary-dark); /* Fundo escuro */
+        padding: 6rem 0;
+        color: var(--text-white);
+    }
+
+    .how-it-works-section .section-title {
+        color: var(--text-white);
+    }
+
+    .how-it-works-section .section-subtitle {
+        color: rgba(255,255,255,0.85);
+    }
+
+    .step-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        margin-top: 4rem;
+    }
+
+    .step-card {
+        text-align: center;
+        padding: 3rem 2rem;
+        border-radius: 15px;
+        background: rgba(255,255,255,0.08); /* Fundo translúcido suave */
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        transition: transform 0.4s ease, background 0.4s ease;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .step-card:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+
+    .step-icon {
+        font-size: 3.5rem; /* Ícone maior */
+        color: var(--highlight-light); /* Amarelo para destaque */
+        margin-bottom: 1.8rem;
+    }
+
+    .step-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--text-white);
+        margin-bottom: 1rem;
+    }
+
+    .step-description {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.75);
+        margin-bottom: 1.5rem;
+    }
+
+    .step-link {
+        color: var(--highlight-light);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .step-link:hover {
+        color: #FFEB3B;
+    }
+
+    /* Recent Issues Section */
+    .recent-issues-section {
+      padding: 6rem 0;
+      background: var(--bg-light);
     }
 
     .issue-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      margin-top: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+      margin-top: 4rem;
     }
 
     .issue-card {
-      background: var(--white);
-      border: 1px solid var(--medium-gray);
-      border-radius: 12px;
+      background: var(--bg-white);
+      border-radius: 15px;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #E0E0E0;
     }
 
     .issue-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 45px rgba(0,0,0,0.15);
     }
 
     .issue-image {
       width: 100%;
-      height: 200px;
+      height: 250px;
       object-fit: cover;
-      background: var(--light-gray);
+      background: var(--bg-light);
+      display: block;
     }
 
     .issue-placeholder {
       width: 100%;
-      height: 200px;
-      background: var(--light-gray);
+      height: 250px;
+      background: var(--bg-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--medium-gray);
+      color: var(--text-secondary);
+      font-size: 3.5rem;
+      border-bottom: 1px solid #E0E0E0;
     }
 
     .issue-content {
-      padding: 1.5rem;
+      padding: 1.8rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .issue-status {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      margin-bottom: 1rem;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.5rem 1.2rem;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      gap: 0.7rem;
+      text-transform: uppercase;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      color: var(--text-white);
     }
 
-    .status-aguardando {
-      background: var(--accent-yellow);
-      color: var(--primary-black);
-    }
-
-    .status-resolvido {
-      background: #28a745;
-      color: var(--white);
-    }
+    .status-Aguardando { background: var(--warning-orange); }
+    .status-EmAnálise { background: var(--info-blue); }
+    .status-Resolvido { background: var(--success-green); }
 
     .issue-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--primary-black);
-      margin-bottom: 0.5rem;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      margin-bottom: 0.8rem;
     }
 
     .issue-description {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-      line-height: 1.5;
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      flex-grow: 1;
     }
 
     .issue-meta {
-      font-size: 0.85rem;
-      color: var(--medium-gray);
-      margin-bottom: 1rem;
-    }
-
-    /* Seção de Estatísticas */
-    .stats-section {
-      padding: 3rem 0;
-      background: var(--primary-red);
-    }
-
-    .stat-item {
-      text-align: center;
-      padding: 1.5rem;
-      background: var(--white);
-      border: 1px solid var(--medium-gray);
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--primary-red);
-      display: block;
-    }
-
-    .stat-label {
       font-size: 0.95rem;
-      color: var(--medium-gray);
-      font-weight: 500;
-      margin-top: 0.5rem;
+      color: var(--text-secondary);
+      margin-top: auto;
+      padding-top: 1.2rem;
+      border-top: 1px solid #E0E0E0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
     }
+
+    .issue-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-secondary);
+    }
+
+    .issue-meta i {
+        color: var(--primary-accent);
+    }
+
+    /* Call to Action Final */
+    .cta-section {
+        background: var(--primary-accent);
+        padding: 6rem 0;
+        text-align: center;
+        color: var(--text-white);
+    }
+
+    .cta-section .section-title {
+        color: var(--text-white);
+        margin-bottom: 2rem;
+    }
+
+    .cta-section .section-subtitle {
+        color: rgba(255,255,255,0.95);
+        margin-bottom: 3rem;
+    }
+
+    .cta-actions {
+        display: flex;
+        gap: 1.8rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .cta-actions .btn-outline-secondary-dark {
+        border-color: rgba(255,255,255,0.8);
+        color: var(--text-white);
+    }
+
+    .cta-actions .btn-outline-secondary-dark:hover {
+        background: rgba(255,255,255,0.15);
+        border-color: var(--text-white);
+    }
+
 
     /* Rodapé */
     .footer {
-      background: var(--primary-black);
-      color: var(--white);
-      padding: 3rem 0 2rem;
+      background: var(--secondary-dark);
+      color: rgba(255,255,255,0.9);
+      padding: 4rem 0 3rem;
+      font-size: 1rem;
     }
 
     .footer-brand {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.8rem;
     }
 
     .footer-brand .logo {
-      background: var(--primary-red);
-      color: var(--white);
+      background: var(--primary-accent);
+      color: var(--text-white);
     }
 
     .footer-brand span {
-      color: var(--white);
-      font-weight: 600;
-      font-size: 1.25rem;
+      color: var(--text-white);
+      font-weight: 700;
+      font-size: 1.6rem;
     }
 
     .footer-links {
       display: flex;
-      gap: 2rem;
-      margin-bottom: 2rem;
+      gap: 2.8rem;
+      margin-bottom: 3rem;
       flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .footer-links a {
-      color: #adb5bd;
+      color: rgba(255,255,255,0.7);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
     }
 
     .footer-links a:hover {
-      color: var(--white);
+      color: var(--primary-accent);
     }
 
     .footer-bottom {
-      border-top: 1px solid #495057;
-      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 2.5rem;
       font-size: 0.9rem;
-      color: #adb5bd;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
     }
 
     /* Carregamento */
@@ -426,19 +704,26 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: var(--white);
+      background: var(--bg-white);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .spinner {
-      width: 32px;
-      height: 32px;
-      border: 3px solid var(--border-color);
-      border-top: 3px solid var(--primary-red);
+      width: 50px; /* Maior */
+      height: 50px; /* Maior */
+      border: 5px solid #E0E0E0;
+      border-top: 5px solid var(--primary-accent);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -448,79 +733,186 @@
       100% { transform: rotate(360deg); }
     }
 
-    .fade-out {
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    /* Cookie Consent Banner */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--secondary-dark);
+      color: var(--text-white);
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.3);
+      z-index: 1100;
+      transform: translateY(100%);
+      transition: transform 0.6s ease-out;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .cookie-banner.show {
+      transform: translateY(0);
+    }
+
+    .cookie-banner p {
+      margin-bottom: 0;
+      font-size: 1rem;
+      text-align: center;
+      max-width: 900px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .cookie-banner .btn-group {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cookie-banner .btn-accept {
+      background-color: var(--primary-accent);
+      color: var(--text-white);
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .cookie-banner .btn-accept:hover {
+      background-color: #E64A19;
+      transform: translateY(-2px);
+    }
+
+    .cookie-banner .btn-more-info {
+      background-color: transparent;
+      color: var(--text-white);
+      border: 2px solid rgba(255,255,255,0.6);
+      padding: 0.8rem 1.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cookie-banner .btn-more-info:hover {
+      background-color: rgba(255,255,255,0.15);
+      border-color: var(--text-white);
+      transform: translateY(-2px);
     }
 
     /* Responsividade */
-    @media (max-width: 768px) {
-      .hero-title {
-        font-size: 2.25rem;
-      }
-
-      .hero-subtitle {
-        font-size: 1.1rem;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .hero-actions .btn-primary-custom,
-      .hero-actions .btn-outline-custom {
-        width: 100%;
-        max-width: 280px;
-      }
-
-      .section-title {
-        font-size: 1.875rem;
-      }
-
-      .feature-card {
-        padding: 1.5rem;
-      }
-
-      .footer-links {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .stat-item {
-        margin-bottom: 1.5rem;
-      }
+    @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark);
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark);
+        }
+        .navbar.scrolled .navbar-brand, .navbar.scrolled .nav-link, .navbar.scrolled .btn-outline-secondary-dark {
+            color: var(--secondary-dark);
+            border-color: transparent; /* No mobile, os botões do nav não têm borda */
+        }
+        .navbar .nav-link, .navbar .btn-outline-secondary-dark {
+            color: var(--text-main);
+            border-color: transparent;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+        }
+        .hero-subtitle {
+            font-size: 1.4rem;
+        }
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn-main, .btn-outline-secondary-dark {
+            width: 90%; /* Ocupa mais espaço */
+            max-width: 380px;
+        }
+        .section-title {
+            font-size: 2.8rem;
+        }
+        .section-subtitle {
+            font-size: 1.1rem;
+        }
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .stat-card {
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .step-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .issue-grid {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        .footer-links {
+            justify-content: flex-start;
+            gap: 1.8rem;
+        }
+        .cookie-banner {
+          padding: 1.2rem;
+        }
+        .cookie-banner p {
+          font-size: 0.9rem;
+        }
+        .cookie-banner .btn-group {
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+        }
+        .cookie-banner .btn-accept, .cookie-banner .btn-more-info {
+            width: 90%;
+            max-width: 300px;
+        }
     }
 
     @media (max-width: 576px) {
-      .hero-title {
-        font-size: 2rem;
-      }
-
-      .navbar-brand {
-        font-size: 1.25rem;
-      }
-
-      .logo {
-        width: 28px;
-        height: 28px;
-        font-size: 0.9rem;
-      }
-
-      .issue-grid {
-        grid-template-columns: 1fr;
-      }
+        .hero-title {
+            font-size: 2.8rem;
+        }
+        .hero-subtitle {
+            font-size: 1.1rem;
+        }
+        .btn-main, .btn-outline-secondary-dark {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
+        .stat-number {
+            font-size: 3.2rem;
+        }
+        .stat-label {
+            font-size: 1rem;
+        }
+        .issue-image, .issue-placeholder, .image-comparison {
+            height: 200px;
+        }
+        .section-title {
+            font-size: 2.2rem;
+        }
     }
   </style>
 </head>
 <body>
   <div id="loadingScreen" class="loading-container">
     <div class="spinner"></div>
-    <p class="mt-3" style="color: var(--text-muted);">Carregando...</p>
+    <p class="mt-3" style="color: var(--text-secondary);">Preparando o FixABairro para você...</p>
   </div>
 
   <div id="homepage" style="display: none;">
-    <!-- Header -->
     <nav class="navbar navbar-expand-lg">
       <div class="container">
         <a class="navbar-brand" href="#">
@@ -528,145 +920,163 @@
           FixABairro
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars"></i>
-        </button>
+          <i class="fas fa-bars" style="color: var(--text-white);"></i> </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-lg-center">
             <li class="nav-item">
-              <a class="nav-link" href="#features">Como Funciona</a>
+              <a class="nav-link" href="#impact">Impacto</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#issues">Problemas</a>
+              <a class="nav-link" href="#how-it-works">Como Funciona</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#issues">Problemas Abertos</a>
+            </li>
+            <li class="nav-item ms-lg-3">
+              <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
             </li>
             <li class="nav-item ms-lg-2">
-              <a class="btn-outline-custom" href="new-report.html" aria-label="Relatar um problema">Relatar Problema</a>
-            </li>
-            <li class="nav-item ms-lg-2">
-              <a class="btn-primary-custom" id="authButton" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
             </li>
           </ul>
         </div>
       </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section" role="banner" aria-label="Transforme o Seu Bairro">
+    <section class="hero-section" role="banner" aria-label="Transforme o Seu Bairro. Juntos.">
       <div class="container">
-        <div class="hero-content">
-          <h1 class="hero-title">Transforme o Seu Bairro</h1>
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
+          <h1 class="hero-title">Transforme Seu Bairro.<br>A Sua Voz Faz a Diferença.</h1>
           <p class="hero-subtitle">
-            Reporte problemas urbanos, conecte-se com a comunidade e acompanhe soluções em tempo real. 
-            Juntos construímos bairros melhores em Angola.
+            Conecte-se com a sua comunidade para reportar problemas urbanos, acompanhar soluções e construir um futuro melhor para Angola.
           </p>
           <div class="hero-actions">
-            <a href="new-report.html" class="btn-primary-custom" aria-label="Relatar um problema">Relatar Problema</a>
-            <a href="report.html" class="btn-outline-custom" aria-label="Ver mapa de problemas">Ver Mapa</a>
+            <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Agora <i class="fas fa-arrow-right ms-2"></i></a>
+            <a href="report.html" class="btn-outline-secondary-dark" aria-label="Explorar o mapa de problemas">Explorar Mapa <i class="fas fa-map-marked-alt ms-2"></i></a>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section" id="features">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Como Funciona</h2>
-          <p class="section-subtitle">
-            Uma plataforma simples e eficaz para melhorar a qualidade de vida no seu bairro
+          <p class="mt-4 hero-footer-text">
+            *Não é necessário registo para participar. Sua contribuição é valiosa!
           </p>
         </div>
-        <div class="row g-4">
-          <div class="col-lg-4">
-            <div class="feature-card">
-              <div class="feature-icon">
-                <i class="fas fa-camera"></i>
-              </div>
-              <h3 class="feature-title">Reporte Problemas</h3>
-              <p class="feature-description">
-                Tire uma foto, descreva o problema e marque a localização. 
-                Buracos, lixo, iluminação - tudo pode ser reportado.
-              </p>
-              <a href="new-report.html" class="feature-link" aria-label="Fazer reporte de problema">Fazer Reporte →</a>
+      </div>
+    </section>
+
+    <section class="stats-section" id="impact">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">O Seu Impacto, em Números.</h2>
+          <p class="section-subtitle">
+            Cada reporte, cada solução, constrói um futuro mais limpo e organizado para as nossas comunidades.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fas fa-lightbulb stat-icon"></i>
+                <span class="stat-number" id="totalReports">0</span>
+                <div class="stat-label">Problemas Levantados</div>
             </div>
+            <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fas fa-handshake stat-icon"></i>
+                <span class="stat-number" id="solvedReports">0</span>
+                <div class="stat-label">Soluções Alcançadas</div>
+            </div>
+            <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+                <i class="fas fa-city stat-icon"></i>
+                <span class="stat-number" id="activeUsers">0</span>
+                <div class="stat-label">Bairros Engajados</div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="transformations-section">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Transformações Visíveis. Histórias Reais.</h2>
+          <p class="section-subtitle">
+            Confira o impacto concreto da nossa comunidade. Problemas resolvidos, bairros renovados!
+          </p>
+        </div>
+        <div class="before-after-gallery" id="resolvedIssuesGallery">
+            <div class="col-12 text-center text-muted" id="noTransformationsMessage" style="display: none;">
+                <i class="fas fa-box-open fa-3x mb-3" style="color: var(--text-secondary);"></i>
+                <p>Nenhuma transformação visível para mostrar ainda. Seja o primeiro a reportar e ver a mudança!</p>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works-section" id="how-it-works">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Seu Guia Rápido para a Transformação</h2>
+          <p class="section-subtitle">
+            Começar a fazer a diferença é mais simples do que você imagina. Siga estes passos!
+          </p>
+        </div>
+        <div class="step-grid">
+          <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-camera step-icon"></i>
+            <h3 class="step-title">1. Identifique e Registre</h3>
+            <p class="step-description">Encontrou um buraco, lixo ou falha na iluminação? Tire uma foto e descreva o problema em poucos cliques.</p>
+            <a href="new-report.html" class="step-link">
+                Reportar Problema <i class="fas fa-chevron-right ms-2"></i>
+            </a>
           </div>
-          <div class="col-lg-4">
-            <div class="feature-card">
-              <div class="feature-icon">
-                <i class="fas fa-map-marked-alt"></i>
-              </div>
-              <h3 class="feature-title">Visualize no Mapa</h3>
-              <p class="feature-description">
-                Veja todos os problemas reportados na sua região em um mapa interativo. 
-                Acompanhe o status e participe das discussões.
-              </p>
-              <a href="report.html" class="feature-link" aria-label="Ver mapa de problemas">Ver Mapa →</a>
-            </div>
+          <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-street-map step-icon"></i>
+            <h3 class="step-title">2. Acompanhe no Mapa</h3>
+            <p class="step-description">Veja todos os problemas da sua área e o status de cada um em um mapa interativo e intuitivo.</p>
+            <a href="report.html" class="step-link">
+                Ver Mapa Completo <i class="fas fa-chevron-right ms-2"></i>
+            </a>
           </div>
-          <div class="col-lg-4">
-            <div class="feature-card">
-              <div class="feature-icon">
-                <i class="fas fa-users"></i>
-              </div>
-              <h3 class="feature-title">Conecte-se</h3>
-              <p class="feature-description">
-                Junte-se a outros moradores, autoridades locais e organizações 
-                para encontrar soluções colaborativas.
-              </p>
-              <a href="#" class="feature-link" aria-label="Participar da comunidade">Participar →</a>
-            </div>
+          <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-users-gear step-icon"></i>
+            <h3 class="step-title">3. Colabore e Celebre</h3>
+            <p class="step-description">Conecte-se com vizinhos, sugira soluções e celebre as melhorias que JUNTOS conquistamos.</p>
+            <a href="profile.html" class="step-link">
+                Junte-se à Comunidade <i class="fas fa-chevron-right ms-2"></i>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Recent Issues -->
-    <section class="recent-section" id="issues">
+    <section class="recent-issues-section" id="issues">
       <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Problemas Recentes</h2>
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Problemas Ativos Próximos de Si.</h2>
           <p class="section-subtitle">
-            Veja os últimos problemas reportados pela comunidade
+            Estes são os desafios mais recentes na sua comunidade que aguardam a atenção e a colaboração de todos.
           </p>
         </div>
         <div class="issue-grid" id="recentIssues">
-          <!-- Issues will be loaded here -->
+          <div class="col-12 text-center text-muted" id="noRecentIssuesMessage" style="display: none;">
+                <i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
+                <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>
+            </div>
+        </div>
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="report.html" class="btn-main" aria-label="Ver todos os problemas no mapa">Ver Todos os Problemas no Mapa <i class="fas fa-arrow-right ms-2"></i></a>
         </div>
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Nossos Números</h2>
-          <p class="section-subtitle">
-            Acompanhe o impacto da comunidade na resolução de problemas urbanos
-          </p>
+    <section class="cta-section" data-aos="zoom-in">
+        <div class="container">
+            <h2 class="section-title">Pronto para Ver a Mudança?</h2>
+            <p class="section-subtitle">
+                Sua ação é a chave para um bairro melhor. Comece hoje mesmo!
+            </p>
+            <div class="cta-actions">
+                <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Meu Problema <i class="fas fa-bullhorn ms-2"></i></a>
+                <a href="login.html" class="btn-outline-secondary-dark" aria-label="Entrar na sua conta FixABairro">Entrar na Sua Conta</a>
+            </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="stat-item">
-              <span class="stat-number" id="totalReports">14</span>
-              <div class="stat-label">Problemas Reportados</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="stat-item">
-              <span class="stat-number" id="solvedReports">1</span>
-              <div class="stat-label">Problemas Resolvidos</div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="stat-item">
-              <span class="stat-number" id="activeUsers">0</span>
-              <div class="stat-label">Usuários Ativos</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="container">
         <div class="row">
@@ -675,9 +1085,9 @@
               <div class="logo">F</div>
               <span>FixABairro</span>
             </div>
-            <p style="color: #adb5bd; margin-bottom: 2rem; max-width: 400px;">
-              Transformando bairros através da participação cidadã e tecnologia. 
-              Juntos construímos comunidades melhores em Angola.
+            <p>
+              Transformando bairros através da participação cidadã e tecnologia.
+              Juntos construímos comunidades mais fortes e vibrantes em Angola.
             </p>
           </div>
           <div class="col-lg-6">
@@ -686,6 +1096,7 @@
               <a href="new-report.html" aria-label="Relatar problema">Relatar Problema</a>
               <a href="#" aria-label="Sobre nós (em desenvolvimento)">Sobre Nós</a>
               <a href="#" aria-label="Contato (em desenvolvimento)">Contato</a>
+              <a href="#" id="openCookiePolicy" aria-label="Política de Cookies">Política de Cookies</a>
               <a href="#" aria-label="Termos de uso (em desenvolvimento)">Termos de Uso</a>
               <a href="#" aria-label="Política de privacidade (em desenvolvimento)">Privacidade</a>
             </div>
@@ -696,39 +1107,59 @@
         </div>
       </div>
     </footer>
+
+    <div class="cookie-banner" id="cookieConsentBanner">
+      <p>
+        Nós utilizamos cookies para aprimorar sua experiência no FixABairro, analisar o tráfego e personalizar conteúdo. Ao continuar a navegar, você concorda com a nossa utilização de cookies.
+        <a href="#" id="openCookiePolicyInBanner" style="color: var(--primary-accent); text-decoration: underline; font-weight: 600;">Saiba mais aqui</a>.
+      </p>
+      <div class="btn-group">
+        <button class="btn-accept" id="acceptCookies">Aceitar e Continuar</button>
+        <button class="btn-more-info" id="rejectCookies">Recusar</button>
+      </div>
+    </div>
   </div>
 
-  <!-- Scripts -->
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // Load real stats from Firebase
-    function loadStats(firebase) {
-      const db = firebase.database();
-      
-      // Count total problems
+    // Configuração do Firebase (Substitua pelos seus dados reais)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
+    };
+
+    // Carregamento de estatísticas do Firebase
+    function loadStats(firebaseApp) {
+      const db = firebaseApp.database();
+
       db.ref('problems').once('value', (snapshot) => {
         const total = snapshot.numChildren();
         animateCounter(document.getElementById('totalReports'), total);
-      }).catch(error => {
-        console.error('Erro ao carregar total de problemas:', error);
-        document.getElementById('totalReports').textContent = 'Erro';
-      });
 
-      // Count solved problems
-      db.ref('problems').orderByChild('status').equalTo('Resolvido').once('value', (snapshot) => {
-        const solved = snapshot.numChildren();
+        let solved = 0;
+        snapshot.forEach(childSnapshot => {
+            if (childSnapshot.val().status === 'Resolvido') {
+                solved++;
+            }
+        });
         animateCounter(document.getElementById('solvedReports'), solved);
       }).catch(error => {
-        console.error('Erro ao carregar problemas resolvidos:', error);
+        console.error('Erro ao carregar estatísticas de problemas:', error);
+        document.getElementById('totalReports').textContent = 'Erro';
         document.getElementById('solvedReports').textContent = 'Erro';
       });
 
-      // Count users (approximate)
       db.ref('users').once('value', (snapshot) => {
         const users = snapshot.numChildren();
         animateCounter(document.getElementById('activeUsers'), users);
@@ -738,124 +1169,293 @@
       });
     }
 
-    // Animate counter
-    function animateCounter(element, target, duration = 2000) {
+    // Animação de contador
+    function animateCounter(element, target, duration = 1500) {
       let start = 0;
       const increment = target / (duration / 16);
       const timer = setInterval(() => {
         start += increment;
         if (start >= target) {
-          element.textContent = target;
+          element.textContent = target.toLocaleString('pt-BR');
           clearInterval(timer);
         } else {
-          element.textContent = Math.floor(start);
+          element.textContent = Math.floor(start).toLocaleString('pt-BR');
         }
       }, 16);
     }
 
-    // Load recent issues from Firebase
-    function loadRecentIssues(firebase) {
+    // Carregamento de problemas recentes (apenas Aguardando e Em Análise)
+    function loadRecentIssues(firebaseApp) {
       const recentIssuesContainer = document.getElementById('recentIssues');
-      
-      firebase.database().ref('problems').orderByChild('createdAt').limitToLast(3).once('value', (snapshot) => {
+      const noRecentIssuesMessage = document.getElementById('noRecentIssuesMessage');
+
+      firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value', (snapshot) => {
         let html = '';
         const issues = [];
-        
+
         snapshot.forEach((childSnapshot) => {
-          issues.unshift({
-            key: childSnapshot.key,
-            ...childSnapshot.val()
-          });
+          const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+          if (problem.status !== 'Resolvido') {
+            issues.unshift(problem);
+          }
         });
 
-        if (issues.length === 0) {
-          html = '<div class="col-12"><p class="text-center text-muted">Nenhum problema ainda.</p></div>';
+        const displayIssues = issues.slice(0, 3); // Sempre mostrar apenas os 3 mais recentes
+
+        if (displayIssues.length === 0) {
+          noRecentIssuesMessage.style.display = 'block';
+          recentIssuesContainer.innerHTML = ''; // Limpa qualquer conteúdo antigo
         } else {
-          issues.forEach((problem) => {
-            const imageHtml = problem.image 
-              ? `<img src="${problem.image}" alt="${problem.title || 'Imagem do problema'}" class="max-w-[500px] h-[200px] object-cover mx-auto" loading="lazy"/>`
-              : `<div class="issue-placeholder h-32 bg-gray-200 flex items-center justify-center"><i class="fas fa-image fa-2x text-gray-400"></i></div>`;
-            
-            const statusClass = problem.status === 'Resolvido' ? 'status-resolvido' : 'status-aguardando';
-            const truncatedDescription = problem.description 
-              ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description) 
-              : 'Sem descrição do problema';
-              
+          noRecentIssuesMessage.style.display = 'none';
+          displayIssues.forEach((problem) => {
+            const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+              ? problem.imageUrl
+              : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
+
+            const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+              ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
+              : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
+
+            let statusClass = '';
+            let statusIcon = '';
+            switch (problem.status) {
+              case 'Em Análise':
+                statusClass = 'status-EmAnálise';
+                statusIcon = '<i class="fas fa-hourglass-half"></i>';
+                break;
+              case 'Aguardando':
+                statusClass = 'status-Aguardando';
+                statusIcon = '<i class="fas fa-clock"></i>';
+                break;
+              default: // Fallback para qualquer outro status inesperado
+                statusClass = 'status-Aguardando';
+                statusIcon = '<i class="fas fa-question-circle"></i>';
+                break;
+            }
+
+            const truncatedDescription = problem.description
+              ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
+              : 'Nenhuma descrição detalhada disponível para este problema.';
+
+            const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
+
             html += `
-              <div class="issue-card">
+              <div class="issue-card" data-aos="fade-up">
                 ${imageHtml}
                 <div class="issue-content">
-                  <span class="issue-status ${statusClass}">${problem.status || 'Aguardando'}</span>
-                  <h3 class="issue-title">${problem.title || 'Problema sem título'}</h3>
+                  <span class="issue-status ${statusClass}">${statusIcon} ${problem.status || 'Aguardando'}</span>
+                  <h3 class="issue-title">${problem.title || 'Problema Não Especificado'}</h3>
                   <p class="issue-description">${truncatedDescription}</p>
                   <div class="issue-meta">
-                    <i class="fas fa-map-marker-alt"></i> ${problem.location || 'Localização não informada'}
+                    <span><i class="fas fa-map-marker-alt"></i> ${problem.location?.neighborhood || 'Bairro'}, ${problem.location?.municipality || 'Município'}</span>
+                    <span><i class="fas fa-user-circle"></i> ${userNameDisplay}</span>
                   </div>
-                  <a href="case-details.html?caseId=${problem.key}" class="feature-link" aria-label="Ver detalhes do problema ${problem.title || 'sem título'}">Ver Detalhes →</a>
+                  <a href="case-details.html?caseId=${problem.key}" class="card-link mt-auto">Ver Detalhes <i class="fas fa-arrow-right ms-2"></i></a>
                 </div>
               </div>
             `;
           });
         }
-        
         recentIssuesContainer.innerHTML = html;
       }).catch(error => {
-        console.error('Erro ao carregar problemas:', error);
-        document.getElementById('recentIssues').innerHTML = 
-          '<div class="col-12"><p class="text-center text-muted">Erro ao carregar problemas. Tente novamente mais tarde.</p></div>';
+        console.error('Erro ao carregar problemas recentes:', error);
+        recentIssuesContainer.innerHTML =
+          '<div class="col-12"><p class="text-center text-danger">Erro ao carregar problemas. Por favor, tente novamente mais tarde.</p></div>';
+          noRecentIssuesMessage.style.display = 'none'; // Esconde a mensagem de "sem problemas" em caso de erro
       });
     }
 
-    // Update UI based on auth state
-    function updateUI(user) {
+    // Carregamento de Transformações Visíveis (Problemas Resolvidos com Antes e Depois)
+    function loadResolvedIssues(firebaseApp) {
+        const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
+        const noTransformationsMessage = document.getElementById('noTransformationsMessage');
+        let html = '';
+        const resolvedProblems = [];
+
+        firebaseApp.database().ref('problems').orderByChild('status').equalTo('Resolvido').limitToLast(3).on('value', (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+                // Adiciona apenas se tiver ambas as imagens e o status 'Resolvido'
+                if (problem.imageUrlBefore && problem.imageUrlAfter && problem.status === 'Resolvido') {
+                    resolvedProblems.unshift(problem); // Adiciona ao início para ordem decrescente de 'createdAt'
+                }
+            });
+
+            if (resolvedProblems.length === 0) {
+                noTransformationsMessage.style.display = 'block';
+                resolvedIssuesGallery.innerHTML = '';
+            } else {
+                noTransformationsMessage.style.display = 'none';
+                resolvedProblems.forEach((problem) => {
+                    const title = problem.title || 'Problema Resolvido';
+                    const location = problem.location?.neighborhood || 'Bairro Desconhecido';
+                    const municipality = problem.location?.municipality || 'Município Desconhecido';
+
+                    const imageUrlBefore = problem.imageUrlBefore || 'https://via.placeholder.com/400x280/cccccc/ffffff?text=Antes+N%C3%A3o+Dispon%C3%ADvel';
+                    const imageUrlAfter = problem.imageUrlAfter || 'https://via.placeholder.com/400x280/888888/ffffff?text=Depois+N%C3%A3o+Dispon%C3%ADvel';
+
+                    html += `
+                        <div class="before-after-card" data-aos="fade-up">
+                            <div class="image-comparison">
+                                <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
+                                <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">${title}</h4>
+                                <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
+                                <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    `;
+                });
+                resolvedIssuesGallery.innerHTML = html;
+            }
+        }).catch(error => {
+            console.error('Erro ao carregar transformações visíveis:', error);
+            resolvedIssuesGallery.innerHTML =
+              '<div class="col-12"><p class="text-center text-danger">Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+            noTransformationsMessage.style.display = 'none';
+        });
+    }
+
+
+    // Atualiza UI com base no estado de autenticação
+    function updateAuthUI(user) {
       const authButton = document.getElementById('authButton');
+      const navTogglerIcon = document.querySelector('.navbar-toggler i');
+
       if (user) {
-        authButton.textContent = 'Perfil';
+        authButton.textContent = 'Meu Perfil';
         authButton.href = 'profile.html';
       } else {
         authButton.textContent = 'Entrar';
         authButton.href = 'login.html';
       }
+
+      if (!document.querySelector('.navbar').classList.contains('scrolled')) {
+          navTogglerIcon.style.color = 'var(--text-white)';
+      } else {
+          navTogglerIcon.style.color = 'var(--secondary-dark)';
+      }
     }
 
-    // Initialize page
+    // Gerenciamento de Cookies
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function checkCookieConsent() {
+        const cookieBanner = document.getElementById('cookieConsentBanner');
+        const consent = getCookie('fixabairro_cookie_consent');
+        if (!consent) {
+            setTimeout(() => {
+                cookieBanner.classList.add('show');
+            }, 1000);
+        }
+
+        document.getElementById('acceptCookies').addEventListener('click', () => {
+            setCookie('fixabairro_cookie_consent', 'accepted', 365);
+            cookieBanner.classList.remove('show');
+        });
+
+        document.getElementById('rejectCookies').addEventListener('click', () => {
+            setCookie('fixabairro_cookie_consent', 'rejected', 30);
+            cookieBanner.classList.remove('show');
+            alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
+        });
+
+        document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+        });
+        document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+        });
+    }
+
+    // Inicialização da página
     window.addEventListener('load', () => {
+      // Inicializar Firebase
       if (typeof firebase !== 'undefined') {
-        const firebaseConfig = {
-          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
-          authDomain: "facilita-479b3.firebaseapp.com",
-          projectId: "facilita-479b3",
-          storageBucket: "facilita-479b3.appspot.com",
-          messagingSenderId: "385676676886",
-          appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
 
         setTimeout(() => {
           document.getElementById('loadingScreen').classList.add('fade-out');
-          setTimeout(() => {
+          document.getElementById('loadingScreen').addEventListener('transitionend', () => {
             document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('homepage').style.display = 'block';
-            
-            // Load real data from Firebase
-            loadStats(firebase);
-            loadRecentIssues(firebase);
-            firebase.auth().onAuthStateChanged(updateUI);
-          }, 300);
+            AOS.init({ once: true, duration: 1000 });
+
+            loadStats(app);
+            loadRecentIssues(app);
+            loadResolvedIssues(app);
+            app.auth().onAuthStateChanged(updateAuthUI);
+            checkCookieConsent();
+          }, { once: true });
         }, 800);
       } else {
-        console.warn('Firebase SDK não carregado');
+        console.warn('Firebase SDK não carregado. Verifique sua conexão ou configuração do Firebase.');
         document.getElementById('loadingScreen').classList.add('fade-out');
         setTimeout(() => {
           document.getElementById('loadingScreen').style.display = 'none';
           document.getElementById('homepage').style.display = 'block';
-          
-          // Show error message if Firebase is not available
-          document.getElementById('recentIssues').innerHTML = 
-            '<div class="col-12"><p class="text-center text-muted">Erro ao carregar dados.</p></div>';
+          document.getElementById('recentIssues').innerHTML =
+            '<div class="col-12"><p class="text-center text-danger">Erro ao carregar problemas. Verifique sua conexão.</p></div>';
+          document.getElementById('resolvedIssuesGallery').innerHTML =
+            '<div class="col-12"><p class="text-center text-danger">Erro ao carregar transformações. Verifique sua conexão.</p></div>';
+          document.getElementById('totalReports').textContent = 'N/A';
+          document.getElementById('solvedReports').textContent = 'N/A';
+          document.getElementById('activeUsers').textContent = 'N/A';
+          checkCookieConsent();
         }, 300);
+      }
+    });
+
+    // Efeito de scroll da Navbar
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const navBrand = document.querySelector('.navbar-brand');
+      const btnMain = document.querySelector('.btn-main');
+      const btnOutline = document.getElementById('authButton');
+      const navTogglerIcon = document.querySelector('.navbar-toggler i');
+
+      if (window.scrollY > 80) { /* Aumentei o threshold para a mudança ser mais perceptível */
+        navbar.classList.add('scrolled');
+        navBrand.style.color = 'var(--secondary-dark)';
+        navTogglerIcon.style.color = 'var(--secondary-dark)';
+        navLinks.forEach(link => link.style.color = 'var(--text-main)');
+        btnMain.style.background = 'var(--primary-accent)';
+        btnMain.style.color = 'var(--text-white)';
+        btnOutline.style.color = 'var(--secondary-dark)';
+        btnOutline.style.borderColor = 'var(--secondary-dark)';
+      } else {
+        navbar.classList.remove('scrolled');
+        navBrand.style.color = 'var(--text-white)';
+        navTogglerIcon.style.color = 'var(--text-white)';
+        navLinks.forEach(link => link.style.color = 'rgba(255,255,255,0.9)');
+        btnMain.style.background = 'var(--primary-accent)';
+        btnMain.style.color = 'var(--text-white)';
+        btnOutline.style.color = 'var(--text-white)';
+        btnOutline.style.borderColor = 'rgba(255,255,255,0.7)';
       }
     });
   </script>
