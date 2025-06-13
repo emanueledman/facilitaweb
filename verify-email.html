@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Verificar Email</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <h1>Verifique seu Email</h1>
+  <p>Um email de verificação foi enviado. Clique no link recebido para ativar sua conta.</p>
+  <button id="resendEmail">Reenviar Email</button>
+  <button id="checkVerification">Já Verifiquei</button>
+  <script>
+    const firebaseConfig = { /* ... */ };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    document.getElementById('resendEmail').addEventListener('click', async () => {
+      try {
+        await auth.currentUser.sendEmailVerification();
+        alert("Email reenviado!");
+      } catch (error) {
+        alert(`Erro: ${error.message}`);
+      }
+    });
+    document.getElementById('checkVerification').addEventListener('click', async () => {
+      await auth.currentUser.reload();
+      if (auth.currentUser.emailVerified) {
+        window.location.href = 'profile.html';
+      } else {
+        alert("Email ainda não verificado.");
+      }
+    });
+  </script>
+</body>
+</html>

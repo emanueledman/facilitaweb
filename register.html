@@ -554,54 +554,29 @@
       }
     }
   </style>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: {
-              accent: 'var(--primary-accent)',
-            },
-            secondary: {
-              dark: 'var(--secondary-dark)',
-            },
-            highlight: {
-              light: 'var(--highlight-light)',
-            },
-            success: {
-              DEFAULT: 'var(--success-green)',
-            },
-            warning: {
-              DEFAULT: 'var(--warning-orange)',
-            },
-            info: {
-              DEFAULT: 'var(--info-blue)',
-            },
-            bg: {
-              light: 'var(--bg-light)',
-              white: 'var(--bg-white)',
-              darkOverlay: 'var(--bg-dark-overlay)',
-            },
-            text: {
-              main: 'var(--text-main)',
-              secondary: 'var(--text-secondary)',
-              white: 'var(--text-white)',
-            },
+            primary: { accent: 'var(--primary-accent)' },
+            secondary: { dark: 'var(--secondary-dark)' },
+            highlight: { light: 'var(--highlight-light)' },
+            success: { DEFAULT: 'var(--success-green)' },
+            warning: { DEFAULT: 'var(--warning-orange)' },
+            info: { DEFAULT: 'var(--info-blue)' },
+            bg: { light: 'var(--bg-light)', white: 'var(--bg-white)', darkOverlay: 'var(--bg-dark-overlay)' },
+            text: { main: 'var(--text-main)', secondary: 'var(--text-secondary)', white: 'var(--text-white)' },
             error: 'var(--error-red)',
           },
           fontFamily: {
             inter: ['Inter', 'sans-serif'],
             montserrat: ['Montserrat', 'sans-serif'],
-            poppins: ['Poppins', 'sans-serif'], /* Adicionado Poppins */
+            poppins: ['Poppins', 'sans-serif'],
           },
-          borderRadius: {
-            'lg': 'var(--border-radius-lg)',
-            'md': 'var(--border-radius-md)',
-          },
-          boxShadow: {
-            soft: 'var(--shadow-soft)',
-            medium: 'var(--shadow-medium)',
-          },
+          borderRadius: { 'lg': 'var(--border-radius-lg)', 'md': 'var(--border-radius-md)' },
+          boxShadow: { soft: 'var(--shadow-soft)', medium: 'var(--shadow-medium)' },
         }
       }
     }
@@ -649,20 +624,21 @@
             <div class="relative select-wrapper">
               <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
                 <option value="" class="bg-white text-text-secondary">Selecione</option>
-                </select>
+              </select>
             </div>
             <p id="municipioError" class="text-error text-xs mt-1 hidden"></p>
           </div>
           <div>
             <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
-            <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+            <input type="text" id="bairro" list="bairroSuggestions" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+            <datalist id="bairroSuggestions"></datalist>
             <p id="bairroError" class="text-error text-xs mt-1 hidden"></p>
           </div>
         </div>
 
         <div>
           <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
+          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 8 caracteres, com maiúsculas, números e símbolos" required>
           <p id="passwordError" class="text-error text-xs mt-1 hidden"></p>
         </div>
 
@@ -676,6 +652,11 @@
           <label for="otpCode" class="block text-text-main text-sm font-medium mb-1">Código de Verificação (OTP)</label>
           <input type="text" id="otpCode" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Insira o código de 6 dígitos" maxlength="6">
           <p id="otpError" class="text-error text-xs mt-1 hidden"></p>
+          <p id="otpTimer" class="text-text-secondary text-sm mt-2 hidden">Tempo restante: <span id="timerSeconds">60</span> segundos</p>
+          <button type="button" id="resendOtpBtn" class="w-full bg-info text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#1976D2] focus:outline-none focus:ring-2 focus:ring-info focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-4">
+            <span id="resendOtpText"><i class="fas fa-redo"></i> Reenviar Código</span>
+            <span id="resendOtpSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
           <button type="button" id="verifyOtpBtn" class="w-full bg-success text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#3D8F41] focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-4">
             <span id="verifyOtpText"><i class="fas fa-check-circle"></i> Verificar Código</span>
             <span id="verifyOtpSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
@@ -694,362 +675,465 @@
       </p>
 
       <div id="recaptcha-container" class="mt-4"></div>
+
+      <!-- Modal de Confirmação -->
+      <div id="confirmationModal" class="modal hidden">
+        <div class="modal-content">
+          <h2>Confirmar Dados</h2>
+          <p id="confirmationDetails"></p>
+          <div class="modal-buttons">
+            <button id="cancelConfirmation" class="btn bg-gray-200 text-text-main p-2 rounded-lg hover:bg-gray-300">Editar</button>
+            <button id="confirmRegistration" class="btn bg-primary-accent text-white p-2 rounded-lg hover:bg-[#E64A19]">Confirmar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Firebase Configuration (Replace with your actual Firebase project credentials)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-    };
+    // Encapsulate logic in an IIFE
+    (function () {
+      // Firebase Configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+      };
 
-    // Global Firebase instances
-    let firebaseApp;
-    let auth;
-    let db;
-    let recaptchaVerifier;
-    let confirmationResult; // To store the result of signInWithPhoneNumber
+      // Global Firebase instances
+      let firebaseApp;
+      let auth;
+      let db;
+      let recaptchaVerifier;
+      let confirmationResult;
+      let otpResendAttempts = 0;
+      const maxResendAttempts = 3;
 
-    // --- DOM Elements ---
-    const registerForm = document.getElementById('registerForm');
-    const nameInput = document.getElementById('name');
-    const emailOrPhoneInput = document.getElementById('emailOrPhone');
-    const municipioSelect = document.getElementById('municipio');
-    const bairroInput = document.getElementById('bairro');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const registerBtn = document.getElementById('registerBtn');
-    const registerText = document.getElementById('registerText');
-    const registerSpinner = document.getElementById('registerSpinner');
-    const nameError = document.getElementById('nameError');
-    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-    const municipioError = document.getElementById('municipioError');
-    const bairroError = document.getElementById('bairroError');
-    const passwordError = document.getElementById('passwordError');
-    const confirmPasswordError = document.getElementById('confirmPasswordError');
-    const recaptchaContainer = document.getElementById('recaptcha-container');
-    const otpSection = document.getElementById('otpSection');
-    const otpCodeInput = document.getElementById('otpCode');
-    const otpError = document.getElementById('otpError');
-    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-    const verifyOtpText = document.getElementById('verifyOtpText');
-    const verifyOtpSpinner = document.getElementById('verifyOtpSpinner');
+      // --- DOM Elements ---
+      const registerForm = document.getElementById('registerForm');
+      const nameInput = document.getElementById('name');
+      const emailOrPhoneInput = document.getElementById('emailOrPhone');
+      const municipioSelect = document.getElementById('municipio');
+      const bairroInput = document.getElementById('bairro');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const registerBtn = document.getElementById('registerBtn');
+      const registerText = document.getElementById('registerText');
+      const registerSpinner = document.getElementById('registerSpinner');
+      const nameError = document.getElementById('nameError');
+      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+      const municipioError = document.getElementById('municipioError');
+      const bairroError = document.getElementById('bairroError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const recaptchaContainer = document.getElementById('recaptcha-container');
+      const otpSection = document.getElementById('otpSection');
+      const otpCodeInput = document.getElementById('otpCode');
+      const otpError = document.getElementById('otpError');
+      const otpTimer = document.getElementById('otpTimer');
+      const timerSeconds = document.getElementById('timerSeconds');
+      const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+      const verifyOtpText = document.getElementById('verifyOtpText');
+      const verifyOtpSpinner = document.getElementById('verifyOtpSpinner');
+      const resendOtpBtn = document.getElementById('resendOtpBtn');
+      const resendOtpText = document.getElementById('resendOtpText');
+      const resendOtpSpinner = document.getElementById('resendOtpSpinner');
+      const confirmationModal = document.getElementById('confirmationModal');
+      const confirmationDetails = document.getElementById('confirmationDetails');
+      const cancelConfirmation = document.getElementById('cancelConfirmation');
+      const confirmRegistration = document.getElementById('confirmRegistration');
 
-    // --- Helper Functions for UI Feedback ---
-    function showLoadingState(button, textSpan, spinnerSpan, loadingText = 'Aguarde...') {
-      button.disabled = true;
-      textSpan.classList.add('hidden');
-      spinnerSpan.classList.remove('hidden');
-      button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${loadingText}`;
-    }
-
-    function hideLoadingState(button, textSpan, spinnerSpan, originalText) {
-      button.disabled = false;
-      textSpan.classList.remove('hidden');
-      spinnerSpan.classList.add('hidden');
-      button.innerHTML = originalText;
-    }
-
-    function showError(errorElement, message) {
-      errorElement.textContent = message;
-      errorElement.classList.remove('hidden');
-    }
-
-    function hideError(errorElement) {
-      errorElement.classList.add('hidden');
-      errorElement.textContent = '';
-    }
-
-    function disableFormFields() {
-      nameInput.disabled = true;
-      emailOrPhoneInput.disabled = true;
-      municipioSelect.disabled = true;
-      bairroInput.disabled = true;
-      passwordInput.disabled = true;
-      confirmPasswordInput.disabled = true;
-      // registerBtn.disabled = true; // Handled by showLoadingState
-    }
-
-    function enableFormFields() {
-      nameInput.disabled = false;
-      emailOrPhoneInput.disabled = false;
-      municipioSelect.disabled = false;
-      bairroInput.disabled = false;
-      passwordInput.disabled = false;
-      confirmPasswordInput.disabled = false;
-      // registerBtn.disabled = false; // Handled by hideLoadingState
-    }
-
-    // --- Municipality Data (Luanda Province only) ---
-    const municipiosDeLuanda = [
-      "Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi",
-      "Luanda", "Quilamba", "Quiçama", "Talatona", "Viana"
-    ];
-
-    // Popula o select de municípios de Luanda
-    function populateMunicipios() {
-      municipiosDeLuanda.sort().forEach(municipio => {
-        const option = document.createElement('option');
-        option.value = municipio;
-        option.textContent = municipio;
-        municipioSelect.appendChild(option);
-      });
-    }
-
-    // --- Firebase Initialization and Auth State Check ---
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize Firebase App
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebaseApp = firebase.initializeApp(firebaseConfig);
-        console.log("Firebase App inicializado com sucesso.");
-      } else if (firebase.apps.length) {
-        firebaseApp = firebase.app();
-        console.log("Firebase App já estava inicializado.");
-      } else {
-        console.error("Firebase SDK não carregado. Verifique os scripts defer.");
-        alert("Erro: Firebase SDK não carregado. A funcionalidade de registro pode não funcionar.");
-        return; // Exit if Firebase is not loaded
+      // --- Helper Functions for UI Feedback ---
+      function showLoadingState(button, textSpan, spinnerSpan, loadingText = 'Aguarde...') {
+        button.disabled = true;
+        textSpan.classList.add('hidden');
+        spinnerSpan.classList.remove('hidden');
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${loadingText}`;
       }
 
-      // Get Auth and Firestore instances
-      auth = firebase.auth();
-      db = firebase.firestore();
+      function hideLoadingState(button, textSpan, spinnerSpan, originalText) {
+        button.disabled = false;
+        textSpan.classList.remove('hidden');
+        spinnerSpan.classList.add('hidden');
+        button.innerHTML = originalText;
+      }
 
-      // Initialize reCAPTCHA Verifier for Phone Auth
-      recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        'size': 'invisible', // Invisible reCAPTCHA for seamless UX
-        'callback': (response) => {
-          // reCAPTCHA solved, allows signInWithPhoneNumber to proceed.
-          // No direct action needed here for invisible reCAPTCHA, it just enables the next step.
-          console.log("reCAPTCHA resolvido.");
-        },
-        'expired-callback': () => {
-          console.warn("reCAPTCHA expirado. Por favor, tente novamente.");
-          alert("Verificação de segurança expirada. Por favor, tente novamente.");
-          if (window.recaptchaWidgetId) {
-            grecaptcha.reset(window.recaptchaWidgetId); // Reset if it's rendered
+      function showError(errorElement, message) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+      }
+
+      function hideError(errorElement) {
+        errorElement.classList.add('hidden');
+        errorElement.textContent = '';
+      }
+
+      function disableFormFields() {
+        nameInput.disabled = true;
+        emailOrPhoneInput.disabled = true;
+        municipioSelect.disabled = true;
+        bairroInput.disabled = true;
+        passwordInput.disabled = true;
+        confirmPasswordInput.disabled = true;
+      }
+
+      function enableFormFields() {
+        nameInput.disabled = false;
+        emailOrPhoneInput.disabled = false;
+        municipioSelect.disabled = false;
+        bairroInput.disabled = false;
+        passwordInput.disabled = false;
+        confirmPasswordInput.disabled = false;
+      }
+
+      // --- Validation Regex ---
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      const phoneRegex = /^\+2449[12356]\d{7}$/;
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+      // --- Municipality Data ---
+      const municipiosDeLuanda = [
+        "Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi",
+        "Luanda", "Quilamba", "Quiçama", "Talatona", "Viana"
+      ];
+
+      // Popula o select de municípios
+      function populateMunicipios() {
+        municipiosDeLuanda.sort().forEach(municipio => {
+          const option = document.createElement('option');
+          option.value = municipio;
+          option.textContent = municipio;
+          municipioSelect.appendChild(option);
+        });
+      }
+
+      // Popula sugestões de bairros (exemplo, deve ser preenchido com dados reais do Firestore)
+      async function populateBairros(municipio) {
+        // Simulação de bairros por município (substitua por consulta real ao Firestore)
+        const bairrosPorMunicipio = {
+          Belas: ['Morro Bento', 'Futungo de Belas'],
+          Cacuaco: ['Cacuaco Centro', 'Sequele'],
+          // Adicione outros bairros reais
+        };
+        const bairros = bairrosPorMunicipio[municipio] || [];
+        const datalist = document.getElementById('bairroSuggestions');
+        datalist.innerHTML = '';
+        bairros.forEach(bairro => {
+          const option = document.createElement('option');
+          option.value = bairro;
+          datalist.appendChild(option);
+        });
+      }
+
+      // --- OTP Timer ---
+      function startOtpTimer() {
+        let timeLeft = 60;
+        otpTimer.classList.remove('hidden');
+        const timer = setInterval(() => {
+          timeLeft--;
+          timerSeconds.textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            showError(otpError, "Código expirado. Solicite um novo.");
+            otpSection.disabled = true;
+            resendOtpBtn.disabled = false;
           }
+        }, 1000);
+      }
+
+      // --- Firebase Initialization and Auth State Check ---
+      document.addEventListener('DOMContentLoaded', () => {
+        // Initialize Firebase App
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+          firebaseApp = firebase.initializeApp(firebaseConfig);
+          console.log("Firebase App inicializado com sucesso.");
+        } else if (firebase.apps.length) {
+          firebaseApp = firebase.app();
+          console.log("Firebase App já estava inicializado.");
+        } else {
+          console.error("Firebase SDK não carregado. Verifique os scripts.");
+          alert("Erro: Firebase SDK não carregado. A funcionalidade de registro pode não funcionar.");
+          return;
+        }
+
+        // Get Auth and Firestore instances
+        auth = firebase.auth();
+        db = firebase.firestore();
+        window.auth = auth; // Expose globally for firebaseAuth.js
+        window.db = db; // Expose globally for firebaseAuth.js
+
+        // Initialize reCAPTCHA Verifier
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          'size': 'invisible',
+          'callback': () => {
+            console.log("reCAPTCHA resolvido.");
+          },
+          'expired-callback': () => {
+            console.warn("reCAPTCHA expirado. Tente novamente.");
+            alert("Verificação de segurança expirada. Tente novamente.");
+            grecaptcha.reset(window.recaptchaWidgetId);
+            enableFormFields();
+            hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
+          }
+        });
+
+        recaptchaVerifier.render().then(widgetId => {
+          window.recaptchaWidgetId = widgetId;
+          console.log("reCAPTCHA widget renderizado.");
+        }).catch(error => {
+          console.error("Erro ao renderizar reCAPTCHA:", error);
+          alert("Erro ao carregar verificação de segurança. Tente recarregar a página.");
+        });
+
+        // Populate municipalities dropdown
+        populateMunicipios();
+
+        // Populate bairros on municipio change
+        municipioSelect.addEventListener('change', () => {
+          if (municipioSelect.value) {
+            populateBairros(municipioSelect.value);
+          }
+        });
+
+        // Check if user is authenticated
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            if (user.email && !user.emailVerified) {
+              alert("Por favor, verifique seu email antes de continuar.");
+              window.location.href = 'verify-email.html';
+            } else {
+              console.log("Usuário logado:", user.uid);
+              window.location.href = 'profile.html';
+            }
+          } else {
+            console.log("Nenhum usuário logado. Exibindo formulário.");
+          }
+        });
+      });
+
+      // --- Real-time Validation ---
+      nameInput.addEventListener('input', () => {
+        const name = nameInput.value.trim();
+        if (!name) {
+          showError(nameError, "Nome completo é obrigatório.");
+        } else {
+          hideError(nameError);
+        }
+      });
+
+      emailOrPhoneInput.addEventListener('input', () => {
+        const value = emailOrPhoneInput.value.trim();
+        if (value.includes('@')) {
+          if (!emailRegex.test(value)) {
+            showError(emailOrPhoneError, "Email inválido.");
+          } else {
+            hideError(emailOrPhoneError);
+          }
+        } else if (value.startsWith('+244')) {
+          if (!phoneRegex.test(value)) {
+            showError(emailOrPhoneError, "Número inválido. Use +2449XXXXXXXX.");
+          } else {
+            hideError(emailOrPhoneError);
+          }
+        } else {
+          showError(emailOrPhoneError, "Use um email ou +2449XXXXXXXX.");
+        }
+      });
+
+      passwordInput.addEventListener('input', () => {
+        const password = passwordInput.value;
+        if (!passwordRegex.test(password)) {
+          showError(passwordError, "A senha deve ter 8+ caracteres, com maiúsculas, números e símbolos.");
+        } else {
+          hideError(passwordError);
+        }
+      });
+
+      confirmPasswordInput.addEventListener('input', () => {
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
+        } else {
+          hideError(confirmPasswordError);
+        }
+      });
+
+      // --- Form Submission Logic ---
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.text-error').forEach(hideError);
+
+        let isValid = true;
+        const sanitizeInput = (input) => input.replace(/[<>&"'/]/g, '');
+        const sanitizedName = sanitizeInput(nameInput.value.trim());
+        const emailOrPhone = emailOrPhoneInput.value.trim();
+        const isEmail = emailRegex.test(emailOrPhone);
+        const isPhone = phoneRegex.test(emailOrPhone);
+        const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
+
+        // Validate inputs
+        if (!sanitizedName) {
+          showError(nameError, "Nome completo é obrigatório.");
+          isValid = false;
+        }
+        if (!emailOrPhone || (!isEmail && !isPhone)) {
+          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+          isValid = false;
+        }
+        if (!municipioSelect.value) {
+          showError(municipioError, "Por favor, selecione seu município.");
+          isValid = false;
+        }
+        if (!sanitizedBairro) {
+          showError(bairroError, "O nome do bairro é obrigatório.");
+          isValid = false;
+        }
+        if (!passwordRegex.test(passwordInput.value)) {
+          showError(passwordError, "A senha deve ter 8+ caracteres, com maiúsculas, números e símbolos.");
+          isValid = false;
+        }
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // Show confirmation modal
+        confirmationDetails.innerHTML = `
+          Nome: ${sanitizedName}<br>
+          ${isEmail ? 'Email' : 'Telefone'}: ${emailOrPhone}<br>
+          Município: ${municipioSelect.value}<br>
+          Bairro: ${sanitizedBairro}<br>
+        `;
+        confirmationModal.classList.remove('hidden');
+      });
+
+      // --- Confirmation Modal Logic ---
+      cancelConfirmation.addEventListener('click', () => {
+        confirmationModal.classList.add('hidden');
+        enableFormFields();
+      });
+
+      confirmRegistration.addEventListener('click', async () => {
+        confirmationModal.classList.add('hidden');
+        showLoadingState(registerBtn, registerText, registerSpinner, 'Registrando...');
+        disableFormFields();
+
+        const sanitizedName = sanitizeInput(nameInput.value.trim());
+        const emailOrPhone = emailOrPhoneInput.value.trim();
+        const isEmail = emailRegex.test(emailOrPhone);
+        const isPhone = phoneRegex.test(emailOrPhone);
+        const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
+
+        try {
+          if (isEmail) {
+            const result = await window.firebaseAuth.registerUser(
+              sanitizedName,
+              emailOrPhone,
+              passwordInput.value,
+              municipioSelect.value,
+              sanitizedBairro,
+              firebaseApp
+            );
+            firebase.analytics().logEvent('registration_success', { method: 'email' });
+            alert("Conta criada com sucesso! Verifique seu email para ativar sua conta.");
+            window.location.href = 'verify-email.html';
+          } else if (isPhone) {
+            showLoadingState(registerBtn, registerText, registerSpinner, 'Enviando SMS...');
+            confirmationResult = await auth.signInWithPhoneNumber(emailOrPhone, recaptchaVerifier);
+            firebase.analytics().logEvent('otp_sent', { phone: emailOrPhone });
+            registerForm.querySelectorAll('div').forEach(el => {
+              if (el.id !== 'otpSection' && el.id !== 'recaptcha-container') {
+                el.classList.add('hidden');
+              }
+            });
+            registerBtn.classList.add('hidden');
+            otpSection.classList.remove('hidden');
+            disableFormFields();
+            otpCodeInput.disabled = false;
+            alert("Código de verificação enviado para seu telefone.");
+            startOtpTimer();
+          }
+        } catch (error) {
+          showError(isEmail ? emailOrPhoneError : otpError, error.message);
           enableFormFields();
           hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
         }
       });
 
-      // Render the reCAPTCHA widget (important for invisible reCAPTCHA to be ready)
-      recaptchaVerifier.render().then(function(widgetId) {
-        window.recaptchaWidgetId = widgetId; // Store widget ID for explicit reset if needed
-        console.log("reCAPTCHA widget renderizado.");
-      }).catch(error => {
-        console.error("Erro ao renderizar reCAPTCHA:", error);
-        alert("Erro ao carregar verificação de segurança. Tente recarregar a página.");
-      });
+      // --- OTP Verification Logic ---
+      verifyOtpBtn.addEventListener('click', async () => {
+        hideError(otpError);
+        const otpCode = otpCodeInput.value.trim();
 
-      // Populate municipalities dropdown
-      populateMunicipios();
-
-      // Check if user is already authenticated and redirect them
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          // User is signed in. Redirect to a protected page (e.g., profile.html or dashboard.html)
-          console.log("Usuário já logado:", user.uid);
-          window.location.href = 'profile.html'; // Redirect to a protected page
-        } else {
-          console.log("Nenhum usuário logado. Exibindo formulário de registro.");
-          // No user is signed in, display the registration form.
+        if (!otpCode || otpCode.length !== 6) {
+          showError(otpError, "Por favor, insira um código de 6 dígitos.");
+          return;
         }
-      });
-    });
 
-    // --- Form Submission Logic ---
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+        if (!confirmationResult) {
+          showError(otpError, "Nenhuma verificação de telefone pendente. Tente novamente.");
+          return;
+        }
 
-      // Clear previous error messages
-      document.querySelectorAll('.text-error').forEach(hideError);
+        showLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, 'Verificando...');
+        otpCodeInput.disabled = true;
 
-      let isValid = true; // Validation flag
-
-      // Validate Name
-      if (!nameInput.value.trim()) {
-        showError(nameError, "Nome completo é obrigatório.");
-        isValid = false;
-      }
-
-      // Validate Email or Phone
-      const emailOrPhone = emailOrPhoneInput.value.trim();
-      const isEmail = emailOrPhone.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // "+244" followed by 9 digits
-
-      if (!emailOrPhone) {
-        showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-        isValid = false;
-      } else if (!isEmail && !isPhone) {
-        showError(emailOrPhoneError, "Formato inválido. Use um email ou +244XXXXXXXXX.");
-        isValid = false;
-      }
-
-      // Validate Municipality
-      if (!municipioSelect.value) {
-        showError(municipioError, "Por favor, selecione seu município.");
-        isValid = false;
-      }
-
-      // Validate Bairro
-      if (!bairroInput.value.trim()) {
-        showError(bairroError, "O nome do bairro é obrigatório.");
-        isValid = false;
-      }
-
-      // Validate Password
-      if (passwordInput.value.length < 6) {
-        showError(passwordError, "A senha deve ter pelo menos 6 caracteres.");
-        isValid = false;
-      }
-
-      // Validate Confirm Password
-      if (passwordInput.value !== confirmPasswordInput.value) {
-        showError(confirmPasswordError, "As senhas não coincidem.");
-        isValid = false;
-      }
-
-      if (!isValid) {
-        return; // Exit if validation fails
-      }
-
-      showLoadingState(registerBtn, registerText, registerSpinner, 'Registrando...');
-      disableFormFields(); // Disable fields to prevent changes during submission
-
-      try {
-        if (isEmail) {
-          // --- Register with Email and Password ---
-          const userCredential = await auth.createUserWithEmailAndPassword(emailOrPhone, passwordInput.value);
+        try {
+          const userCredential = await confirmationResult.confirm(otpCode);
           const user = userCredential.user;
+          const sanitizedName = sanitizeInput(nameInput.value.trim());
+          const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
 
-          // Store additional user data in Firestore
           await db.collection('users').doc(user.uid).set({
-            name: nameInput.value.trim(),
-            email: user.email,
+            name: sanitizedName,
+            phoneNumber: user.phoneNumber,
+            emailOrPhone: emailOrPhoneInput.value.trim(),
             municipio: municipioSelect.value,
-            bairro: bairroInput.value.trim(),
+            bairro: sanitizedBairro,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          }, { merge: true });
 
-          alert("Conta criada com sucesso! Você está agora logado.");
-          window.location.href = 'profile.html'; // Redirect to a protected page
+          firebase.analytics().logEvent('registration_success', { method: 'phone' });
+          alert("Número verificado e conta criada com sucesso!");
+          window.location.href = 'profile.html';
+        } catch (error) {
+          showError(otpError, error.message);
+          hideLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, '<i class="fas fa-check-circle"></i> Verificar Código');
+          otpCodeInput.disabled = false;
+        }
+      });
 
-        } else if (isPhone) {
-          // --- Register with Phone Number (Initiate OTP sending) ---
-          console.log("Tentando registro por telefone para:", emailOrPhone);
-
-          // This will trigger the reCAPTCHA invisible verification
-          confirmationResult = await auth.signInWithPhoneNumber(emailOrPhone, recaptchaVerifier);
-          console.log("SMS enviado. Aguardando OTP...");
-
-          // Hide registration fields and show OTP input
-          registerForm.querySelectorAll('div').forEach(el => {
-              if (el.id !== 'otpSection' && el.id !== 'recaptcha-container') {
-                  el.classList.add('hidden'); // Hide all form groups except OTP and reCAPTCHA
-              }
-          });
-          registerBtn.classList.add('hidden'); // Hide the main register button
-          otpSection.classList.remove('hidden'); // Show OTP input section
-
-          // Disable all previous input fields
-          disableFormFields(); // Call again to ensure everything is disabled
-          otpCodeInput.disabled = false; // Enable OTP input
-
-          alert("Um código de verificação foi enviado para o seu número de telefone. Por favor, insira-o abaixo.");
-          hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
-          // No need to enable form fields here, as we transition to OTP verification
+      // --- Resend OTP Logic ---
+      resendOtpBtn.addEventListener('click', async () => {
+        if (otpResendAttempts >= maxResendAttempts) {
+          showError(otpError, "Limite de reenvios atingido. Tente novamente mais tarde.");
+          return;
         }
 
-      } catch (error) {
-        console.error("Erro no registro:", error);
-        if (isEmail) {
-          if (error.code === 'auth/email-already-in-use') {
-            showError(emailOrPhoneError, "Este email já está em uso. Tente fazer login ou redefinir a senha.");
-          } else if (error.code === 'auth/weak-password') {
-            showError(passwordError, "A senha é muito fraca. Por favor, use uma senha mais forte.");
-          } else {
-            alert(`Erro ao criar conta: ${error.message}`);
-          }
-        } else if (isPhone) {
-          if (error.code === 'auth/invalid-phone-number') {
-            showError(emailOrPhoneError, "Número de telefone inválido. Certifique-se de usar +244XXXXXXXXX.");
-          } else if (error.code === 'auth/quota-exceeded') {
-            showError(emailOrPhoneError, "Cota de SMS excedida. Tente novamente mais tarde.");
-          } else if (error.code === 'auth/too-many-requests') {
-            showError(emailOrPhoneError, "Muitas tentativas. Tente novamente mais tarde.");
-          } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
-              alert("A verificação foi cancelada. Por favor, tente novamente.");
-          }
-          else {
-            alert(`Erro ao enviar código: ${error.message}`);
-          }
+        showLoadingState(resendOtpBtn, resendOtpText, resendOtpSpinner, 'Reenviando...');
+        try {
+          confirmationResult = await auth.signInWithPhoneNumber(emailOrPhoneInput.value.trim(), recaptchaVerifier);
+          otpResendAttempts++;
+          firebase.analytics().logEvent('otp_resent', { phone: emailOrPhoneInput.value.trim() });
+          alert("Código reenviado com sucesso!");
+          startOtpTimer();
+        } catch (error) {
+          showError(otpError, error.message);
+        } finally {
+          hideLoadingState(resendOtpBtn, resendOtpText, resendOtpSpinner, '<i class="fas fa-redo"></i> Reenviar Código');
         }
-        enableFormFields(); // Re-enable form fields on error
-        hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
-      }
-    });
-
-    // --- OTP Verification Logic ---
-    verifyOtpBtn.addEventListener('click', async () => {
-      hideError(otpError);
-      const otpCode = otpCodeInput.value.trim();
-
-      if (!otpCode || otpCode.length !== 6) {
-        showError(otpError, "Por favor, insira um código de 6 dígitos.");
-        return;
-      }
-
-      if (!confirmationResult) {
-        showError(otpError, "Nenhuma verificação de telefone pendente. Tente novamente o registro.");
-        return;
-      }
-
-      showLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, 'Verificando...');
-      otpCodeInput.disabled = true; // Disable OTP input during verification
-
-      try {
-        const userCredential = await confirmationResult.confirm(otpCode);
-        const user = userCredential.user;
-
-        // Store additional user data in Firestore
-        await db.collection('users').doc(user.uid).set({
-          name: nameInput.value.trim(),
-          phoneNumber: user.phoneNumber, // Phone number is now confirmed
-          municipio: municipioSelect.value,
-          bairro: bairroInput.value.trim(),
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }); // Use merge: true if the document might already exist (e.g., if an email was already stored)
-
-        alert("Número de telefone verificado e conta criada com sucesso!");
-        window.location.href = 'profile.html'; // Redirect to a protected page
-
-      } catch (error) {
-        console.error("Erro na verificação de OTP:", error);
-        if (error.code === 'auth/invalid-verification-code') {
-          showError(otpError, "Código de verificação inválido. Verifique e tente novamente.");
-        } else if (error.code === 'auth/code-expired') {
-          showError(otpError, "O código expirou. Por favor, solicite um novo registro.");
-          // Potentially redirect back to main registration or offer resend
-        } else {
-          alert(`Erro ao verificar código: ${error.message}`);
-        }
-        hideLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, '<i class="fas fa-check-circle"></i> Verificar Código');
-        otpCodeInput.disabled = false; // Re-enable OTP input on error
-      }
-    });
+      });
+    })();
   </script>
 </body>
 </html>
