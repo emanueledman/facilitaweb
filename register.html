@@ -694,6 +694,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/imask"></script>
   <script src="js/firebaseAuth.js"></script>
 
   <script>
@@ -710,9 +711,13 @@
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof firebase !== 'undefined' && !firebase.apps.length) {
         firebaseApp = firebase.initializeApp(firebaseConfig);
-        console.log("Firebase App inicializado com sucesso.");
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+        console.log("Firebase App e Firestore inicializados com sucesso.");
       } else if (firebase.apps.length) {
         firebaseApp = firebase.app();
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
         console.log("Firebase App já estava inicializado.");
       } else {
         console.error("Firebase SDK não carregado.");
@@ -721,25 +726,25 @@
       }
 
       if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
-          window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-              'size': 'invisible',
-              'callback': (response) => {
-                  console.log("reCAPTCHA invisível resolvido.");
-              },
-              'expired-callback': () => {
-                  console.warn("reCAPTCHA invisível expirou.");
-                  alert("Verificação de segurança expirada. Tente novamente.");
-                  if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-                      grecaptcha.reset(window.recaptchaWidgetId);
-                  }
-              }
-          });
-          window.recaptchaVerifier.render().then(function(widgetId) {
-              window.recaptchaWidgetId = widgetId;
-              console.log("reCAPTCHA invisível renderizado com ID do widget:", widgetId);
-          }).catch(error => {
-              console.error("Erro ao renderizar reCAPTCHA invisível:", error);
-          });
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          'size': 'invisible',
+          'callback': (response) => {
+            console.log("reCAPTCHA invisível resolvido.");
+          },
+          'expired-callback': () => {
+            console.warn("reCAPTCHA invisível expirou.");
+            alert("Verificação de segurança expirada. Tente novamente.");
+            if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+              grecaptcha.reset(window.recaptchaWidgetId);
+            }
+          }
+        });
+        window.recaptchaVerifier.render().then(function(widgetId) {
+          window.recaptchaWidgetId = widgetId;
+          console.log("reCAPTCHA invisível renderizado com ID do widget:", widgetId);
+        }).catch(error => {
+          console.error("Erro ao renderizar reCAPTCHA invisível:", error);
+        });
       }
     });
 
@@ -794,7 +799,13 @@
       });
     }
 
-    document.addEventListener('DOMContentLoaded', populateMunicipios);
+    document.addEventListener('DOMContentLoaded', () => {
+      populateMunicipios();
+      IMask(emailOrPhoneInput, {
+        mask: '+244 900 000 000',
+        lazy: false
+      });
+    });
 
     emailOrPhoneInput.addEventListener('focus', () => {
       if (emailOrPhoneInput.value === '') {

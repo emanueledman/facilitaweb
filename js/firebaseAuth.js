@@ -57,9 +57,13 @@
   // Log errors to Firestore
   async function logError(error, context) {
     try {
+      if (!window.db) {
+        console.error("Firestore não inicializado para logging de erro.");
+        return;
+      }
       await window.db.collection('error_logs').add({
         error: error.message,
-        code: error.code,
+        code: error.code || 'unknown',
         context: context,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -152,9 +156,9 @@
   }
 
   // Function to check registration attempts
-  async function checkRegistrationAttempts(emailOrPhone) {
+  async function checkRegistrationAttempts(emailOrPhone, dbInstance) {
     const normalizedEmailOrPhone = normalizePhone(emailOrPhone);
-    const attemptsDoc = await window.db.collection('registration_attempts').doc(normalizedEmailOrPhone).get();
+    const attemptsDoc = await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).get();
     const now = Date.now();
     const maxAttempts = 5;
     const windowMs = 24 * 60 * 60 * 1000; // 24 hours
@@ -165,17 +169,17 @@
         throw new Error("Limite de tentativas excedido. Tente novamente em 24 horas.");
       }
       if (now - data.firstAttempt > windowMs) {
-        await window.db.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
+        await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
           attempts: 1,
           firstAttempt: now
         });
       } else {
-        await window.db.collection('registration_attempts').doc(normalizedEmailOrPhone).update({
+        await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).update({
           attempts: firebase.firestore.FieldValue.increment(1)
         });
       }
     } else {
-      await window.db.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
+      await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
         attempts: 1,
         firstAttempt: now
       });
@@ -224,7 +228,7 @@
       }
 
       // Check registration attempts
-      await checkRegistrationAttempts(normalizedEmailOrPhone);
+      await checkRegistrationAttempts(normalizedEmailOrPhone, dbInstance);
 
       let user;
       if (isEmail) {
