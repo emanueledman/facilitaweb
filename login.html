@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" type="image/png" href="/favicon.png"/>
   <style>
+    /* Seu CSS atual */
     :root {
       --primary-color: #1e40af; /* Azul escuro */
       --secondary-color: #22c55e; /* Verde */
@@ -195,7 +196,7 @@
     }
     
     .error-message {
-      color: var(--error-color);
+      color: #ef4444; /* Usar uma cor de erro definida */
       font-size: 0.9rem;
       margin-top: -0.75rem;
       margin-bottom: 1rem;
@@ -247,9 +248,9 @@
       
       <form id="loginForm" class="auth-form">
         <div class="mb-4">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Digite seu email" required>
-          <div id="emailError" class="error-message"></div>
+          <label for="emailOrPhone" class="form-label">Email ou Número de Telefone</label>
+          <input type="text" class="form-control" id="emailOrPhone" placeholder="Email ou +244XXXXXXXXX" required>
+          <div id="emailOrPhoneError" class="error-message"></div>
         </div>
         
         <div class="mb-3">
@@ -283,53 +284,128 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // DOM elements
+    // Seus elementos DOM e scripts atuais
     const loginForm = document.getElementById('loginForm');
-    const emailInput = document.getElementById('email');
+    const emailOrPhoneInput = document.getElementById('emailOrPhone'); // Mudança aqui
     const passwordInput = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
     const loginText = document.getElementById('loginText');
     const loginSpinner = document.getElementById('loginSpinner');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
     const forgotPasswordLink = document.getElementById('forgotPassword');
-    const emailError = document.getElementById('emailError');
+    const emailOrPhoneError = document.getElementById('emailOrPhoneError'); // Mudança aqui
     const passwordError = document.getElementById('passwordError');
 
-    // Handle login form submission
+    // Inicialização do reCAPTCHA (para login por telefone)
+    let recaptchaVerifier;
+    window.onload = function() {
+      // Apenas inicialize o reCAPTCHA se o login por telefone for uma opção primária
+      // Ou se você tiver um botão específico para login por telefone
+      // É mais comum inicializá-lo ao tentar o login por telefone
+    };
+
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Limpar mensagens de erro
+      emailOrPhoneError.style.display = 'none';
+      passwordError.style.display = 'none';
+
+      let isValid = true;
+      const emailOrPhone = emailOrPhoneInput.value.trim();
+      const isEmail = emailOrPhone.includes('@');
+      const isPhone = /^\+244\d{9}$/.test(emailOrPhone);
+
+      if (!emailOrPhone) {
+        emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
+        emailOrPhoneError.style.display = 'block';
+        isValid = false;
+      } else if (!isEmail && !isPhone) {
+        emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
+        emailOrPhoneError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!passwordInput.value) {
+        passwordError.textContent = "A senha é obrigatória.";
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) {
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginText.style.display = 'none';
+      loginSpinner.style.display = 'inline-block';
+
       try {
-        await firebaseAuth.loginWithEmail(emailInput, passwordInput, loginBtn, loginText, loginSpinner, emailError, passwordError);
+        if (isEmail) {
+          await firebaseAuth.loginWithEmail(emailOrPhone, passwordInput.value);
+        } else if (isPhone) {
+          // Para login por telefone, você precisará de uma etapa de OTP
+          // A senha não é usada diretamente para autenticação com telefone no Firebase,
+          // mas pode ser usada para um registro inicial
+          // A autenticação por telefone no Firebase envolve o envio de um código de verificação
+          // E uma nova tela para inserção desse código.
+          // window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginBtn', { // 'loginBtn' é o ID do elemento onde o reCAPTCHA será renderizado ou onde o botão é clicado
+          //   'size': 'invisible',
+          //   'callback': (response) => {
+          //     // reCAPTCHA resolvido, agora você pode enviar o código de verificação
+          //   }
+          // });
+          // const appVerifier = window.recaptchaVerifier;
+          // await firebaseAuth.loginWithPhone(emailOrPhone, appVerifier);
+          // Redirecionar para tela de verificação de OTP
+          alert('Será enviado um código para o seu número de telefone.');
+          // Armazenar o número de telefone para a próxima tela
+          localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhone);
+          window.location.href = 'verify-phone.html'; 
+
+        }
+        alert('Login realizado com sucesso! Você será redirecionado.');
+        window.location.href = 'dashboard.html';
       } catch (error) {
-        console.error("Erro ao fazer login:", error.message);
+        alert('Erro ao fazer login: ' + error.message);
+        console.error("Erro ao fazer login:", error);
+        loginBtn.disabled = false;
+        loginText.style.display = 'inline';
+        loginSpinner.style.display = 'none';
       }
     });
 
-    // Google login
     googleLoginBtn.addEventListener('click', async () => {
       try {
-        await firebaseAuth.loginWithGoogle(googleLoginBtn);
+        await firebaseAuth.loginWithGoogle();
+        alert('Login com Google realizado com sucesso! Você será redirecionado.');
+        window.location.href = 'dashboard.html';
       } catch (error) {
-        console.error("Erro ao fazer login com Google:", error.message);
+        alert('Erro ao fazer login com Google: ' + error.message);
+        console.error("Erro ao fazer login com Google:", error);
       }
     });
 
-    // Forgot password
     forgotPasswordLink.addEventListener('click', async (e) => {
       e.preventDefault();
+      const emailInputVal = emailOrPhoneInput.value.trim(); // Assume que se usou email, vai querer resetar por email
+      if (!emailInputVal || !emailInputVal.includes('@')) {
+        alert('Por favor, digite seu email no campo acima para resetar a senha.');
+        return;
+      }
       try {
-        await firebaseAuth.resetPassword(forgotPasswordLink);
+        await firebaseAuth.resetPassword(emailInputVal);
+        alert('Um email para redefinição de senha foi enviado para ' + emailInputVal);
       } catch (error) {
-        console.error("Erro ao resetar senha:", error.message);
+        alert('Erro ao resetar senha: ' + error.message);
+        console.error("Erro ao resetar senha:", error);
       }
     });
   </script>

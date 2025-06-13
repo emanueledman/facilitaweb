@@ -3,158 +3,231 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FixABairro - Criar Conta">
-  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, registro">
+  <meta name="description" content="FixABairro - Criar Conta e Unir-se à Comunidade">
+  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, registro, telefone, email, bairro, comunidade">
   <meta name="author" content="FixABairro Team">
   <title>FixABairro | Criar Conta</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" type="image/png" href="/favicon.png"/>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Google Fonts (Mantendo a nova paleta) -->
+  <link href="[https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap](https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap)" rel="stylesheet">
+
+  <!-- Bootstrap 5 -->
+  <link href="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css](https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css)" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
+  
+  <!-- AOS Animation Library -->
+  <link href="[https://unpkg.com/aos@2.3.1/dist/aos.css](https://unpkg.com/aos@2.3.1/dist/aos.css)" rel="stylesheet">
+
   <style>
+    /* Variáveis Globais (da nova paleta de cores) */
     :root {
-      --primary-color: #1e40af; /* Azul escuro */
-      --secondary-color: #22c55e; /* Verde */
-      --highlight-color: #f59e0b; /* Amarelo-alaranjado */
-      --dark-bg: #1f2937;
-      --dark-card: #2d3748;
-      --light-text: #f3f4f6;
-      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      --border-radius: 12px;
+      --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
+      --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
+      --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
+      --success-green: #4CAF50; /* Verde para status de sucesso */
+      --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
+      --info-blue: #2196F3; /* Azul para status de informação/progresso */
+
+      --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
+      --bg-white: #FFFFFF; /* Fundo branco puro para cards */
+      --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
+
+      --text-main: #34495E; /* Azul escuro para texto principal */
+      --text-secondary: #7F8C8D; /* Cinza para texto secundário */
+      --text-white: #FFFFFF; /* Texto branco */
+
+      --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
+      --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
+
+      --border-radius-lg: 15px;
+      --border-radius-md: 10px;
+      --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+      --error-red: #DC3545;
+    }
+    
+    /* Reset e estilos base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
     
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--dark-bg);
-      color: var(--light-text);
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--secondary-dark) 0%, rgba(44, 62, 80, 0.8) 100%);
+      color: var(--text-white);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
     }
     
     .auth-container {
-      max-width: 500px;
+      max-width: 550px; /* Aumentado para mais campos */
       width: 100%;
-      margin: auto;
-      padding: 2rem;
+      padding: 1.5rem;
+      margin: 2rem auto;
     }
     
     .auth-card {
-      background: var(--dark-card);
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      transition: transform 0.3s ease;
+      background: var(--bg-white);
+      border-radius: var(--border-radius-lg);
+      padding: 3rem;
+      box-shadow: var(--shadow-medium);
+      border: 1px solid #ECEFF1;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
     
     .auth-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
     }
     
     .auth-logo {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 2.5rem;
     }
     
     .auth-logo img {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
-      transition: transform 0.3s ease;
-    }
-    
-    .auth-logo img:hover {
-      transform: scale(1.1);
-    }
-    
-    .auth-logo h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0;
-      background: linear-gradient(to right, #ffffff, var(--primary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .auth-form .form-control {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--light-text);
-      padding: 0.75rem 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.25rem;
+      width: 80px; /* Logo maior */
+      height: 80px;
+      margin-bottom: 1.2rem;
+      background: var(--primary-accent);
+      border-radius: 50%;
+      padding: 10px;
+      box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
       transition: all 0.3s ease;
     }
     
-    .auth-form .form-control:focus {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-      color: var(--light-text);
+    .auth-logo img:hover {
+      transform: scale(1.05) rotate(5deg);
     }
     
-    .auth-form .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.5);
+    .auth-logo h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--secondary-dark); /* Título em azul escuro */
     }
     
     .auth-form .form-label {
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      margin-bottom: 0.6rem;
       font-weight: 500;
+      font-size: 1rem;
+    }
+
+    .auth-form .form-control, .auth-form .form-select {
+      background: var(--bg-light);
+      border: 1px solid #CFD8DC;
+      color: var(--text-main);
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--border-radius-md);
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .auth-form .form-control:focus, .auth-form .form-select:focus {
+      background: var(--bg-white);
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+      color: var(--text-main);
+    }
+    
+    .auth-form .form-control::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    /* Estilo para select com seta customizada */
+    .select-container {
+        position: relative;
+    }
+    .select-container .form-select {
+        appearance: none; /* Esconde a seta padrão */
+        padding-right: 2.5rem; /* Espaço para nossa seta customizada */
+    }
+    .select-container::after {
+        content: '\f078'; /* Ícone de seta para baixo */
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 1.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        pointer-events: none; /* Permite clicar no select através da seta */
+        font-size: 0.9rem;
     }
     
     .btn-auth {
       width: 100%;
-      padding: 0.75rem;
-      border-radius: 50px;
+      padding: 1rem;
+      border-radius: 30px;
       font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      margin-top: 1rem; /* Espaço extra após o último campo */
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
     }
     
     .btn-primary {
-      background-color: var(--primary-color);
+      background-color: var(--primary-accent);
+      color: var(--text-white);
       border: none;
-      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
+      box-shadow: 0 8px 20px rgba(255, 87, 34, 0.4);
     }
     
     .btn-primary:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
+      background-color: #E64A19;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(255, 87, 34, 0.5);
     }
     
     .btn-primary:disabled {
-      background-color: #6b7280;
+      background-color: #B0BEC5; /* Cinza claro */
       cursor: not-allowed;
       box-shadow: none;
+      transform: none;
     }
     
     .auth-footer {
       text-align: center;
-      margin-top: 1.5rem;
-      color: rgba(255, 255, 255, 0.7);
+      margin-top: 2rem;
+      color: var(--text-secondary);
+      font-size: 1rem;
     }
     
     .auth-footer a {
-      color: var(--primary-color);
+      color: var(--primary-accent);
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
+      transition: color 0.3s ease;
     }
     
     .auth-footer a:hover {
       text-decoration: underline;
-      color: var(--primary-dark);
+      color: #E64A19;
     }
     
     .error-message {
-      color: var(--error-color);
-      font-size: 0.9rem;
-      margin-top: -0.75rem;
-      margin-bottom: 1rem;
+      color: var(--error-red);
+      font-size: 0.85rem;
+      margin-top: -1.2rem; /* Ajuste para ficar abaixo do input */
+      margin-bottom: 1.5rem; /* Espaço para o próximo input */
       display: none;
+      font-weight: 500;
     }
     
     .spinner {
@@ -165,39 +238,64 @@
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
-      margin-left: 0.5rem;
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
+    @media (max-width: 768px) {
+      .auth-container {
+        padding: 1rem;
+      }
+      .auth-card {
+        padding: 2rem;
+      }
+      .auth-logo img {
+        width: 70px;
+        height: 70px;
+      }
+      .auth-logo h1 {
+        font-size: 1.8rem;
+      }
+      .auth-form .form-control, .auth-form .form-select {
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+      }
+      .btn-auth {
+        padding: 0.8rem;
+        font-size: 1rem;
+      }
+    }
+    
     @media (max-width: 576px) {
       .auth-container {
-        padding: 1.5rem;
+        padding: 0.5rem;
       }
-      
       .auth-card {
         padding: 1.5rem;
       }
-      
-      .auth-logo h1 {
-        font-size: 1.5rem;
-      }
-      
       .auth-logo img {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
+      }
+      .auth-logo h1 {
+        font-size: 1.6rem;
+      }
+      .error-message {
+        font-size: 0.8rem;
+        margin-top: -1rem;
+        margin-bottom: 1rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="auth-container">
+  <div class="auth-container" data-aos="fade-up">
     <div class="auth-card">
       <div class="auth-logo">
-        <img src="icons/Icon-192.png" alt="FixABairro Logo">
-        <h1>Criar Conta</h1>
+        <img src="[https://placehold.co/80x80/FF5722/FFFFFF?text=F](https://placehold.co/80x80/FF5722/FFFFFF?text=F)" alt="Logotipo FixABairro"> <!-- Placeholder para favicon.png -->
+        <h1>Crie Sua Conta Grátis</h1>
       </div>
       
       <form id="registerForm" class="auth-form">
@@ -208,14 +306,31 @@
         </div>
         
         <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Digite seu email" required>
-          <div id="emailError" class="error-message"></div>
+          <label for="emailOrPhone" class="form-label">Email ou Número de Telefone (+244XXXXXXXXX)</label>
+          <input type="text" class="form-control" id="emailOrPhone" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
+          <div id="emailOrPhoneError" class="error-message"></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="municipio" class="form-label">Município</label>
+          <div class="select-container">
+            <select class="form-select form-control" id="municipio" required>
+              <option value="">Selecione seu município</option>
+              <!-- Opções de municípios angolanos serão carregadas via JavaScript -->
+            </select>
+          </div>
+          <div id="municipioError" class="error-message"></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="bairro" class="form-label">Bairro</label>
+          <input type="text" class="form-control" id="bairro" placeholder="Digite o nome do seu bairro (Ex: Morro Bento)" required>
+          <div id="bairroError" class="error-message"></div>
         </div>
         
         <div class="mb-3">
           <label for="password" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="password" placeholder="Crie uma senha" required>
+          <input type="password" class="form-control" id="password" placeholder="Crie uma senha forte (mín. 6 caracteres)" required>
           <div id="passwordError" class="error-message"></div>
         </div>
         
@@ -226,47 +341,246 @@
         </div>
         
         <button type="submit" class="btn btn-primary btn-auth" id="registerBtn">
-          <span id="registerText">Criar Conta</span>
+          <span id="registerText"><i class="fas fa-user-plus me-2"></i> Criar Conta</span>
           <span id="registerSpinner" class="spinner" style="display: none;"></span>
         </button>
         
         <div class="auth-footer">
-          Já tem uma conta? <a href="login.html" id="loginLink">Faça login</a>
+          Já tem uma conta? <a href="login.html" id="loginLink">Faça login agora!</a>
         </div>
       </form>
+      <!-- reCAPTCHA container for phone auth, will be hidden -->
+      <div id="recaptcha-container" style="display: none;"></div>
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDKs (defer para carregamento assíncrono) -->
+  <script src="[https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js)"></script>
+  <script src="[https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js)"></script>
+  <script src="[https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js](https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js)"></script>
 
-  <!-- Firebase Auth Module -->
+  <!-- Bootstrap JS -->
+  <script src="[https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js](https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js)"></script>
+
+  <!-- AOS Animation -->
+  <script src="[https://unpkg.com/aos@2.3.1/dist/aos.js](https://unpkg.com/aos@2.3.1/dist/aos.js)"></script>
+
+  <!-- SEU Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // DOM elements
+    // Inicialização do AOS
+    window.addEventListener('load', () => {
+      AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+      });
+    });
+
+    // Configuração do Firebase (copiar de sua config real)
+    const firebaseConfig = {
+      apiKey: "SUA_API_KEY_DO_FIREBASE", // <--- SUBSTITUA PELA SUA CHAVE API
+      authDomain: "SEU_AUTH_DOMAIN.firebaseapp.com", // <--- SUBSTITUA PELO SEU DOMÍNIO DE AUTENTICAÇÃO
+      projectId: "SEU_PROJECT_ID", // <--- SUBSTITUA PELO SEU ID DE PROJETO
+      storageBucket: "SEU_STORAGE_BUCKET.appspot.com", // <--- SUBSTITUA PELO SEU STORAGE BUCKET
+      messagingSenderId: "SEU_MESSAGING_SENDER_ID", // <--- SUBSTITUA PELO SEU SENDER ID
+      appId: "SEU_APP_ID" // <--- SUBSTITUA PELO SEU APP ID
+    };
+
+    // Inicializa Firebase após o carregamento dos SDKs
+    let firebaseApp;
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+      } else if (firebase.apps.length) {
+        firebaseApp = firebase.app();
+      }
+      // O reCAPTCHA para o fluxo de telefone é inicializado dentro do firebaseAuth.js
+      // quando sendVerificationCode é chamado.
+    });
+
+    // Elementos DOM
     const registerForm = document.getElementById('registerForm');
     const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
+    const emailOrPhoneInput = document.getElementById('emailOrPhone');
+    const municipioSelect = document.getElementById('municipio');
+    const bairroInput = document.getElementById('bairro');
     const passwordInput = document.getElementById('password');
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const registerBtn = document.getElementById('registerBtn');
     const registerText = document.getElementById('registerText');
     const registerSpinner = document.getElementById('registerSpinner');
     const nameError = document.getElementById('nameError');
-    const emailError = document.getElementById('emailError');
+    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+    const municipioError = document.getElementById('municipioError');
+    const bairroError = document.getElementById('bairroError');
     const passwordError = document.getElementById('passwordError');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
+    
+    // Dados de municípios angolanos (Você pode carregar isso de um backend ou JSON)
+    const municipiosDeAngola = [
+      "Belas", "Cacuaco", "Cazenga", "Ícolo e Bengo", "Luanda", "Quiçama", "Kilamba Kiaxi", "Talatona", "Viana",
+      "Ambriz", "Dande", "Nambuagongo", "Bula Atumba", "Dembos", "Pango Aluquém", "Puri", "Quitexe", "Uíge", "Amboim", "Andulo",
+      "Camacupa", "Cuito", "Chitembo", "Kuito Cuanavale", "Cuchi", "Menongue", "Caluquembe", "Caconda", "Chipindo", "Jamba",
+      "Kuvango", "Lubango", "Matala", "Quilengues", "Humpata", "Capenda Camulemba", "Caungula", "Chitato", "Cuango", "Cunda Dia Baze",
+      "Lubalo", "Xá-Muteba", "Lucapa", "Cambulo", "Cazombo", "Cacolo", "Dala", "Muconda", "Saurimo", "Lumeje", "Cazengo", "Kambambe",
+      "Ngonguembo", "Quiçama", "Libolo", "Mussende", "Quibala", "Waku-Kungo", "Cela", "Ganda", "Cubal", "Caimbambo", "Baía Farta",
+      "Catumbela", "Lobito", "Bocoio", "Chongoroi", "Balombo", "Ganda", "Benguela", "Cahama", "Chiange", "Curoca", "Cuanhama",
+      "Cunene", "Ombadja", "Namacunde", "Santa-Clara", "Caimbambo", "Chongoroi", "Cuvango", "Cuvelai", "Cahama", "Ondjiva", "Tchibemba",
+      "Cambambe", "Amboim", "Quilenda", "Dembo Chio", "Porto Amboim", "Seles", "Quilengues", "Humpata", "Virei", "Tômbua", "Moçâmedes",
+      "Bibala", "Camucuio", "Curoca", "Cahama", "Chipindo", "Cuvango", "Matala", "Quilengues", "Chongoroi", "Ganda", "Bocoio", "Balombo",
+      "Longonjo", "Mungo", "Bailundo", "Cachiungo", "Chicala-Choloanga", "Ekunha", "Catchiungo", "Londuimbali", "Uíge", "Negage", "Maquela do Zombo",
+      "Damba", "Songo", "Buengas", "Bembe", "Alto Cawale", "Mucaba", "Quimbele", "Sanza Pombo", "Púri", "Banza", "Mabanza Congo", "Nzeto",
+      "Tomboco", "Cuimba", "Nóqui", "Soyo", "M'Banza Congo", "Nzeto", "Tomboco", "Cuimba", "Nóqui", "Soyo", "M'Banza Congo", "Nzeto", "Tomboco", "Cuimba"
+    ];
 
-    // Handle register form submission
+    // Popula o select de municípios
+    function populateMunicipios() {
+      municipiosDeAngola.sort().forEach(municipio => { // Ordena alfabeticamente
+        const option = document.createElement('option');
+        option.value = municipio;
+        option.textContent = municipio;
+        municipioSelect.appendChild(option);
+      });
+    }
+
+    // Chama a função ao carregar o DOM
+    document.addEventListener('DOMContentLoaded', populateMunicipios);
+
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      // Limpar mensagens de erro
+      nameError.style.display = 'none';
+      emailOrPhoneError.style.display = 'none';
+      municipioError.style.display = 'none';
+      bairroError.style.display = 'none';
+      passwordError.style.display = 'none';
+      confirmPasswordError.style.display = 'none';
+
+      let isValid = true;
+
+      if (!nameInput.value.trim()) {
+        nameError.textContent = "Nome completo é obrigatório.";
+        nameError.style.display = 'block';
+        isValid = false;
+      }
+
+      const emailOrPhone = emailOrPhoneInput.value.trim();
+      const isEmail = emailOrPhone.includes('@');
+      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // Formato +244XXXXXXXXX
+      
+      if (!emailOrPhone) {
+        emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
+        emailOrPhoneError.style.display = 'block';
+        isValid = false;
+      } else if (!isEmail && !isPhone) {
+        emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
+        emailOrPhoneError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!municipioSelect.value) {
+        municipioError.textContent = "Por favor, selecione seu município.";
+        municipioError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!bairroInput.value.trim()) {
+        bairroError.textContent = "O nome do bairro é obrigatório.";
+        bairroError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (passwordInput.value.length < 6) {
+        passwordError.textContent = "A senha deve ter pelo menos 6 caracteres.";
+        passwordError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordError.textContent = "As senhas não coincidem.";
+        confirmPasswordError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) {
+        return; // Impede o envio se a validação falhar
+      }
+
+      registerBtn.disabled = true;
+      registerText.style.display = 'none';
+      registerSpinner.style.display = 'inline-block';
+
       try {
-        await firebaseAuth.registerUser(nameInput, emailInput, passwordInput, confirmPasswordInput, registerBtn, registerText, registerSpinner, nameError, emailError, passwordError, confirmPasswordError);
+        if (typeof firebaseAuth === 'undefined') {
+          throw new Error("Módulo firebaseAuth não carregado. Verifique js/firebaseAuth.js ou a ordem de carregamento.");
+        }
+
+        if (isEmail) {
+          // Registo com email
+          await firebaseAuth.registerUserWithEmail(
+            nameInput.value, 
+            emailOrPhone, 
+            passwordInput.value, 
+            municipioSelect.value, 
+            bairroInput.value
+          );
+          alert('Conta criada com sucesso com email! Você será redirecionado para o seu perfil.');
+          window.location.href = 'profile.html'; // Redireciona para o perfil após login
+        } else if (isPhone) {
+          // Registo com telefone (requer verificação OTP)
+          // Armazenar temporariamente dados para a próxima tela
+          localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhone);
+          localStorage.setItem('userTempName', nameInput.value);
+          localStorage.setItem('userTempMunicipio', municipioSelect.value);
+          localStorage.setItem('userTempBairro', bairroInput.value);
+          localStorage.setItem('userTempPassword', passwordInput.value); // Para o caso de precisar da senha depois
+
+          // Chama a função para enviar OTP do firebaseAuth.js
+          // Passamos 'recaptcha-container' para o reCAPTCHA saber onde "renderizar" (mesmo que invisível)
+          await firebaseAuth.sendVerificationCode(emailOrPhone, firebaseApp, 'recaptcha-container'); 
+          
+          alert('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.');
+          window.location.href = 'verify-phone.html'; // Redirecionar para tela de verificação de OTP
+        }
       } catch (error) {
-        console.error("Erro ao registrar usuário:", error.message);
+        let errorMessage = "Erro ao criar conta. Por favor, tente novamente.";
+        if (error.code) {
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'Este email já está registado.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'O formato do email é inválido.';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'A senha é muito fraca.';
+                    break;
+                case 'auth/invalid-phone-number':
+                    errorMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +244XXXXXXXXX.';
+                    break;
+                case 'auth/missing-phone-number':
+                    errorMessage = 'Número de telefone é obrigatório.';
+                    break;
+                case 'auth/quota-exceeded':
+                    errorMessage = 'Tentativas de verificação excessivas. Tente novamente mais tarde.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Muitas tentativas de registo. Tente novamente mais tarde.';
+                    break;
+                default:
+                    errorMessage = `Erro: ${error.message}`;
+            }
+        } else {
+            errorMessage = error.message;
+        }
+        alert(errorMessage);
+        console.error("Erro ao registrar usuário:", error);
+        registerBtn.disabled = false;
+        registerText.style.display = 'inline';
+        registerSpinner.style.display = 'none';
       }
     });
   </script>
