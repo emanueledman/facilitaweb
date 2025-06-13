@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FixABairro - Verifique seu número de telefone para aceder à sua conta.">
+  <meta name="keywords" content="fixabairro, angola, verificação, telefone, SMS, OTP, código">
+  <meta name="author" content="FixABairro Team">
+  <title>FixABairro | Verificar Telefone</title>
+  
+  <!-- Favicon (Usando um placeholder) -->
+  <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
+
+  <!-- Google Fonts: Inter para corpo, Montserrat para títulos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome para ícones -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Tailwind CSS (direto do CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer base {
+      /* Paleta de Cores e Variáveis Globais */
+      :root {
+        --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
+        --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
+        --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
+        --success-green: #4CAF50; /* Verde para status de sucesso */
+        --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
+        --info-blue: #2196F3; /* Azul para status de informação/progresso */
+
+        --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
+        --bg-white: #FFFFFF; /* Fundo branco puro para cards */
+        --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
+
+        --text-main: #34495E; /* Azul escuro para texto principal */
+        --text-secondary: #7F8C8D; /* Cinza para texto secundário */
+        --text-white: #FFFFFF; /* Texto branco */
+
+        --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
+        --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
+
+        --border-radius-lg: 15px;
+        --border-radius-md: 10px;
+        --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+        --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+        --error-red: #DC3545; /* Vermelho para erros */
+      }
+      
+      /* Reset e estilos base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: var(--font-body);
+        background: var(--bg-light);
+        color: var(--text-main);
+        line-height: 1.7;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+          width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+          background: var(--bg-light);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--primary-accent);
+          border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #E64A19;
+      }
+
+      /* Classes utilitárias do spinner */
+      .spinner-border {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        vertical-align: -0.125em;
+        border: 0.25em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .75s linear infinite spinner-border;
+      }
+      @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+      }
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              accent: 'var(--primary-accent)',
+            },
+            secondary: {
+              dark: 'var(--secondary-dark)',
+            },
+            highlight: {
+              light: 'var(--highlight-light)',
+            },
+            success: {
+              DEFAULT: 'var(--success-green)',
+            },
+            warning: {
+              DEFAULT: 'var(--warning-orange)',
+            },
+            info: {
+              DEFAULT: 'var(--info-blue)',
+            },
+            bg: {
+              light: 'var(--bg-light)',
+              white: 'var(--bg-white)',
+              darkOverlay: 'var(--bg-dark-overlay)',
+            },
+            text: {
+              main: 'var(--text-main)',
+              secondary: 'var(--text-secondary)',
+              white: 'var(--text-white)',
+            },
+            error: 'var(--error-red)',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': 'var(--border-radius-lg)',
+            'md': 'var(--border-radius-md)',
+          },
+          boxShadow: {
+            soft: 'var(--shadow-soft)',
+            medium: 'var(--shadow-medium)',
+          },
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-light text-main">
+  <div class="relative w-full max-w-lg min-h-[450px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1] p-8 md:p-12 flex-col items-center justify-center text-center">
+    <!-- Ícone e Título -->
+    <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+      <i class="fas fa-sms text-3xl text-white"></i> <!-- Ícone de SMS -->
+    </div>
+    <h1 class="text-3xl font-montserrat font-bold text-secondary-dark mb-3">Verifique Seu Telefone</h1>
+    <p class="text-text-secondary text-base mb-6">
+      Um código de 6 dígitos foi enviado para <strong class="text-text-main" id="phoneNumberDisplay">seu número</strong>. Por favor, digite-o abaixo para continuar.
+    </p>
+    
+    <form id="verifyPhoneForm" class="w-full space-y-6">
+      <div>
+        <label for="verificationCode" class="sr-only">Código de Verificação</label>
+        <input type="text" id="verificationCode" class="w-full p-4 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary text-center text-xl font-bold tracking-widest focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="______" required maxlength="6" pattern="\d{6}" title="Digite 6 dígitos numéricos">
+        <p id="codeError" class="text-error text-xs mt-2 hidden">Erro de código</p>
+      </div>
+      
+      <button type="submit" id="verifyBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+        <span id="verifyText"><i class="fas fa-check-circle"></i> Verificar Código</span>
+        <span id="verifySpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+      </button>
+
+      <button type="button" id="resendCodeBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md gap-2">
+          <span id="resendText"><i class="fas fa-redo"></i> Reenviar Código</span>
+          <span id="resendSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+      </button>
+      
+      <!-- reCAPTCHA container, sempre presente mas invisível -->
+      <div id="recaptcha-container" class="mt-4 hidden"></div> 
+
+      <p class="text-center text-text-secondary text-sm mt-6">
+        Voltar ao 
+        <a href="login.html" class="text-primary-accent hover:underline font-medium">Login</a>
+      </p>
+    </form>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- SEU Firebase Auth Module -->
+  <script src="js/firebaseAuth.js"></script>
+
+  <script>
+    // Configuração do Firebase (SUBSTITUA PELAS SUAS CREDENCIAIS REAIS DO FIREBASE)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+    };
+
+    // Inicializa Firebase App. Esta parte é crucial e deve ser feita uma única vez.
+    let firebaseApp;
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+        console.log("Firebase App inicializado com sucesso.");
+      } else if (firebase.apps.length) {
+        firebaseApp = firebase.app();
+        console.log("Firebase App já estava inicializado.");
+      } else {
+        console.error("Firebase SDK não carregado. Verifique os scripts defer.");
+      }
+    });
+
+    // Elementos DOM
+    const verifyPhoneForm = document.getElementById('verifyPhoneForm');
+    const verificationCodeInput = document.getElementById('verificationCode');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const verifyText = document.getElementById('verifyText');
+    const verifySpinner = document.getElementById('verifySpinner');
+    const resendCodeBtn = document.getElementById('resendCodeBtn');
+    const resendText = document.getElementById('resendText');
+    const resendSpinner = document.getElementById('resendSpinner');
+    const codeError = document.getElementById('codeError');
+    const phoneNumberDisplay = document.getElementById('phoneNumberDisplay');
+    const recaptchaContainer = document.getElementById('recaptcha-container');
+
+    let confirmationResult = window.confirmationResult; // Tenta obter o resultado da confirmação do localStorage
+
+    // Ao carregar a página, tenta obter o número de telefone do localStorage
+    document.addEventListener('DOMContentLoaded', async () => {
+      const storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
+      if (storedPhoneNumber) {
+        phoneNumberDisplay.textContent = storedPhoneNumber;
+        // Se `confirmationResult` não veio da navegação anterior (ex: recarregamento da página),
+        // tentamos reenviar o código para obter um novo `confirmationResult`.
+        if (!confirmationResult) {
+            try {
+                if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
+                    throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
+                }
+                // Reenvia o código para obter um novo confirmationResult
+                confirmationResult = await firebaseAuth.sendVerificationCode(storedPhoneNumber, firebaseApp, 'recaptcha-container');
+                alert('O código de verificação foi reenviado para o seu telefone.');
+            } catch (error) {
+                alert('Erro ao iniciar verificação do telefone ou reenviar código: ' + error.message);
+                console.error("Erro ao enviar código na inicialização:", error);
+                window.location.href = 'login.html'; // Redireciona em caso de erro crítico
+            }
+        }
+      } else {
+        alert('Número de telefone não encontrado. Por favor, retorne à tela de registo ou login.');
+        window.location.href = 'login.html'; // Redireciona de volta
+      }
+    });
+
+    verifyPhoneForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      codeError.classList.add('hidden');
+
+      const code = verificationCodeInput.value.trim();
+      if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+        codeError.textContent = "O código deve ter 6 dígitos numéricos.";
+        codeError.classList.remove('hidden');
+        return;
+      }
+
+      // Ativar estado de carregamento do botão
+      verifyBtn.disabled = true;
+      verifyText.classList.add('hidden');
+      verifySpinner.classList.remove('hidden');
+      verifyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A verificar...`;
+
+      try {
+        if (!confirmationResult) {
+            throw new Error("Resultado de confirmação do Firebase não encontrado. Tente reenviar o código.");
+        }
+        
+        await confirmationResult.confirm(code);
+        
+        // Se a verificação for bem-sucedida, o utilizador está logado.
+        // Agora, atualizamos os dados adicionais no Firestore.
+        const user = firebase.auth().currentUser;
+        if (user) {
+          const db = firebase.firestore();
+          
+          // Recupera os dados temporários do localStorage
+          const name = localStorage.getItem('userTempName') || user.displayName;
+          const municipio = localStorage.getItem('userTempMunicipio');
+          const bairro = localStorage.getItem('userTempBairro');
+          const tempPassword = localStorage.getItem('userTempPassword'); // Para caso de novo registo
+
+          // Prepara os dados para salvar/atualizar
+          const userData = {
+            uid: user.uid,
+            name: name || 'Utilizador', // Prefere o nome inserido ou displayName
+            phoneNumber: user.phoneNumber, // O Firebase já coloca o phoneNumber aqui
+            municipio: municipio || 'Não informado',
+            bairro: bairro || 'Não informado',
+            // Adiciona timestamp de criação apenas se for um utilizador novo (ou se não existir)
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            notificationPreferences: {
+              email: user.email ? true : false, // Habilita email se tiver
+              phone: true // Habilita telefone se logou por telefone
+            },
+          };
+
+          // Salva/atualiza os dados no Firestore. Se for um registo novo, set() cria.
+          // Se for login de um utilizador existente (ex: logou com Google antes e adicionou telefone),
+          // merge: true atualiza os campos existentes sem sobrescrever tudo.
+          await db.collection('users').doc(user.uid).set(userData, { merge: true }); 
+
+          alert('Telefone verificado e conta atualizada com sucesso! Bem-vindo(a) ao FixABairro.');
+          
+          // Limpa os dados temporários do localStorage
+          localStorage.removeItem('pendingVerificationPhoneNumber');
+          localStorage.removeItem('userTempName');
+          localStorage.removeItem('userTempMunicipio');
+          localStorage.removeItem('userTempBairro');
+          localStorage.removeItem('userTempPassword');
+
+          window.location.href = 'profile.html'; // Redireciona para o perfil/dashboard
+        } else {
+            alert('Erro: Utilizador não autenticado após verificação. Tente novamente.');
+            window.location.href = 'login.html';
+        }
+      } catch (error) {
+        let userFacingMessage = "Ocorreu um erro ao verificar o código. Por favor, tente novamente.";
+        console.error("Erro ao verificar código:", error);
+
+        if (error.code) {
+          switch (error.code) {
+            case 'auth/invalid-verification-code':
+              userFacingMessage = 'Código de verificação inválido.';
+              codeError.textContent = userFacingMessage;
+              codeError.classList.remove('hidden');
+              break;
+            case 'auth/code-expired':
+              userFacingMessage = 'O código de verificação expirou. Por favor, reenvie.';
+              codeError.textContent = userFacingMessage;
+              codeError.classList.remove('hidden');
+              break;
+            case 'auth/user-disabled':
+              userFacingMessage = 'Sua conta foi desativada.';
+              alert(userFacingMessage);
+              break;
+            case 'auth/too-many-requests':
+              userFacingMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+              alert(userFacingMessage);
+              break;
+            case 'auth/network-request-failed':
+              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+              alert(userFacingMessage);
+              break;
+            default:
+              userFacingMessage = `Erro Firebase: ${error.message}`;
+              alert(userFacingMessage);
+          }
+        } else {
+          userFacingMessage = error.message;
+          alert(userFacingMessage);
+        }
+      } finally {
+        // Restaurar estado do botão após a tentativa
+        verifyBtn.disabled = false;
+        verifyText.classList.remove('hidden');
+        verifySpinner.classList.add('hidden');
+        verifyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Verificar Código`;
+      }
+    });
+
+    resendCodeBtn.addEventListener('click', async () => {
+      // Ativar estado de carregamento do botão
+      resendCodeBtn.disabled = true;
+      resendText.classList.add('hidden');
+      resendSpinner.classList.remove('hidden');
+      resendCodeBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A reenviar...`;
+      codeError.classList.add('hidden'); // Limpa erros anteriores
+
+      const storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
+      if (storedPhoneNumber) {
+        try {
+          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
+            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
+          }
+          // Reenvia o código. `confirmationResult` será atualizado no `window`.
+          confirmationResult = await firebaseAuth.sendVerificationCode(storedPhoneNumber, firebaseApp, 'recaptcha-container');
+          alert('Novo código de verificação enviado! Verifique seu telefone.');
+        } catch (error) {
+          alert('Erro ao reenviar código: ' + error.message);
+          console.error("Erro ao reenviar código:", error);
+          codeError.textContent = 'Erro ao reenviar código. Tente novamente mais tarde.';
+          codeError.classList.remove('hidden');
+        } finally {
+          // Restaurar estado do botão
+          resendCodeBtn.disabled = false;
+          resendText.classList.remove('hidden');
+          resendSpinner.classList.add('hidden');
+          resendCodeBtn.innerHTML = `<i class="fas fa-redo"></i> Reenviar Código`;
+        }
+      } else {
+        alert('Número de telefone não encontrado para reenviar. Por favor, retorne à tela de registo/login.');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>
