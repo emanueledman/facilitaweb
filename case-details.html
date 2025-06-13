@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Problema | FixABairro</title>
+
+  <meta name="description" content="Acompanhe os detalhes de um problema reportado no FixABairro. Veja o status, localização, fotos e atualizações da comunidade.">
+  <meta name="keywords" content="fixabairro, angola, problemas urbanos, detalhes do caso, acompanhar, resolver, antes e depois, mapa, comunidade">
+  <meta name="author" content="FixABairro Team">
+
+  <link rel="icon" type="image/png" href="favicon.png"> <link rel="apple-touch-icon" href="icons/Icon-192.png"> <link rel="manifest" href="manifest.json">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="FixABairro">
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4Nx5QGkE0P/t3y5L7+rJ3A9MhS/yD/g/s5pZ5nC5A0=" crossorigin=""/>
+
+  <style>
+    /* Variáveis globais - Nova Paleta de Cores e Fontes (Repetidas de index.html para consistência) */
+    :root {
+      --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
+      --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
+      --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
+      --success-green: #4CAF50; /* Verde para status de sucesso */
+      --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
+      --info-blue: #2196F3; /* Azul para status de informação/progresso */
+
+      --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
+      --bg-white: #FFFFFF; /* Fundo branco puro para cards */
+      --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
+
+      --text-main: #34495E; /* Azul escuro para texto principal */
+      --text-secondary: #7F8C8D; /* Cinza para texto secundário */
+      --text-white: #FFFFFF; /* Texto branco */
+
+      --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
+      --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
+    }
+
+    /* Reset e estilos base (Repetidos de index.html para consistência) */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+    }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--bg-light);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--primary-accent);
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #E64A19;
+    }
+
+    /* Navbar (Adaptado para página de detalhes) */
+    .navbar {
+      background: var(--bg-white); /* Navbar sempre branca nesta página */
+      padding: 0.8rem 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      position: sticky; /* Sticky para ficar no topo ao rolar */
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      background: var(--primary-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      font-size: 1.5rem;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+    }
+
+    .nav-link {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      font-weight: 500;
+      padding: 0.6rem 1.2rem;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 3px;
+        background: var(--primary-accent);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+        width: 70%;
+    }
+
+    .nav-link:hover {
+      color: var(--primary-accent);
+    }
+
+    /* Botões Globais (Repetidos de index.html para consistência) */
+    .btn-main {
+      background: var(--primary-accent);
+      color: var(--text-white);
+      padding: 0.9rem 2.5rem;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      border: none;
+      display: inline-block;
+      box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn-main:hover {
+      background: #E64A19;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+    }
+
+    .btn-outline-secondary-dark {
+      background: transparent;
+      color: var(--secondary-dark);
+      padding: 0.9rem 2.5rem;
+      border: 2px solid var(--secondary-dark);
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary-dark:hover {
+        background: var(--secondary-dark);
+        color: var(--text-white);
+        border-color: var(--secondary-dark);
+        transform: translateY(-3px);
+    }
+
+    /* Estilos específicos da Página de Detalhes */
+    .case-details-section {
+      padding: 4rem 0;
+      background: var(--bg-light);
+    }
+
+    .case-header {
+      background: var(--bg-white);
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-bottom: 3rem;
+    }
+
+    .case-title {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      margin-bottom: 1rem;
+    }
+
+    .case-meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+    }
+
+    .case-meta-info span {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .case-meta-info i {
+      color: var(--primary-accent);
+      font-size: 1.2rem;
+    }
+
+    .case-description {
+      font-size: 1.1rem;
+      color: var(--text-main);
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.7rem 1.5rem;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      gap: 0.8rem;
+      text-transform: uppercase;
+      color: var(--text-white);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .status-Aguardando { background: var(--warning-orange); }
+    .status-EmAnálise { background: var(--info-blue); }
+    .status-Resolvido { background: var(--success-green); }
+
+    .action-buttons {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .action-buttons .btn {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    /* Imagens do Caso (Antes e Depois) */
+    .case-images {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .image-container {
+      background: var(--bg-white);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      border: 1px solid #E0E0E0;
+    }
+
+    .image-container img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-caption {
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-main);
+      text-align: center;
+      background: var(--bg-light);
+      border-top: 1px solid #ECEFF1;
+    }
+
+    .image-placeholder {
+        width: 100%;
+        height: 300px;
+        background: #ECEFF1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-size: 4rem;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+        padding: 20px;
+    }
+    .image-placeholder small {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+
+    /* Mapa */
+    #caseMap {
+      height: 400px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      margin-top: 3rem;
+      z-index: 1; /* Para o Leaflet funcionar bem */
+    }
+
+    /* Comentários e Atualizações */
+    .comments-section {
+      background: var(--bg-white);
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      margin-top: 3rem;
+    }
+
+    .comments-section h3 {
+      font-size: 2rem;
+      color: var(--secondary-dark);
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--primary-accent);
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #ECEFF1;
+      align-items: flex-start;
+    }
+
+    .comment-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .comment-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--bg-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      flex-grow: 1;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: var(--secondary-dark);
+      font-size: 1.1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .comment-date {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.8rem;
+    }
+
+    .comment-text {
+      font-size: 1rem;
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    .add-comment-form {
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid #ECEFF1;
+    }
+
+    .add-comment-form textarea {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #CED4DA;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .add-comment-form .btn-main {
+      padding: 0.7rem 2rem;
+      font-size: 1rem;
+      border-radius: 25px;
+    }
+
+    .add-comment-form .btn-main:disabled {
+        background-color: #B0BEC5;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
+
+    .no-comments-message {
+        text-align: center;
+        color: var(--text-secondary);
+        padding: 2rem;
+        background: var(--bg-light);
+        border-radius: 10px;
+        margin-top: 2rem;
+    }
+    .no-comments-message i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #B0BEC5;
+    }
+
+    /* Loading e Mensagens de Erro */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #E0E0E0;
+      border-top: 5px solid var(--primary-accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message {
+        text-align: center;
+        padding: 3rem;
+        background: #F8D7DA; /* light red */
+        color: #721C24; /* dark red */
+        border: 1px solid #F5C6CB;
+        border-radius: 15px;
+        margin-top: 5rem;
+        font-size: 1.1rem;
+    }
+    .error-message i {
+        color: #DC3545; /* Bootstrap red */
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Cookie Consent Banner (Repetidos de index.html para consistência) */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--secondary-dark);
+      color: var(--text-white);
+      padding: 1.8rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.3);
+      z-index: 1100;
+      transform: translateY(100%);
+      transition: transform 0.6s ease-out;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .cookie-banner.show {
+      transform: translateY(0);
+    }
+
+    .cookie-banner p {
+      margin-bottom: 0;
+      font-size: 1rem;
+      text-align: center;
+      max-width: 900px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .cookie-banner .btn-group {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cookie-banner .btn-accept {
+      background-color: var(--primary-accent);
+      color: var(--text-white);
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .cookie-banner .btn-accept:hover {
+      background-color: #E64A19;
+      transform: translateY(-2px);
+    }
+
+    .cookie-banner .btn-more-info {
+      background-color: transparent;
+      color: var(--text-white);
+      border: 2px solid rgba(255,255,255,0.6);
+      padding: 0.8rem 1.8rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cookie-banner .btn-more-info:hover {
+      background-color: rgba(255,255,255,0.15);
+      border-color: var(--text-white);
+      transform: translateY(-2px);
+    }
+
+    /* Rodapé (Repetidos de index.html para consistência) */
+    .footer {
+      background: var(--secondary-dark);
+      color: rgba(255,255,255,0.9);
+      padding: 4rem 0 3rem;
+      font-size: 1rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .footer-brand .logo {
+      background: var(--primary-accent);
+      color: var(--text-white);
+    }
+
+    .footer-brand span {
+      color: var(--text-white);
+      font-weight: 700;
+      font-size: 1.6rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2.8rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary-accent);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 2.5rem;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.6);
+      text-align: center;
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark);
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark);
+        }
+        .nav-link, .btn-outline-secondary-dark {
+            color: var(--text-main);
+            border-color: transparent;
+        }
+        .hero-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn-main, .btn-outline-secondary-dark {
+            width: 90%;
+            max-width: 380px;
+        }
+        .case-title {
+            font-size: 2.5rem;
+        }
+        .case-meta-info {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .footer-links {
+            justify-content: flex-start;
+            gap: 1.8rem;
+        }
+        .cookie-banner {
+          padding: 1.2rem;
+        }
+        .cookie-banner p {
+          font-size: 0.9rem;
+        }
+        .cookie-banner .btn-group {
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+        }
+        .cookie-banner .btn-accept, .cookie-banner .btn-more-info {
+            width: 90%;
+            max-width: 300px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .case-title {
+            font-size: 2rem;
+        }
+        .btn-main, .btn-outline-secondary-dark {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
+        .image-container img, .image-placeholder {
+            height: 250px;
+        }
+        .comments-section h3 {
+            font-size: 1.6rem;
+        }
+        .comment-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .comment-avatar {
+            margin-bottom: 0.8rem;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div id="loadingScreen" class="loading-container">
+    <div class="spinner"></div>
+    <p class="mt-3" style="color: var(--text-secondary);">Carregando detalhes do problema...</p>
+  </div>
+
+  <div id="caseDetailsPage" style="display: none;">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <div class="logo">F</div>
+          FixABairro
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars" style="color: var(--secondary-dark);"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#impact">Impacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+            </li>
+            <li class="nav-item ms-lg-3">
+              <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
+            </li>
+            <li class="nav-item ms-lg-2">
+              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="case-details-section">
+      <div class="container">
+        <div id="errorMessage" class="error-message" style="display: none;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p class="mt-3" id="errorText">Ocorreu um erro ao carregar os detalhes do problema ou o ID não foi encontrado.</p>
+          <a href="index.html" class="btn btn-main mt-4">Voltar para a Página Inicial</a>
+        </div>
+
+        <div id="problemDetailsContent" style="display: none;">
+          <div class="case-header" data-aos="fade-up">
+            <h1 class="case-title" id="problemTitle"></h1>
+            <div class="case-meta-info">
+              <span><i class="fas fa-map-marker-alt"></i> <span id="problemLocation"></span></span>
+              <span><i class="fas fa-user-circle"></i> <span id="problemReporter"></span></span>
+              <span><i class="fas fa-calendar-alt"></i> <span id="problemDate"></span></span>
+              <span><i class="fas fa-hashtag"></i> <span id="problemCategory"></span></span>
+            </div>
+            <span class="status-badge" id="problemStatus"></span>
+            <p class="case-description" id="problemDescription"></p>
+
+            <div class="action-buttons">
+              <button class="btn-main" id="supportButton"><i class="fas fa-heart me-2"></i>Apoiar (<span id="supportCount">0</span>)</button>
+              <button class="btn-outline-secondary-dark" id="markResolvedButton" style="display: none;"><i class="fas fa-check-circle me-2"></i>Marcar como Resolvido</button>
+            </div>
+          </div>
+
+          <div class="case-images" id="problemImages" data-aos="fade-up" data-aos-delay="200">
+            </div>
+
+          <div id="caseMap" data-aos="fade-up" data-aos-delay="300"></div>
+
+          <div class="comments-section" data-aos="fade-up" data-aos-delay="400">
+            <h3>Atualizações e Comentários</h3>
+            <div id="commentsList">
+                <div class="no-comments-message" id="noCommentsMessage" style="display: none;">
+                    <i class="fas fa-comments"></i>
+                    <p class="mt-3">Ainda não há comentários ou atualizações para este problema. Seja o primeiro a interagir!</p>
+                </div>
+            </div>
+            <form class="add-comment-form" id="addCommentForm">
+              <textarea id="commentText" placeholder="Adicione seu comentário ou atualização..." required></textarea>
+              <button type="submit" class="btn-main" id="submitCommentButton">Publicar Comentário</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="footer-brand">
+              <div class="logo">F</div>
+              <span>FixABairro</span>
+            </div>
+            <p>
+              Transformando bairros através da participação cidadã e tecnologia.
+              Juntos construímos comunidades mais fortes e vibrantes em Angola.
+            </p>
+          </div>
+          <div class="col-lg-6">
+            <div class="footer-links">
+              <a href="index.html#impact" aria-label="Mapa de problemas">Mapa de Problemas</a>
+              <a href="new-report.html" aria-label="Relatar problema">Relatar Problema</a>
+              <a href="#" aria-label="Sobre nós (em desenvolvimento)">Sobre Nós</a>
+              <a href="#" aria-label="Contato (em desenvolvimento)">Contato</a>
+              <a href="#" id="openCookiePolicy" aria-label="Política de Cookies">Política de Cookies</a>
+              <a href="#" aria-label="Termos de uso (em desenvolvimento)">Termos de Uso</a>
+              <a href="#" aria-label="Política de privacidade (em desenvolvimento)">Privacidade</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 FixABairro. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="cookie-banner" id="cookieConsentBanner">
+      <p>
+        Nós utilizamos cookies para aprimorar sua experiência no FixABairro, analisar o tráfego e personalizar conteúdo. Ao continuar a navegar, você concorda com a nossa utilização de cookies.
+        <a href="#" id="openCookiePolicyInBanner" style="color: var(--primary-accent); text-decoration: underline; font-weight: 600;">Saiba mais aqui</a>.
+      </p>
+      <div class="btn-group">
+        <button class="btn-accept" id="acceptCookies">Aceitar e Continuar</button>
+        <button class="btn-more-info" id="rejectCookies">Recusar</button>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjGwZGOxKjW7W6q8LVSg1fPjHjJ9Ew=" crossorigin=""></script>
+
+  <script>
+    // Configuração do Firebase (Substitua pelos seus dados reais)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
+    };
+
+    let map; // Variável global para a instância do mapa
+    let currentUser = null; // Variável global para armazenar o usuário autenticado
+
+    // Função para obter o parâmetro caseId da URL
+    function getCaseIdFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('caseId');
+    }
+
+    // Função para formatar a data
+    function formatTimestamp(timestamp) {
+      if (!timestamp) return 'Data Indisponível';
+      const date = new Date(timestamp);
+      return date.toLocaleDateString('pt-BR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Função para exibir modal/alerta para login/registro
+    function showLoginPrompt() {
+        if (confirm('Para realizar esta ação, você precisa estar registado ou fazer login. Deseja ser redirecionado para a página de login/registro?')) {
+            window.location.href = 'login.html';
+        }
+    }
+
+    // Função para carregar os detalhes do problema
+    function loadProblemDetails(caseId, firebaseApp) {
+      const db = firebaseApp.database();
+      const problemRef = db.ref('problems/' + caseId);
+
+      const errorMessageDiv = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
+      const problemDetailsContent = document.getElementById('problemDetailsContent');
+
+      problemRef.once('value', (snapshot) => {
+        const problem = snapshot.val();
+        if (problem) {
+          problemDetailsContent.style.display = 'block';
+          document.getElementById('problemTitle').textContent = problem.title || 'Problema Sem Título';
+          document.getElementById('problemDescription').textContent = problem.description || 'Nenhuma descrição detalhada fornecida.';
+          document.getElementById('problemLocation').textContent = `${problem.location?.neighborhood || 'Bairro Desconhecido'}, ${problem.location?.municipality || 'Município Desconhecido'}, ${problem.location?.province || 'Província Desconhecida'}`;
+          document.getElementById('problemReporter').textContent = problem.userName || 'Cidadão Anónimo';
+          document.getElementById('problemDate').textContent = formatTimestamp(problem.createdAt);
+          document.getElementById('problemCategory').textContent = problem.category || 'Não Classificado';
+
+          // Status Badge
+          const statusBadge = document.getElementById('problemStatus');
+          statusBadge.textContent = problem.status || 'Aguardando';
+          statusBadge.className = `status-badge status-${problem.status?.replace(/\s/g, '') || 'Aguardando'}`;
+          let statusIcon = '';
+          switch (problem.status) {
+            case 'Em Análise': statusIcon = '<i class="fas fa-hourglass-half"></i>'; break;
+            case 'Resolvido': statusIcon = '<i class="fas fa-check-circle"></i>'; break;
+            case 'Aguardando':
+            default: statusIcon = '<i class="fas fa-clock"></i>'; break;
+          }
+          statusBadge.innerHTML = statusIcon + ' ' + (problem.status || 'Aguardando');
+
+          // Suporte Count
+          const supportCount = problem.supporters ? Object.keys(problem.supporters).length : 0;
+          document.getElementById('supportCount').textContent = supportCount;
+
+          // Carregar Imagens (Lógica de "Depois" apenas para Resolvido)
+          const problemImagesContainer = document.getElementById('problemImages');
+          let imagesHtml = '';
+
+          const addImageHtml = (url, caption, placeholderIcon) => {
+            if (url && typeof url === 'string' && url.trim() !== '') {
+              return `
+                <div class="image-container">
+                  <img src="${url}" alt="${caption}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300/cccccc/ffffff?text=Imagem+N%C3%A3o+Dispon%C3%ADvel';"/>
+                  <div class="image-caption">${caption}</div>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="image-container">
+                  <div class="image-placeholder">
+                    <i class="fas ${placeholderIcon}"></i>
+                    <small>${caption} (Imagem indisponível)</small>
+                  </div>
+                  <div class="image-caption">${caption}</div>
+                </div>
+              `;
+            }
+          };
+
+          imagesHtml += addImageHtml(problem.imageUrl, 'Foto do Problema (Antes)', 'fa-camera');
+
+          // Exibir "Foto Depois" SOMENTE se o status for "Resolvido"
+          if (problem.status === 'Resolvido') {
+            imagesHtml += addImageHtml(problem.imageUrlAfter, 'Foto do Problema (Depois)', 'fa-check');
+          }
+
+          problemImagesContainer.innerHTML = imagesHtml;
+
+          // Carregar Mapa
+          if (problem.location && problem.location.latitude && problem.location.longitude) {
+            const lat = problem.location.latitude;
+            const lng = problem.location.longitude;
+
+            if (map) { // Se o mapa já foi inicializado, apenas ajuste a vista e o marcador
+                map.setView([lat, lng], 14);
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+            } else { // Se o mapa não foi inicializado, crie-o
+                map = L.map('caseMap').setView([lat, lng], 14);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }).addTo(map);
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+            }
+          } else {
+            document.getElementById('caseMap').style.display = 'none'; // Esconde o mapa se não houver dados
+          }
+
+          // Carregar Comentários
+          loadComments(caseId, firebaseApp);
+
+          // Lógica dos Botões de Ação
+          setupActionButtons(caseId, firebaseApp, problem); // Passa o problema para ter acesso aos dados
+        } else {
+          errorMessageDiv.style.display = 'block';
+          errorText.textContent = 'Problema não encontrado. O ID fornecido pode estar incorreto ou o problema foi removido.';
+          problemDetailsContent.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao carregar detalhes do problema:', error);
+        errorMessageDiv.style.display = 'block';
+        errorText.textContent = `Erro ao carregar os detalhes do problema: ${error.message}`;
+        problemDetailsContent.style.display = 'none';
+      });
+    }
+
+    // Função para carregar comentários
+    function loadComments(caseId, firebaseApp) {
+      const db = firebaseApp.database();
+      const commentsRef = db.ref('comments/' + caseId).orderByChild('timestamp');
+      const commentsList = document.getElementById('commentsList');
+      const noCommentsMessage = document.getElementById('noCommentsMessage');
+      const submitCommentButton = document.getElementById('submitCommentButton');
+      const commentTextarea = document.getElementById('commentText');
+
+      commentsRef.on('value', (snapshot) => {
+        let html = '';
+        if (snapshot.exists()) {
+          noCommentsMessage.style.display = 'none';
+          snapshot.forEach((childSnapshot) => {
+            const comment = childSnapshot.val();
+            const userName = comment.userName || 'Cidadão Anónimo';
+            const initial = userName.charAt(0).toUpperCase();
+            const date = formatTimestamp(comment.timestamp);
+
+            html += `
+              <div class="comment-item">
+                <div class="comment-avatar">${initial}</div>
+                <div class="comment-content">
+                  <div class="comment-author">${userName}</div>
+                  <div class="comment-date">${date}</div>
+                  <p class="comment-text">${comment.text}</p>
+                </div>
+              </div>
+            `;
+          });
+        } else {
+          noCommentsMessage.style.display = 'block';
+        }
+        commentsList.innerHTML = html;
+      }, (error) => {
+        console.error('Erro ao carregar comentários:', error);
+        commentsList.innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar comentários.</p></div>';
+      });
+
+      // Habilitar/Desabilitar o botão de comentar com base no login
+      if (currentUser) {
+          submitCommentButton.disabled = false;
+          commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
+      } else {
+          submitCommentButton.disabled = true;
+          commentTextarea.placeholder = 'Faça login para comentar...';
+      }
+    }
+
+    // Função para adicionar um novo comentário
+    function addComment(caseId, firebaseApp) {
+      if (!currentUser) {
+        showLoginPrompt();
+        return;
+      }
+
+      const db = firebaseApp.database();
+      const commentTextarea = document.getElementById('commentText');
+      const commentText = commentTextarea.value.trim();
+
+      if (!commentText) {
+        alert('Por favor, escreva um comentário antes de publicar.');
+        return;
+      }
+
+      let userName = currentUser.displayName || currentUser.email || 'Utilizador Registado';
+      let userId = currentUser.uid;
+
+      const newCommentRef = db.ref('comments/' + caseId).push();
+      newCommentRef.set({
+        text: commentText,
+        userName: userName,
+        userId: userId,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+      })
+      .then(() => {
+        commentTextarea.value = ''; // Limpa a textarea
+        // alert('Comentário publicado com sucesso!'); // Feedback mais suave já que o update é instantâneo
+      })
+      .catch((error) => {
+        console.error('Erro ao adicionar comentário:', error);
+        alert('Erro ao publicar comentário: ' + error.message);
+      });
+    }
+
+    // Gerenciar botões de ação
+    function setupActionButtons(caseId, firebaseApp, problemData) {
+        const auth = firebaseApp.auth();
+        const db = firebaseApp.database();
+        const supportButton = document.getElementById('supportButton');
+        const markResolvedButton = document.getElementById('markResolvedButton');
+        const supportCountSpan = document.getElementById('supportCount');
+
+        // Listener de autenticação para atualizar o estado do botão "Marcar como Resolvido" e Apoiar
+        auth.onAuthStateChanged((user) => {
+            currentUser = user; // Atualiza a variável global do usuário atual
+            if (problemData.status === 'Resolvido') {
+                markResolvedButton.style.display = 'none'; // Se já resolvido, esconde o botão
+                supportButton.disabled = true; // Desabilita o apoio
+            } else if (user && user.uid === problemData.userId) { // Se o problema for do usuário logado
+                markResolvedButton.style.display = 'inline-block';
+            } else {
+                markResolvedButton.style.display = 'none';
+            }
+
+            // Atualiza o estado do botão de apoio
+            if (user && problemData.supporters && problemData.supporters[user.uid]) {
+                supportButton.classList.add('btn-outline-secondary-dark'); // Muda a cor se já apoiou
+                supportButton.classList.remove('btn-main');
+                supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiado (${supportCountSpan.textContent})`;
+            } else {
+                supportButton.classList.remove('btn-outline-secondary-dark');
+                supportButton.classList.add('btn-main');
+                supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${supportCountSpan.textContent})`;
+            }
+        });
+
+        // Evento para o botão de Apoio
+        supportButton.addEventListener('click', () => {
+            if (!currentUser) {
+                showLoginPrompt();
+                return;
+            }
+
+            const supportersRef = db.ref(`problems/${caseId}/supporters/${currentUser.uid}`);
+            supportersRef.once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    // Já apoiou, remover apoio
+                    supportersRef.remove()
+                        .then(() => {
+                            const newCount = (problemData.supporters ? Object.keys(problemData.supporters).length : 1) - 1;
+                            supportCountSpan.textContent = newCount;
+                            supportButton.classList.remove('btn-outline-secondary-dark');
+                            supportButton.classList.add('btn-main');
+                            supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${newCount})`;
+                        })
+                        .catch(error => console.error('Erro ao remover apoio:', error));
+                } else {
+                    // Não apoiou, adicionar apoio
+                    supportersRef.set(true)
+                        .then(() => {
+                            const newCount = (problemData.supporters ? Object.keys(problemData.supporters).length : 0) + 1;
+                            supportCountSpan.textContent = newCount;
+                            supportButton.classList.add('btn-outline-secondary-dark');
+                            supportButton.classList.remove('btn-main');
+                            supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiado (${newCount})`;
+                        })
+                        .catch(error => console.error('Erro ao adicionar apoio:', error));
+                }
+            }).catch(error => {
+                console.error('Erro ao verificar apoio:', error);
+            });
+        });
+
+        // Evento para o botão "Marcar como Resolvido"
+        markResolvedButton.addEventListener('click', async () => {
+            if (!currentUser || currentUser.uid !== problemData.userId) {
+                alert('Você não tem permissão para marcar este problema como resolvido.');
+                return;
+            }
+
+            const confirmResolved = confirm('Tem certeza de que deseja marcar este problema como RESOLVIDO? Esta ação é irreversível e significa que o problema foi completamente solucionado.');
+
+            if (confirmResolved) {
+                const newStatus = 'Resolvido';
+                const updates = {};
+                updates[`problems/${caseId}/status`] = newStatus;
+                updates[`problems/${caseId}/resolvedAt`] = firebase.database.ServerValue.TIMESTAMP;
+                updates[`problems/${caseId}/resolvedBy`] = currentUser.uid;
+
+                // Solicitar nova imagem (Foto Depois)
+                const imageUrlAfter = prompt('O problema foi resolvido! Por favor, forneça o URL da imagem "DEPOIS" da solução:');
+                if (imageUrlAfter && imageUrlAfter.trim() !== '') {
+                    updates[`problems/${caseId}/imageUrlAfter`] = imageUrlAfter.trim();
+                } else {
+                    alert('É altamente recomendável adicionar uma imagem "DEPOIS" para comprovar a resolução do problema.');
+                }
+
+                try {
+                    await db.ref().update(updates);
+                    alert('Problema marcado como RESOLVIDO com sucesso!');
+                    // Recarregar os detalhes para atualizar a UI
+                    loadProblemDetails(caseId, firebaseApp);
+                } catch (error) {
+                    console.error('Erro ao marcar problema como resolvido:', error);
+                    alert('Erro ao marcar problema como resolvido: ' + error.message);
+                }
+            }
+        });
+    }
+
+
+    // Atualiza UI com base no estado de autenticação (igual à index.html)
+    function updateAuthUI(user) {
+      const authButton = document.getElementById('authButton');
+      const navTogglerIcon = document.querySelector('.navbar-toggler i');
+      const submitCommentButton = document.getElementById('submitCommentButton');
+      const commentTextarea = document.getElementById('commentText');
+
+      if (user) {
+        authButton.textContent = 'Meu Perfil';
+        authButton.href = 'profile.html';
+        currentUser = user; // Garante que a variável global currentUser esteja atualizada
+        submitCommentButton.disabled = false;
+        commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
+      } else {
+        authButton.textContent = 'Entrar';
+        authButton.href = 'login.html';
+        currentUser = null; // Limpa o usuário global
+        submitCommentButton.disabled = true;
+        commentTextarea.placeholder = 'Faça login para comentar...';
+      }
+
+      // No case-details, a navbar é sempre branca, então o ícone deve ser sempre dark
+      navTogglerIcon.style.color = 'var(--secondary-dark)';
+    }
+
+    // Gerenciamento de Cookies (igual à index.html)
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function checkCookieConsent() {
+        const cookieBanner = document.getElementById('cookieConsentBanner');
+        const consent = getCookie('fixabairro_cookie_consent');
+        if (!consent) {
+            setTimeout(() => {
+                cookieBanner.classList.add('show');
+            }, 1000);
+        }
+
+        document.getElementById('acceptCookies').addEventListener('click', () => {
+            setCookie('fixabairro_cookie_consent', 'accepted', 365);
+            cookieBanner.classList.remove('show');
+        });
+
+        document.getElementById('rejectCookies').addEventListener('click', () => {
+            setCookie('fixabairro_cookie_consent', 'rejected', 30);
+            cookieBanner.classList.remove('show');
+            alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
+        });
+
+        document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+        });
+        document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+        });
+    }
+
+
+    // Inicialização da página
+    window.addEventListener('load', () => {
+      const caseId = getCaseIdFromUrl();
+      const errorMessageDiv = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
+
+      if (!caseId) {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        document.getElementById('loadingScreen').addEventListener('transitionend', () => {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('caseDetailsPage').style.display = 'block';
+            errorMessageDiv.style.display = 'block';
+            errorText.textContent = 'ID do problema não fornecido na URL.';
+            AOS.init({ once: true, duration: 1000 });
+            checkCookieConsent();
+        }, { once: true });
+        return; // Sai da função se não houver caseId
+      }
+
+      if (typeof firebase !== 'undefined') {
+        const app = firebase.initializeApp(firebaseConfig);
+
+        setTimeout(() => {
+          document.getElementById('loadingScreen').classList.add('fade-out');
+          document.getElementById('loadingScreen').addEventListener('transitionend', () => {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('caseDetailsPage').style.display = 'block';
+            AOS.init({ once: true, duration: 1000 });
+
+            // Inicializa o listener de autenticação globalmente
+            app.auth().onAuthStateChanged((user) => {
+                currentUser = user; // Atualiza a variável global
+                updateAuthUI(user); // Atualiza a UI baseada no estado de autenticação
+                // Agora que o usuário foi determinado, carregue os detalhes do problema
+                loadProblemDetails(caseId, app);
+            });
+            checkCookieConsent();
+          }, { once: true });
+        }, 800); // Pequeno delay para a tela de carregamento aparecer
+      } else {
+        console.warn('Firebase SDK não carregado. Verifique sua conexão ou configuração do Firebase.');
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('caseDetailsPage').style.display = 'block';
+          errorMessageDiv.style.display = 'block';
+          errorText.textContent = 'Erro de inicialização. Firebase SDK não carregado. Verifique sua conexão.';
+          AOS.init({ once: true, duration: 1000 });
+          checkCookieConsent();
+        }, 300);
+      }
+
+      // Adiciona o evento para o formulário de comentários
+      document.getElementById('addCommentForm').addEventListener('submit', (e) => {
+        e.preventDefault(); // Impede o envio padrão do formulário
+        if (typeof firebase !== 'undefined' && firebase.app()) {
+            addComment(caseId, firebase.app());
+        } else {
+            alert('O Firebase não foi inicializado corretamente. Não foi possível adicionar o comentário.');
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>
