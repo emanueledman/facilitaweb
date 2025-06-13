@@ -11,8 +11,8 @@
   <!-- Favicon (Usando um placeholder para garantir que o link funcione no Canvas) -->
   <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
 
-  <!-- Google Fonts: Inter para corpo, Montserrat para títulos -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Poppins para corpo, Montserrat para títulos, Inter para consistência -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -21,7 +21,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style type="text/tailwindcss">
     @layer base {
-      /* Nova Paleta de Cores e Variáveis Globais */
+      /* Paleta de Cores e Variáveis Globais */
       :root {
         --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
         --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
@@ -57,20 +57,20 @@
       
       body {
         font-family: var(--font-body);
-        background: var(--bg-light); /* Novo fundo */
-        color: var(--text-main); /* Nova cor de texto principal */
+        background: var(--bg-light); /* Fundo com a nova paleta */
+        color: var(--text-main); /* Cor do texto principal */
         line-height: 1.7;
         overflow-x: hidden;
-        padding-top: 80px; /* Espaço para a navbar fixa */
-        min-height: 100vh; /* Garante que o corpo ocupa toda a altura da viewport */
+        min-height: 100vh;
         display: flex;
-        align-items: center; /* Centraliza verticalmente o conteúdo na página */
-        justify-content: center; /* Centraliza horizontalmente o conteúdo na página */
+        flex-direction: column; /* Organiza a navbar e o conteúdo principal */
+        align-items: center;
+        /* Remover padding-top aqui, pois a navbar é fixa e o conteúdo principal será ajustado */
       }
       
       h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-heading);
-        color: var(--secondary-dark); /* Nova cor para títulos */
+        color: var(--secondary-dark); /* Cor de título */
         line-height: 1.2;
       }
 
@@ -89,6 +89,115 @@
           background: #E64A19;
       }
 
+      /* Navbar Styles (Replicado do tema principal) */
+      .navbar {
+        background: var(--secondary-dark); /* Fundo escuro fixo para consistência com o tema */
+        padding: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        position: fixed; /* Navbar fixa no topo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-white); /* Cor do texto da marca */
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        background: var(--primary-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-white);
+        font-size: 1.5rem;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+      }
+
+      .nav-link {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.9); /* Links brancos */
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 3px;
+          background: var(--primary-accent);
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after, .nav-link.active::after {
+          width: 70%;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-accent);
+      }
+
+      /* Botões Globais (replicados para a navbar e formulário) */
+      .btn-main {
+        background: var(--primary-accent);
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .btn-main:hover {
+        background: #E64A19;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+      }
+
+      .btn-outline-secondary-dark {
+        background: transparent;
+        color: var(--text-white); /* Cor branca no estado padrão da navbar fixa */
+        padding: 0.9rem 2.5rem;
+        border: 2px solid rgba(255,255,255,0.7);
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-secondary-dark:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--text-white);
+        color: var(--text-white);
+        transform: translateY(-3px);
+      }
+
       /* Estilo customizado para o select com seta */
       select {
         -webkit-appearance: none;
@@ -105,7 +214,7 @@
         top: 50%;
         transform: translateY(-50%);
         pointer-events: none;
-        color: theme('colors.gray.400'); /* Será substituído pelo text-secondary do root */
+        color: var(--text-secondary);
       }
       /* Classes utilitárias do spinner */
       .spinner-border {
@@ -128,64 +237,15 @@
       }
 
       /* Estilos Específicos do Formulário */
-      .form-container {
-        max-width: 900px;
-        margin: 3rem auto;
-        padding: 0 1rem;
-      }
-      
-      .form-header {
-        background: linear-gradient(135deg, var(--primary-accent) 0%, #E64A19 100%);
-        padding: 3.5rem 2rem;
-        text-align: center;
-        border-radius: var(--border-radius-lg);
-        margin-bottom: 2.5rem;
-        box-shadow: var(--shadow-medium);
-        color: var(--text-white);
-        position: relative;
-        overflow: hidden;
-      }
-      /* Efeito de brilho criativo */
-      .form-header::before {
-        content: '';
-        position: absolute;
-        top: -50px;
-        left: -50px;
-        width: 150px;
-        height: 150px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        filter: blur(40px);
-        animation: rotateLight 10s linear infinite;
-        z-index: 0;
-      }
-      @keyframes rotateLight {
-        0% { transform: translate(0, 0) rotate(0deg); }
-        25% { transform: translate(calc(100% - 50px), 0) rotate(90deg); }
-        50% { transform: translate(calc(100% - 50px), calc(100% - 50px)) rotate(180deg); }
-        75% { transform: translate(0, calc(100% - 50px)) rotate(270deg); }
-        100% { transform: translate(0, 0) rotate(360deg); }
+      .form-container-wrapper {
+        flex-grow: 1; /* Permite que o wrapper do formulário ocupe o espaço restante */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0; /* Espaçamento vertical para que não fique colado no topo/rodapé */
+        margin-top: 80px; /* Ajuste para compensar a navbar fixa */
       }
 
-
-      .form-header h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 0.8rem;
-        color: var(--text-white);
-        position: relative;
-        z-index: 1;
-      }
-      
-      .form-header p {
-        font-size: 1.2rem;
-        opacity: 0.9;
-        margin: 0;
-        color: var(--text-white);
-        position: relative;
-        z-index: 1;
-      }
-      
       .form-card {
         background: var(--bg-white);
         border-radius: var(--border-radius-lg);
@@ -193,6 +253,8 @@
         box-shadow: var(--shadow-medium);
         border: 1px solid #ECEFF1;
         transition: all 0.4s ease;
+        width: 100%; /* Garante que o card ocupe a largura máxima permitida pelo flexbox/max-width */
+        max-width: 900px; /* Mantém a largura máxima para o card */
       }
       
       .form-card:hover {
@@ -256,46 +318,6 @@
         opacity: 0.7;
       }
       
-      .btn-navigation {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        margin-top: 2.5rem;
-      }
-      
-      .btn-navigation .btn-main, .btn-navigation .btn-outline-secondary-dark {
-        padding: 0.8rem 2.2rem;
-        font-size: 1rem;
-        border-radius: 30px;
-        flex-grow: 1; /* Para ocupar o espaço disponível */
-        max-width: 200px; /* Limitar largura para botões em linha */
-        text-align: center;
-      }
-
-      .btn-navigation .btn-main:disabled, .btn-navigation .btn-outline-secondary-dark:disabled {
-          background-color: #B0BEC5;
-          cursor: not-allowed;
-          box-shadow: none;
-          transform: none;
-          border-color: #B0BEC5;
-          color: #607D8B;
-      }
-      
-      .spinner {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: white;
-        animation: spin 1s ease-in-out infinite;
-        margin-left: 0.5rem;
-      }
-      
-      @keyframes spin {
-        to { transform: rotate(360deg); }
-      }
-      
       .error-message {
         color: var(--error-red); /* Usando a variável de erro da paleta */
         font-size: 0.9rem;
@@ -303,258 +325,56 @@
         display: none;
         font-weight: 500;
       }
-      
-      .image-preview-container {
-        position: relative;
-        max-width: 100%;
-        height: 200px; /* Altura fixa para consistência */
-        border-radius: var(--border-radius-md);
-        margin-top: 1.5rem;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #ECEFF1; /* Fundo cinza claro para placeholder */
-        border: 1px solid #CFD8DC;
-        box-shadow: var(--shadow-soft);
+
+      /* Responsividade para a navbar */
+      @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark); /* Cor escura no mobile */
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark); /* Cor escura do toggler */
+        }
+        .navbar {
+            background: var(--bg-white); /* Fundo branco no mobile */
+        }
+        .nav-link {
+            color: var(--text-main); /* Links escuros no mobile */
+        }
+        .btn-outline-secondary-dark {
+            color: var(--secondary-dark); /* Botões escuros no mobile */
+            border-color: var(--secondary-dark);
+        }
+        .navbar-nav {
+            background-color: var(--bg-white); /* Fundo para o menu colapsado */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
       }
-      
-      .image-preview {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: none; /* Escondido por padrão até ter imagem */
-      }
-      
-      .image-placeholder-text {
-        color: var(--text-secondary);
-        font-size: 1rem;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-      }
-      .image-placeholder-text i {
+
+      @media (max-width: 768px) {
+        .form-card {
+          padding: 2rem;
+        }
+        .form-header h1 {
           font-size: 2.5rem;
-          color: #B0BEC5;
-      }
-
-      .select-container {
-        position: relative;
-      }
-      
-      select.form-control {
-        appearance: none; /* Esconde a seta padrão */
-        padding-right: 2.5rem; /* Espaço para nossa seta customizada */
+        }
+        .form-header p {
+          font-size: 1rem;
+        }
       }
       
-      .select-container::after {
-        content: '\f078'; /* Ícone de seta para baixo */
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-secondary); /* Usa a variável da paleta */
-        pointer-events: none; /* Permite clicar no select através da seta */
-      }
-      
-      .stepper {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 3rem;
-        position: relative;
-      }
-      
-      .step {
-        flex: 1;
-        text-align: center;
-        position: relative;
-        z-index: 2; /* Para os círculos ficarem acima da linha */
-      }
-      
-      .step::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 4px;
-        background: #CFD8DC; /* Cor da linha inativa */
-        transform: translateY(-50%);
-        z-index: 1;
-      }
-      
-      .step:last-child::after {
-        display: none;
-      }
-
-      /* Linha de progresso animada */
-      .stepper::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 0;
-        height: 4px;
-        background: var(--primary-accent);
-        width: 0%; /* Inicialmente 0% */
-        transform: translateY(-50%);
-        transition: width 0.6s ease-out;
-        z-index: 0;
-      }
-      .stepper[data-step="0"]::before { width: 0%; }
-      .stepper[data-step="1"]::before { width: 50%; } /* Ajuste de acordo com seus passos */
-      .stepper[data-step="2"]::before { width: 100%; } /* Ajuste de acordo com seus passos */
-      
-      .step-circle {
-        width: 55px; /* Aumentado para melhor toque */
-        height: 55px;
-        background: var(--bg-light);
-        border: 2px solid #CFD8DC;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.8rem;
-        font-weight: 600;
-        color: var(--text-secondary);
-        transition: all 0.4s ease;
-        font-size: 1.2rem;
-      }
-      
-      .step.active .step-circle {
-        background: var(--primary-accent);
-        color: var(--text-white);
-        border-color: var(--primary-accent);
-        box-shadow: 0 0 0 4px rgba(255, 87, 34, 0.3);
-      }
-      
-      .step.completed .step-circle {
-        background: var(--success-green); /* Nova cor para concluído */
-        color: var(--text-white);
-        border-color: var(--success-green);
-        box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
-      }
-      
-      .step-title {
-        font-size: 0.95rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-        transition: color 0.3s ease;
-      }
-      .step.active .step-title {
-          color: var(--secondary-dark);
-          font-weight: 600;
-      }
-      .step.completed .step-title {
-          color: var(--success-green);
-          font-weight: 600;
-      }
-
-      .category-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.8rem;
-      }
-      
-      .category-chip {
-        background: var(--bg-light);
-        border: 1px solid #CFD8DC;
-        border-radius: var(--border-radius-md);
-        padding: 1rem 0.8rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        color: var(--text-main);
-        font-weight: 500;
-        font-size: 0.95rem;
-      }
-      
-      .category-chip i {
+      @media (max-width: 576px) {
+        .form-card {
+          padding: 1.5rem;
+        }
+        .form-header h1 {
           font-size: 2rem;
-          color: var(--info-blue); /* Cor padrão para ícones de categoria */
-          transition: color 0.3s ease;
-      }
-
-      .category-chip:hover {
-        background: #E8F5E9; /* Um verde bem suave no hover */
-        border-color: var(--primary-accent);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-      }
-      
-      .category-chip.selected {
-        background: var(--primary-accent);
-        border-color: var(--primary-accent);
-        color: var(--text-white);
-        box-shadow: 0 6px 15px rgba(255, 87, 34, 0.3);
-        transform: translateY(-3px);
-      }
-      .category-chip.selected i {
-          color: var(--text-white); /* Ícone branco quando selecionado */
-      }
-
-      .urgency-radio {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      
-      .urgency-radio label {
-        flex: 1;
-        min-width: 120px;
-        background: var(--bg-light);
-        border: 1px solid #CFD8DC;
-        border-radius: var(--border-radius-md);
-        padding: 1rem;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        color: var(--text-main);
-        font-weight: 500;
-        font-size: 0.95rem;
-      }
-      
-      .urgency-radio input {
-        display: none;
-      }
-
-      .urgency-radio label i {
-          font-size: 2rem;
-          color: var(--info-blue); /* Cor padrão para ícones de urgência */
-          transition: color 0.3s ease;
-      }
-      
-      .urgency-radio label:hover {
-        background: #E8F5E9;
-        border-color: var(--primary-accent);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-      }
-      
-      .urgency-radio input:checked + label {
-        background: var(--primary-accent);
-        border-color: var(--primary-accent);
-        color: var(--text-white);
-        box-shadow: 0 6px 15px rgba(255, 87, 34, 0.3);
-        transform: translateY(-3px);
-      }
-      .urgency-radio input:checked + label i {
-          color: var(--text-white);
+        }
+        .form-header p {
+          font-size: 0.9rem;
+        }
       }
     }
   </style>
@@ -594,9 +414,9 @@
             error: 'var(--error-red)',
           },
           fontFamily: {
-            inter: ['Inter', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
             montserrat: ['Montserrat', 'sans-serif'],
-            poppins: ['Poppins', 'sans-serif'], /* Adicionado Poppins */
+            inter: ['Inter', 'sans-serif'], // Garantir que Inter também esteja disponível se for usado em outros lugares
           },
           borderRadius: {
             'lg': 'var(--border-radius-lg)',
@@ -611,90 +431,128 @@
     }
   </script>
 </head>
-<body class="bg-light text-main">
-  <div class="relative w-full max-w-4xl min-h-[600px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1]">
-    <!-- Lado Esquerdo - Boas-vindas e Imagem/Ilustração -->
-    <div class="hidden md:flex md:w-1/2 p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
-      <div class="absolute inset-0 opacity-10"></div> <!-- Removido bg-pattern, mantido para efeito visual -->
-      <i class="fas fa-handshake text-6xl text-white mb-6 transform scale-110"></i>
-      <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
-        Faça Parte da Mudança!
-      </h2>
-      <p class="text-lg font-poppins opacity-90 mb-8">
-        Sua voz tem poder. Junte-se ao FixABairro e ajude a resolver os problemas da sua comunidade.
-      </p>
-      <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Comunidade" alt="Ilustração de comunidade engajada" class="w-64 h-64 object-contain">
-    </div>
-
-    <!-- Lado Direito - Formulário de Registo -->
-    <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white z-20">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <i class="fas fa-user-plus text-3xl text-white"></i>
-        </div>
-        <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Crie Sua Conta</h1>
-        <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container mx-auto px-4">
+      <a class="navbar-brand flex items-center" href="index.html">
+        <div class="logo">F</div>
+        FixABairro
+      </a>
+      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary-dark"></i>
+      </button>
+      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
+        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#impact">Impacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+          </li>
+          <li class="nav-item ml-auto md:ml-3">
+            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
+          </li>
+          <li class="nav-item md:ml-2">
+            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+          </li>
+        </ul>
       </div>
-      
-      <form id="registerForm" class="space-y-5">
-        <div>
-          <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
-          <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
-          <p id="nameError" class="text-error text-xs mt-1 hidden">Erro de nome</p>
+    </div>
+  </nav>
+
+  <!-- Conteúdo Principal - Formulário de Registo -->
+  <div class="form-container-wrapper w-full px-4">
+    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
+      <!-- Lado Esquerdo - Boas-vindas e Ilustração -->
+      <div class="hidden md:flex p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
+        <div class="absolute inset-0 opacity-10"></div>
+        <i class="fas fa-handshake text-6xl text-white mb-6 transform scale-110"></i>
+        <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
+          Faça Parte da Mudança!
+        </h2>
+        <p class="text-lg font-poppins opacity-90 mb-8">
+          Sua voz tem poder. Junte-se ao FixABairro e ajude a resolver os problemas da sua comunidade.
+        </p>
+        <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Comunidade" alt="Ilustração de comunidade engajada" class="w-64 h-64 object-contain">
+      </div>
+
+      <!-- Lado Direito - Formulário de Registo -->
+      <div class="w-full p-8 md:p-12 flex flex-col justify-center bg-white z-20">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-user-plus text-3xl text-white"></i>
+          </div>
+          <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Crie Sua Conta</h1>
+          <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
         </div>
         
-        <div>
-          <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone (+244XXXXXXXXX)</label>
-          <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
-          <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form id="registerForm" class="space-y-5">
           <div>
-            <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
-            <div class="relative select-wrapper">
-              <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
-                <option value="" class="bg-white text-text-secondary">Selecione</option>
-                <!-- Populated by JS -->
-              </select>
+            <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
+            <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
+            <p id="nameError" class="text-error text-xs mt-1 hidden">Erro de nome</p>
+          </div>
+          
+          <div>
+            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou 912345678" required>
+            <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
+              <div class="relative select-wrapper">
+                <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
+                  <option value="" class="bg-white text-text-secondary">Selecione</option>
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+              <p id="municipioError" class="text-error text-xs mt-1 hidden">Erro de município</p>
             </div>
-            <p id="municipioError" class="text-error text-xs mt-1 hidden">Erro de município</p>
+            <div>
+              <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
+              <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+              <p id="bairroError" class="text-error text-xs mt-1 hidden">Erro de bairro</p>
+            </div>
           </div>
+          
           <div>
-            <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
-            <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
-            <p id="bairroError" class="text-error text-xs mt-1 hidden">Erro de bairro</p>
+            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
+            <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
           </div>
-        </div>
+          
+          <div>
+            <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
+            <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
+            <p id="confirmPasswordError" class="text-error text-xs mt-1 hidden">Erro de confirmação de senha</p>
+          </div>
+          
+          <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+            <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
+            <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
         
-        <div>
-          <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
-          <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
-        </div>
-        
-        <div>
-          <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
-          <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
-          <p id="confirmPasswordError" class="text-error text-xs mt-1 hidden">Erro de confirmação de senha</p>
-        </div>
-        
-        <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
-          <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
-          <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
-        </button>
-      </form>
-      
-      <p class="text-center text-text-secondary text-sm mt-6">
-        Já tem uma conta? 
-        <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
-      </p>
+        <p class="text-center text-text-secondary text-sm mt-6">
+          Já tem uma conta? 
+          <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
+        </p>
 
-      <!-- reCAPTCHA container, will be hidden, mas necessário para o Firebase Phone Auth -->
-      <div id="recaptcha-container" class="mt-4 hidden"></div>
+        <!-- reCAPTCHA container, hidden mas necessário para o Firebase Phone Auth -->
+        <div id="recaptcha-container" class="mt-4 hidden"></div>
+      </div>
     </div>
   </div>
 
+  <!-- Bootstrap JS (para a funcionalidade da navbar) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   <!-- Firebase SDKs (carregamento assíncrono para melhor performance) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -778,6 +636,31 @@
     // Chama a função ao carregar o DOM
     document.addEventListener('DOMContentLoaded', populateMunicipios);
 
+    // Lógica para preencher automaticamente o prefixo do telefone (+244)
+    emailOrPhoneInput.addEventListener('focus', () => {
+      if (!emailOrPhoneInput.value.startsWith('+244')) {
+        emailOrPhoneInput.value = '+244';
+      }
+    });
+
+    emailOrPhoneInput.addEventListener('input', () => {
+      if (!emailOrPhoneInput.value.startsWith('+244')) {
+        emailOrPhoneInput.value = '+244';
+      }
+      // Garante que o cursor esteja sempre após o prefixo, a menos que o usuário esteja apagando.
+      if (document.activeElement === emailOrPhoneInput && emailOrPhoneInput.value.length < 4) {
+        emailOrPhoneInput.setSelectionRange(4, 4);
+      }
+    });
+
+    emailOrPhoneInput.addEventListener('blur', () => {
+      // Se o usuário apagar tudo e sair, limpa o campo ou mantém o prefixo
+      if (emailOrPhoneInput.value === '+244') {
+        emailOrPhoneInput.value = ''; // Remove o prefixo se nada mais foi digitado
+      }
+    });
+
+
     // Validação e submissão do formulário
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -795,18 +678,37 @@
       }
 
       // Validação de email ou telefone
-      const emailOrPhone = emailOrPhoneInput.value.trim();
-      const isEmail = emailOrPhone.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // Formato +244XXXXXXXXX
-      
-      if (!emailOrPhone) {
+      const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+      let emailOrPhoneProcessed = emailOrPhoneRaw; // Variável para a credencial processada
+
+      const isEmail = emailOrPhoneRaw.includes('@');
+      const isPhone = /^\+244\d{9}$/.test(emailOrPhoneRaw); // Verifica se já está no formato +244XXXXXXXXX
+      const isPartialPhone = /^\+2449\d{0,8}$/.test(emailOrPhoneRaw); // Verifica se o usuário começou a digitar um número de telefone
+
+      if (!emailOrPhoneRaw) {
         emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
         emailOrPhoneError.classList.remove('hidden');
         isValid = false;
-      } else if (!isEmail && !isPhone) {
-        emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
+      } else if (isEmail) {
+        // Nada a fazer, é um email válido
+      } else if (isPhone) {
+        // Já está no formato correto, usa como está
+      } else if (isPartialPhone) {
+        // O usuário digitou "+2449..." mas não o número completo. Força erro.
+        emailOrPhoneError.textContent = "Número de telefone incompleto. Use +244XXXXXXXXX.";
         emailOrPhoneError.classList.remove('hidden');
         isValid = false;
+      }
+      else {
+        // Nenhuma das opções acima, formato inválido.
+        emailOrPhoneError.textContent = "Formato inválido. Use um email ou um número de telefone angolano (+244XXXXXXXXX).";
+        emailOrPhoneError.classList.remove('hidden');
+        isValid = false;
+      }
+      
+      // Se a validação inicial do formato do telefone falhou, não prossegue
+      if (!isValid) {
+        return;
       }
 
       // Validação do município
@@ -853,14 +755,16 @@
         }
 
         // Chama a função de registo do módulo firebaseAuth
+        // Nota sobre reCAPTCHA: Ele permanece no HTML (hidden) e é usado pelo firebaseAuth.js internamente
+        // para Phone Auth, mesmo que você não o "veja".
         const result = await firebaseAuth.registerUser(
           nameInput.value, 
-          emailOrPhone, 
+          emailOrPhoneProcessed, // Usa a credencial processada
           passwordInput.value, 
           municipioSelect.value, 
           bairroInput.value,
           firebaseApp,
-          'recaptcha-container' // Passa o ID do container para o reCAPTCHA
+          'recaptcha-container' // ID do container hidden para o reCAPTCHA
         );
 
         if (result && result.requiresPhoneVerification) {
