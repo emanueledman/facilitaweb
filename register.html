@@ -558,64 +558,38 @@
       }
     }
   </style>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            primary: {
-              accent: 'var(--primary-accent)',
-            },
-            secondary: {
-              dark: 'var(--secondary-dark)',
-            },
-            highlight: {
-              light: 'var(--highlight-light)',
-            },
-            success: {
-              DEFAULT: 'var(--success-green)',
-            },
-            warning: {
-              DEFAULT: 'var(--warning-orange)',
-            },
-            info: {
-              DEFAULT: 'var(--info-blue)',
-            },
-            bg: {
-              light: 'var(--bg-light)',
-              white: 'var(--bg-white)',
-              darkOverlay: 'var(--bg-dark-overlay)',
-            },
-            text: {
-              main: 'var(--text-main)',
-              secondary: 'var(--text-secondary)',
-              white: 'var(--text-white)',
-            },
+            primary: { accent: 'var(--primary-accent)' },
+            secondary: { dark: 'var(--secondary-dark)' },
+            highlight: { light: 'var(--highlight-light)' },
+            success: { DEFAULT: 'var(--success-green)' },
+            warning: { DEFAULT: 'var(--warning-orange)' },
+            info: { DEFAULT: 'var(--info-blue)' },
+            bg: { light: 'var(--bg-light)', white: 'var(--bg-white)', darkOverlay: 'var(--bg-dark-overlay)' },
+            text: { main: 'var(--text-main)', secondary: 'var(--text-secondary)', white: 'var(--text-white)' },
             error: 'var(--error-red)',
           },
           fontFamily: {
             inter: ['Inter', 'sans-serif'],
             montserrat: ['Montserrat', 'sans-serif'],
-            poppins: ['Poppins', 'sans-serif'], /* Adicionado Poppins */
+            poppins: ['Poppins', 'sans-serif'],
           },
-          borderRadius: {
-            'lg': 'var(--border-radius-lg)',
-            'md': 'var(--border-radius-md)',
-          },
-          boxShadow: {
-            soft: 'var(--shadow-soft)',
-            medium: 'var(--shadow-medium)',
-          },
+          borderRadius: { 'lg': 'var(--border-radius-lg)', 'md': 'var(--border-radius-md)' },
+          boxShadow: { soft: 'var(--shadow-soft)', medium: 'var(--shadow-medium)' },
         }
       }
     }
   </script>
 </head>
 <body class="bg-light text-main">
-  <div class="relative w-full max-w-4xl min-h-[600px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1]">
-    <!-- Lado Esquerdo - Boas-vindas e Imagem/Ilustração -->
+  <div class="relative w-full max-w-4xl min-h-[600px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1] mx-auto mt-10">
     <div class="hidden md:flex md:w-1/2 p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
-      <div class="absolute inset-0 opacity-10"></div> <!-- Removido bg-pattern, mantido para efeito visual -->
+      <div class="absolute inset-0 opacity-10"></div>
       <i class="fas fa-handshake text-6xl text-white mb-6 transform scale-110"></i>
       <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
         Faça Parte da Mudança!
@@ -626,7 +600,6 @@
       <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Comunidade" alt="Ilustração de comunidade engajada" class="w-64 h-64 object-contain">
     </div>
 
-    <!-- Lado Direito - Formulário de Registo -->
     <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white z-20">
       <div class="text-center mb-8">
         <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -635,296 +608,614 @@
         <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Crie Sua Conta</h1>
         <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
       </div>
-      
+
       <form id="registerForm" class="space-y-5">
-        <div>
+        <div class="relative">
           <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
           <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
-          <p id="nameError" class="text-error text-xs mt-1 hidden">Erro de nome</p>
+          <p id="nameError" class="text-error text-xs mt-1 hidden"></p>
         </div>
-        
-        <div>
-          <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone (+244XXXXXXXXX)</label>
+
+        <div class="relative">
+          <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone (+2449XXXXXXXX)</label>
           <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
-          <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
+          <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden"></p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
+          <div class="relative">
+            <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município (Luanda)</label>
             <div class="relative select-wrapper">
               <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
                 <option value="" class="bg-white text-text-secondary">Selecione</option>
-                <!-- Populated by JS -->
               </select>
             </div>
-            <p id="municipioError" class="text-error text-xs mt-1 hidden">Erro de município</p>
+            <p id="municipioError" class="text-error text-xs mt-1 hidden"></p>
           </div>
-          <div>
+          <div class="relative">
             <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
-            <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
-            <p id="bairroError" class="text-error text-xs mt-1 hidden">Erro de bairro</p>
+            <input type="text" id="bairro" list="bairroSuggestions" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+            <datalist id="bairroSuggestions"></datalist>
+            <p id="bairroError" class="text-error text-xs mt-1 hidden"></p>
           </div>
         </div>
-        
-        <div>
+
+        <div class="relative">
           <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
-          <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
+          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 8 caracteres, com maiúsculas, números e símbolos (~!@#$%^&*.,-_=+)" required>
+          <button type="button" id="showPasswordToggle" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700"><i class="fas fa-eye"></i></button>
+          <p id="passwordError" class="text-error text-xs mt-1 hidden"></p>
         </div>
-        
-        <div>
+
+        <div class="relative">
           <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
           <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
-          <p id="confirmPasswordError" class="text-error text-xs mt-1 hidden">Erro de confirmação de senha</p>
+          <button type="button" id="showConfirmPasswordToggle" class="absolute right-3 top-9 text-gray-500 hover:text-gray-700"><i class="fas fa-eye"></i></button>
+          <p id="confirmPasswordError" class="text-error text-xs mt-1 hidden"></p>
         </div>
-        
+
+        <div id="otpSection" class="hidden">
+          <label for="otpCode" class="block text-text-main text-sm font-medium mb-1">Código de Verificação (OTP)</label>
+          <input type="text" id="otpCode" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Insira o código de 6 dígitos" maxlength="6">
+          <p id="otpError" class="text-error text-xs mt-1 hidden"></p>
+          <p id="otpTimer" class="text-text-secondary text-sm mt-2 hidden">Tempo restante: <span id="timerSeconds">60</span> segundos</p>
+          <button type="button" id="resendOtpBtn" class="w-full bg-info text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#1976D2] focus:outline-none focus:ring-2 focus:ring-info focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-4">
+            <span id="resendOtpText"><i class="fas fa-redo"></i> Reenviar Código</span>
+            <span id="resendOtpSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+          <button type="button" id="verifyOtpBtn" class="w-full bg-success text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#3D8F41] focus:outline-none focus:ring-2 focus:ring-success focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2 mt-4">
+            <span id="verifyOtpText"><i class="fas fa-check-circle"></i> Verificar Código</span>
+            <span id="verifyOtpSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </div>
+
         <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
           <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
           <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
         </button>
       </form>
-      
+
       <p class="text-center text-text-secondary text-sm mt-6">
-        Já tem uma conta? 
+        Já tem uma conta?
         <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
       </p>
 
-      <!-- reCAPTCHA container, will be hidden, mas necessário para o Firebase Phone Auth -->
-      <div id="recaptcha-container" class="mt-4 hidden"></div>
+      <div id="recaptcha-container" class="mt-4"></div>
+
+      <!-- Modal de Confirmação -->
+      <div id="confirmationModal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <h2 class="text-2xl font-montserrat font-bold text-secondary-dark mb-4">Confirmar Dados</h2>
+          <p id="confirmationDetails" class="mb-6"></p>
+          <div class="flex justify-end gap-4">
+            <button id="cancelConfirmation" class="bg-gray-200 text-text-main p-2 rounded-lg hover:bg-gray-300 transition-all duration-200">Editar</button>
+            <button id="confirmRegistration" class="bg-primary-accent text-white p-2 rounded-lg hover:bg-[#E64A19] transition-all duration-200">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal de Termos e Condições -->
+      <div id="termsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="text-2xl font-montserrat font-bold text-secondary-dark">Entendendo Nossas Regras do Jogo no FixABairro</h3>
+            <button id="closeTermsModal" class="modal-close-btn">×</button>
+          </div>
+          <div class="modal-body custom-scrollbar">
+            <h4 class="text-lg font-montserrat font-semibold">1. O Que É o FixABairro?</h4>
+            <p>O FixABairro é um lugar onde nós, cidadãos, podemos mostrar os problemas que vemos nos nossos bairros (como buracos na rua, lixo, luzes que não funcionam). A ideia é que, ao mostrar esses problemas de forma clara, a gente ajude as autoridades a saber onde e o que precisa ser arranjado. É como um mapa vivo dos nossos desafios urbanos.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">2. Sua Conta e Seus Dados</h4>
+            <p>Para participar, você vai criar uma conta. Pedimos seu nome, email (ou telefone), seu município e bairro. É importante que essas informações sejam verdadeiras, para podermos saber de onde vem a ajuda e para onde as soluções são mais necessárias. Sua senha é só sua, guarde bem!</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">3. O Que Você Pode Publicar?</h4>
+            <p>Quando você posta algo (fotos, textos, localização), é como se estivesse mostrando um pedacinho do seu bairro. Por favor, lembre-se de que tudo que você publica deve:
+              <ul class="list-disc pl-6">
+                <li>Ser sobre um problema do bairro, algo que realmente ajude a comunidade.</li>
+                <li>Ser respeitoso, sem palavras feias, xingamentos ou coisas que prejudiquem alguém.</li>
+                <li>Não ter coisas como propaganda, correntes de email ou qualquer tipo de "spam".</li>
+                <li>Não usar fotos ou textos que não sejam seus sem permissão.</li>
+                <li>Ser uma informação que você viu ou conhece, para não espalhar boatos.</li>
+              </ul>
+            </p>
+            <p>Se algo que você postar não seguir essas regras, podemos ter que remover. Queremos que o FixABairro seja um lugar bom para todos.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">4. Como Usar a Plataforma?</h4>
+            <p>Use o FixABairro para o bem da comunidade! Não use para fazer mal a ninguém, incomodar outras pessoas ou atrapalhar as conversas. Queremos um ambiente de colaboração e respeito.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">5. Sua Privacidade</h4>
+            <p>Nós cuidamos das suas informações. Explicamos direitinho como usamos seus dados em nossa <a href="privacy-policy.html" class="text-primary-accent hover:underline font-medium" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>. Ao usar a plataforma, você concorda com a forma como lidamos com seus dados, sempre pensando na sua segurança.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">6. O Nosso Papel e o Papel das Autoridades</h4>
+            <p>Nós do FixABairro somos como uma ponte. Mostramos os problemas, mas quem resolve mesmo são as autoridades e os órgãos responsáveis. Não podemos prometer que todo problema será resolvido, pois isso depende muito deles, mas prometemos que sua voz será ouvida!</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">7. Sobre Erros e Problemas na Plataforma</h4>
+            <p>Trabalhamos duro para que o FixABairro funcione bem, mas como toda ferramenta, pode ter seus pequenos erros ou momentos de pausa. Não podemos garantir que estará sempre 100% perfeito, mas faremos o possível para arrumar qualquer falha rapidamente.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">8. Nossa Responsabilidade</h4>
+            <p>Não somos responsáveis por qualquer problema que você possa ter ao usar a plataforma, ou por algo que outras pessoas publiquem. A ideia é que todos colaborem com consciência e respeito.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">9. Mudanças Nas Regras</h4>
+            <p>Podemos atualizar estas regras de vez em quando. Se isso acontecer, vamos avisar aqui na plataforma. Se você continuar usando o FixABairro depois das mudanças, significa que você concorda com as novas regras.</p>
+
+            <h4 class="text-lg font-montserrat font-semibold">10. Conversando Conosco</h4>
+            <p>Se tiver alguma dúvida sobre estas regras ou qualquer outra coisa, fale connosco! Pode enviar um email para: <a href="mailto:suporte@fixabairro.co.ao" class="text-primary-accent hover:underline font-medium">suporte@fixabairro.co.ao</a></p>
+          </div>
+          <div class="modal-footer">
+            <button id="acceptTermsModal" class="btn-main btn-accept-terms"><i class="fas fa-check-circle"></i> Aceitar e Fechar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Firebase SDKs (carregamento assíncrono para melhor performance) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <!-- SEU Firebase Auth Module (certifique-se de que este caminho esteja correto) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Configuração do Firebase (SUBSTITUA PELAS SUAS CREDENCIAIS REAIS DO FIREBASE)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-    };
+    (function () {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+      };
 
-    // Inicializa Firebase App. Esta parte é crucial e deve ser feita uma única vez.
-    let firebaseApp;
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebaseApp = firebase.initializeApp(firebaseConfig);
-        console.log("Firebase App inicializado com sucesso.");
-      } else if (firebase.apps.length) {
-        firebaseApp = firebase.app();
-        console.log("Firebase App já estava inicializado.");
-      } else {
-        console.error("Firebase SDK não carregado. Verifique os scripts defer.");
-      }
-    });
+      let firebaseApp;
+      let auth;
+      let db;
+      let recaptchaVerifier;
+      let confirmationResult;
+      let otpResendAttempts = 0;
+      const maxResendAttempts = 3;
+      let termsAccepted = false;
 
-    // Elementos DOM
-    const registerForm = document.getElementById('registerForm');
-    const nameInput = document.getElementById('name');
-    const emailOrPhoneInput = document.getElementById('emailOrPhone');
-    const municipioSelect = document.getElementById('municipio');
-    const bairroInput = document.getElementById('bairro');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const registerBtn = document.getElementById('registerBtn');
-    const registerText = document.getElementById('registerText');
-    const registerSpinner = document.getElementById('registerSpinner');
-    const nameError = document.getElementById('nameError');
-    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-    const municipioError = document.getElementById('municipioError');
-    const bairroError = document.getElementById('bairroError');
-    const passwordError = document.getElementById('passwordError');
-    const confirmPasswordError = document.getElementById('confirmPasswordError');
-    const recaptchaContainer = document.getElementById('recaptcha-container');
-    
-    // Dados de municípios angolanos (Você pode carregar isso de um backend ou JSON)
-    const municipiosDeAngola = [
-      "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi",
-      "Benguela", "Huambo", "Lubango", "Cabinda", "Malanje", "Lobito", "Soyo",
-      "Ambriz", "Dande", "Nambuagongo", "Bula Atumba", "Dembos", "Pango Aluquém", "Puri", "Quitexe", "Uíge", "Amboim", "Andulo",
-      "Camacupa", "Cuito", "Chitembo", "Kuito Cuanavale", "Cuchi", "Menongue", "Caluquembe", "Caconda", "Chipindo", "Jamba",
-      "Kuvango", "Lubango", "Matala", "Quilengues", "Humpata", "Capenda Camulemba", "Caungula", "Chitato", "Cuango", "Cunda Dia Baze",
-      "Lubalo", "Xá-Muteba", "Lucapa", "Cambulo", "Cazombo", "Cacolo", "Dala", "Muconda", "Saurimo", "Lumeje", "Cazengo", "Kambambe",
-      "Ngonguembo", "Quiçama", "Libolo", "Mussende", "Quibala", "Waku-Kungo", "Cela", "Ganda", "Cubal", "Caimbambo", "Baía Farta",
-      "Catumbela", "Lobito", "Bocoio", "Chongoroi", "Balombo", "Ganda", "Benguela", "Cahama", "Chiange", "Curoca", "Cuanhama",
-      "Cunene", "Ombadja", "Namacunde", "Santa-Clara", "Caimbambo", "Chongoroi", "Cuvango", "Cuvelai", "Cahama", "Ondjiva", "Tchibemba",
-      "Cambambe", "Amboim", "Quilenda", "Dembo Chio", "Porto Amboim", "Seles", "Quilengues", "Humpata", "Virei", "Tômbua", "Moçâmedes",
-      "Bibala", "Camucuio", "Curoca", "Cahama", "Chipindo", "Cuvango", "Matala", "Quilengues", "Chongoroi", "Ganda", "Bocoio", "Balombo",
-      "Longonjo", "Mungo", "Bailundo", "Cachiungo", "Chicala-Choloanga", "Ekunha", "Catchiungo", "Londuimbali", "Uíge", "Negage", "Maquela do Zombo",
-      "Damba", "Songo", "Buengas", "Bembe", "Alto Cawale", "Mucaba", "Quimbele", "Sanza Pombo", "Púri", "Banza", "Mabanza Congo", "Nzeto",
-      "Tomboco", "Cuimba", "Nóqui", "Soyo", "M'Banza Congo", "Nzeto", "Tomboco", "Cuimba", "Nóqui", "Soyo", "M'Banza Congo", "Nzeto", "Tomboco", "Cuimba"
-    ];
+      const registerForm = document.getElementById('registerForm');
+      const nameInput = document.getElementById('name');
+      const emailOrPhoneInput = document.getElementById('emailOrPhone');
+      const municipioSelect = document.getElementById('municipio');
+      const bairroInput = document.getElementById('bairro');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const registerBtn = document.getElementById('registerBtn');
+      const registerText = document.getElementById('registerText');
+      const registerSpinner = document.getElementById('registerSpinner');
+      const nameError = document.getElementById('nameError');
+      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+      const municipioError = document.getElementById('municipioError');
+      const bairroError = document.getElementById('bairroError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const recaptchaContainer = document.getElementById('recaptcha-container');
+      const otpSection = document.getElementById('otpSection');
+      const otpCodeInput = document.getElementById('otpCode');
+      const otpError = document.getElementById('otpError');
+      const otpTimer = document.getElementById('otpTimer');
+      const timerSeconds = document.getElementById('timerSeconds');
+      const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+      const verifyOtpText = document.getElementById('verifyOtpText');
+      const verifyOtpSpinner = document.getElementById('verifyOtpSpinner');
+      const resendOtpBtn = document.getElementById('resendOtpBtn');
+      const resendOtpText = document.getElementById('resendOtpText');
+      const resendOtpSpinner = document.getElementById('resendOtpSpinner');
+      const confirmationModal = document.getElementById('confirmationModal');
+      const confirmationDetails = document.getElementById('confirmationDetails');
+      const cancelConfirmation = document.getElementById('cancelConfirmation');
+      const confirmRegistration = document.getElementById('confirmRegistration');
+      const showPasswordToggle = document.getElementById('showPasswordToggle');
+      const showConfirmPasswordToggle = document.getElementById('showConfirmPasswordToggle');
+      const termsModal = document.getElementById('termsModal');
+      const closeTermsModal = document.getElementById('closeTermsModal');
+      const acceptTermsModal = document.getElementById('acceptTermsModal');
 
-    // Popula o select de municípios
-    function populateMunicipios() {
-      municipiosDeAngola.sort().forEach(municipio => { // Ordena alfabeticamente
-        const option = document.createElement('option');
-        option.value = municipio;
-        option.textContent = municipio;
-        municipioSelect.appendChild(option);
-      });
-    }
-
-    // Chama a função ao carregar o DOM
-    document.addEventListener('DOMContentLoaded', populateMunicipios);
-
-    // Validação e submissão do formulário
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Limpar mensagens de erro anteriores
-      document.querySelectorAll('.text-error').forEach(el => el.classList.add('hidden'));
-
-      let isValid = true; // Flag de validação
-
-      // Validação do nome
-      if (!nameInput.value.trim()) {
-        nameError.textContent = "Nome completo é obrigatório.";
-        nameError.classList.remove('hidden');
-        isValid = false;
+      function showLoadingState(button, textSpan, spinnerSpan, loadingText = 'Aguarde...') {
+        button.disabled = true;
+        textSpan.classList.add('hidden');
+        spinnerSpan.classList.remove('hidden');
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${loadingText}`;
       }
 
-      // Validação de email ou telefone
-      const emailOrPhone = emailOrPhoneInput.value.trim();
-      const isEmail = emailOrPhone.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // Formato +244XXXXXXXXX
-      
-      if (!emailOrPhone) {
-        emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
-        emailOrPhoneError.classList.remove('hidden');
-        isValid = false;
-      } else if (!isEmail && !isPhone) {
-        emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
-        emailOrPhoneError.classList.remove('hidden');
-        isValid = false;
+      function hideLoadingState(button, textSpan, spinnerSpan, originalText) {
+        button.disabled = false;
+        textSpan.classList.remove('hidden');
+        spinnerSpan.classList.add('hidden');
+        button.innerHTML = originalText;
       }
 
-      // Validação do município
-      if (!municipioSelect.value) {
-        municipioError.textContent = "Por favor, selecione seu município.";
-        municipioError.classList.remove('hidden');
-        isValid = false;
+      function showError(errorElement, message) {
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
       }
 
-      // Validação do bairro
-      if (!bairroInput.value.trim()) {
-        bairroError.textContent = "O nome do bairro é obrigatório.";
-        bairroError.classList.remove('hidden');
-        isValid = false;
+      function hideError(errorElement) {
+        errorElement.classList.add('hidden');
+        errorElement.textContent = '';
       }
 
-      // Validação da senha
-      if (passwordInput.value.length < 6) {
-        passwordError.textContent = "A senha deve ter pelo menos 6 caracteres.";
-        passwordError.classList.remove('hidden');
-        isValid = false;
+      function disableFormFields() {
+        nameInput.disabled = true;
+        emailOrPhoneInput.disabled = true;
+        municipioSelect.disabled = true;
+        bairroInput.disabled = true;
+        passwordInput.disabled = true;
+        confirmPasswordInput.disabled = true;
       }
 
-      // Validação da confirmação de senha
-      if (passwordInput.value !== confirmPasswordInput.value) {
-        confirmPasswordError.textContent = "As senhas não coincidem.";
-        confirmPasswordError.classList.remove('hidden');
-        isValid = false;
+      function enableFormFields() {
+        nameInput.disabled = false;
+        emailOrPhoneInput.disabled = false;
+        municipioSelect.disabled = false;
+        bairroInput.disabled = false;
+        passwordInput.disabled = false;
+        confirmPasswordInput.disabled = false;
       }
 
-      if (!isValid) {
-        return; // Sai se a validação falhar
+      const municipiosDeLuanda = [
+        "Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi",
+        "Luanda", "Quilamba", "Quiçama", "Talatona", "Viana"
+      ];
+
+      function populateMunicipios() {
+        municipiosDeLuanda.sort().forEach(municipio => {
+          const option = document.createElement('option');
+          option.value = municipio;
+          option.textContent = municipio;
+          municipioSelect.appendChild(option);
+        });
       }
 
-      // Ativar estado de carregamento do botão
-      registerBtn.disabled = true;
-      registerText.classList.add('hidden');
-      registerSpinner.classList.remove('hidden');
-      registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
+      async function populateBairros(municipio) {
+        const bairrosPorMunicipio = {
+          Belas: ['Morro Bento', 'Futungo de Belas'],
+          Cacuaco: ['Cacuaco Centro', 'Sequele'],
+          Cazenga: ['Tala Hady', 'Mabor'],
+          // Adicione outros bairros reais via Firestore
+        };
+        const bairros = bairrosPorMunicipio[municipio] || [];
+        const datalist = document.getElementById('bairroSuggestions');
+        datalist.innerHTML = '';
+        bairros.forEach(bairro => {
+          const option = document.createElement('option');
+          option.value = bairro;
+          datalist.appendChild(option);
+        });
+      }
 
-      try {
-        if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-          throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
-        }
-
-        // Chama a função de registo do módulo firebaseAuth
-        const result = await firebaseAuth.registerUser(
-          nameInput.value, 
-          emailOrPhone, 
-          passwordInput.value, 
-          municipioSelect.value, 
-          bairroInput.value,
-          firebaseApp,
-          'recaptcha-container' // Passa o ID do container para o reCAPTCHA
-        );
-
-        if (result && result.requiresPhoneVerification) {
-          // Se for registo por telefone, o módulo `firebaseAuth` já enviou o SMS e salvou temporariamente os dados.
-          alert('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.');
-          window.location.href = 'verify-phone.html'; // Redireciona para a tela de verificação
-        } else {
-          // Se for registo por email, o utilizador já está logado
-          alert('Conta criada com sucesso! Bem-vindo(a) ao FixABairro.');
-          window.location.href = 'profile.html'; // Redireciona para o perfil/dashboard
-        }
-
-      } catch (error) {
-        let userFacingMessage = "Ocorreu um erro inesperado. Por favor, tente novamente.";
-        console.error("Erro no registo:", error);
-
-        // Tratamento de erros específicos do Firebase
-        if (error.code) {
-          switch (error.code) {
-            case 'auth/email-already-in-use':
-              userFacingMessage = 'Este email já está registado. Tente fazer login ou use outro email.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
-              break;
-            case 'auth/invalid-email':
-              userFacingMessage = 'O formato do email é inválido.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
-              break;
-            case 'auth/weak-password':
-              userFacingMessage = 'A senha é muito fraca. Escolha uma senha mais forte.';
-              passwordError.textContent = userFacingMessage;
-              passwordError.classList.remove('hidden');
-              break;
-            case 'auth/invalid-phone-number':
-              userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +244XXXXXXXXX.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
-              break;
-            case 'auth/quota-exceeded':
-            case 'auth/too-many-requests':
-              userFacingMessage = 'Muitas tentativas. Por favor, tente novamente mais tarde.';
-              break;
-            case 'auth/network-request-failed':
-              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-              break;
-            default:
-              // Para outros erros Firebase não tratados especificamente, use a mensagem do Firebase.
-              userFacingMessage = `Erro Firebase: ${error.message}`;
-              alert(userFacingMessage); // Exibe um alerta genérico para outros erros
+      function startOtpTimer() {
+        let timeLeft = 60;
+        otpTimer.classList.remove('hidden');
+        const timer = setInterval(() => {
+          timeLeft--;
+          timerSeconds.textContent = timeLeft;
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            showError(otpError, "Código expirado. Solicite um novo.");
+            otpSection.disabled = true;
+            resendOtpBtn.disabled = false;
           }
-        } else {
-          // Para erros que não são do Firebase Auth
-          userFacingMessage = error.message;
-          alert(userFacingMessage); // Exibe um alerta genérico
-        }
-      } finally {
-        // Restaurar estado do botão após a tentativa
-        registerBtn.disabled = false;
-        registerText.classList.remove('hidden');
-        registerSpinner.classList.add('hidden');
-        registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+        }, 1000);
       }
-    });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+          firebaseApp = firebase.initializeApp(firebaseConfig);
+          console.log("Firebase App inicializado com sucesso.");
+        } else if (firebase.apps.length) {
+          firebaseApp = firebase.app();
+          console.log("Firebase App já estava inicializado.");
+        } else {
+          console.error("Firebase SDK não carregado.");
+          alert("Erro: Firebase SDK não carregado.");
+          return;
+        }
+
+        auth = firebase.auth();
+        db = firebase.firestore();
+        window.auth = auth;
+        window.db = db;
+
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          'size': 'invisible',
+          'callback': () => console.log("reCAPTCHA resolvido."),
+          'expired-callback': () => {
+            console.warn("reCAPTCHA expirado.");
+            alert("Verificação de segurança expirada. Tente novamente.");
+            grecaptcha.reset(window.recaptchaWidgetId);
+            enableFormFields();
+            hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
+          }
+        });
+
+        recaptchaVerifier.render().then(widgetId => {
+          window.recaptchaWidgetId = widgetId;
+          console.log("reCAPTCHA widget renderizado.");
+        }).catch(error => {
+          console.error("Erro ao renderizar reCAPTCHA:", error);
+          alert("Erro ao carregar verificação de segurança.");
+        });
+
+        populateMunicipios();
+
+        municipioSelect.addEventListener('change', () => {
+          if (municipioSelect.value) {
+            populateBairros(municipioSelect.value);
+          }
+        });
+
+        showPasswordToggle.addEventListener('click', () => {
+          const type = passwordInput.type === 'password' ? 'text' : 'password';
+          passwordInput.type = type;
+          showPasswordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        showConfirmPasswordToggle.addEventListener('click', () => {
+          const type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
+          confirmPasswordInput.type = type;
+          showConfirmPasswordToggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        closeTermsModal.addEventListener('click', () => {
+          termsModal.classList.add('hidden');
+          termsAccepted = false;
+          enableFormFields();
+        });
+
+        acceptTermsModal.addEventListener('click', () => {
+          termsModal.classList.add('hidden');
+          termsAccepted = true;
+          confirmationDetails.innerHTML = `
+            Nome: ${sanitizeInput(nameInput.value.trim())}<br>
+            ${window.firebaseAuth.validateEmail(emailOrPhoneInput.value.trim()) === null ? 'Email' : 'Telefone'}: ${emailOrPhoneInput.value.trim()}<br>
+            Município: ${municipioSelect.value}<br>
+            Bairro: ${sanitizeInput(bairroInput.value.trim())}<br>
+          `;
+          confirmationModal.classList.remove('hidden');
+        });
+
+        termsModal.addEventListener('click', (e) => {
+          if (e.target === termsModal) {
+            termsModal.classList.add('hidden');
+            termsAccepted = false;
+            enableFormFields();
+          }
+        });
+
+        auth.onAuthStateChanged(user => {
+          if (user) {
+            if (user.email && !user.emailVerified) {
+              alert("Por favor, verifique seu email antes de continuar.");
+              window.location.href = 'verify-email.html';
+            } else {
+              console.log("Usuário logado:", user.uid);
+              window.location.href = 'profile.html';
+            }
+          } else {
+            console.log("Nenhum usuário logado.");
+          }
+        });
+      });
+
+      nameInput.addEventListener('input', () => {
+        const name = nameInput.value.trim();
+        if (!name) {
+          showError(nameError, "Nome completo é obrigatório.");
+        } else {
+          hideError(nameError);
+        }
+      });
+
+      emailOrPhoneInput.addEventListener('input', () => {
+        const value = emailOrPhoneInput.value.trim();
+        if (value.includes('@')) {
+          const error = window.firebaseAuth.validateEmail(value);
+          if (error) showError(emailOrPhoneError, error);
+          else hideError(emailOrPhoneError);
+        } else if (value.startsWith('+244')) {
+          const error = window.firebaseAuth.validatePhone(value);
+          if (error) showError(emailOrPhoneError, error);
+          else hideError(emailOrPhoneError);
+        } else {
+          showError(emailOrPhoneError, "Use um email ou +2449 seguido de 8 dígitos.");
+        }
+      });
+
+      passwordInput.addEventListener('input', () => {
+        const error = window.firebaseAuth.validatePassword(passwordInput.value);
+        if (error) showError(passwordError, error);
+        else hideError(passwordError);
+      });
+
+      confirmPasswordInput.addEventListener('input', () => {
+        if (passwordInput.value.trim() !== confirmPasswordInput.value.trim()) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
+        } else {
+          hideError(confirmPasswordError);
+        }
+      });
+
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        document.querySelectorAll('.text-error').forEach(hideError);
+
+        let isValid = true;
+        const sanitizeInput = (input) => input.replace(/[<>&"'/]/g, '');
+        const sanitizedName = sanitizeInput(nameInput.value.trim());
+        const emailOrPhone = emailOrPhoneInput.value.trim();
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhone) === null;
+        const isPhone = window.firebaseAuth.validatePhone(emailOrPhone) === null;
+        const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
+
+        if (!sanitizedName) {
+          showError(nameError, "Nome completo é obrigatório.");
+          isValid = false;
+        }
+        if (!emailOrPhone || (!isEmail && !isPhone)) {
+          showError(emailOrPhoneError, window.firebaseAuth.validateEmail(emailOrPhone) || window.firebaseAuth.validatePhone(emailOrPhone) || "Formato inválido. Use um email ou +2449XXXXXXXX.");
+          isValid = false;
+        }
+        if (!municipioSelect.value) {
+          showError(municipioError, "Por favor, selecione seu município.");
+          isValid = false;
+        }
+        if (!sanitizedBairro) {
+          showError(bairroError, "O nome do bairro é obrigatório.");
+          isValid = false;
+        }
+        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+        if (passwordErrorMsg) {
+          showError(passwordError, passwordErrorMsg);
+          isValid = false;
+        }
+        if (passwordInput.value.trim() !== confirmPasswordInput.value.trim()) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
+          isValid = false;
+        }
+
+        if (!isValid) {
+          console.log("Validação falhou:", {
+            name: sanitizedName,
+            emailOrPhone: emailOrPhone,
+            municipio: municipioSelect.value,
+            bairro: sanitizedBairro,
+            password: passwordInput.value
+          });
+          return;
+        }
+
+        termsModal.classList.remove('hidden');
+        termsAccepted = false;
+      });
+
+      cancelConfirmation.addEventListener('click', () => {
+        confirmationModal.classList.add('hidden');
+        enableFormFields();
+      });
+
+      confirmRegistration.addEventListener('click', async () => {
+        if (!termsAccepted) {
+          alert("Você deve aceitar os Termos e Condições para continuar.");
+          termsModal.classList.remove('hidden');
+          confirmationModal.classList.add('hidden');
+          return;
+        }
+
+        confirmationModal.classList.add('hidden');
+        showLoadingState(registerBtn, registerText, registerSpinner, 'Registrando...');
+        disableFormFields();
+
+        const sanitizedName = sanitizeInput(nameInput.value.trim());
+        const emailOrPhone = emailOrPhoneInput.value.trim();
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhone) === null;
+        const isPhone = window.firebaseAuth.validatePhone(emailOrPhone) === null;
+        const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
+
+        try {
+          if (isEmail) {
+            const result = await window.firebaseAuth.registerUser(
+              sanitizedName,
+              emailOrPhone,
+              passwordInput.value.trim(),
+              municipioSelect.value,
+              sanitizedBairro,
+              firebaseApp
+            );
+            firebase.analytics().logEvent('registration_success', { method: 'email' });
+            alert("Conta criada com sucesso! Verifique seu email para ativar sua conta.");
+            window.location.href = 'verify-email.html';
+          } else if (isPhone) {
+            showLoadingState(registerBtn, registerText, registerSpinner, 'Enviando SMS...');
+            const normalizedPhone = emailOrPhoneInput.value.trim();
+            confirmationResult = await auth.signInWithPhoneNumber(normalizedPhone, recaptchaVerifier);
+            firebase.analytics().logEvent('otp_sent', { phone: normalizedPhone });
+            registerForm.querySelectorAll('div').forEach(el => {
+              if (el.id !== 'otpSection' && el.id !== 'recaptcha-container') {
+                el.classList.add('hidden');
+              }
+            });
+            registerBtn.classList.add('hidden');
+            otpSection.classList.remove('hidden');
+            disableFormFields();
+            otpCodeInput.disabled = false;
+            alert("Código de verificação enviado para seu telefone.");
+            startOtpTimer();
+          }
+        } catch (error) {
+          console.error("Erro no registro:", error);
+          showError(isEmail ? emailOrPhoneError : otpError, error.message);
+          enableFormFields();
+          hideLoadingState(registerBtn, registerText, registerSpinner, '<i class="fas fa-user-plus"></i> Criar Conta');
+        }
+      });
+
+      verifyOtpBtn.addEventListener('click', async () => {
+        hideError(otpError);
+        const otpCode = otpCodeInput.value.trim();
+
+        if (!otpCode || otpCode.length !== 6) {
+          showError(otpError, "Por favor, insira um código de 6 dígitos.");
+          return;
+        }
+
+        if (!confirmationResult) {
+          showError(otpError, "Nenhuma verificação de telefone pendente. Tente novamente.");
+          return;
+        }
+
+        showLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, 'Verificando...');
+        otpCodeInput.disabled = true;
+
+        try {
+          const userCredential = await confirmationResult.confirm(otpCode);
+          const user = userCredential.user;
+          const sanitizedName = sanitizeInput(nameInput.value.trim());
+          const sanitizedBairro = sanitizeInput(bairroInput.value.trim());
+
+          await db.collection('users').doc(user.uid).set({
+            name: sanitizedName,
+            phoneNumber: user.phoneNumber,
+            emailOrPhone: emailOrPhoneInput.value.trim(),
+            municipio: municipioSelect.value,
+            bairro: sanitizedBairro,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            termsAccepted: true
+          }, { merge: true });
+
+          firebase.analytics().logEvent('registration_success', { method: 'phone' });
+          alert("Número verificado e conta criada com sucesso!");
+          window.location.href = 'profile.html';
+        } catch (error) {
+          showError(otpError, error.message);
+          hideLoadingState(verifyOtpBtn, verifyOtpText, verifyOtpSpinner, '<i class="fas fa-check-circle"></i> Verificar Código');
+          otpCodeInput.disabled = false;
+        }
+      });
+
+      resendOtpBtn.addEventListener('click', async () => {
+        if (otpResendAttempts >= maxResendAttempts) {
+          showError(otpError, "Limite de reenvios atingido. Tente novamente mais tarde.");
+          return;
+        }
+
+        showLoadingState(resendOtpBtn, resendOtpText, resendOtpSpinner, 'Reenviando...');
+        try {
+          const normalizedPhone = emailOrPhoneInput.value.trim();
+          confirmationResult = await auth.signInWithPhoneNumber(normalizedPhone, recaptchaVerifier);
+          otpResendAttempts++;
+          firebase.analytics().logEvent('otp_resent', { phone: normalizedPhone });
+          alert("Código reenviado com sucesso!");
+          startOtpTimer();
+        } catch (error) {
+          showError(otpError, error.message);
+        } finally {
+          hideLoadingState(resendOtpBtn, resendOtpText, resendOtpSpinner, '<i class="fas fa-redo"></i> Reenviar Código');
+        }
+      });
+    })();
   </script>
 </body>
 </html>
