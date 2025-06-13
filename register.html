@@ -964,6 +964,7 @@
           throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
         }
 
+        // Removido o argumento 'recaptcha-container' pois o firebaseAuth.js não o espera mais explicitamente.
         const result = await firebaseAuth.registerUser(
           nameInput.value, 
           emailOrPhoneProcessed, 
