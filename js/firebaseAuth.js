@@ -1,246 +1,135 @@
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-};
+// firebaseAuth.js
+// This file assumes firebase-app-compat.js, firebase-auth-compat.js, and firebase-firestore-compat.js are loaded BEFORE this script.
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+// These lines should be REMOVED or commented out if you are initializing
+// Firebase globally in your main HTML file and expecting these to be available.
+// const firebaseConfig = { ... };
+// let auth; // REMOVE THIS IF YOU ARE DECLARING GLOBALLY IN HTML
+// let db; // REMOVE THIS IF YOU ARE DECLARING GLOBALLY IN HTML
+// let googleProvider; // REMOVE THIS IF YOU ARE DECLARING GLOBALLY IN HTML
 
-const auth = firebase.auth();
-const db = firebase.firestore();
-const googleProvider = new firebase.auth.GoogleAuthProvider();
+// window.addEventListener('DOMContentLoaded', () => {
+//   if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+//     firebase.initializeApp(firebaseConfig);
+//     auth = firebase.auth();
+//     db = firebase.firestore();
+//     googleProvider = new firebase.auth.GoogleAuthProvider();
+//     console.log("Firebase initialized in firebaseAuth.js");
+//   } else if (firebase.apps.length) {
+//     auth = firebase.auth();
+//     db = firebase.firestore();
+//     googleProvider = new firebase.auth.GoogleAuthProvider();
+//     console.log("Firebase already initialized in firebaseAuth.js");
+//   }
+// });
 
-// Função para verificar estado de autenticação
+// Function to check authentication state
 function checkAuthState(callback) {
-  return auth.onAuthStateChanged(user => {
+  // Access global 'auth' variable from the main script
+  if (typeof firebase === 'undefined' || !window.auth) { // Use window.auth to access global
+    console.error("Firebase Auth not loaded or not globally available. Cannot check auth state.");
+    return null;
+  }
+  return window.auth.onAuthStateChanged(user => { // Use window.auth
     callback(user);
   });
 }
 
-// Função para login com email e senha
-async function loginWithEmail(emailInput, passwordInput, loginBtn, loginText, loginSpinner, emailError, passwordError) {
+// Function for login with email and password
+async function loginWithEmail(email, password) {
+  if (typeof firebase === 'undefined' || !window.auth) throw new Error("Firebase Auth não inicializado ou não global.");
   try {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-
-    // Reset errors
-    emailError.style.display = 'none';
-    passwordError.style.display = 'none';
-
-    // Validate inputs
-    if (!email) {
-      emailError.textContent = 'Por favor, insira seu email';
-      emailError.style.display = 'block';
-      return;
-    }
-
-    if (!password) {
-      passwordError.textContent = 'Por favor, insira sua senha';
-      passwordError.style.display = 'block';
-      return;
-    }
-
-    // Show loading state
-    loginText.style.display = 'none';
-    loginSpinner.style.display = 'inline-block';
-    loginBtn.disabled = true;
-
-    // Sign in with email and password
-    await auth.signInWithEmailAndPassword(email, password);
-    window.location.href = 'index.html';
+    const userCredential = await window.auth.signInWithEmailAndPassword(email, password);
+    return { success: true, user: userCredential.user };
   } catch (error) {
-    loginText.style.display = 'inline-block';
-    loginSpinner.style.display = 'none';
-    loginBtn.disabled = false;
-
-    let errorMessage = 'Erro ao fazer login. Tente novamente.';
-
-    switch (error.code) {
-      case 'auth/user-not-found':
-        errorMessage = 'Nenhum usuário encontrado com este email.';
-        emailError.textContent = errorMessage;
-        emailError.style.display = 'block';
-        break;
-      case 'auth/wrong-password':
-        errorMessage = 'Senha incorreta. Tente novamente.';
-        passwordError.textContent = errorMessage;
-        passwordError.style.display = 'block';
-        break;
-      case 'auth/invalid-email':
-        errorMessage = 'Email inválido.';
-        emailError.textContent = errorMessage;
-        emailError.style.display = 'block';
-        break;
-      default:
-        alert(errorMessage);
-    }
+    console.error('Login error:', error);
+    return { success: false, error: error };
   }
 }
 
-// Função para login com Google
-async function loginWithGoogle(googleLoginBtn) {
+// Function for login with Google
+async function loginWithGoogle() {
+  if (typeof firebase === 'undefined' || !window.auth || !window.db) throw new Error("Firebase Auth ou Firestore não inicializado ou não global.");
   try {
-    googleLoginBtn.disabled = true;
-    googleLoginBtn.innerHTML = '<span class="spinner"></span>';
-
-    const result = await auth.signInWithPopup(googleProvider);
+    const provider = new firebase.auth.GoogleAuthProvider(); // This can be instantiated here
+    const result = await window.auth.signInWithPopup(provider);
     const user = result.user;
 
-    // Verifica se o usuário já existe no Firestore
-    const userDoc = await db.collection('usuarios').doc(user.uid).get();
+    // Check if user exists in Firestore, create if not
+    const userDoc = await window.db.collection('users').doc(user.uid).get();
 
     if (!userDoc.exists) {
-      await db.collection('usuarios').doc(user.uid).set({
-        nome: user.displayName || 'Usuário Google',
+      await window.db.collection('users').doc(user.uid).set({
+        name: user.displayName || 'Usuário Google',
         email: user.email,
-        data_criacao: firebase.firestore.FieldValue.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
-
-    window.location.href = 'index.html';
+    return { success: true, user: user };
   } catch (error) {
     console.error('Google login error:', error);
-    alert('Erro ao fazer login com Google. Tente novamente.');
-    googleLoginBtn.disabled = false;
-    googleLoginBtn.innerHTML = `
-      <span class="google-btn">
-        <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo">
-        <span>Entrar com Google</span>
-      </span>
-    `;
+    return { success: false, error: error };
   }
 }
 
-// Função para redefinição de senha
-async function resetPassword(forgotPasswordLink) {
+// Function to reset password
+async function resetPassword(email) {
+  if (typeof firebase === 'undefined' || !window.auth) throw new Error("Firebase Auth não inicializado ou não global.");
   try {
-    const email = prompt('Por favor, insira seu email para redefinir a senha:');
-    if (email) {
-      await auth.sendPasswordResetEmail(email);
-      alert('Email de redefinição de senha enviado. Verifique sua caixa de entrada.');
-    }
+    await window.auth.sendPasswordResetEmail(email);
+    return { success: true, message: 'Email de redefinição de senha enviado.' };
   } catch (error) {
-    alert('Erro ao enviar email de redefinição. Verifique o email e tente novamente.');
+    console.error('Reset password error:', error);
+    return { success: false, error: error };
   }
 }
 
-// Função para registro de novo usuário
-async function registerUser(nameInput, emailInput, passwordInput, confirmPasswordInput, registerBtn, registerText, registerSpinner, nameError, emailError, passwordError, confirmPasswordError) {
-  try {
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
+// Function for user registration (simplified, as complex logic is in index.html)
+async function registerUser(name, emailOrPhone, password, municipio, bairro, firebaseAppInstance) {
+    // This function will likely not be used for phone auth in this specific setup,
+    // as phone auth is directly handled in index.html for reCAPTCHA/OTP flow.
+    // It's primarily for email registration.
+    if (typeof firebase === 'undefined' || !firebaseAppInstance) throw new Error("Firebase App não inicializado.");
+    const authInstance = firebaseAppInstance.auth(); // Get auth instance from passed app
+    const dbInstance = firebaseAppInstance.firestore(); // Get db instance from passed app
 
-    // Reset errors
-    nameError.style.display = 'none';
-    emailError.style.display = 'none';
-    passwordError.style.display = 'none';
-    confirmPasswordError.style.display = 'none';
+    const isEmail = emailOrPhone.includes('@');
 
-    // Validate inputs
-    if (!name) {
-      nameError.textContent = 'Por favor, insira seu nome';
-      nameError.style.display = 'block';
-      return;
+    try {
+        let user;
+        if (isEmail) {
+            const userCredential = await authInstance.createUserWithEmailAndPassword(emailOrPhone, password);
+            user = userCredential.user;
+            await dbInstance.collection('users').doc(user.uid).set({
+                name: name,
+                email: user.email,
+                municipio: municipio,
+                bairro: bairro,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            return { success: true, user: user, requiresPhoneVerification: false };
+        } else {
+            throw new Error("Phone registration initiation is handled directly by the main script for OTP flow.");
+        }
+    } catch (error) {
+        console.error("Registration error in firebaseAuth.js:", error);
+        return { success: false, error: error };
     }
-
-    if (!email) {
-      emailError.textContent = 'Por favor, insira seu email';
-      emailError.style.display = 'block';
-      return;
-    }
-
-    if (!password) {
-      passwordError.textContent = 'Por favor, insira sua senha';
-      passwordError.style.display = 'block';
-      return;
-    }
-
-    if (password.length < 6) {
-      passwordError.textContent = 'A senha deve ter pelo menos 6 caracteres';
-      passwordError.style.display = 'block';
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      confirmPasswordError.textContent = 'As senhas não coincidem';
-      confirmPasswordError.style.display = 'block';
-      return;
-    }
-
-    // Show loading state
-    registerText.style.display = 'none';
-    registerSpinner.style.display = 'inline-block';
-    registerBtn.disabled = true;
-
-    // Create user
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-    const user = userCredential.user;
-
-    // Save additional user data
-    await db.collection('usuarios').doc(user.uid).set({
-      nome: name,
-      email: email,
-      data_criacao: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    window.location.href = 'index.html';
-  } catch (error) {
-    registerText.style.display = 'inline-block';
-    registerSpinner.style.display = 'none';
-    registerBtn.disabled = false;
-
-    let errorMessage = 'Erro ao criar conta. Tente novamente.';
-
-    switch (error.code) {
-      case 'auth/email-already-in-use':
-        errorMessage = 'Este email já está em uso.';
-        emailError.textContent = errorMessage;
-        emailError.style.display = 'block';
-        break;
-      case 'auth/invalid-email':
-        errorMessage = 'Email inválido.';
-        emailError.textContent = errorMessage;
-        emailError.style.display = 'block';
-        break;
-      case 'auth/weak-password':
-        errorMessage = 'A senha é muito fraca.';
-        passwordError.textContent = errorMessage;
-        passwordError.style.display = 'block';
-        break;
-      default:
-        alert(errorMessage);
-    }
-  }
 }
 
-// Função para logout
-async function logout(logoutBtn, logoutText, logoutSpinner) {
+// Function for logout
+async function logout() {
+  if (typeof firebase === 'undefined' || !window.auth) throw new Error("Firebase Auth não inicializado ou não global.");
   try {
-    logoutText.style.display = 'none';
-    logoutSpinner.style.display = 'inline-block';
-    logoutBtn.disabled = true;
-
-    await auth.signOut();
-    window.location.href = 'index.html';
+    await window.auth.signOut();
+    return { success: true };
   } catch (error) {
     console.error('Logout error:', error);
-    alert('Erro ao fazer logout. Tente novamente.');
-    logoutText.style.display = 'inline-block';
-    logoutSpinner.style.display = 'none';
-    logoutBtn.disabled = false;
+    return { success: false, error: error };
   }
 }
 
-// Exportar funções para uso em outros arquivos
+// Export functions for use in other files
 window.firebaseAuth = {
   checkAuthState,
   loginWithEmail,
