@@ -376,6 +376,111 @@
           font-size: 0.9rem;
         }
       }
+
+      /* Estilos para o Modal de Termos e Condições */
+      .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1050; /* Acima da navbar */
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .modal-overlay.show {
+          opacity: 1;
+          visibility: visible;
+      }
+
+      .modal-content {
+          background: var(--bg-white);
+          border-radius: var(--border-radius-lg);
+          padding: 2rem;
+          max-width: 700px;
+          width: 90%;
+          max-height: 90%;
+          display: flex;
+          flex-direction: column;
+          box-shadow: var(--shadow-medium);
+          transform: translateY(20px);
+          transition: transform 0.3s ease;
+      }
+      .modal-overlay.show .modal-content {
+          transform: translateY(0);
+      }
+
+      .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #ECEFF1;
+      }
+      .modal-header h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: var(--secondary-dark);
+          margin: 0;
+      }
+      .modal-close-btn {
+          background: none;
+          border: none;
+          font-size: 1.8rem;
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: color 0.3s ease;
+      }
+      .modal-close-btn:hover {
+          color: var(--primary-accent);
+      }
+
+      .modal-body {
+          flex-grow: 1;
+          overflow-y: auto;
+          line-height: 1.6;
+          color: var(--text-main);
+          font-size: 0.95rem;
+          padding-right: 0.5rem; /* Para compensar a barra de rolagem */
+      }
+      .modal-body p {
+          margin-bottom: 1rem;
+      }
+      .modal-body h4 {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: var(--primary-accent);
+          margin-top: 1.5rem;
+          margin-bottom: 0.8rem;
+      }
+
+      .modal-footer {
+          padding-top: 1.5rem;
+          border-top: 1px solid #ECEFF1;
+          margin-top: 1.5rem;
+          text-align: right;
+      }
+      .modal-footer button {
+          font-size: 1rem;
+          padding: 0.8rem 1.5rem;
+          border-radius: 30px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+      .modal-footer .btn-accept-terms {
+          background-color: var(--primary-accent);
+          color: var(--text-white);
+          border: none;
+      }
+      .modal-footer .btn-accept-terms:hover {
+          background-color: #E64A19;
+      }
     }
   </style>
   <script>
@@ -494,13 +599,13 @@
           <div>
             <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
             <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
-            <p id="nameError" class="text-error text-xs mt-1 hidden">Erro de nome</p>
+            <p id="nameError" class="error-message">Erro de nome</p>
           </div>
           
           <div>
             <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
             <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou 912345678" required>
-            <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
+            <p id="emailOrPhoneError" class="error-message">Erro de email/telefone</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -512,28 +617,39 @@
                   <!-- Populated by JS -->
                 </select>
               </div>
-              <p id="municipioError" class="text-error text-xs mt-1 hidden">Erro de município</p>
+              <p id="municipioError" class="error-message">Erro de município</p>
             </div>
             <div>
               <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
               <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
-              <p id="bairroError" class="text-error text-xs mt-1 hidden">Erro de bairro</p>
+              <p id="bairroError" class="error-message">Erro de bairro</p>
             </div>
           </div>
           
           <div>
             <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
             <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
-            <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
+            <p id="passwordError" class="error-message">Erro de senha</p>
           </div>
           
           <div>
             <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
             <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
-            <p id="confirmPasswordError" class="text-error text-xs mt-1 hidden">Erro de confirmação de senha</p>
+            <p id="confirmPasswordError" class="error-message">Erro de confirmação de senha</p>
           </div>
+
+          <!-- Termos e Condições -->
+          <div class="flex items-start">
+            <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent" disabled>
+            <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
+              Eu li e concordo com os 
+              <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium" onclick="event.preventDefault();">Termos e Condições de Serviço</a>
+              do FixABairro.
+            </label>
+          </div>
+          <p id="termsError" class="error-message mt-1">Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.</p>
           
-          <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+          <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2" disabled>
             <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
             <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
           </button>
@@ -544,13 +660,66 @@
           <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
         </p>
 
-        <!-- reCAPTCHA container, hidden mas necessário para o Firebase Phone Auth -->
+        <!-- reCAPTCHA container, hidden mas necessário para o Firebase Phone Auth (para compatibilidade interna do Firebase) -->
         <div id="recaptcha-container" class="mt-4 hidden"></div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS (para a funcionalidade da navbar) -->
+  <!-- Modal de Termos e Condições -->
+  <div id="termsModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Entendendo Nossas Regras do Jogo no FixABairro</h3>
+        <button id="closeTermsModal" class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body custom-scrollbar">
+        <h4>1. O Que É o FixABairro?</h4>
+        <p>O FixABairro é um lugar onde nós, cidadãos, podemos mostrar os problemas que vemos nos nossos bairros (como buracos na rua, lixo, luzes que não funcionam). A ideia é que, ao mostrar esses problemas de forma clara, a gente ajude as autoridades a saber onde e o que precisa ser arranjado. É como um mapa vivo dos nossos desafios urbanos.</p>
+
+        <h4>2. Sua Conta e Seus Dados</h4>
+        <p>Para participar, você vai criar uma conta. Pedimos seu nome, email (ou telefone), seu município e bairro. É importante que essas informações sejam verdadeiras, para podermos saber de onde vem a ajuda e para onde as soluções são mais necessárias. Sua senha é só sua, guarde bem!</p>
+
+        <h4>3. O Que Você Pode Publicar?</h4>
+        <p>Quando você posta algo (fotos, textos, localização), é como se estivesse mostrando um pedacinho do seu bairro. Por favor, lembre-se de que tudo que você publica deve:
+          <ul>
+            <li>Ser sobre um problema do bairro, algo que realmente ajude a comunidade.</li>
+            <li>Ser respeitoso, sem palavras feias, xingamentos ou coisas que prejudiquem alguém.</li>
+            <li>Não ter coisas como propaganda, correntes de email ou qualquer tipo de "spam".</li>
+            <li>Não usar fotos ou textos que não sejam seus sem permissão.</li>
+            <li>Ser uma informação que você viu ou conhece, para não espalhar boatos.</li>
+          </ul>
+        </p>
+        <p>Se algo que você postar não seguir essas regras, podemos ter que remover. Queremos que o FixABairro seja um lugar bom para todos.</p>
+
+        <h4>4. Como Usar a Plataforma?</h4>
+        <p>Use o FixABairro para o bem da comunidade! Não use para fazer mal a ninguém, incomodar outras pessoas ou atrapalhar as conversas. Queremos um ambiente de colaboração e respeito.</p>
+
+        <h4>5. Sua Privacidade</h4>
+        <p>Nós cuidamos das suas informações. Explicamos direitinho como usamos seus dados em nossa <a href="privacy-policy.html" class="text-primary-accent hover:underline font-medium" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>. Ao usar a plataforma, você concorda com a forma como lidamos com seus dados, sempre pensando na sua segurança.</p>
+
+        <h4>6. O Nosso Papel e o Papel das Autoridades</h4>
+        <p>Nós do FixABairro somos como uma ponte. Mostramos os problemas, mas quem resolve mesmo são as autoridades e os órgãos responsáveis. Não podemos prometer que todo problema será resolvido, pois isso depende muito deles, mas prometemos que sua voz será ouvida!</p>
+
+        <h4>7. Sobre Erros e Problemas na Plataforma</h4>
+        <p>Trabalhamos duro para que o FixABairro funcione bem, mas como toda ferramenta, pode ter seus pequenos erros ou momentos de pausa. Não podemos garantir que estará sempre 100% perfeito, mas faremos o possível para arrumar qualquer falha rapidamente.</p>
+
+        <h4>8. Nossa Responsabilidade</h4>
+        <p>Não somos responsáveis por qualquer problema que você possa ter ao usar a plataforma, ou por algo que outras pessoas publiquem. A ideia é que todos colaborem com consciência e respeito.</p>
+
+        <h4>9. Mudanças Nas Regras</h4>
+        <p>Podemos atualizar estas regras de vez em quando. Se isso acontecer, vamos avisar aqui na plataforma. Se você continuar usando o FixABairro depois das mudanças, significa que você concorda com as novas regras.</p>
+
+        <h4>10. Conversando Conosco</h4>
+        <p>Se tiver alguma dúvida sobre estas regras ou qualquer outra coisa, fale connosco! Pode enviar um email para: suporte@fixabairro.co.ao</p>
+      </div>
+      <div class="modal-footer">
+        <button id="acceptTermsModal" class="btn-main btn-accept-terms">Aceitar e Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (para a funcionalidade da navbar e do modal) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   
   <!-- Firebase SDKs (carregamento assíncrono para melhor performance) -->
@@ -584,6 +753,33 @@
       } else {
         console.error("Firebase SDK não carregado. Verifique os scripts defer.");
       }
+
+      // IMPORTANTE: Inicializa e renderiza o reCAPTCHA invisível para Phone Auth
+      // Isso deve ser feito ANTES de qualquer tentativa de signInWithPhoneNumber.
+      // O 'recaptcha-container' deve estar presente no HTML (hidden ou não).
+      if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
+          window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+              'size': 'invisible', // Mantemos invisível
+              'callback': (response) => {
+                  // reCAPTCHA resolvido, pode ser usado para depuração se necessário
+                  console.log("reCAPTCHA invisível resolvido.");
+              },
+              'expired-callback': () => {
+                  // reCAPTCHA expirou, importante para relançar se o usuário demorar
+                  console.warn("reCAPTCHA invisível expirou. Por favor, tente novamente.");
+                  // Você pode querer re-renderizar ou avisar o usuário aqui
+                  if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                      grecaptcha.reset(window.recaptchaWidgetId); // Resetar para nova tentativa
+                  }
+              }
+          });
+          window.recaptchaVerifier.render().then(function(widgetId) {
+              window.recaptchaWidgetId = widgetId;
+              console.log("reCAPTCHA invisível renderizado com ID do widget:", widgetId);
+          }).catch(error => {
+              console.error("Erro ao renderizar reCAPTCHA invisível:", error);
+          });
+      }
     });
 
     // Elementos DOM
@@ -603,8 +799,18 @@
     const bairroError = document.getElementById('bairroError');
     const passwordError = document.getElementById('passwordError');
     const confirmPasswordError = document.getElementById('confirmPasswordError');
-    const recaptchaContainer = document.getElementById('recaptcha-container');
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    const termsError = document.getElementById('termsError');
+    const showTermsLink = document.getElementById('showTermsLink');
+    const termsModal = document.getElementById('termsModal');
+    const closeTermsModalBtn = document.getElementById('closeTermsModal');
+    const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
+    // reCAPTCHA container não é mais diretamente manipulado, mas a referência é mantida para o módulo de auth.
+    const recaptchaContainer = document.getElementById('recaptcha-container'); 
     
+    // Variável para controlar se os termos foram aceites via modal. Inicia como falso.
+    let termsAcceptedViaModal = false;
+
     // Dados de municípios angolanos (Você pode carregar isso de um backend ou JSON)
     const municipiosDeAngola = [
       "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi",
@@ -638,26 +844,69 @@
 
     // Lógica para preencher automaticamente o prefixo do telefone (+244)
     emailOrPhoneInput.addEventListener('focus', () => {
-      if (!emailOrPhoneInput.value.startsWith('+244')) {
+      // Apenas adiciona "+244" se o campo estiver vazio
+      if (emailOrPhoneInput.value === '') {
         emailOrPhoneInput.value = '+244';
       }
     });
 
     emailOrPhoneInput.addEventListener('input', () => {
+      // Garante que o campo sempre comece com "+244"
       if (!emailOrPhoneInput.value.startsWith('+244')) {
-        emailOrPhoneInput.value = '+244';
-      }
-      // Garante que o cursor esteja sempre após o prefixo, a menos que o usuário esteja apagando.
-      if (document.activeElement === emailOrPhoneInput && emailOrPhoneInput.value.length < 4) {
-        emailOrPhoneInput.setSelectionRange(4, 4);
+        emailOrPhoneInput.value = '+244' + emailOrPhoneInput.value.replace(/[^0-9]/g, '').substring(3); // Mantém apenas os números após o prefixo, se o usuário tentar apagar o +244
+      } else {
+        // Se o usuário apagar o prefixo de forma que ele fique incompleto, restaura
+        if (emailOrPhoneInput.value.length < 4 && emailOrPhoneInput.value.startsWith('+244'.substring(0, emailOrPhoneInput.value.length))) {
+            emailOrPhoneInput.value = '+244';
+        }
       }
     });
 
     emailOrPhoneInput.addEventListener('blur', () => {
-      // Se o usuário apagar tudo e sair, limpa o campo ou mantém o prefixo
-      if (emailOrPhoneInput.value === '+244') {
-        emailOrPhoneInput.value = ''; // Remove o prefixo se nada mais foi digitado
+      // Se o campo for apenas "+244" ou estiver vazio ao perder o foco, limpa.
+      if (emailOrPhoneInput.value === '+244' || emailOrPhoneInput.value === '') {
+        emailOrPhoneInput.value = '';
       }
+    });
+
+    // Funções para mostrar/esconder mensagens de erro
+    function showError(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+
+    function hideError(element) {
+        element.classList.add('hidden');
+    }
+
+    // Lógica de ativação/desativação do botão "Criar Conta" e checkbox de termos
+    function toggleRegisterButtonAndTerms() {
+      // O botão "Criar Conta" só é habilitado se 'termsAcceptedViaModal' for verdadeiro
+      registerBtn.disabled = !termsAcceptedViaModal;
+      // O checkbox dos termos só é marcado se 'termsAcceptedViaModal' for verdadeiro
+      termsCheckbox.checked = termsAcceptedViaModal;
+
+      if (!termsAcceptedViaModal) {
+        // Se os termos não foram aceitos via modal, mostra a mensagem de erro
+        showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos e Condições de Serviço.");
+      } else {
+        // Se foram aceitos, esconde a mensagem de erro dos termos
+        hideError(termsError);
+      }
+    }
+
+    // Inicializa o estado do botão e checkbox ao carregar a página
+    document.addEventListener('DOMContentLoaded', toggleRegisterButtonAndTerms);
+
+    // O checkbox em si NÃO deve ser clicável diretamente para evitar bypass.
+    // Ele será marcado APENAS quando o botão "Aceitar e Fechar" do modal for clicado.
+    termsCheckbox.addEventListener('click', (e) => {
+        // Impede que o usuário clique no checkbox
+        e.preventDefault(); 
+        // Se o usuário tentar clicar no checkbox, abre o modal (se não estiver aberto)
+        if (!termsModal.classList.contains('show')) {
+            showTermsLink.click();
+        }
     });
 
 
@@ -666,14 +915,13 @@
       e.preventDefault();
       
       // Limpar mensagens de erro anteriores
-      document.querySelectorAll('.text-error').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.error-message').forEach(el => hideError(el));
 
       let isValid = true; // Flag de validação
 
       // Validação do nome
       if (!nameInput.value.trim()) {
-        nameError.textContent = "Nome completo é obrigatório.";
-        nameError.classList.remove('hidden');
+        showError(nameError, "Nome completo é obrigatório.");
         isValid = false;
       }
 
@@ -682,60 +930,49 @@
       let emailOrPhoneProcessed = emailOrPhoneRaw; // Variável para a credencial processada
 
       const isEmail = emailOrPhoneRaw.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhoneRaw); // Verifica se já está no formato +244XXXXXXXXX
-      const isPartialPhone = /^\+2449\d{0,8}$/.test(emailOrPhoneRaw); // Verifica se o usuário começou a digitar um número de telefone
+      // Regex atualizada para telefone angolano (9 dígitos após +244, começando com 9)
+      const isPhone = /^\+244(9[1-6]{1}|99)\d{7}$/.test(emailOrPhoneRaw); 
 
       if (!emailOrPhoneRaw) {
-        emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
-        emailOrPhoneError.classList.remove('hidden');
+        showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
         isValid = false;
       } else if (isEmail) {
         // Nada a fazer, é um email válido
       } else if (isPhone) {
         // Já está no formato correto, usa como está
-      } else if (isPartialPhone) {
-        // O usuário digitou "+2449..." mas não o número completo. Força erro.
-        emailOrPhoneError.textContent = "Número de telefone incompleto. Use +244XXXXXXXXX.";
-        emailOrPhoneError.classList.remove('hidden');
-        isValid = false;
-      }
-      else {
+      } else {
         // Nenhuma das opções acima, formato inválido.
-        emailOrPhoneError.textContent = "Formato inválido. Use um email ou um número de telefone angolano (+244XXXXXXXXX).";
-        emailOrPhoneError.classList.remove('hidden');
+        showError(emailOrPhoneError, "Formato inválido. Use um email ou um número de telefone angolano válido (+2449XXXXXXXX).");
         isValid = false;
       }
       
-      // Se a validação inicial do formato do telefone falhou, não prossegue
-      if (!isValid) {
-        return;
-      }
-
       // Validação do município
       if (!municipioSelect.value) {
-        municipioError.textContent = "Por favor, selecione seu município.";
-        municipioError.classList.remove('hidden');
+        showError(municipioError, "Por favor, selecione seu município.");
         isValid = false;
       }
 
       // Validação do bairro
       if (!bairroInput.value.trim()) {
-        bairroError.textContent = "O nome do bairro é obrigatório.";
-        bairroError.classList.remove('hidden');
+        showError(bairroError, "O nome do bairro é obrigatório.");
         isValid = false;
       }
 
       // Validação da senha
       if (passwordInput.value.length < 6) {
-        passwordError.textContent = "A senha deve ter pelo menos 6 caracteres.";
-        passwordError.classList.remove('hidden');
+        showError(passwordError, "A senha deve ter pelo menos 6 caracteres.");
         isValid = false;
       }
 
       // Validação da confirmação de senha
       if (passwordInput.value !== confirmPasswordInput.value) {
-        confirmPasswordError.textContent = "As senhas não coincidem.";
-        confirmPasswordError.classList.remove('hidden');
+        showError(confirmPasswordError, "As senhas não coincidem.");
+        isValid = false;
+      }
+
+      // Validação dos termos e condições: deve ter sido aceito via modal
+      if (!termsAcceptedViaModal) {
+        showError(termsError, "Você precisa aceitar os Termos e Condições de Serviço para continuar.");
         isValid = false;
       }
 
@@ -754,79 +991,103 @@
           throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
         }
 
-        // Chama a função de registo do módulo firebaseAuth
-        // Nota sobre reCAPTCHA: Ele permanece no HTML (hidden) e é usado pelo firebaseAuth.js internamente
-        // para Phone Auth, mesmo que você não o "veja".
+        // A chamada ao firebaseAuth.registerUser não precisa mais do recaptchaContainerId aqui,
+        // pois o reCAPTCHA invisível já foi inicializado globalmente no DOMContentLoaded.
         const result = await firebaseAuth.registerUser(
           nameInput.value, 
-          emailOrPhoneProcessed, // Usa a credencial processada
+          emailOrPhoneProcessed, 
           passwordInput.value, 
           municipioSelect.value, 
           bairroInput.value,
-          firebaseApp,
-          'recaptcha-container' // ID do container hidden para o reCAPTCHA
+          firebaseApp
         );
 
         if (result && result.requiresPhoneVerification) {
-          // Se for registo por telefone, o módulo `firebaseAuth` já enviou o SMS e salvou temporariamente os dados.
           alert('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.');
-          window.location.href = 'verify-phone.html'; // Redireciona para a tela de verificação
+          window.location.href = 'verify-phone.html';
         } else {
-          // Se for registo por email, o utilizador já está logado
           alert('Conta criada com sucesso! Bem-vindo(a) ao FixABairro.');
-          window.location.href = 'profile.html'; // Redireciona para o perfil/dashboard
+          window.location.href = 'profile.html';
         }
 
       } catch (error) {
         let userFacingMessage = "Ocorreu um erro inesperado. Por favor, tente novamente.";
         console.error("Erro no registo:", error);
 
-        // Tratamento de erros específicos do Firebase
         if (error.code) {
           switch (error.code) {
             case 'auth/email-already-in-use':
               userFacingMessage = 'Este email já está registado. Tente fazer login ou use outro email.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
+              showError(emailOrPhoneError, userFacingMessage);
               break;
             case 'auth/invalid-email':
               userFacingMessage = 'O formato do email é inválido.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
+              showError(emailOrPhoneError, userFacingMessage);
               break;
             case 'auth/weak-password':
               userFacingMessage = 'A senha é muito fraca. Escolha uma senha mais forte.';
-              passwordError.textContent = userFacingMessage;
-              passwordError.classList.remove('hidden');
+              showError(passwordError, userFacingMessage);
               break;
             case 'auth/invalid-phone-number':
-              userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +244XXXXXXXXX.';
-              emailOrPhoneError.textContent = userFacingMessage;
-              emailOrPhoneError.classList.remove('hidden');
+              userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +2449XXXXXXXX.';
+              showError(emailOrPhoneError, userFacingMessage);
               break;
             case 'auth/quota-exceeded':
             case 'auth/too-many-requests':
               userFacingMessage = 'Muitas tentativas. Por favor, tente novamente mais tarde.';
+              alert(userFacingMessage); // Usa alert para mensagens de erro gerais
               break;
             case 'auth/network-request-failed':
               userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+              alert(userFacingMessage);
               break;
             default:
-              // Para outros erros Firebase não tratados especificamente, use a mensagem do Firebase.
               userFacingMessage = `Erro Firebase: ${error.message}`;
-              alert(userFacingMessage); // Exibe um alerta genérico para outros erros
+              alert(userFacingMessage);
           }
         } else {
-          // Para erros que não são do Firebase Auth
           userFacingMessage = error.message;
-          alert(userFacingMessage); // Exibe um alerta genérico
+          alert(userFacingMessage);
         }
       } finally {
-        // Restaurar estado do botão após a tentativa
         registerBtn.disabled = false;
         registerText.classList.remove('hidden');
         registerSpinner.classList.add('hidden');
         registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+      }
+    });
+
+    // Lógica do Modal de Termos e Condições
+    showTermsLink.addEventListener('click', () => {
+      termsModal.classList.add('show');
+      // Certifica-se de que o checkbox não está marcado ao abrir o modal,
+      // forçando o usuário a aceitar via botão "Aceitar e Fechar".
+      termsCheckbox.checked = false; 
+      toggleRegisterButtonAndTerms(); // Revalida o estado do botão
+    });
+
+    closeTermsModalBtn.addEventListener('click', () => {
+      termsModal.classList.remove('show');
+      // Ao fechar o modal sem aceitar, os termos NÃO são aceitos via modal
+      termsAcceptedViaModal = false;
+      toggleRegisterButtonAndTerms(); // Revalida o estado do botão
+    });
+
+    acceptTermsModalBtn.addEventListener('click', () => {
+      termsAcceptedViaModal = true; // Termos aceites via modal
+      termsModal.classList.remove('show');
+      toggleRegisterButtonAndTerms(); // Habilita o botão e esconde o erro
+    });
+
+    // Fechar modal ao clicar fora dele
+    termsModal.addEventListener('click', (e) => {
+      if (e.target === termsModal) {
+        termsModal.classList.remove('show');
+        // Ao fechar o modal clicando fora sem aceitar, os termos NÃO são aceitos via modal
+        if (!e.target.closest('.modal-content')) { // Verifica se o clique não foi dentro do conteúdo do modal
+          termsAcceptedViaModal = false;
+          toggleRegisterButtonAndTerms();
+        }
       }
     });
   </script>
