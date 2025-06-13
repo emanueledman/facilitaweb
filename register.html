@@ -753,6 +753,33 @@
       } else {
         console.error("Firebase SDK não carregado. Verifique os scripts defer.");
       }
+
+      // IMPORTANTE: Inicializa e renderiza o reCAPTCHA invisível para Phone Auth
+      // Isso deve ser feito ANTES de qualquer tentativa de signInWithPhoneNumber.
+      // O 'recaptcha-container' deve estar presente no HTML (hidden ou não).
+      if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
+          window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+              'size': 'invisible', // Mantemos invisível
+              'callback': (response) => {
+                  // reCAPTCHA resolvido, pode ser usado para depuração se necessário
+                  console.log("reCAPTCHA invisível resolvido.");
+              },
+              'expired-callback': () => {
+                  // reCAPTCHA expirou, importante para relançar se o usuário demorar
+                  console.warn("reCAPTCHA invisível expirou. Por favor, tente novamente.");
+                  // Você pode querer re-renderizar ou avisar o usuário aqui
+                  if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                      grecaptcha.reset(window.recaptchaWidgetId); // Resetar para nova tentativa
+                  }
+              }
+          });
+          window.recaptchaVerifier.render().then(function(widgetId) {
+              window.recaptchaWidgetId = widgetId;
+              console.log("reCAPTCHA invisível renderizado com ID do widget:", widgetId);
+          }).catch(error => {
+              console.error("Erro ao renderizar reCAPTCHA invisível:", error);
+          });
+      }
     });
 
     // Elementos DOM
@@ -964,7 +991,8 @@
           throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
         }
 
-        // Removido o argumento 'recaptcha-container' pois o firebaseAuth.js não o espera mais explicitamente.
+        // A chamada ao firebaseAuth.registerUser não precisa mais do recaptchaContainerId aqui,
+        // pois o reCAPTCHA invisível já foi inicializado globalmente no DOMContentLoaded.
         const result = await firebaseAuth.registerUser(
           nameInput.value, 
           emailOrPhoneProcessed, 
