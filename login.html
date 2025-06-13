@@ -11,8 +11,8 @@
   <!-- Favicon (Usando um placeholder para garantir que o link funcione no Canvas) -->
   <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
 
-  <!-- Google Fonts: Inter para corpo, Montserrat para títulos -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Poppins para corpo, Montserrat para títulos, Inter para consistência -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -61,16 +61,15 @@
         color: var(--text-main); /* Cor do texto principal */
         line-height: 1.7;
         overflow-x: hidden;
-        padding-top: 80px; /* Espaço para a navbar fixa, se houver */
         min-height: 100vh;
         display: flex;
+        flex-direction: column; /* Organiza a navbar e o conteúdo principal */
         align-items: center;
-        justify-content: center;
       }
       
       h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-heading);
-        color: var(--secondary-dark);
+        color: var(--secondary-dark); /* Cor de título */
         line-height: 1.2;
       }
 
@@ -87,6 +86,115 @@
       }
       ::-webkit-scrollbar-thumb:hover {
           background: #E64A19;
+      }
+
+      /* Navbar Styles (Replicado do tema principal) */
+      .navbar {
+        background: var(--secondary-dark); /* Fundo escuro fixo para consistência com o tema */
+        padding: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        position: fixed; /* Navbar fixa no topo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-white); /* Cor do texto da marca */
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        background: var(--primary-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-white);
+        font-size: 1.5rem;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+      }
+
+      .nav-link {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.9); /* Links brancos */
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 3px;
+          background: var(--primary-accent);
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after, .nav-link.active::after {
+          width: 70%;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-accent);
+      }
+
+      /* Botões Globais (replicados para a navbar e formulário) */
+      .btn-main {
+        background: var(--primary-accent);
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .btn-main:hover {
+        background: #E64A19;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+      }
+
+      .btn-outline-secondary-dark {
+        background: transparent;
+        color: var(--text-white); /* Cor branca no estado padrão da navbar fixa */
+        padding: 0.9rem 2.5rem;
+        border: 2px solid rgba(255,255,255,0.7);
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-secondary-dark:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--text-white);
+        color: var(--text-white);
+        transform: translateY(-3px);
       }
 
       /* Classes utilitárias do spinner */
@@ -107,6 +215,142 @@
         width: 1rem;
         height: 1rem;
         border-width: 0.2em;
+      }
+
+      /* Estilos Específicos do Formulário */
+      .form-container-wrapper {
+        flex-grow: 1; /* Permite que o wrapper do formulário ocupe o espaço restante */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0; /* Espaçamento vertical para que não fique colado no topo/rodapé */
+        margin-top: 80px; /* Ajuste para compensar a navbar fixa */
+      }
+
+      .form-card {
+        background: var(--bg-white);
+        border-radius: var(--border-radius-lg);
+        padding: 3rem;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid #ECEFF1;
+        transition: all 0.4s ease;
+        width: 100%; /* Garante que o card ocupe a largura máxima permitida pelo flexbox/max-width */
+        max-width: 900px; /* Mantém a largura máxima para o card */
+      }
+      
+      .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--secondary-dark);
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--primary-accent);
+        border-radius: 2px;
+      }
+      
+      .form-group {
+        margin-bottom: 1.8rem;
+        position: relative;
+      }
+      
+      .form-group label {
+        font-weight: 500;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 1.05rem;
+      }
+
+      .form-control {
+        background: var(--bg-light);
+        border: 1px solid #CED4DA;
+        color: var(--text-main);
+        border-radius: var(--border-radius-md);
+        padding: 0.9rem 1.2rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+      
+      .form-control:focus {
+        background: var(--bg-white);
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+        color: var(--text-main);
+      }
+      
+      .form-control::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+      
+      .error-message {
+        color: var(--error-red); /* Usando a variável de erro da paleta */
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: none;
+        font-weight: 500;
+      }
+
+      /* Responsividade para a navbar */
+      @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark); /* Cor escura no mobile */
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark); /* Cor escura do toggler */
+        }
+        .navbar {
+            background: var(--bg-white); /* Fundo branco no mobile */
+        }
+        .nav-link {
+            color: var(--text-main); /* Links escuros no mobile */
+        }
+        .btn-outline-secondary-dark {
+            color: var(--secondary-dark); /* Botões escuros no mobile */
+            border-color: var(--secondary-dark);
+        }
+        .navbar-nav {
+            background-color: var(--bg-white); /* Fundo para o menu colapsado */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .form-card {
+          padding: 2rem;
+        }
+        /* Ajustar tamanho de fonte para mobile */
+        .form-card h1 {
+          font-size: 2rem;
+        }
+        .form-card p {
+          font-size: 0.95rem;
+        }
+      }
+      
+      @media (max-width: 576px) {
+        .form-card {
+          padding: 1.5rem;
+        }
       }
     }
   </style>
@@ -146,9 +390,9 @@
             error: 'var(--error-red)',
           },
           fontFamily: {
-            inter: ['Inter', 'sans-serif'],
-            montserrat: ['Montserrat', 'sans-serif'],
             poppins: ['Poppins', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
           },
           borderRadius: {
             'lg': 'var(--border-radius-lg)',
@@ -163,75 +407,113 @@
     }
   </script>
 </head>
-<body class="bg-light text-main">
-  <div class="relative w-full max-w-4xl min-h-[600px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1]">
-    <!-- Lado Esquerdo - Boas-vindas e Ilustração -->
-    <div class="hidden md:flex md:w-1/2 p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
-      <div class="absolute inset-0 opacity-10"></div>
-      <i class="fas fa-chart-line text-6xl text-white mb-6 transform scale-110"></i> <!-- Ícone diferente para login -->
-      <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
-        Conecte-se com Sua Comunidade!
-      </h2>
-      <p class="text-lg font-poppins opacity-90 mb-8">
-        Faça login para acompanhar e resolver problemas, e construir um bairro melhor.
-      </p>
-      <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Login" alt="Ilustração de login" class="w-64 h-64 object-contain">
-    </div>
-
-    <!-- Lado Direito - Formulário de Login -->
-    <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white z-20">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <i class="fas fa-sign-in-alt text-3xl text-white"></i>
-        </div>
-        <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Bem-vindo(a) de Volta!</h1>
-        <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
-      </div>
-      
-      <form id="loginForm" class="space-y-5">
-        <div>
-          <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
-          <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244XXXXXXXXX" required>
-          <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
-        </div>
-        
-        <div>
-          <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
-          <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
-        </div>
-        
-        <div class="text-right text-sm">
-          <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
-        </div>
-        
-        <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
-          <span id="loginText"><i class="fas fa-sign-in-alt"></i> Entrar</span>
-          <span id="loginSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
-        </button>
-      </form>
-      
-      <div class="relative flex py-5 items-center">
-        <div class="flex-grow border-t border-text-secondary opacity-30"></div>
-        <span class="flex-shrink mx-4 text-text-secondary text-sm font-medium">OU</span>
-        <div class="flex-grow border-t border-text-secondary opacity-30"></div>
-      </div>
-
-      <button type="button" id="googleLoginBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md">
-        <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
-        <span>Entrar com Google</span>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container mx-auto px-4">
+      <a class="navbar-brand flex items-center" href="index.html">
+        <div class="logo">F</div>
+        FixABairro
+      </a>
+      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary-dark"></i>
       </button>
-      
-      <p class="text-center text-text-secondary text-sm mt-6">
-        Não tem uma conta? 
-        <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
-      </p>
+      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
+        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#impact">Impacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+          </li>
+          <li class="nav-item ml-auto md:ml-3">
+            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
+          </li>
+          <li class="nav-item md:ml-2">
+            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-      <!-- reCAPTCHA container, will be hidden, mas necessário para o Firebase Phone Auth -->
-      <div id="recaptcha-container" class="mt-4 hidden"></div>
+  <!-- Conteúdo Principal - Formulário de Login -->
+  <div class="form-container-wrapper w-full px-4">
+    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
+      <!-- Lado Esquerdo - Ilustração -->
+      <div class="hidden md:flex p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
+        <div class="absolute inset-0 opacity-10"></div>
+        <i class="fas fa-chart-line text-6xl text-white mb-6 transform scale-110"></i>
+        <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
+          Conecte-se com Sua Comunidade!
+        </h2>
+        <p class="text-lg font-poppins opacity-90 mb-8">
+          Faça login para acompanhar e resolver problemas, e construir um bairro melhor.
+        </p>
+        <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Login" alt="Ilustração de login" class="w-64 h-64 object-contain">
+      </div>
+
+      <!-- Lado Direito - Formulário de Login -->
+      <div class="w-full p-8 md:p-12 flex flex-col justify-center bg-white z-20">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-sign-in-alt text-3xl text-white"></i>
+          </div>
+          <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Bem-vindo(a) de Volta!</h1>
+          <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-5">
+          <div>
+            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou 912345678" required>
+            <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
+          </div>
+          
+          <div>
+            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
+            <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
+          </div>
+          
+          <div class="text-right text-sm">
+            <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
+          </div>
+          
+          <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+            <span id="loginText"><i class="fas fa-sign-in-alt"></i> Entrar</span>
+            <span id="loginSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+        
+        <div class="relative flex py-5 items-center">
+          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+          <span class="flex-shrink mx-4 text-text-secondary text-sm font-medium">OU</span>
+          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+        </div>
+
+        <button type="button" id="googleLoginBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md">
+          <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
+          <span>Entrar com Google</span>
+        </button>
+        
+        <p class="text-center text-text-secondary text-sm mt-6">
+          Não tem uma conta? 
+          <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
+        </p>
+
+        <!-- reCAPTCHA container, hidden mas necessário para o Firebase Phone Auth -->
+        <div id="recaptcha-container" class="mt-4 hidden"></div>
+      </div>
     </div>
   </div>
 
+  <!-- Bootstrap JS (para a funcionalidade da navbar) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -278,6 +560,30 @@
     const passwordError = document.getElementById('passwordError');
     const recaptchaContainer = document.getElementById('recaptcha-container');
 
+    // Lógica para preencher automaticamente o prefixo do telefone (+244)
+    emailOrPhoneInput.addEventListener('focus', () => {
+      if (!emailOrPhoneInput.value.startsWith('+244')) {
+        emailOrPhoneInput.value = '+244';
+      }
+    });
+
+    emailOrPhoneInput.addEventListener('input', () => {
+      if (!emailOrPhoneInput.value.startsWith('+244')) {
+        emailOrPhoneInput.value = '+244';
+      }
+      // Garante que o cursor esteja sempre após o prefixo, a menos que o usuário esteja apagando.
+      if (document.activeElement === emailOrPhoneInput && emailOrPhoneInput.value.length < 4) {
+        emailOrPhoneInput.setSelectionRange(4, 4);
+      }
+    });
+
+    emailOrPhoneInput.addEventListener('blur', () => {
+      // Se o usuário apagar tudo e sair, limpa o campo ou mantém o prefixo
+      if (emailOrPhoneInput.value === '+244') {
+        emailOrPhoneInput.value = ''; // Remove o prefixo se nada mais foi digitado
+      }
+    });
+
     // Manipulador do formulário de login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -286,16 +592,30 @@
       document.querySelectorAll('.text-error').forEach(el => el.classList.add('hidden'));
 
       let isValid = true; // Flag de validação
-      const emailOrPhone = emailOrPhoneInput.value.trim();
-      const isEmail = emailOrPhone.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // Formato +244XXXXXXXXX
+      const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+      let emailOrPhoneProcessed = emailOrPhoneRaw; // Variável para a credencial processada
 
-      if (!emailOrPhone) {
+      const isEmail = emailOrPhoneRaw.includes('@');
+      const isPhone = /^\+244\d{9}$/.test(emailOrPhoneRaw); // Verifica se já está no formato +244XXXXXXXXX
+      const isPartialPhone = /^\+2449\d{0,8}$/.test(emailOrPhoneRaw); // Verifica se o usuário começou a digitar um número de telefone
+
+      if (!emailOrPhoneRaw) {
         emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
         emailOrPhoneError.classList.remove('hidden');
         isValid = false;
-      } else if (!isEmail && !isPhone) {
-        emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
+      } else if (isEmail) {
+        // Nada a fazer, é um email válido
+      } else if (isPhone) {
+        // Já está no formato correto, usa como está
+      } else if (isPartialPhone) {
+        // O usuário digitou "+2449..." mas não o número completo. Força erro.
+        emailOrPhoneError.textContent = "Número de telefone incompleto. Use +244XXXXXXXXX.";
+        emailOrPhoneError.classList.remove('hidden');
+        isValid = false;
+      }
+      else {
+        // Nenhuma das opções acima, formato inválido.
+        emailOrPhoneError.textContent = "Formato inválido. Use um email ou um número de telefone angolano (+244XXXXXXXXX).";
         emailOrPhoneError.classList.remove('hidden');
         isValid = false;
       }
@@ -322,7 +642,7 @@
         }
 
         const result = await firebaseAuth.loginUser(
-          emailOrPhone, 
+          emailOrPhoneProcessed, // Usa a credencial processada
           passwordInput.value, 
           firebaseApp, 
           'recaptcha-container'
