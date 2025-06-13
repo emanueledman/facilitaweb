@@ -3,409 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FixABairro - Login">
-  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, login">
+  <meta name="description" content="FixABairro - Faça login para gerenciar problemas e ajudar sua comunidade.">
+  <meta name="keywords" content="fixabairro, angola, login, entrar, conta, email, telefone, google">
   <meta name="author" content="FixABairro Team">
-  <title>FixABairro | Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <title>FixABairro | Entrar</title>
+  
+  <!-- Favicon (Usando um placeholder para garantir que o link funcione no Canvas) -->
+  <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
+
+  <!-- Google Fonts: Inter para corpo, Montserrat para títulos -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" type="image/png" href="/favicon.png"/>
-  <style>
-    /* Seu CSS atual */
-    :root {
-      --primary-color: #1e40af; /* Azul escuro */
-      --secondary-color: #22c55e; /* Verde */
-      --highlight-color: #f59e0b; /* Amarelo-alaranjado */
-      --dark-bg: #1f2937;
-      --dark-card: #2d3748;
-      --light-text: #f3f4f6;
-      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      --border-radius: 12px;
-    }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--dark-bg);
-      color: var(--light-text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .auth-container {
-      max-width: 500px;
-      width: 100%;
-      margin: auto;
-      padding: 2rem;
-    }
-    
-    .auth-card {
-      background: var(--dark-card);
-      border-radius: 16px;
-      padding: 2.5rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
-      transition: transform 0.3s ease;
-    }
-    
-    .auth-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .auth-logo {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    
-    .auth-logo img {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.5));
-      transition: transform 0.3s ease;
-    }
-    
-    .auth-logo img:hover {
-      transform: scale(1.1);
-    }
-    
-    .auth-logo h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      margin: 0;
-      background: linear-gradient(to right, #ffffff, var(--primary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .auth-form .form-control {
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--light-text);
-      padding: 0.75rem 1rem;
-      border-radius: 12px;
-      margin-bottom: 1.25rem;
-      transition: all 0.3s ease;
-    }
-    
-    .auth-form .form-control:focus {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25);
-      color: var(--light-text);
-    }
-    
-    .auth-form .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-    
-    .auth-form .form-label {
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    
-    .btn-auth {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      transition: all 0.3s ease;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      border: none;
-      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
-    }
-    
-    .btn-primary:hover {
-      background-color: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(34, 197, 94, 0.5);
-    }
-    
-    .btn-primary:disabled {
-      background-color: #6b7280;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-    
-    .btn-outline-light {
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      background: transparent;
-      color: var(--light-text);
-    }
-    
-    .btn-outline-light:hover {
-      background: rgba(34, 197, 94, 0.2);
-      border-color: var(--primary-color);
-      color: white;
-      transform: translateY(-2px);
-    }
-    
-    .auth-footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    
-    .auth-footer a {
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    
-    .auth-footer a:hover {
-      text-decoration: underline;
-      color: var(--primary-dark);
-    }
-    
-    .divider {
-      display: flex;
-      align-items: center;
-      margin: 1.5rem 0;
-      color: rgba(255, 255, 255, 0.5);
-    }
-    
-    .divider::before, .divider::after {
-      content: "";
-      flex: 1;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .divider::before {
-      margin-right: 1rem;
-    }
-    
-    .divider::after {
-      margin-left: 1rem;
-    }
-    
-    .google-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-    }
-    
-    .google-btn img {
-      height: 20px;
-    }
-    
-    .error-message {
-      color: #ef4444; /* Usar uma cor de erro definida */
-      font-size: 0.9rem;
-      margin-top: -0.75rem;
-      margin-bottom: 1rem;
-      display: none;
-    }
-    
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 1s ease-in-out infinite;
-      margin-left: 0.5rem;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    @media (max-width: 576px) {
-      .auth-container {
-        padding: 1.5rem;
+
+  <!-- Tailwind CSS (direto do CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer base {
+      /* Paleta de Cores e Variáveis Globais */
+      :root {
+        --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
+        --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
+        --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
+        --success-green: #4CAF50; /* Verde para status de sucesso */
+        --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
+        --info-blue: #2196F3; /* Azul para status de informação/progresso */
+
+        --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
+        --bg-white: #FFFFFF; /* Fundo branco puro para cards */
+        --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
+
+        --text-main: #34495E; /* Azul escuro para texto principal */
+        --text-secondary: #7F8C8D; /* Cinza para texto secundário */
+        --text-white: #FFFFFF; /* Texto branco */
+
+        --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
+        --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
+
+        --border-radius-lg: 15px;
+        --border-radius-md: 10px;
+        --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+        --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+        --error-red: #DC3545; /* Vermelho para erros */
       }
       
-      .auth-card {
-        padding: 1.5rem;
+      /* Reset e estilos base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
       
-      .auth-logo h1 {
-        font-size: 1.5rem;
+      body {
+        font-family: var(--font-body);
+        background: var(--bg-light); /* Fundo com a nova paleta */
+        color: var(--text-main); /* Cor do texto principal */
+        line-height: 1.7;
+        overflow-x: hidden;
+        padding-top: 80px; /* Espaço para a navbar fixa, se houver */
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
-      .auth-logo img {
-        width: 50px;
-        height: 50px;
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+          width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+          background: var(--bg-light);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--primary-accent);
+          border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #E64A19;
+      }
+
+      /* Classes utilitárias do spinner */
+      .spinner-border {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        vertical-align: -0.125em;
+        border: 0.25em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .75s linear infinite spinner-border;
+      }
+      @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+      }
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
       }
     }
   </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              accent: 'var(--primary-accent)',
+            },
+            secondary: {
+              dark: 'var(--secondary-dark)',
+            },
+            highlight: {
+              light: 'var(--highlight-light)',
+            },
+            success: {
+              DEFAULT: 'var(--success-green)',
+            },
+            warning: {
+              DEFAULT: 'var(--warning-orange)',
+            },
+            info: {
+              DEFAULT: 'var(--info-blue)',
+            },
+            bg: {
+              light: 'var(--bg-light)',
+              white: 'var(--bg-white)',
+              darkOverlay: 'var(--bg-dark-overlay)',
+            },
+            text: {
+              main: 'var(--text-main)',
+              secondary: 'var(--text-secondary)',
+              white: 'var(--text-white)',
+            },
+            error: 'var(--error-red)',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': 'var(--border-radius-lg)',
+            'md': 'var(--border-radius-md)',
+          },
+          boxShadow: {
+            soft: 'var(--shadow-soft)',
+            medium: 'var(--shadow-medium)',
+          },
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <div class="auth-container">
-    <div class="auth-card">
-      <div class="auth-logo">
-        <img src="icons/Icon-192.png" alt="FixABairro Logo">
-        <h1>FixABairro</h1>
+<body class="bg-light text-main">
+  <div class="relative w-full max-w-4xl min-h-[600px] flex rounded-3xl shadow-2xl overflow-hidden bg-white border border-[#ECEFF1]">
+    <!-- Lado Esquerdo - Boas-vindas e Ilustração -->
+    <div class="hidden md:flex md:w-1/2 p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
+      <div class="absolute inset-0 opacity-10"></div>
+      <i class="fas fa-chart-line text-6xl text-white mb-6 transform scale-110"></i> <!-- Ícone diferente para login -->
+      <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
+        Conecte-se com Sua Comunidade!
+      </h2>
+      <p class="text-lg font-poppins opacity-90 mb-8">
+        Faça login para acompanhar e resolver problemas, e construir um bairro melhor.
+      </p>
+      <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Login" alt="Ilustração de login" class="w-64 h-64 object-contain">
+    </div>
+
+    <!-- Lado Direito - Formulário de Login -->
+    <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-white z-20">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <i class="fas fa-sign-in-alt text-3xl text-white"></i>
+        </div>
+        <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Bem-vindo(a) de Volta!</h1>
+        <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
       </div>
       
-      <form id="loginForm" class="auth-form">
-        <div class="mb-4">
-          <label for="emailOrPhone" class="form-label">Email ou Número de Telefone</label>
-          <input type="text" class="form-control" id="emailOrPhone" placeholder="Email ou +244XXXXXXXXX" required>
-          <div id="emailOrPhoneError" class="error-message"></div>
+      <form id="loginForm" class="space-y-5">
+        <div>
+          <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+          <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244XXXXXXXXX" required>
+          <p id="emailOrPhoneError" class="text-error text-xs mt-1 hidden">Erro de email/telefone</p>
         </div>
         
-        <div class="mb-3">
-          <label for="password" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
-          <div id="passwordError" class="error-message"></div>
+        <div>
+          <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+          <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
+          <p id="passwordError" class="text-error text-xs mt-1 hidden">Erro de senha</p>
         </div>
         
-        <div class="d-flex justify-content-end mb-4">
-          <a href="#" id="forgotPassword" class="text-decoration-none" style="color: var(--primary-color);">Esqueceu a senha?</a>
+        <div class="text-right text-sm">
+          <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
         </div>
         
-        <button type="submit" class="btn btn-primary btn-auth" id="loginBtn">
-          <span id="loginText">Entrar</span>
-          <span id="loginSpinner" class="spinner" style="display: none;"></span>
+        <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+          <span id="loginText"><i class="fas fa-sign-in-alt"></i> Entrar</span>
+          <span id="loginSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
         </button>
-        
-        <div class="divider">ou</div>
-        
-        <button type="button" class="btn btn-outline-light btn-auth" id="googleLoginBtn">
-          <span class="google-btn">
-            <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo">
-            <span>Entrar com Google</span>
-          </span>
-        </button>
-        
-        <div class="auth-footer">
-          Não tem uma conta? <a href="register.html" id="registerLink">Criar conta</a>
-        </div>
       </form>
+      
+      <div class="relative flex py-5 items-center">
+        <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+        <span class="flex-shrink mx-4 text-text-secondary text-sm font-medium">OU</span>
+        <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+      </div>
+
+      <button type="button" id="googleLoginBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md">
+        <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
+        <span>Entrar com Google</span>
+      </button>
+      
+      <p class="text-center text-text-secondary text-sm mt-6">
+        Não tem uma conta? 
+        <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
+      </p>
+
+      <!-- reCAPTCHA container, will be hidden, mas necessário para o Firebase Phone Auth -->
+      <div id="recaptcha-container" class="mt-4 hidden"></div>
     </div>
   </div>
 
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+  <!-- SEU Firebase Auth Module -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Seus elementos DOM e scripts atuais
+    // Configuração do Firebase (SUBSTITUA PELAS SUAS CREDENCIAIS REAIS DO FIREBASE)
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+    };
+
+    // Inicializa Firebase App. Esta parte é crucial e deve ser feita uma única vez.
+    let firebaseApp;
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebaseApp = firebase.initializeApp(firebaseConfig);
+        console.log("Firebase App inicializado com sucesso.");
+      } else if (firebase.apps.length) {
+        firebaseApp = firebase.app();
+        console.log("Firebase App já estava inicializado.");
+      } else {
+        console.error("Firebase SDK não carregado. Verifique os scripts defer.");
+      }
+    });
+
+    // Elementos DOM
     const loginForm = document.getElementById('loginForm');
-    const emailOrPhoneInput = document.getElementById('emailOrPhone'); // Mudança aqui
+    const emailOrPhoneInput = document.getElementById('emailOrPhone');
     const passwordInput = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
     const loginText = document.getElementById('loginText');
     const loginSpinner = document.getElementById('loginSpinner');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
     const forgotPasswordLink = document.getElementById('forgotPassword');
-    const emailOrPhoneError = document.getElementById('emailOrPhoneError'); // Mudança aqui
+    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
     const passwordError = document.getElementById('passwordError');
+    const recaptchaContainer = document.getElementById('recaptcha-container');
 
-    // Inicialização do reCAPTCHA (para login por telefone)
-    let recaptchaVerifier;
-    window.onload = function() {
-      // Apenas inicialize o reCAPTCHA se o login por telefone for uma opção primária
-      // Ou se você tiver um botão específico para login por telefone
-      // É mais comum inicializá-lo ao tentar o login por telefone
-    };
-
+    // Manipulador do formulário de login
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      // Limpar mensagens de erro
-      emailOrPhoneError.style.display = 'none';
-      passwordError.style.display = 'none';
+      // Limpar mensagens de erro anteriores
+      document.querySelectorAll('.text-error').forEach(el => el.classList.add('hidden'));
 
-      let isValid = true;
+      let isValid = true; // Flag de validação
       const emailOrPhone = emailOrPhoneInput.value.trim();
       const isEmail = emailOrPhone.includes('@');
-      const isPhone = /^\+244\d{9}$/.test(emailOrPhone);
+      const isPhone = /^\+244\d{9}$/.test(emailOrPhone); // Formato +244XXXXXXXXX
 
       if (!emailOrPhone) {
         emailOrPhoneError.textContent = "Email ou número de telefone é obrigatório.";
-        emailOrPhoneError.style.display = 'block';
+        emailOrPhoneError.classList.remove('hidden');
         isValid = false;
       } else if (!isEmail && !isPhone) {
         emailOrPhoneError.textContent = "Formato inválido. Use um email ou +244XXXXXXXXX.";
-        emailOrPhoneError.style.display = 'block';
+        emailOrPhoneError.classList.remove('hidden');
         isValid = false;
       }
 
       if (!passwordInput.value) {
         passwordError.textContent = "A senha é obrigatória.";
-        passwordError.style.display = 'block';
+        passwordError.classList.remove('hidden');
         isValid = false;
       }
 
       if (!isValid) {
-        return;
+        return; // Sai se a validação falhar
       }
 
+      // Ativar estado de carregamento do botão
       loginBtn.disabled = true;
-      loginText.style.display = 'none';
-      loginSpinner.style.display = 'inline-block';
+      loginText.classList.add('hidden');
+      loginSpinner.classList.remove('hidden');
+      loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
 
       try {
-        if (isEmail) {
-          await firebaseAuth.loginWithEmail(emailOrPhone, passwordInput.value);
-        } else if (isPhone) {
-          // Para login por telefone, você precisará de uma etapa de OTP
-          // A senha não é usada diretamente para autenticação com telefone no Firebase,
-          // mas pode ser usada para um registro inicial
-          // A autenticação por telefone no Firebase envolve o envio de um código de verificação
-          // E uma nova tela para inserção desse código.
-          // window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginBtn', { // 'loginBtn' é o ID do elemento onde o reCAPTCHA será renderizado ou onde o botão é clicado
-          //   'size': 'invisible',
-          //   'callback': (response) => {
-          //     // reCAPTCHA resolvido, agora você pode enviar o código de verificação
-          //   }
-          // });
-          // const appVerifier = window.recaptchaVerifier;
-          // await firebaseAuth.loginWithPhone(emailOrPhone, appVerifier);
-          // Redirecionar para tela de verificação de OTP
-          alert('Será enviado um código para o seu número de telefone.');
-          // Armazenar o número de telefone para a próxima tela
-          localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhone);
-          window.location.href = 'verify-phone.html'; 
-
+        if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
+          throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
         }
-        alert('Login realizado com sucesso! Você será redirecionado.');
-        window.location.href = 'dashboard.html';
+
+        const result = await firebaseAuth.loginUser(
+          emailOrPhone, 
+          passwordInput.value, 
+          firebaseApp, 
+          'recaptcha-container'
+        );
+
+        if (result && result.requiresPhoneVerification) {
+          // Se for login por telefone, redireciona para a verificação
+          alert('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.');
+          window.location.href = 'verify-phone.html';
+        } else {
+          // Se for login por email/senha, o utilizador já está logado
+          alert('Login realizado com sucesso! Bem-vindo(a) de volta ao FixABairro.');
+          window.location.href = 'profile.html'; // Redireciona para o perfil/dashboard
+        }
       } catch (error) {
-        alert('Erro ao fazer login: ' + error.message);
-        console.error("Erro ao fazer login:", error);
+        let userFacingMessage = "Ocorreu um erro inesperado. Por favor, tente novamente.";
+        console.error("Erro no login:", error);
+
+        // Tratamento de erros específicos do Firebase
+        if (error.code) {
+          switch (error.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+              userFacingMessage = 'Credenciais inválidas. Verifique seu email/telefone e senha.';
+              emailOrPhoneError.textContent = userFacingMessage;
+              emailOrPhoneError.classList.remove('hidden');
+              passwordError.textContent = userFacingMessage; // Pode mostrar em ambos para feedback
+              passwordError.classList.remove('hidden');
+              break;
+            case 'auth/invalid-email':
+              userFacingMessage = 'O formato do email é inválido.';
+              emailOrPhoneError.textContent = userFacingMessage;
+              emailOrPhoneError.classList.remove('hidden');
+              break;
+            case 'auth/invalid-phone-number':
+              userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +244XXXXXXXXX.';
+              emailOrPhoneError.textContent = userFacingMessage;
+              emailOrPhoneError.classList.remove('hidden');
+              break;
+            case 'auth/too-many-requests':
+              userFacingMessage = 'Muitas tentativas de login. Sua conta pode ter sido temporariamente bloqueada.';
+              alert(userFacingMessage);
+              break;
+            case 'auth/network-request-failed':
+              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+              alert(userFacingMessage);
+              break;
+            default:
+              userFacingMessage = `Erro Firebase: ${error.message}`;
+              alert(userFacingMessage);
+          }
+        } else {
+          userFacingMessage = error.message;
+          alert(userFacingMessage);
+        }
+      } finally {
+        // Restaurar estado do botão após a tentativa
         loginBtn.disabled = false;
-        loginText.style.display = 'inline';
-        loginSpinner.style.display = 'none';
+        loginText.classList.remove('hidden');
+        loginSpinner.classList.add('hidden');
+        loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
       }
     });
 
+    // Login com Google
     googleLoginBtn.addEventListener('click', async () => {
+      // Ativar estado de carregamento do botão Google
+      googleLoginBtn.disabled = true;
+      googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+
       try {
-        await firebaseAuth.loginWithGoogle();
-        alert('Login com Google realizado com sucesso! Você será redirecionado.');
-        window.location.href = 'dashboard.html';
+        if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
+          throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
+        }
+        await firebaseAuth.loginWithGoogle(firebaseApp);
+        alert('Login com Google realizado com sucesso! Bem-vindo(a) ao FixABairro.');
+        window.location.href = 'profile.html';
       } catch (error) {
-        alert('Erro ao fazer login com Google: ' + error.message);
-        console.error("Erro ao fazer login com Google:", error);
+        let userFacingMessage = "Ocorreu um erro inesperado ao fazer login com Google. Por favor, tente novamente.";
+        console.error("Erro no login com Google:", error);
+
+        if (error.code) {
+          switch (error.code) {
+            case 'auth/popup-closed-by-user':
+              userFacingMessage = 'A janela de login do Google foi fechada.';
+              break;
+            case 'auth/cancelled-popup-request':
+              userFacingMessage = 'A requisição de popup foi cancelada.';
+              break;
+            case 'auth/network-request-failed':
+              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+              break;
+            default:
+              userFacingMessage = `Erro Firebase: ${error.message}`;
+          }
+        } else {
+          userFacingMessage = error.message;
+        }
+        alert(userFacingMessage);
+      } finally {
+        // Restaurar estado do botão Google
+        googleLoginBtn.disabled = false;
+        googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
       }
     });
 
+    // Esqueceu a senha
     forgotPasswordLink.addEventListener('click', async (e) => {
       e.preventDefault();
-      const emailInputVal = emailOrPhoneInput.value.trim(); // Assume que se usou email, vai querer resetar por email
+      const emailInputVal = emailOrPhoneInput.value.trim();
+      
+      // Validação simples para garantir que há um email no campo
       if (!emailInputVal || !emailInputVal.includes('@')) {
-        alert('Por favor, digite seu email no campo acima para resetar a senha.');
+        alert('Por favor, digite seu email no campo "Email ou Número de Telefone" para redefinir a senha.');
         return;
       }
+
       try {
-        await firebaseAuth.resetPassword(emailInputVal);
-        alert('Um email para redefinição de senha foi enviado para ' + emailInputVal);
+        if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
+          throw new Error("Módulo firebaseAuth ou Firebase App não inicializado. Verifique os scripts.");
+        }
+        await firebaseAuth.resetPassword(emailInputVal, firebaseApp);
+        alert('Um email para redefinição de senha foi enviado para ' + emailInputVal + '. Verifique sua caixa de entrada.');
       } catch (error) {
-        alert('Erro ao resetar senha: ' + error.message);
+        let userFacingMessage = "Ocorreu um erro ao tentar redefinir a senha. Por favor, tente novamente.";
         console.error("Erro ao resetar senha:", error);
+
+        if (error.code) {
+          switch (error.code) {
+            case 'auth/user-not-found':
+              userFacingMessage = 'Não há conta com este email.';
+              break;
+            case 'auth/invalid-email':
+              userFacingMessage = 'O formato do email é inválido.';
+              break;
+            case 'auth/network-request-failed':
+              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+              break;
+            default:
+              userFacingMessage = `Erro Firebase: ${error.message}`;
+          }
+        } else {
+          userFacingMessage = error.message;
+        }
+        alert(userFacingMessage);
       }
     });
   </script>
