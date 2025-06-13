@@ -1143,30 +1143,35 @@
     function loadStats(firebaseApp) {
       const db = firebaseApp.database();
 
-      db.ref('problems').once('value', (snapshot) => {
-        const total = snapshot.numChildren();
-        animateCounter(document.getElementById('totalReports'), total);
+      // Para 'once', você pode usar .catch() na Promise retornada.
+      db.ref('problems').once('value')
+        .then((snapshot) => {
+          const total = snapshot.numChildren();
+          animateCounter(document.getElementById('totalReports'), total);
 
-        let solved = 0;
-        snapshot.forEach(childSnapshot => {
-            if (childSnapshot.val().status === 'Resolvido') {
-                solved++;
-            }
+          let solved = 0;
+          snapshot.forEach(childSnapshot => {
+              if (childSnapshot.val().status === 'Resolvido') {
+                  solved++;
+              }
+          });
+          animateCounter(document.getElementById('solvedReports'), solved);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar estatísticas de problemas:', error);
+          document.getElementById('totalReports').textContent = 'Erro';
+          document.getElementById('solvedReports').textContent = 'Erro';
         });
-        animateCounter(document.getElementById('solvedReports'), solved);
-      }).catch(error => {
-        console.error('Erro ao carregar estatísticas de problemas:', error);
-        document.getElementById('totalReports').textContent = 'Erro';
-        document.getElementById('solvedReports').textContent = 'Erro';
-      });
 
-      db.ref('users').once('value', (snapshot) => {
-        const users = snapshot.numChildren();
-        animateCounter(document.getElementById('activeUsers'), users);
-      }).catch(error => {
-        console.error('Erro ao carregar usuários ativos:', error);
-        document.getElementById('activeUsers').textContent = 'Erro';
-      });
+      db.ref('users').once('value')
+        .then((snapshot) => {
+          const users = snapshot.numChildren();
+          animateCounter(document.getElementById('activeUsers'), users);
+        })
+        .catch(error => {
+          console.error('Erro ao carregar usuários ativos:', error);
+          document.getElementById('activeUsers').textContent = 'Erro';
+        });
     }
 
     // Animação de contador
@@ -1189,80 +1194,86 @@
       const recentIssuesContainer = document.getElementById('recentIssues');
       const noRecentIssuesMessage = document.getElementById('noRecentIssuesMessage');
 
-      firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value', (snapshot) => {
-        let html = '';
-        const issues = [];
+      // Adicionando um segundo argumento para tratamento de erro no .on()
+      firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
+        (snapshot) => {
+          let html = '';
+          const issues = [];
 
-        snapshot.forEach((childSnapshot) => {
-          const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-          if (problem.status !== 'Resolvido') {
-            issues.unshift(problem);
-          }
-        });
-
-        const displayIssues = issues.slice(0, 3); // Sempre mostrar apenas os 3 mais recentes
-
-        if (displayIssues.length === 0) {
-          noRecentIssuesMessage.style.display = 'block';
-          recentIssuesContainer.innerHTML = ''; // Limpa qualquer conteúdo antigo
-        } else {
-          noRecentIssuesMessage.style.display = 'none';
-          displayIssues.forEach((problem) => {
-            const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
-              ? problem.imageUrl
-              : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
-
-            const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
-              ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
-              : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
-
-            let statusClass = '';
-            let statusIcon = '';
-            switch (problem.status) {
-              case 'Em Análise':
-                statusClass = 'status-EmAnálise';
-                statusIcon = '<i class="fas fa-hourglass-half"></i>';
-                break;
-              case 'Aguardando':
-                statusClass = 'status-Aguardando';
-                statusIcon = '<i class="fas fa-clock"></i>';
-                break;
-              default: // Fallback para qualquer outro status inesperado
-                statusClass = 'status-Aguardando';
-                statusIcon = '<i class="fas fa-question-circle"></i>';
-                break;
+          snapshot.forEach((childSnapshot) => {
+            const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+            // Apenas problemas que NÃO estão resolvidos
+            if (problem.status !== 'Resolvido') {
+              issues.unshift(problem); // Adiciona ao início para obter os mais recentes primeiro
             }
-
-            const truncatedDescription = problem.description
-              ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
-              : 'Nenhuma descrição detalhada disponível para este problema.';
-
-            const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
-
-            html += `
-              <div class="issue-card" data-aos="fade-up">
-                ${imageHtml}
-                <div class="issue-content">
-                  <span class="issue-status ${statusClass}">${statusIcon} ${problem.status || 'Aguardando'}</span>
-                  <h3 class="issue-title">${problem.title || 'Problema Não Especificado'}</h3>
-                  <p class="issue-description">${truncatedDescription}</p>
-                  <div class="issue-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> ${problem.location?.neighborhood || 'Bairro'}, ${problem.location?.municipality || 'Município'}</span>
-                    <span><i class="fas fa-user-circle"></i> ${userNameDisplay}</span>
-                  </div>
-                  <a href="case-details.html?caseId=${problem.key}" class="card-link mt-auto">Ver Detalhes <i class="fas fa-arrow-right ms-2"></i></a>
-                </div>
-              </div>
-            `;
           });
-        }
-        recentIssuesContainer.innerHTML = html;
-      }).catch(error => {
-        console.error('Erro ao carregar problemas recentes:', error);
-        recentIssuesContainer.innerHTML =
-          '<div class="col-12"><p class="text-center text-danger">Erro ao carregar problemas. Por favor, tente novamente mais tarde.</p></div>';
+
+          const displayIssues = issues.slice(0, 3); // Sempre mostrar apenas os 3 mais recentes
+
+          if (displayIssues.length === 0) {
+            noRecentIssuesMessage.style.display = 'block';
+            recentIssuesContainer.innerHTML = ''; // Limpa qualquer conteúdo antigo
+          } else {
+            noRecentIssuesMessage.style.display = 'none';
+            displayIssues.forEach((problem) => {
+              const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+                ? problem.imageUrl
+                : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
+
+              const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+                ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
+                : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
+
+              let statusClass = '';
+              let statusIcon = '';
+              switch (problem.status) {
+                case 'Em Análise':
+                  statusClass = 'status-EmAnálise';
+                  statusIcon = '<i class="fas fa-hourglass-half"></i>';
+                  break;
+                case 'Aguardando':
+                  statusClass = 'status-Aguardando';
+                  statusIcon = '<i class="fas fa-clock"></i>';
+                  break;
+                default: // Fallback para qualquer outro status inesperado
+                  statusClass = 'status-Aguardando';
+                  statusIcon = '<i class="fas fa-question-circle"></i>';
+                  break;
+              }
+
+              const truncatedDescription = problem.description
+                ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
+                : 'Nenhuma descrição detalhada disponível para este problema.';
+
+              const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
+
+              html += `
+                <div class="issue-card" data-aos="fade-up">
+                  ${imageHtml}
+                  <div class="issue-content">
+                    <span class="issue-status ${statusClass}">${statusIcon} ${problem.status || 'Aguardando'}</span>
+                    <h3 class="issue-title">${problem.title || 'Problema Não Especificado'}</h3>
+                    <p class="issue-description">${truncatedDescription}</p>
+                    <div class="issue-meta">
+                      <span><i class="fas fa-map-marker-alt"></i> ${problem.location?.neighborhood || 'Bairro'}, ${problem.location?.municipality || 'Município'}</span>
+                      <span><i class="fas fa-user-circle"></i> ${userNameDisplay}</span>
+                    </div>
+                    <a href="case-details.html?caseId=${problem.key}" class="card-link mt-auto">Ver Detalhes <i class="fas fa-arrow-right ms-2"></i></a>
+                  </div>
+                </div>
+              `;
+            });
+          }
+          recentIssuesContainer.innerHTML = html;
+        },
+        // Callback de erro para o listener .on()
+        (error) => {
+          console.error('Erro ao carregar problemas recentes:', error);
+          recentIssuesContainer.innerHTML =
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Por favor, tente novamente mais tarde.</p></div>';
           noRecentIssuesMessage.style.display = 'none'; // Esconde a mensagem de "sem problemas" em caso de erro
-      });
+        }
+      );
     }
 
     // Carregamento de Transformações Visíveis (Problemas Resolvidos com Antes e Depois)
@@ -1272,50 +1283,59 @@
         let html = '';
         const resolvedProblems = [];
 
-        firebaseApp.database().ref('problems').orderByChild('status').equalTo('Resolvido').limitToLast(3).on('value', (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-                // Adiciona apenas se tiver ambas as imagens e o status 'Resolvido'
-                if (problem.imageUrlBefore && problem.imageUrlAfter && problem.status === 'Resolvido') {
-                    resolvedProblems.unshift(problem); // Adiciona ao início para ordem decrescente de 'createdAt'
-                }
-            });
-
-            if (resolvedProblems.length === 0) {
-                noTransformationsMessage.style.display = 'block';
-                resolvedIssuesGallery.innerHTML = '';
-            } else {
-                noTransformationsMessage.style.display = 'none';
-                resolvedProblems.forEach((problem) => {
-                    const title = problem.title || 'Problema Resolvido';
-                    const location = problem.location?.neighborhood || 'Bairro Desconhecido';
-                    const municipality = problem.location?.municipality || 'Município Desconhecido';
-
-                    const imageUrlBefore = problem.imageUrlBefore || 'https://via.placeholder.com/400x280/cccccc/ffffff?text=Antes+N%C3%A3o+Dispon%C3%ADvel';
-                    const imageUrlAfter = problem.imageUrlAfter || 'https://via.placeholder.com/400x280/888888/ffffff?text=Depois+N%C3%A3o+Dispon%C3%ADvel';
-
-                    html += `
-                        <div class="before-after-card" data-aos="fade-up">
-                            <div class="image-comparison">
-                                <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
-                                <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
-                            </div>
-                            <div class="card-content">
-                                <h4 class="card-title">${title}</h4>
-                                <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
-                                <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    `;
+        // Adicionando um segundo argumento para tratamento de erro no .on()
+        // Buscamos os 10 últimos problemas criados e filtramos por "Resolvido" e por ter ambas as imagens
+        firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
+            (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+                    // Verifica se o status é 'Resolvido' e se ambas as URLs de imagem existem e são strings não vazias
+                    if (problem.status === 'Resolvido' && problem.imageUrlBefore && typeof problem.imageUrlBefore === 'string' && problem.imageUrlBefore.trim() !== '' && problem.imageUrlAfter && typeof problem.imageUrlAfter === 'string' && problem.imageUrlAfter.trim() !== '') {
+                        resolvedProblems.unshift(problem); // Adiciona ao início para que os mais recentes apareçam primeiro
+                    }
                 });
-                resolvedIssuesGallery.innerHTML = html;
+
+                // Limita a exibição aos 3 mais recentes resolvidos com imagens válidas
+                const displayResolved = resolvedProblems.slice(0, 3);
+
+                if (displayResolved.length === 0) {
+                    noTransformationsMessage.style.display = 'block';
+                    resolvedIssuesGallery.innerHTML = ''; // Limpa qualquer conteúdo antigo
+                } else {
+                    noTransformationsMessage.style.display = 'none';
+                    displayResolved.forEach((problem) => {
+                        const title = problem.title || 'Problema Resolvido';
+                        const location = problem.location?.neighborhood || 'Bairro Desconhecido';
+                        const municipality = problem.location?.municipality || 'Município Desconhecido';
+
+                        const imageUrlBefore = problem.imageUrlBefore; // Já verificamos se existe
+                        const imageUrlAfter = problem.imageUrlAfter;   // Já verificamos se existe
+
+                        html += `
+                            <div class="before-after-card" data-aos="fade-up">
+                                <div class="image-comparison">
+                                    <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
+                                    <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">${title}</h4>
+                                    <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
+                                    <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    resolvedIssuesGallery.innerHTML = html;
+                }
+            },
+            // Callback de erro para o listener .on()
+            (error) => {
+                console.error('Erro ao carregar transformações visíveis:', error);
+                resolvedIssuesGallery.innerHTML =
+                  '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+                noTransformationsMessage.style.display = 'none'; // Esconde a mensagem de "sem problemas" em caso de erro
             }
-        }).catch(error => {
-            console.error('Erro ao carregar transformações visíveis:', error);
-            resolvedIssuesGallery.innerHTML =
-              '<div class="col-12"><p class="text-center text-danger">Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
-            noTransformationsMessage.style.display = 'none';
-        });
+        );
     }
 
 
@@ -1418,9 +1438,9 @@
           document.getElementById('loadingScreen').style.display = 'none';
           document.getElementById('homepage').style.display = 'block';
           document.getElementById('recentIssues').innerHTML =
-            '<div class="col-12"><p class="text-center text-danger">Erro ao carregar problemas. Verifique sua conexão.</p></div>';
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Verifique sua conexão.</p></div>';
           document.getElementById('resolvedIssuesGallery').innerHTML =
-            '<div class="col-12"><p class="text-center text-danger">Erro ao carregar transformações. Verifique sua conexão.</p></div>';
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Verifique sua conexão.</p></div>';
           document.getElementById('totalReports').textContent = 'N/A';
           document.getElementById('solvedReports').textContent = 'N/A';
           document.getElementById('activeUsers').textContent = 'N/A';
