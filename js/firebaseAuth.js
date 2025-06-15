@@ -18,8 +18,7 @@
 
   const validatePhone = (phone) => {
     const normalizedPhone = normalizePhone(phone);
-    // Adicionado 90 para cobrir 900 000 000
-    const phoneRegex = /^\+244(9[0-6]{1}|99)\d{7}$/; 
+    const phoneRegex = /^\+244(9[0-6]|99)\d{7}$/;
     if (!phoneRegex.test(normalizedPhone)) {
       console.log(`Telefone inválido: ${normalizedPhone}`);
       return "Número inválido. Use +2449 seguido de 8 dígitos (ex.: +244912345678).";
@@ -53,7 +52,7 @@
     'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
     'auth/network-request-failed': 'Falha de conexão. Verifique sua internet.',
     'auth/user-disabled': 'Esta conta foi desativada. Contate o suporte.',
-    'auth/captcha-check-failed': 'A verificação de segurança (reCAPTCHA) falhou. Tente novamente.'
+    'auth/captcha-check-failed': 'A verificação de segurança (reCAPTCHA) falhou. Tente novamente.',
   };
 
   // --- Log errors to Firestore ---
@@ -67,7 +66,8 @@
         error: error.message,
         code: error.code || 'unknown',
         context: context,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        userAgent: navigator.userAgent,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
     } catch (err) {
       console.error("Failed to log error to Firestore:", err);
@@ -80,7 +80,7 @@
       console.error("Firebase Auth not loaded or not globally available.");
       return null;
     }
-    return window.auth.onAuthStateChanged(user => {
+    return window.auth.onAuthStateChanged((user) => {
       callback(user);
     });
   }
@@ -127,7 +127,7 @@
           name: user.displayName || 'Usuário Google',
           email: user.email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          emailVerified: true // Google accounts are typically already verified
+          emailVerified: true,
         });
       }
       return { success: true, user: user };
@@ -158,7 +158,6 @@
   }
 
   // --- Function to check registration attempts ---
-  // This function is moved to firebaseAuth for internal use when registering.
   async function checkRegistrationAttempts(emailOrPhone, dbInstance) {
     const normalizedEmailOrPhone = normalizePhone(emailOrPhone);
     const attemptsDoc = await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).get();
@@ -174,23 +173,22 @@
       if (now - data.firstAttempt > windowMs) {
         await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
           attempts: 1,
-          firstAttempt: now
+          firstAttempt: now,
         });
       } else {
         await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).update({
-          attempts: firebase.firestore.FieldValue.increment(1)
+          attempts: firebase.firestore.FieldValue.increment(1),
         });
       }
     } else {
       await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).set({
         attempts: 1,
-        firstAttempt: now
+        firstAttempt: now,
       });
     }
   }
 
   // --- Function for user registration with Email ---
-  // This function now only handles email registration.
   async function registerUserWithEmail(name, email, password, municipio, bairro, firebaseAppInstance) {
     if (typeof firebase === 'undefined' || !firebaseAppInstance) {
       throw new Error("Firebase App não inicializado.");
@@ -243,10 +241,9 @@
         municipio: municipio,
         bairro: sanitizedBairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        emailVerified: false
+        emailVerified: false,
       });
       return { success: true, user: user, requiresEmailVerification: true };
-
     } catch (error) {
       console.error("Registration error in firebaseAuth.js (Email):", error);
       logError(error, 'registerUserWithEmail');
@@ -254,20 +251,66 @@
     }
   }
 
-  // --- Function for setting user data after Phone Registration/Verification ---
-  // This function is called AFTER the phone number is successfully verified by Firebase Auth.
-  async function setUserDataForPhoneUser(uid, name, phoneNumber, municipio, bairro, firebaseAppInstance) {
+  // --- Function to initiate phone registration ---
+  async function initiatePhoneRegistration(phoneNumber, recaptchaVerifier, firebaseAppInstance) {
     if (typeof firebase === 'undefined' || !firebaseAppInstance) {
       throw new Error("Firebase App não inicializado.");
     }
+    const authInstance = firebaseAppInstance.auth();
     const dbInstance = firebaseAppInstance.firestore();
 
     try {
+      const normalizedPhone = normalizePhone(phoneNumber);
+      const phoneError = validatePhone(normalizedPhone);
+      if (phoneError) {
+        throw new Error(phoneError);
+      }
+
+      // Check for duplicate user (by phone)
+      const userQuery = await dbInstance.collection('users').where('phoneNumber', '==', normalizedPhone).get();
+      if (!userQuery.empty) {
+        throw new Error('Este número de telefone já está registrado.');
+      }
+
+      // Check registration attempts
+      await checkRegistrationAttempts(normalizedPhone, dbInstance);
+
+      // Configure Firebase Auth for phone sign-in
+      authInstance.languageCode = 'pt';
+      const confirmationResult = await firebase.auth.PhoneAuthProvider.credentialWithPhoneNumber(
+        normalizedPhone,
+        recaptchaVerifier
+      );
+      return { success: true, confirmationResult: confirmationResult };
+    } catch (error) {
+      console.error("Phone registration initiation error:", error);
+      logError(error, 'initiatePhoneRegistration');
+      throw new Error(errorMessages[error.code] || `Erro: ${error.message}`);
+    }
+  }
+
+  // --- Function to verify phone OTP and set user data ---
+  async function verifyPhoneAndSetUserData(
+    confirmationResult,
+    verificationCode,
+    name,
+    municipio,
+    bairro,
+    firebaseAppInstance
+  ) {
+    if (typeof firebase === 'undefined' || !firebaseAppInstance) {
+      throw new Error("Firebase App não inicializado.");
+    }
+    const authInstance = firebaseAppInstance.auth();
+    const dbInstance = firebaseAppInstance.firestore();
+
+    try {
+      // Sanitize inputs
       const sanitizeInput = (input) => input.replace(/[<>&"'/]/g, '');
       const sanitizedName = sanitizeInput(name.trim());
       const sanitizedBairro = sanitizeInput(bairro.trim());
-      const normalizedPhoneNumber = normalizePhone(phoneNumber);
 
+      // Validate inputs
       if (!sanitizedName) {
         throw new Error("Nome completo é obrigatório.");
       }
@@ -278,30 +321,54 @@
         throw new Error("Bairro é obrigatório.");
       }
 
-      // It's good practice to ensure the phone number is not already associated with another user's profile data
-      // This check is important here since Firebase Auth might allow a phone number to be linked after creation
-      const userQuery = await dbInstance.collection('users').where('phoneNumber', '==', normalizedPhoneNumber).get();
-      if (!userQuery.empty && userQuery.docs[0].id !== uid) {
-          throw new Error('Este número de telefone já está associado a outra conta.');
-      }
+      // Verify OTP
+      const userCredential = await confirmationResult.confirm(verificationCode);
+      const user = userCredential.user;
 
-      await dbInstance.collection('users').doc(uid).set({
+      // Set user data
+      await dbInstance.collection('users').doc(user.uid).set({
         name: sanitizedName,
-        phoneNumber: normalizedPhoneNumber,
+        phoneNumber: user.phoneNumber,
         municipio: municipio,
         bairro: sanitizedBairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        phoneVerified: true // Assuming this is called after successful phone verification
-      }, { merge: true }); // Use merge to update if the user doc already exists (e.g., from initial auth)
+        phoneVerified: true,
+      });
 
-      return { success: true };
+      return { success: true, user: user, requiresPhoneVerification: false };
     } catch (error) {
-      console.error("Error setting user data for phone user:", error);
-      logError(error, 'setUserDataForPhoneUser');
+      console.error("Phone verification error:", error);
+      logError(error, 'verifyPhoneAndSetUserData');
       throw new Error(errorMessages[error.code] || `Erro: ${error.message}`);
     }
   }
 
+  // --- Unified registerUser function ---
+  async function registerUser(name, emailOrPhone, password, municipio, bairro, firebaseAppInstance) {
+    const isEmail = validateEmail(emailOrPhone) === null;
+    const isPhone = validatePhone(emailOrPhone) === null;
+
+    if (isEmail) {
+      return registerUserWithEmail(name, emailOrPhone, password, municipio, bairro, firebaseAppInstance);
+    } else if (isPhone) {
+      // Initiate phone registration
+      const recaptchaVerifier = window.recaptchaVerifier;
+      if (!recaptchaVerifier) {
+        throw new Error("reCAPTCHA não inicializado.");
+      }
+      const result = await initiatePhoneRegistration(emailOrPhone, recaptchaVerifier, firebaseAppInstance);
+      // Store data temporarily for verification step
+      window.tempRegistrationData = {
+        confirmationResult: result.confirmationResult,
+        name,
+        municipio,
+        bairro,
+      };
+      return { success: true, requiresPhoneVerification: true };
+    } else {
+      throw new Error("Formato inválido. Use um email válido ou número de telefone no formato +2449XXXXXXXX.");
+    }
+  }
 
   // --- Function for logout ---
   async function logout() {
@@ -324,12 +391,11 @@
     loginWithEmail,
     loginWithGoogle,
     resetPassword,
-    registerUserWithEmail, // Renamed for clarity
-    setUserDataForPhoneUser, // New function for phone user data
-    logout,
+    registerUser,
     validateEmail,
     validatePhone,
-    validatePassword,
-    normalizePhone // Exporth this if needed elsewhere for masking
+    verifyPhoneNumber: verifyPhoneAndSetUserData, // Expose for verification step
+    logout,
+    normalizePhone,
   };
 })();
