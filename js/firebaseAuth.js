@@ -77,6 +77,36 @@ const firebaseAuth = {
     }
   },
 
+  // Send verification code for phone number
+  async sendVerificationCode(phoneNumber, firebaseApp, recaptchaContainerId) {
+    try {
+      const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+      if (!this.validatePhone(normalizedPhone)) {
+        throw new Error("Número de telefone inválido. Use o formato +2449XXXXXXXX.");
+      }
+
+      // Initialize reCAPTCHA verifier if not already set
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(recaptchaContainerId, {
+          size: 'invisible',
+          callback: () => {
+            console.log("reCAPTCHA resolvido para envio de código.");
+          },
+          'expired-callback': () => {
+            console.warn("reCAPTCHA expirou.");
+            window.recaptchaVerifier = null;
+          },
+        });
+        await window.recaptchaVerifier.render();
+      }
+
+      const confirmationResult = await firebase.auth().signInWithPhoneNumber(normalizedPhone, window.recaptchaVerifier);
+      return confirmationResult;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // Register user (handles both email and phone registration)
   async registerUser(name, emailOrPhone, password, municipio, bairro, firebaseApp) {
     try {
@@ -127,7 +157,10 @@ const firebaseAuth = {
           name,
           municipio,
           bairro,
+          phoneNumber: emailOrPhoneProcessed,
         };
+        // Store phone number in localStorage for verify-phone.html
+        localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhone);
       }
 
       return {
@@ -154,9 +187,17 @@ const firebaseAuth = {
         municipio,
         bairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
+        notificationPreferences: {
+          email: userCredential.user.email ? true : false,
+          phone: true,
+        },
+      }, { merge: true });
 
       await userCredential.user.updateProfile({ displayName: name });
+
+      // Clear temporary data
+      localStorage.removeItem('pendingVerificationPhoneNumber');
+      window.tempRegistrationData = null;
 
       return {
         user: userCredential.user,

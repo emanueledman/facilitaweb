@@ -960,7 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'verify-email.html';
       } else if (result.requiresPhoneVerification) {
         alert('Um código de verificação foi enviado para o seu telefone. Por favor, insira o código.');
-        showOTPModal();
+        window.location.href = 'verify-phone.html';
       } else {
         alert('Conta criada com sucesso! Bem-vindo(a) ao FixABairro.');
         window.location.href = 'profile.html';
@@ -1012,77 +1012,6 @@ document.addEventListener('DOMContentLoaded', () => {
       isSubmitting = false;
     }
   });
-
-  // Função para exibir modal de OTP
-  function showOTPModal() {
-    const modal = document.createElement('div');
-    modal.classList.add('modal-overlay', 'show');
-    modal.innerHTML = `
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Verificar Código OTP</h3>
-          <button id="closeOtpModal" class="modal-close-btn">×</button>
-        </div>
-        <div class="modal-body">
-          <p>Insira o código de 6 dígitos enviado para o seu número de telefone.</p>
-          <input type="text" id="otpInput" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Código OTP" maxlength="6" required>
-          <p id="otpError" class="error-message mt-2" style="display: none;">Código inválido. Tente novamente.</p>
-        </div>
-        <div class="modal-footer">
-          <button id="verifyOtpBtn" class="btn-main btn-accept-terms">Verificar Código</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-
-    const closeOtpModalBtn = document.getElementById('closeOtpModal');
-    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
-    const otpInput = document.getElementById('otpInput');
-    const otpError = document.getElementById('otpError');
-
-    closeOtpModalBtn.addEventListener('click', () => {
-      modal.remove();
-      window.tempRegistrationData = null;
-    });
-
-    verifyOtpBtn.addEventListener('click', async () => {
-      const code = otpInput.value.trim();
-      if (!code || code.length !== 6) {
-        showError(otpError, "Insira um código de 6 dígitos.");
-        return;
-      }
-
-      verifyOtpBtn.disabled = true;
-      verifyOtpBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verificando...`;
-
-      try {
-        const { confirmationResult, name, municipio, bairro } = window.tempRegistrationData;
-        const result = await firebaseAuth.verifyPhoneNumber(
-          confirmationResult,
-          code,
-          name,
-          municipio,
-          bairro,
-          firebaseApp
-        );
-        alert('Conta criada com sucesso! Bem-vindo(a) ao FixABairro.');
-        window.location.href = 'profile.html';
-      } catch (error) {
-        console.error("Erro na verificação OTP:", error);
-        showError(otpError, error.message || "Código inválido. Tente novamente.");
-      } finally {
-        verifyOtpBtn.disabled = false;
-        verifyOtpBtn.innerHTML = 'Verificar Código';
-      }
-    });
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.remove();
-        window.tempRegistrationData = null;
-      }
-    });
-  }
 
   showTermsLink.addEventListener('click', () => {
     termsModal.classList.add('show');
