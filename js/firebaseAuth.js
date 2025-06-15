@@ -2,6 +2,11 @@
 
 // Export an object containing authentication-related functions
 const firebaseAuth = {
+  // Normalize phone number by removing spaces
+  normalizePhoneNumber(phone) {
+    return phone.replace(/\s/g, '');
+  },
+
   // Validate email format
   validateEmail(email) {
     const emailRegex = /^\S+@\S+\.\S+$/;
@@ -13,8 +18,9 @@ const firebaseAuth = {
 
   // Validate phone number format (specific to Angola: +2449XXXXXXXX)
   validatePhone(phone) {
+    const normalizedPhone = this.normalizePhoneNumber(phone);
     const phoneRegex = /^\+2449[0-9]{8}$/;
-    if (!phoneRegex.test(phone)) {
+    if (!phoneRegex.test(normalizedPhone)) {
       return "O número de telefone fornecido é inválido. Use o formato +2449XXXXXXXX.";
     }
     return null;
@@ -75,10 +81,15 @@ const firebaseAuth = {
   async registerUser(name, emailOrPhone, password, municipio, bairro, firebaseApp) {
     try {
       const isEmail = this.validateEmail(emailOrPhone) === null;
-      const isPhone = this.validatePhone(emailOrPhone) === null;
+      let isPhone = this.validatePhone(emailOrPhone) === null;
+      let emailOrPhoneProcessed = emailOrPhone;
 
       if (!isEmail && !isPhone) {
         throw new Error("Formato inválido para email ou número de telefone.");
+      }
+
+      if (isPhone) {
+        emailOrPhoneProcessed = this.normalizePhoneNumber(emailOrPhone);
       }
 
       const db = firebaseApp.firestore();
@@ -89,7 +100,7 @@ const firebaseAuth = {
 
       if (isEmail) {
         // Register with email
-        userCredential = await firebase.auth().createUserWithEmailAndPassword(emailOrPhone, password);
+        userCredential = await firebase.auth().createUserWithEmailAndPassword(emailOrPhoneProcessed, password);
         await userCredential.user.updateProfile({ displayName: name });
         await userCredential.user.sendEmailVerification();
         requiresEmailVerification = true;
@@ -97,7 +108,7 @@ const firebaseAuth = {
         // Save user data to Firestore
         await db.collection('users').doc(userCredential.user.uid).set({
           name,
-          email: emailOrPhone,
+          email: emailOrPhoneProcessed,
           municipio,
           bairro,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -107,7 +118,7 @@ const firebaseAuth = {
         if (!window.recaptchaVerifier) {
           throw new Error("reCAPTCHA não inicializado.");
         }
-        confirmationResult = await firebase.auth().signInWithPhoneNumber(emailOrPhone, window.recaptchaVerifier);
+        confirmationResult = await firebase.auth().signInWithPhoneNumber(emailOrPhoneProcessed, window.recaptchaVerifier);
         requiresPhoneVerification = true;
 
         // Store temporary registration data for OTP verification
