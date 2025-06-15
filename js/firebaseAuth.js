@@ -1,5 +1,5 @@
 (function () {
-  // Validation Functions
+  // --- Validation Functions ---
   const normalizePhone = (phone) => {
     const normalized = phone.replace(/[\s\-()]/g, '');
     console.log(`Telefone normalizado: ${phone} -> ${normalized}`);
@@ -18,7 +18,8 @@
 
   const validatePhone = (phone) => {
     const normalizedPhone = normalizePhone(phone);
-    const phoneRegex = /^\+244(9[1-6]{1}|99)\d{7}$/;
+    // Adicionado 90 para cobrir 900 000 000
+    const phoneRegex = /^\+244(9[0-6]{1}|99)\d{7}$/; 
     if (!phoneRegex.test(normalizedPhone)) {
       console.log(`Telefone inválido: ${normalizedPhone}`);
       return "Número inválido. Use +2449 seguido de 8 dígitos (ex.: +244912345678).";
@@ -41,7 +42,7 @@
     return null;
   };
 
-  // Error messages mapping
+  // --- Error messages mapping ---
   const errorMessages = {
     'auth/email-already-in-use': 'Este email já está registrado. Tente fazer login.',
     'auth/invalid-email': 'Email inválido. Verifique o formato.',
@@ -51,10 +52,11 @@
     'auth/code-expired': 'O código OTP expirou. Solicite um novo.',
     'auth/too-many-requests': 'Muitas tentativas. Tente novamente mais tarde.',
     'auth/network-request-failed': 'Falha de conexão. Verifique sua internet.',
-    'auth/user-disabled': 'Esta conta foi desativada. Contate o suporte.'
+    'auth/user-disabled': 'Esta conta foi desativada. Contate o suporte.',
+    'auth/captcha-check-failed': 'A verificação de segurança (reCAPTCHA) falhou. Tente novamente.'
   };
 
-  // Log errors to Firestore
+  // --- Log errors to Firestore ---
   async function logError(error, context) {
     try {
       if (!window.db) {
@@ -72,7 +74,7 @@
     }
   }
 
-  // Function to check authentication state
+  // --- Function to check authentication state ---
   function checkAuthState(callback) {
     if (typeof firebase === 'undefined' || !window.auth) {
       console.error("Firebase Auth not loaded or not globally available.");
@@ -83,7 +85,7 @@
     });
   }
 
-  // Function for login with email and password
+  // --- Function for login with email and password ---
   async function loginWithEmail(email, password) {
     if (typeof firebase === 'undefined' || !window.auth) {
       throw new Error("Firebase Auth não inicializado ou não global.");
@@ -109,7 +111,7 @@
     }
   }
 
-  // Function for login with Google
+  // --- Function for login with Google ---
   async function loginWithGoogle() {
     if (typeof firebase === 'undefined' || !window.auth || !window.db) {
       throw new Error("Firebase Auth ou Firestore não inicializado ou não global.");
@@ -125,7 +127,7 @@
           name: user.displayName || 'Usuário Google',
           email: user.email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          emailVerified: true
+          emailVerified: true // Google accounts are typically already verified
         });
       }
       return { success: true, user: user };
@@ -136,7 +138,7 @@
     }
   }
 
-  // Function to reset password
+  // --- Function to reset password ---
   async function resetPassword(email) {
     if (typeof firebase === 'undefined' || !window.auth) {
       throw new Error("Firebase Auth não inicializado ou não global.");
@@ -155,7 +157,8 @@
     }
   }
 
-  // Function to check registration attempts
+  // --- Function to check registration attempts ---
+  // This function is moved to firebaseAuth for internal use when registering.
   async function checkRegistrationAttempts(emailOrPhone, dbInstance) {
     const normalizedEmailOrPhone = normalizePhone(emailOrPhone);
     const attemptsDoc = await dbInstance.collection('registration_attempts').doc(normalizedEmailOrPhone).get();
@@ -186,29 +189,29 @@
     }
   }
 
-  // Function for user registration
-  async function registerUser(name, emailOrPhone, password, municipio, bairro, firebaseAppInstance) {
+  // --- Function for user registration with Email ---
+  // This function now only handles email registration.
+  async function registerUserWithEmail(name, email, password, municipio, bairro, firebaseAppInstance) {
     if (typeof firebase === 'undefined' || !firebaseAppInstance) {
       throw new Error("Firebase App não inicializado.");
     }
     const authInstance = firebaseAppInstance.auth();
     const dbInstance = firebaseAppInstance.firestore();
-    const isEmail = validateEmail(emailOrPhone) === null;
-    const isPhone = validatePhone(emailOrPhone) === null;
 
     try {
       // Sanitize inputs
       const sanitizeInput = (input) => input.replace(/[<>&"'/]/g, '');
       const sanitizedName = sanitizeInput(name.trim());
       const sanitizedBairro = sanitizeInput(bairro.trim());
-      const normalizedEmailOrPhone = normalizePhone(emailOrPhone);
+      const trimmedEmail = email.trim();
 
       // Validate inputs
       if (!sanitizedName) {
         throw new Error("Nome completo é obrigatório.");
       }
-      if (!isEmail && !isPhone) {
-        throw new Error(validateEmail(emailOrPhone) || validatePhone(normalizedEmailOrPhone) || "Formato inválido. Use um email ou +2449XXXXXXXX.");
+      const emailError = validateEmail(trimmedEmail);
+      if (emailError) {
+        throw new Error(emailError);
       }
       if (!municipio) {
         throw new Error("Município é obrigatório.");
@@ -221,43 +224,86 @@
         throw new Error(passwordError);
       }
 
-      // Check for duplicate user
-      const userQuery = await dbInstance.collection('users').where('emailOrPhone', '==', normalizedEmailOrPhone).get();
+      // Check for duplicate user (by email)
+      const userQuery = await dbInstance.collection('users').where('email', '==', trimmedEmail).get();
       if (!userQuery.empty) {
-        throw new Error('Este email ou número de telefone já está registrado.');
+        throw new Error('Este email já está registrado.');
       }
 
       // Check registration attempts
-      await checkRegistrationAttempts(normalizedEmailOrPhone, dbInstance);
+      await checkRegistrationAttempts(trimmedEmail, dbInstance);
 
-      let user;
-      if (isEmail) {
-        const userCredential = await authInstance.createUserWithEmailAndPassword(emailOrPhone.trim(), password.trim());
-        user = userCredential.user;
-        await user.sendEmailVerification();
-        await dbInstance.collection('users').doc(user.uid).set({
-          name: sanitizedName,
-          email: user.email,
-          emailOrPhone: normalizedEmailOrPhone,
-          municipio: municipio,
-          bairro: sanitizedBairro,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          emailVerified: false
-        });
-        return { success: true, user: user, requiresEmailVerification: true };
-      } else if (isPhone) {
-        throw new Error("Phone registration initiation is handled directly by the main script for OTP flow.");
-      } else {
-        throw new Error("Formato inválido para email ou telefone.");
-      }
+      const userCredential = await authInstance.createUserWithEmailAndPassword(trimmedEmail, password.trim());
+      const user = userCredential.user;
+      await user.sendEmailVerification();
+
+      await dbInstance.collection('users').doc(user.uid).set({
+        name: sanitizedName,
+        email: user.email,
+        municipio: municipio,
+        bairro: sanitizedBairro,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        emailVerified: false
+      });
+      return { success: true, user: user, requiresEmailVerification: true };
+
     } catch (error) {
-      console.error("Registration error in firebaseAuth.js:", error);
-      logError(error, 'registerUser');
+      console.error("Registration error in firebaseAuth.js (Email):", error);
+      logError(error, 'registerUserWithEmail');
       throw new Error(errorMessages[error.code] || `Erro: ${error.message}`);
     }
   }
 
-  // Function for logout
+  // --- Function for setting user data after Phone Registration/Verification ---
+  // This function is called AFTER the phone number is successfully verified by Firebase Auth.
+  async function setUserDataForPhoneUser(uid, name, phoneNumber, municipio, bairro, firebaseAppInstance) {
+    if (typeof firebase === 'undefined' || !firebaseAppInstance) {
+      throw new Error("Firebase App não inicializado.");
+    }
+    const dbInstance = firebaseAppInstance.firestore();
+
+    try {
+      const sanitizeInput = (input) => input.replace(/[<>&"'/]/g, '');
+      const sanitizedName = sanitizeInput(name.trim());
+      const sanitizedBairro = sanitizeInput(bairro.trim());
+      const normalizedPhoneNumber = normalizePhone(phoneNumber);
+
+      if (!sanitizedName) {
+        throw new Error("Nome completo é obrigatório.");
+      }
+      if (!municipio) {
+        throw new Error("Município é obrigatório.");
+      }
+      if (!sanitizedBairro) {
+        throw new Error("Bairro é obrigatório.");
+      }
+
+      // It's good practice to ensure the phone number is not already associated with another user's profile data
+      // This check is important here since Firebase Auth might allow a phone number to be linked after creation
+      const userQuery = await dbInstance.collection('users').where('phoneNumber', '==', normalizedPhoneNumber).get();
+      if (!userQuery.empty && userQuery.docs[0].id !== uid) {
+          throw new Error('Este número de telefone já está associado a outra conta.');
+      }
+
+      await dbInstance.collection('users').doc(uid).set({
+        name: sanitizedName,
+        phoneNumber: normalizedPhoneNumber,
+        municipio: municipio,
+        bairro: sanitizedBairro,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        phoneVerified: true // Assuming this is called after successful phone verification
+      }, { merge: true }); // Use merge to update if the user doc already exists (e.g., from initial auth)
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error setting user data for phone user:", error);
+      logError(error, 'setUserDataForPhoneUser');
+      throw new Error(errorMessages[error.code] || `Erro: ${error.message}`);
+    }
+  }
+
+
+  // --- Function for logout ---
   async function logout() {
     if (typeof firebase === 'undefined' || !window.auth) {
       throw new Error("Firebase Auth não inicializado ou não global.");
@@ -272,16 +318,18 @@
     }
   }
 
-  // Export functions
+  // --- Export functions ---
   window.firebaseAuth = {
     checkAuthState,
     loginWithEmail,
     loginWithGoogle,
     resetPassword,
-    registerUser,
+    registerUserWithEmail, // Renamed for clarity
+    setUserDataForPhoneUser, // New function for phone user data
     logout,
     validateEmail,
     validatePhone,
-    validatePassword
+    validatePassword,
+    normalizePhone // Exporth this if needed elsewhere for masking
   };
 })();
