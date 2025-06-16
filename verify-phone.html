@@ -201,229 +201,195 @@
   </div>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <!-- SEU Firebase Auth Module -->
-  <script src="js/firebaseAuth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/imask@7.6.1/dist/imask.min.js"></script> <!-- Only for register.html -->
+<script src="js/firebaseAuth.js"></script>
 
   <script>
-    // Configuração do Firebase (SUBSTITUA PELAS SUAS CREDENCIAIS REAIS DO FIREBASE)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-    };
+// Configuração do Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+  authDomain: "facilita-479b3.firebaseapp.com",
+  projectId: "facilita-479b3",
+  storageBucket: "facilita-479b3.appspot.com",
+  messagingSenderId: "385676676886",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+};
 
-    // Inicializa Firebase App. Esta parte é crucial e deve ser feita uma única vez.
-    let firebaseApp;
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebaseApp = firebase.initializeApp(firebaseConfig);
-        console.log("Firebase App inicializado com sucesso.");
-      } else if (firebase.apps.length) {
-        firebaseApp = firebase.app();
-        console.log("Firebase App já estava inicializado.");
-      } else {
-        console.error("Firebase SDK não carregado. Verifique os scripts defer.");
+// Inicializa Firebase App
+let firebaseApp;
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+    firebaseApp = firebase.initializeApp(firebaseConfig);
+    console.log("Firebase App inicializado com sucesso.");
+  } else if (firebase.apps.length) {
+    firebaseApp = firebase.app();
+    console.log("Firebase App já estava inicializado.");
+  } else {
+    console.error("Firebase SDK não carregado.");
+    alert("Erro: Firebase SDK não carregado.");
+    return;
+  }
+
+  // Elementos DOM
+  const verifyPhoneForm = document.getElementById('verifyPhoneForm');
+  const verificationCodeInput = document.getElementById('verificationCode');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const verifyText = document.getElementById('verifyText');
+  const verifySpinner = document.getElementById('verifySpinner');
+  const resendCodeBtn = document.getElementById('resendCodeBtn');
+  const resendText = document.getElementById('resendText');
+  const resendSpinner = document.getElementById('resendSpinner');
+  const codeError = document.getElementById('codeError');
+  const phoneNumberDisplay = document.getElementById('phoneNumberDisplay');
+
+  // Get confirmationResult and phone number from temporary data
+  let confirmationResult = window.tempRegistrationData?.confirmationResult;
+  let storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
+
+  // Initialize page
+  if (storedPhoneNumber) {
+    phoneNumberDisplay.textContent = storedPhoneNumber;
+    if (!confirmationResult && storedPhoneNumber) {
+      // Resend code if confirmationResult is missing (e.g., page refresh)
+      resendCodeBtn.click();
+    }
+  } else {
+    alert('Número de telefone não encontrado. Por favor, retorne à tela de registo ou login.');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  verifyPhoneForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    codeError.classList.add('hidden');
+
+    const code = verificationCodeInput.value.trim();
+    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
+      codeError.textContent = "O código deve ter 6 dígitos numéricos.";
+      codeError.classList.remove('hidden');
+      return;
+    }
+
+    // Show loading state
+    verifyBtn.disabled = true;
+    verifyText.classList.add('hidden');
+    verifySpinner.classList.remove('hidden');
+    verifyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A verificar...`;
+
+    try {
+      if (!confirmationResult) {
+        throw new Error("Resultado de confirmação do Firebase não encontrado. Tente reenviar o código.");
       }
-    });
 
-    // Elementos DOM
-    const verifyPhoneForm = document.getElementById('verifyPhoneForm');
-    const verificationCodeInput = document.getElementById('verificationCode');
-    const verifyBtn = document.getElementById('verifyBtn');
-    const verifyText = document.getElementById('verifyText');
-    const verifySpinner = document.getElementById('verifySpinner');
-    const resendCodeBtn = document.getElementById('resendCodeBtn');
-    const resendText = document.getElementById('resendText');
-    const resendSpinner = document.getElementById('resendSpinner');
-    const codeError = document.getElementById('codeError');
-    const phoneNumberDisplay = document.getElementById('phoneNumberDisplay');
-    const recaptchaContainer = document.getElementById('recaptcha-container');
+      // Get temporary registration data
+      const { name, municipio, bairro } = window.tempRegistrationData || {};
+      if (!name || !municipio || !bairro) {
+        throw new Error("Dados de registo temporários não encontrados. Por favor, registe-se novamente.");
+      }
 
-    let confirmationResult = window.confirmationResult; // Tenta obter o resultado da confirmação do localStorage
+      // Verify OTP
+      const result = await firebaseAuth.verifyPhoneNumber(
+        confirmationResult,
+        code,
+        name,
+        municipio,
+        bairro,
+        firebaseApp
+      );
 
-    // Ao carregar a página, tenta obter o número de telefone do localStorage
-    document.addEventListener('DOMContentLoaded', async () => {
-      const storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
-      if (storedPhoneNumber) {
-        phoneNumberDisplay.textContent = storedPhoneNumber;
-        // Se `confirmationResult` não veio da navegação anterior (ex: recarregamento da página),
-        // tentamos reenviar o código para obter um novo `confirmationResult`.
-        if (!confirmationResult) {
-            try {
-                if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-                    throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
-                }
-                // Reenvia o código para obter um novo confirmationResult
-                confirmationResult = await firebaseAuth.sendVerificationCode(storedPhoneNumber, firebaseApp, 'recaptcha-container');
-                alert('O código de verificação foi reenviado para o seu telefone.');
-            } catch (error) {
-                alert('Erro ao iniciar verificação do telefone ou reenviar código: ' + error.message);
-                console.error("Erro ao enviar código na inicialização:", error);
-                window.location.href = 'login.html'; // Redireciona em caso de erro crítico
-            }
+      alert('Telefone verificado com sucesso! Bem-vindo(a) ao FixABairro.');
+      window.location.href = 'profile.html';
+    } catch (error) {
+      let userFacingMessage = "Ocorreu um erro ao verificar o código. Por favor, tente novamente.";
+      console.error("Erro ao verificar código:", error);
+
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/invalid-verification-code':
+            userFacingMessage = 'Código de verificação inválido.';
+            break;
+          case 'auth/code-expired':
+            userFacingMessage = 'O código de verificação expirou. Por favor, reenvie.';
+            break;
+          case 'auth/user-disabled':
+            userFacingMessage = 'Sua conta foi desativada.';
+            break;
+          case 'auth/too-many-requests':
+            userFacingMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+            break;
+          case 'auth/network-request-failed':
+            userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+            break;
+          default:
+            userFacingMessage = `Erro: ${error.message}`;
         }
       } else {
-        alert('Número de telefone não encontrado. Por favor, retorne à tela de registo ou login.');
-        window.location.href = 'login.html'; // Redireciona de volta
+        userFacingMessage = error.message;
       }
-    });
+      codeError.textContent = userFacingMessage;
+      codeError.classList.remove('hidden');
+    } finally {
+      // Restore button state
+      verifyBtn.disabled = false;
+      verifyText.classList.remove('hidden');
+      verifySpinner.classList.add('hidden');
+      verifyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Verificar Código`;
+    }
+  });
 
-    verifyPhoneForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      codeError.classList.add('hidden');
+  resendCodeBtn.addEventListener('click', async () => {
+    // Show loading state
+    resendCodeBtn.disabled = true;
+    resendText.classList.add('hidden');
+    resendSpinner.classList.remove('hidden');
+    resendCodeBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A reenviar...`;
+    codeError.classList.add('hidden');
 
-      const code = verificationCodeInput.value.trim();
-      if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-        codeError.textContent = "O código deve ter 6 dígitos numéricos.";
-        codeError.classList.remove('hidden');
-        return;
+    try {
+      if (!storedPhoneNumber) {
+        throw new Error("Número de telefone não encontrado.");
       }
 
-      // Ativar estado de carregamento do botão
-      verifyBtn.disabled = true;
-      verifyText.classList.add('hidden');
-      verifySpinner.classList.remove('hidden');
-      verifyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A verificar...`;
-
-      try {
-        if (!confirmationResult) {
-            throw new Error("Resultado de confirmação do Firebase não encontrado. Tente reenviar o código.");
+      // Resend verification code
+      confirmationResult = await firebaseAuth.sendVerificationCode(storedPhoneNumber, firebaseApp, 'recaptcha-container');
+      window.tempRegistrationData = {
+        ...window.tempRegistrationData,
+        confirmationResult,
+        phoneNumber: storedPhoneNumber,
+      };
+      alert('Novo código de verificação enviado! Verifique seu telefone.');
+    } catch (error) {
+      let userFacingMessage = "Erro ao reenviar código. Tente novamente mais tarde.";
+      console.error("Erro ao reenviar código:", error);
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/invalid-phone-number':
+            userFacingMessage = 'Número de telefone inválido.';
+            break;
+          case 'auth/too-many-requests':
+            userFacingMessage = 'Muitas tentativas. Tente novamente mais tarde.';
+            break;
+          case 'auth/network-request-failed':
+            userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
+            break;
+          default:
+            userFacingMessage = `Erro: ${error.message}`;
         }
-        
-        await confirmationResult.confirm(code);
-        
-        // Se a verificação for bem-sucedida, o utilizador está logado.
-        // Agora, atualizamos os dados adicionais no Firestore.
-        const user = firebase.auth().currentUser;
-        if (user) {
-          const db = firebase.firestore();
-          
-          // Recupera os dados temporários do localStorage
-          const name = localStorage.getItem('userTempName') || user.displayName;
-          const municipio = localStorage.getItem('userTempMunicipio');
-          const bairro = localStorage.getItem('userTempBairro');
-          const tempPassword = localStorage.getItem('userTempPassword'); // Para caso de novo registo
-
-          // Prepara os dados para salvar/atualizar
-          const userData = {
-            uid: user.uid,
-            name: name || 'Utilizador', // Prefere o nome inserido ou displayName
-            phoneNumber: user.phoneNumber, // O Firebase já coloca o phoneNumber aqui
-            municipio: municipio || 'Não informado',
-            bairro: bairro || 'Não informado',
-            // Adiciona timestamp de criação apenas se for um utilizador novo (ou se não existir)
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            notificationPreferences: {
-              email: user.email ? true : false, // Habilita email se tiver
-              phone: true // Habilita telefone se logou por telefone
-            },
-          };
-
-          // Salva/atualiza os dados no Firestore. Se for um registo novo, set() cria.
-          // Se for login de um utilizador existente (ex: logou com Google antes e adicionou telefone),
-          // merge: true atualiza os campos existentes sem sobrescrever tudo.
-          await db.collection('users').doc(user.uid).set(userData, { merge: true }); 
-
-          alert('Telefone verificado e conta atualizada com sucesso! Bem-vindo(a) ao FixABairro.');
-          
-          // Limpa os dados temporários do localStorage
-          localStorage.removeItem('pendingVerificationPhoneNumber');
-          localStorage.removeItem('userTempName');
-          localStorage.removeItem('userTempMunicipio');
-          localStorage.removeItem('userTempBairro');
-          localStorage.removeItem('userTempPassword');
-
-          window.location.href = 'profile.html'; // Redireciona para o perfil/dashboard
-        } else {
-            alert('Erro: Utilizador não autenticado após verificação. Tente novamente.');
-            window.location.href = 'login.html';
-        }
-      } catch (error) {
-        let userFacingMessage = "Ocorreu um erro ao verificar o código. Por favor, tente novamente.";
-        console.error("Erro ao verificar código:", error);
-
-        if (error.code) {
-          switch (error.code) {
-            case 'auth/invalid-verification-code':
-              userFacingMessage = 'Código de verificação inválido.';
-              codeError.textContent = userFacingMessage;
-              codeError.classList.remove('hidden');
-              break;
-            case 'auth/code-expired':
-              userFacingMessage = 'O código de verificação expirou. Por favor, reenvie.';
-              codeError.textContent = userFacingMessage;
-              codeError.classList.remove('hidden');
-              break;
-            case 'auth/user-disabled':
-              userFacingMessage = 'Sua conta foi desativada.';
-              alert(userFacingMessage);
-              break;
-            case 'auth/too-many-requests':
-              userFacingMessage = 'Muitas tentativas. Tente novamente mais tarde.';
-              alert(userFacingMessage);
-              break;
-            case 'auth/network-request-failed':
-              userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-              alert(userFacingMessage);
-              break;
-            default:
-              userFacingMessage = `Erro Firebase: ${error.message}`;
-              alert(userFacingMessage);
-          }
-        } else {
-          userFacingMessage = error.message;
-          alert(userFacingMessage);
-        }
-      } finally {
-        // Restaurar estado do botão após a tentativa
-        verifyBtn.disabled = false;
-        verifyText.classList.remove('hidden');
-        verifySpinner.classList.add('hidden');
-        verifyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Verificar Código`;
       }
-    });
-
-    resendCodeBtn.addEventListener('click', async () => {
-      // Ativar estado de carregamento do botão
-      resendCodeBtn.disabled = true;
-      resendText.classList.add('hidden');
-      resendSpinner.classList.remove('hidden');
-      resendCodeBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A reenviar...`;
-      codeError.classList.add('hidden'); // Limpa erros anteriores
-
-      const storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
-      if (storedPhoneNumber) {
-        try {
-          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
-          }
-          // Reenvia o código. `confirmationResult` será atualizado no `window`.
-          confirmationResult = await firebaseAuth.sendVerificationCode(storedPhoneNumber, firebaseApp, 'recaptcha-container');
-          alert('Novo código de verificação enviado! Verifique seu telefone.');
-        } catch (error) {
-          alert('Erro ao reenviar código: ' + error.message);
-          console.error("Erro ao reenviar código:", error);
-          codeError.textContent = 'Erro ao reenviar código. Tente novamente mais tarde.';
-          codeError.classList.remove('hidden');
-        } finally {
-          // Restaurar estado do botão
-          resendCodeBtn.disabled = false;
-          resendText.classList.remove('hidden');
-          resendSpinner.classList.add('hidden');
-          resendCodeBtn.innerHTML = `<i class="fas fa-redo"></i> Reenviar Código`;
-        }
-      } else {
-        alert('Número de telefone não encontrado para reenviar. Por favor, retorne à tela de registo/login.');
-        window.location.href = 'login.html';
-      }
-    });
+      codeError.textContent = userFacingMessage;
+      codeError.classList.remove('hidden');
+    } finally {
+      // Restore button state
+      resendCodeBtn.disabled = false;
+      resendText.classList.remove('hidden');
+      resendSpinner.classList.add('hidden');
+      resendCodeBtn.innerHTML = `<i class="fas fa-redo"></i> Reenviar Código`;
+    }
+  });
+});
   </script>
 </body>
 </html>
