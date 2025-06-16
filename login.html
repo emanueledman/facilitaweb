@@ -290,6 +290,27 @@
         font-weight: 500;
       }
 
+      /* Estilos para a nova mensagem de notificação */
+      .notification-message {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 1rem;
+        border: 1px solid;
+      }
+      .notification-message.success {
+        background-color: #d1fae5; /* green-100 */
+        color: #065f46; /* green-700 */
+        border-color: #34d399; /* green-400 */
+      }
+      .notification-message.error {
+        background-color: #fee2e2; /* red-100 */
+        color: #991b1b; /* red-700 */
+        border-color: #f87171; /* red-400 */
+      }
+
+
       @media (max-width: 992px) {
         .navbar-brand {
             color: var(--secondary-dark);
@@ -443,6 +464,9 @@
           <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
         </div>
         
+        <!-- Nova div para mensagens de notificação gerais -->
+        <div id="notificationMessage" class="notification-message hidden" role="alert"></div>
+
         <form id="loginForm" class="space-y-5">
           <div>
             <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
@@ -482,19 +506,23 @@
           <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
         </p>
 
+        <!-- reCAPTCHA container, hidden as it's invisible reCAPTCHA -->
         <div id="recaptcha-container" class="mt-4 hidden"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Usando versões compatíveis do Firebase para manter a API v8 -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/imask"></script>
+  <!-- Carregue seu arquivo firebaseAuth.js após os SDKs do Firebase -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
+    // Configuração do Firebase (SUBSTITUA PELAS SUAS PRÓPRIAS CREDENCIAIS DO PROJETO SE AINDA NÃO FEZ!)
     const firebaseConfig = {
       apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
@@ -505,66 +533,82 @@
     };
 
     let firebaseApp;
-    document.addEventListener('DOMContentLoaded', () => {
+    // Referências aos elementos da UI
+    const loginForm = document.getElementById('loginForm');
+    const emailOrPhoneInput = document.getElementById('emailOrPhone');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginText = document.getElementById('loginText');
+    const loginSpinner = document.getElementById('loginSpinner');
+    const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const forgotPasswordLink = document.getElementById('forgotPassword');
+    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+    const passwordError = document.getElementById('passwordError');
+    const notificationMessageDiv = document.getElementById('notificationMessage'); // Nova referência
+
+    // Funções auxiliares para mostrar/ocultar mensagens
+    function showNotification(message, type) {
+      notificationMessageDiv.textContent = message;
+      notificationMessageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-error', 'bg-green-100', 'text-green-700', 'border-success');
+      if (type === 'error') {
+        notificationMessageDiv.classList.add('bg-red-100', 'text-red-700', 'border-error');
+      } else if (type === 'success') {
+        notificationMessageDiv.classList.add('bg-green-100', 'text-green-700', 'border-success');
+      }
+    }
+
+    function hideNotification() {
+      notificationMessageDiv.classList.add('hidden');
+      notificationMessageDiv.textContent = '';
+    }
+
+    function showError(element, message) {
+      element.textContent = message;
+      element.classList.remove('hidden');
+    }
+
+    function hideError(element) {
+      element.classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Inicialização do Firebase App
       if (typeof firebase !== 'undefined' && !firebase.apps.length) {
         firebaseApp = firebase.initializeApp(firebaseConfig);
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
-        console.log("Firebase App e Firestore inicializados com sucesso.");
+        // Não é necessário definir window.auth e window.db se o firebaseAuth.js usa firebase.auth() e firebase.firestore() diretamente.
+        // Se você precisar de acesso direto para depuração, pode mantê-los.
+        console.log("Firebase App inicializado com sucesso.");
       } else if (firebase.apps.length) {
         firebaseApp = firebase.app();
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
         console.log("Firebase App já estava inicializado.");
       } else {
         console.error("Firebase SDK não carregado.");
-        alert("Erro: Firebase SDK não carregado.");
+        showNotification("Erro: Firebase SDK não carregado. Verifique sua conexão.", 'error');
         return;
       }
 
-      // Check if user is already logged in and redirect to index.html
+      // Inicializa o reCAPTCHA usando a função do firebaseAuth.js
+      try {
+        await firebaseAuth.initializeRecaptcha('recaptcha-container');
+      } catch (error) {
+        console.error("Erro ao inicializar reCAPTCHA:", error);
+        showNotification("Erro ao carregar verificação de segurança. Tente recarregar a página.", 'error');
+      }
+
+      // Otimização: Verificação de autenticação e redirecionamento
+      // Este ouvinte é para gerenciar o estado da sessão e redirecionar
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           console.log("Usuário já está logado:", user.uid);
-          window.location.href = 'index.html';
+          // Redireciona para a página principal se já estiver logado
+          window.location.href = 'index.html'; 
         } else {
           console.log("Nenhum usuário logado, exibindo página de login.");
+          // Se não houver usuário, a página de login permanece visível
         }
       });
 
-      if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-          'size': 'invisible',
-          'callback': (response) => {
-            console.log("reCAPTCHA invisível resolvido.");
-          },
-          'expired-callback': () => {
-            console.warn("reCAPTCHA invisível expirou.");
-            alert("Verificação de segurança expirada. Tente novamente.");
-            if (window.recaptchaVerifier && typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-              grecaptcha.reset(window.recaptchaWidgetId);
-            }
-          }
-        });
-        window.recaptchaVerifier.render().then(function(widgetId) {
-          window.recaptchaWidgetId = widgetId;
-          console.log("reCAPTCHA invisível renderizado com ID do widget:", widgetId);
-        }).catch(error => {
-          console.error("Erro ao renderizar reCAPTCHA invisível:", error);
-        });
-      }
-
-      const loginForm = document.getElementById('loginForm');
-      const emailOrPhoneInput = document.getElementById('emailOrPhone');
-      const passwordInput = document.getElementById('password');
-      const loginBtn = document.getElementById('loginBtn');
-      const loginText = document.getElementById('loginText');
-      const loginSpinner = document.getElementById('loginSpinner');
-      const googleLoginBtn = document.getElementById('googleLoginBtn');
-      const forgotPasswordLink = document.getElementById('forgotPassword');
-      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-      const passwordError = document.getElementById('passwordError');
-
+      // Máscara de telefone
       IMask(emailOrPhoneInput, {
         mask: '+244 900 000 000',
         lazy: false
@@ -592,22 +636,18 @@
         }
       });
 
-      function showError(element, message) {
-        element.textContent = message;
-        element.classList.remove('hidden');
-      }
-
-      function hideError(element) {
-        element.classList.add('hidden');
-      }
-
+      // Event listener para o formulário de login
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        document.querySelectorAll('.error-message').forEach(el => hideError(el));
+        hideError(emailOrPhoneError);
+        hideError(passwordError);
+        hideNotification();
 
         let isValid = true;
         const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        const password = passwordInput.value;
+
+        // Validações de entrada
         const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
         const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneRaw) === null;
 
@@ -619,7 +659,7 @@
           isValid = false;
         }
 
-        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+        const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
         if (passwordErrorMsg) {
           showError(passwordError, passwordErrorMsg);
           isValid = false;
@@ -629,151 +669,85 @@
           return;
         }
 
+        // Exibe spinner e desabilita botão
         loginBtn.disabled = true;
-        loginText.classList.add('hidden');
-        loginSpinner.classList.remove('hidden');
         loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
 
         try {
-          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
-          }
-
           if (isPhone) {
-            const signInWithPhoneNumber = firebase.auth().signInWithPhoneNumber;
-            if (!window.recaptchaVerifier) {
-              throw new Error("reCAPTCHA não inicializado.");
-            }
-            const confirmationResult = await signInWithPhoneNumber(emailOrPhoneRaw, window.recaptchaVerifier);
-            window.confirmationResult = confirmationResult;
-            alert('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.');
-            window.location.href = 'verify-phone.html';
+            // Usa a função atualizada sendVerificationCode do firebaseAuth
+            await firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
+            showNotification('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.', 'success');
+            // Redireciona para a página de verificação de telefone
+            window.location.href = 'verify-phone.html'; 
           } else {
-            const result = await firebaseAuth.loginWithEmail(emailOrPhoneRaw, passwordInput.value);
-            alert('Login realizado com sucesso! Bem-vindo(a) de volta ao FixABairro.');
-            window.location.href = 'profile.html';
+            // Usa a função atualizada loginWithEmail do firebaseAuth
+            const result = await firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
+            showNotification('Login realizado com sucesso! Bem-vindo(a) de volta ao FixABairro.', 'success');
+            // Redireciona para o perfil após login bem-sucedido
+            window.location.href = 'profile.html'; 
           }
         } catch (error) {
-          let userFacingMessage = "Ocorreu um erro inesperado. Por favor, tente novamente.";
+          // O firebaseAuth.js agora lança Erros com mensagens amigáveis
           console.error("Erro no login:", error);
-
-          if (error.code) {
-            switch (error.code) {
-              case 'auth/user-not-found':
-              case 'auth/wrong-password':
-              case 'auth/invalid-credential':
-                userFacingMessage = 'Credenciais inválidas. Verifique seu email/telefone e senha.';
-                showError(emailOrPhoneError, userFacingMessage);
-                showError(passwordError, userFacingMessage);
-                break;
-              case 'auth/invalid-email':
-                userFacingMessage = 'O formato do email é inválido.';
-                showError(emailOrPhoneError, userFacingMessage);
-                break;
-              case 'auth/invalid-phone-number':
-                userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +2449XXXXXXXX.';
-                showError(emailOrPhoneError, userFacingMessage);
-                break;
-              case 'auth/too-many-requests':
-                userFacingMessage = 'Muitas tentativas de login. Tente novamente mais tarde.';
-                alert(userFacingMessage);
-                break;
-              case 'auth/network-request-failed':
-                userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-                alert(userFacingMessage);
-                break;
-              default:
-                userFacingMessage = `Erro: ${error.message}`;
-                alert(userFacingMessage);
-            }
+          if (error.message.includes("Email inválido") || error.message.includes("telefone inválido")) {
+            showError(emailOrPhoneError, error.message);
+          } else if (error.message.includes("Senha incorreta") || error.message.includes("Credenciais inválidas")) {
+            showError(passwordError, error.message);
           } else {
-            userFacingMessage = error.message;
-            alert(userFacingMessage);
+            showNotification(error.message, 'error');
           }
         } finally {
+          // Restaura o botão
           loginBtn.disabled = false;
-          loginText.classList.remove('hidden');
-          loginSpinner.classList.add('hidden');
           loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
         }
       });
 
+      // Event listener para o login com Google
       googleLoginBtn.addEventListener('click', async () => {
+        hideNotification();
         googleLoginBtn.disabled = true;
         googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
 
         try {
-          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
-          }
+          // Usa a função atualizada loginWithGoogle do firebaseAuth
           await firebaseAuth.loginWithGoogle();
-          alert('Login com Google realizado com sucesso! Bem-vindo(a) ao FixABairro.');
+          showNotification('Login com Google realizado com sucesso! Bem-vindo(a) ao FixABairro.', 'success');
           window.location.href = 'profile.html';
         } catch (error) {
-          let userFacingMessage = "Ocorreu um erro ao fazer login com Google. Por favor, tente novamente.";
           console.error("Erro no login com Google:", error);
-
-          if (error.code) {
-            switch (error.code) {
-              case 'auth/popup-closed-by-user':
-                userFacingMessage = 'A janela de login do Google foi fechada.';
-                break;
-              case 'auth/cancelled-popup-request':
-                userFacingMessage = 'A requisição de popup foi cancelada.';
-                break;
-              case 'auth/network-request-failed':
-                userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-                break;
-              default:
-                userFacingMessage = `Erro: ${error.message}`;
-            }
-          } else {
-            userFacingMessage = error.message;
-          }
-          alert(userFacingMessage);
+          showNotification(error.message, 'error'); // Exibe a mensagem de erro amigável
         } finally {
           googleLoginBtn.disabled = false;
           googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
         }
       });
 
+      // Event listener para "Esqueceu a senha?"
       forgotPasswordLink.addEventListener('click', async (e) => {
         e.preventDefault();
+        hideError(emailOrPhoneError);
+        hideNotification();
+
         const emailInputVal = emailOrPhoneInput.value.trim();
         
-        if (!emailInputVal || !window.firebaseAuth.validateEmail(emailInputVal)) {
-          showError(emailOrPhoneError, 'Por favor, digite um email válido para redefinir a senha.');
+        // Valida se o campo contém um email válido para redefinir a senha
+        const emailValidationResult = window.firebaseAuth.validateEmail(emailInputVal);
+        if (!emailInputVal || emailValidationResult) {
+          showError(emailOrPhoneError, emailValidationResult || 'Por favor, digite um email válido para redefinir a senha.');
           return;
         }
 
         try {
-          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
+          // Usa a função atualizada resetPassword do firebaseAuth
+          const success = await firebaseAuth.resetPassword(emailInputVal);
+          if (success) {
+            showNotification('Um email para redefinição de senha foi enviado para ' + emailInputVal + '. Verifique sua caixa de entrada.', 'success');
           }
-          await firebaseAuth.resetPassword(emailInputVal);
-          alert('Um email para redefinição de senha foi enviado para ' + emailInputVal + '. Verifique sua caixa de entrada.');
         } catch (error) {
-          let userFacingMessage = "Ocorreu um erro ao tentar redefinir a senha. Por favor, tente novamente.";
           console.error("Erro ao resetar senha:", error);
-
-          if (error.code) {
-            switch (error.code) {
-              case 'auth/user-not-found':
-                userFacingMessage = 'Não há conta com este email.';
-                break;
-              case 'auth/invalid-email':
-                userFacingMessage = 'O formato do email é inválido.';
-                break;
-              case 'auth/network-request-failed':
-                userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-                break;
-              default:
-                userFacingMessage = `Erro: ${error.message}`;
-            }
-          } else {
-            userFacingMessage = error.message;
-          }
-          alert(userFacingMessage);
+          showNotification(error.message, 'error'); // Exibe a mensagem de erro amigável
         }
       });
     });
