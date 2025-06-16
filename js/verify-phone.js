@@ -14,60 +14,70 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("Firebase App inicializado.");
   } catch (error) {
     console.error("Erro ao inicializar Firebase:", error);
-    alert("Erro: Firebase SDK não carregado.");
-    window.location.href = 'login.html';
+    showNotification("Erro: Firebase SDK não carregado.", 'error');
+    return;
+  }
+
+  // Verifica se há uma verificação pendente
+  const pendingPhone = localStorage.getItem('pendingVerificationPhoneNumber');
+  if (!pendingPhone) {
+    showNotification("Nenhuma verificação de telefone pendente. Redirecionando para login.", 'error');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 2000);
     return;
   }
 
   // Verifica o estado de autenticação
-  window.firebaseAuth.checkAuthState('index.html', null);
+  window.firebaseAuth.checkAuthState('profile.html', null);
 
-  // Verifica se há uma verificação pendente
-  const storedPhoneNumber = localStorage.getItem('pendingVerificationPhoneNumber');
-  if (!storedPhoneNumber) {
-    alert('Nenhuma verificação de telefone pendente. Retorne ao login.');
-    window.location.href = 'login.html';
-    return;
-  }
-
-  // Inicializa o reCAPTCHA
-  try {
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-  } catch (error) {
-    console.error("Erro ao inicializar reCAPTCHA:", error);
-    alert("Erro ao carregar verificação de segurança.");
-  }
-
-  // Elementos DOM
+  // Referências aos elementos da UI
   const verifyPhoneForm = document.getElementById('verifyPhoneForm');
-  const verificationCodeInput = document.getElementById('verificationCode');
+  const otpCodeInput = document.getElementById('otpCode');
   const verifyBtn = document.getElementById('verifyBtn');
   const verifyText = document.getElementById('verifyText');
   const verifySpinner = document.getElementById('verifySpinner');
-  const resendCodeBtn = document.getElementById('resendCodeBtn');
-  const resendText = document.getElementById('resendText');
-  const resendSpinner = document.getElementById('resendSpinner');
-  const codeError = document.getElementById('codeError');
-  const phoneNumberDisplay = document.getElementById('phoneNumberDisplay');
+  const resendCodeLink = document.getElementById('resendCode');
+  const otpError = document.getElementById('otpError');
+  const notificationMessageDiv = document.getElementById('notificationMessage');
 
-  // Exibe o número de telefone
-  phoneNumberDisplay.textContent = storedPhoneNumber;
+  // Funções auxiliares para mostrar/ocultar mensagens
+  function showNotification(message, type) {
+    notificationMessageDiv.textContent = message;
+    notificationMessageDiv.classList.remove('hidden', 'notification-message', 'success', 'error');
+    notificationMessageDiv.classList.add('notification-message', type);
+  }
 
-  // Máscara para o código OTP
-  IMask(verificationCodeInput, {
+  function hideNotification() {
+    notificationMessageDiv.classList.add('hidden');
+    notificationMessageDiv.textContent = '';
+  }
+
+  function showError(element, message) {
+    element.textContent = message;
+    element.classList.remove('hidden');
+    element.classList.add('block');
+  }
+
+  function hideError(element) {
+    element.classList.add('hidden');
+  }
+
+  // Máscara para o campo OTP
+  IMask(otpCodeInput, {
     mask: '000000',
-    lazy: false
+    placeholderChar: '_'
   });
 
-  // Validação do formulário
+  // Event listener para o formulário de verificação
   verifyPhoneForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    codeError.classList.add('hidden');
+    hideError(otpError);
+    hideNotification();
 
-    const code = verificationCodeInput.value.trim();
-    if (code.length !== 6 || !/^\d{6}$/.test(code)) {
-      codeError.textContent = "O código deve ter 6 dígitos numéricos.";
-      codeError.classList.remove('hidden');
+    const code = otpCodeInput.value.trim();
+    if (!code || code.length !== 6) {
+      showError(otpError, "Por favor, insira um código OTP de 6 dígitos.");
       return;
     }
 
@@ -78,40 +88,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const result = await window.firebaseAuth.verifyPhoneNumber(code);
-      alert('Telefone verificado com sucesso! Bem-vindo(a) ao FixABairro.');
+      showNotification('Verificação concluída com sucesso!', 'success');
       window.location.href = 'profile.html';
     } catch (error) {
-      console.error("Erro ao verificar código:", error);
-      codeError.textContent = error.message;
-      codeError.classList.remove('hidden');
+      console.error("Erro ao verificar OTP:", error);
+      showError(otpError, error.message);
+      if (error.message.includes("Nenhuma verificação") || error.message.includes("expirou")) {
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+      }
     } finally {
       verifyBtn.disabled = false;
       verifyText.classList.remove('hidden');
       verifySpinner.classList.add('hidden');
-      verifyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Verificar Código`;
+      verifyBtn.innerHTML = `<i class="fas fa-check-circle"></i> Verificar`;
     }
   });
 
-  // Reenviar código
-  resendCodeBtn.addEventListener('click', async () => {
-    resendCodeBtn.disabled = true;
-    resendText.classList.add('hidden');
-    resendSpinner.classList.remove('hidden');
-    resendCodeBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A reenviar...`;
-    codeError.classList.add('hidden');
+  // Event listener para reenviar código
+  resendCodeLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+    hideNotification();
+    hideError(otpError);
+
+    resendCodeLink.disabled = true;
+    resendCodeLink.textContent = 'A reenviar...';
 
     try {
-      await window.firebaseAuth.sendVerificationCode(storedPhoneNumber);
-      alert('Novo código de verificação enviado!');
+      await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+      await window.firebaseAuth.sendVerificationCode(pendingPhone);
+      showNotification('Código de verificação reenviado com sucesso.', 'success');
     } catch (error) {
       console.error("Erro ao reenviar código:", error);
-      codeError.textContent = error.message;
-      codeError.classList.remove('hidden');
+      showNotification(error.message, 'error');
     } finally {
-      resendCodeBtn.disabled = false;
-      resendText.classList.remove('hidden');
-      resendSpinner.classList.add('hidden');
-      resendCodeBtn.innerHTML = `<i class="fas fa-redo"></i> Reenviar Código`;
+      resendCodeLink.disabled = false;
+      resendCodeLink.textContent = 'Reenviar código';
     }
   });
 });
