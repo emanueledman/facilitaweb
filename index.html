@@ -1277,61 +1277,78 @@
     }
 
     // Carregamento de Transformações Visíveis (Problemas Resolvidos com Antes e Depois)
-    function loadResolvedIssues(firebaseApp) {
-        const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
-        const noTransformationsMessage = document.getElementById('noTransformationsMessage');
-        let html = '';
-        const resolvedProblems = [];
+    // Carregamento de Transformações Visíveis (3 Casos Resolvidos - Qualquer Data)
+function loadResolvedIssues(firebaseApp) {
+    const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
+    const noTransformationsMessage = document.getElementById('noTransformationsMessage');
+    let html = '';
+    const resolvedProblems = [];
 
-        firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
-            (snapshot) => {
-                snapshot.forEach((childSnapshot) => {
-                    const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-                    if (problem.status === 'Resolvido' && problem.imageUrlBefore && typeof problem.imageUrlBefore === 'string' && problem.imageUrlBefore.trim() !== '' && problem.imageUrlAfter && typeof problem.imageUrlAfter === 'string' && problem.imageUrlAfter.trim() !== '') {
-                        resolvedProblems.unshift(problem);
+    // MUDANÇA 1: Remover limitToLast(10) para pegar todos os registros
+    firebaseApp.database().ref('problems').orderByChild('status').equalTo('Resolvido').on('value',
+        (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+                
+                // MUDANÇA 2: Relaxar as condições - só verificar se tem imagem "antes"
+                // Para casos que só têm imageUrlBefore, usar a mesma imagem para "depois"
+                if (problem.status === 'Resolvido' && 
+                    problem.imageUrlBefore && 
+                    typeof problem.imageUrlBefore === 'string' && 
+                    problem.imageUrlBefore.trim() !== '') {
+                    
+                    // Se não tem imageUrlAfter, usar a imageUrlBefore para ambas
+                    if (!problem.imageUrlAfter || 
+                        typeof problem.imageUrlAfter !== 'string' || 
+                        problem.imageUrlAfter.trim() === '') {
+                        problem.imageUrlAfter = problem.imageUrlBefore;
                     }
-                });
-
-                const displayResolved = resolvedProblems.slice(0, 3);
-
-                if (displayResolved.length === 0) {
-                    noTransformationsMessage.style.display = 'block';
-                    resolvedIssuesGallery.innerHTML = '';
-                } else {
-                    noTransformationsMessage.style.display = 'none';
-                    displayResolved.forEach((problem) => {
-                        const title = problem.title || 'Problema Resolvido';
-                        const location = problem.location?.neighborhood || 'Bairro Desconhecido';
-                        const municipality = problem.location?.municipality || 'Município Desconhecido';
-
-                        const imageUrlBefore = problem.imageUrlBefore;
-                        const imageUrlAfter = problem.imageUrlAfter;
-
-                        html += `
-                            <div class="before-after-card" data-aos="fade-up">
-                                <div class="image-comparison">
-                                    <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
-                                    <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
-                                </div>
-                                <div class="card-content">
-                                    <h4 class="card-title">${title}</h4>
-                                    <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
-                                    <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    resolvedIssuesGallery.innerHTML = html;
+                    
+                    resolvedProblems.push(problem);
                 }
-            },
-            (error) => {
-                console.error('Erro ao carregar transformações visíveis:', error);
-                resolvedIssuesGallery.innerHTML =
-                  '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+            });
+
+            // MUDANÇA 3: Ordenar por data (mais recente primeiro) e pegar exatamente 3
+            resolvedProblems.sort((a, b) => b.createdAt - a.createdAt);
+            const displayResolved = resolvedProblems.slice(0, 3);
+
+            if (displayResolved.length === 0) {
+                noTransformationsMessage.style.display = 'block';
+                resolvedIssuesGallery.innerHTML = '';
+            } else {
                 noTransformationsMessage.style.display = 'none';
+                displayResolved.forEach((problem) => {
+                    const title = problem.title || 'Problema Resolvido';
+                    const location = problem.location?.neighborhood || 'Bairro Desconhecido';
+                    const municipality = problem.location?.municipality || 'Município Desconhecido';
+                    const imageUrlBefore = problem.imageUrlBefore;
+                    const imageUrlAfter = problem.imageUrlAfter;
+
+                    html += `
+                        <div class="before-after-card" data-aos="fade-up">
+                            <div class="image-comparison">
+                                <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
+                                <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
+                            </div>
+                            <div class="card-content">
+                                <h4 class="card-title">${title}</h4>
+                                <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
+                                <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    `;
+                });
+                resolvedIssuesGallery.innerHTML = html;
             }
-        );
-    }
+        },
+        (error) => {
+            console.error('Erro ao carregar transformações visíveis:', error);
+            resolvedIssuesGallery.innerHTML =
+                '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+            noTransformationsMessage.style.display = 'none';
+        }
+    );
+}
 
     // Atualiza UI com base no estado de autenticação
     function updateAuthUI(user) {
