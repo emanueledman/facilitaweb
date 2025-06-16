@@ -9,7 +9,9 @@
   <meta name="keywords" content="fixabairro, angola, problemas urbanos, comunidade, cidadania, reportar, soluções, bairro, antes e depois, transformação, impacto, cookies">
   <meta name="author" content="FixABairro Team">
 
-  <link rel="icon" type="image/png" href="favicon.png"> <link rel="apple-touch-icon" href="icons/Icon-192.png"> <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="favicon.png"> 
+  <link rel="apple-touch-icon" href="icons/Icon-192.png"> 
+  <link rel="manifest" href="manifest.json">
 
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -19,7 +21,6 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 
   <style>
     /* Variáveis globais - Nova Paleta de Cores e Fontes */
@@ -644,7 +645,6 @@
         border-color: var(--text-white);
     }
 
-
     /* Rodapé */
     .footer {
       background: var(--secondary-dark);
@@ -920,7 +920,8 @@
           FixABairro
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars" style="color: var(--text-white);"></i> </button>
+          <i class="fas fa-bars" style="color: var(--text-white);"></i> 
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-lg-center">
             <li class="nav-item">
@@ -932,11 +933,14 @@
             <li class="nav-item">
               <a class="nav-link" href="#issues">Problemas Abertos</a>
             </li>
+            <li class="nav-item" id="profileLink" style="display: none;">
+              <a class="nav-link" href="profile.html" aria-label="Acessar perfil">Perfil</a>
+            </li>
             <li class="nav-item ms-lg-3">
               <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
             </li>
             <li class="nav-item ms-lg-2">
-              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou sair">Entrar</a>
             </li>
           </ul>
         </div>
@@ -1128,7 +1132,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // Configuração do Firebase (Substitua pelos seus dados reais)
+    // Configuração do Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
         authDomain: "facilita-479b3.firebaseapp.com",
@@ -1143,7 +1147,6 @@
     function loadStats(firebaseApp) {
       const db = firebaseApp.database();
 
-      // Para 'once', você pode usar .catch() na Promise retornada.
       db.ref('problems').once('value')
         .then((snapshot) => {
           const total = snapshot.numChildren();
@@ -1194,7 +1197,6 @@
       const recentIssuesContainer = document.getElementById('recentIssues');
       const noRecentIssuesMessage = document.getElementById('noRecentIssuesMessage');
 
-      // Adicionando um segundo argumento para tratamento de erro no .on()
       firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
         (snapshot) => {
           let html = '';
@@ -1202,17 +1204,16 @@
 
           snapshot.forEach((childSnapshot) => {
             const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-            // Apenas problemas que NÃO estão resolvidos
             if (problem.status !== 'Resolvido') {
-              issues.unshift(problem); // Adiciona ao início para obter os mais recentes primeiro
+              issues.unshift(problem);
             }
           });
 
-          const displayIssues = issues.slice(0, 3); // Sempre mostrar apenas os 3 mais recentes
+          const displayIssues = issues.slice(0, 3);
 
           if (displayIssues.length === 0) {
             noRecentIssuesMessage.style.display = 'block';
-            recentIssuesContainer.innerHTML = ''; // Limpa qualquer conteúdo antigo
+            recentIssuesContainer.innerHTML = '';
           } else {
             noRecentIssuesMessage.style.display = 'none';
             displayIssues.forEach((problem) => {
@@ -1235,7 +1236,7 @@
                   statusClass = 'status-Aguardando';
                   statusIcon = '<i class="fas fa-clock"></i>';
                   break;
-                default: // Fallback para qualquer outro status inesperado
+                default:
                   statusClass = 'status-Aguardando';
                   statusIcon = '<i class="fas fa-question-circle"></i>';
                   break;
@@ -1266,12 +1267,11 @@
           }
           recentIssuesContainer.innerHTML = html;
         },
-        // Callback de erro para o listener .on()
         (error) => {
           console.error('Erro ao carregar problemas recentes:', error);
           recentIssuesContainer.innerHTML =
             '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Por favor, tente novamente mais tarde.</p></div>';
-          noRecentIssuesMessage.style.display = 'none'; // Esconde a mensagem de "sem problemas" em caso de erro
+          noRecentIssuesMessage.style.display = 'none';
         }
       );
     }
@@ -1283,24 +1283,20 @@
         let html = '';
         const resolvedProblems = [];
 
-        // Adicionando um segundo argumento para tratamento de erro no .on()
-        // Buscamos os 10 últimos problemas criados e filtramos por "Resolvido" e por ter ambas as imagens
         firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
             (snapshot) => {
                 snapshot.forEach((childSnapshot) => {
                     const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-                    // Verifica se o status é 'Resolvido' e se ambas as URLs de imagem existem e são strings não vazias
                     if (problem.status === 'Resolvido' && problem.imageUrlBefore && typeof problem.imageUrlBefore === 'string' && problem.imageUrlBefore.trim() !== '' && problem.imageUrlAfter && typeof problem.imageUrlAfter === 'string' && problem.imageUrlAfter.trim() !== '') {
-                        resolvedProblems.unshift(problem); // Adiciona ao início para que os mais recentes apareçam primeiro
+                        resolvedProblems.unshift(problem);
                     }
                 });
 
-                // Limita a exibição aos 3 mais recentes resolvidos com imagens válidas
                 const displayResolved = resolvedProblems.slice(0, 3);
 
                 if (displayResolved.length === 0) {
                     noTransformationsMessage.style.display = 'block';
-                    resolvedIssuesGallery.innerHTML = ''; // Limpa qualquer conteúdo antigo
+                    resolvedIssuesGallery.innerHTML = '';
                 } else {
                     noTransformationsMessage.style.display = 'none';
                     displayResolved.forEach((problem) => {
@@ -1308,8 +1304,8 @@
                         const location = problem.location?.neighborhood || 'Bairro Desconhecido';
                         const municipality = problem.location?.municipality || 'Município Desconhecido';
 
-                        const imageUrlBefore = problem.imageUrlBefore; // Já verificamos se existe
-                        const imageUrlAfter = problem.imageUrlAfter;   // Já verificamos se existe
+                        const imageUrlBefore = problem.imageUrlBefore;
+                        const imageUrlAfter = problem.imageUrlAfter;
 
                         html += `
                             <div class="before-after-card" data-aos="fade-up">
@@ -1328,28 +1324,43 @@
                     resolvedIssuesGallery.innerHTML = html;
                 }
             },
-            // Callback de erro para o listener .on()
             (error) => {
                 console.error('Erro ao carregar transformações visíveis:', error);
                 resolvedIssuesGallery.innerHTML =
                   '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
-                noTransformationsMessage.style.display = 'none'; // Esconde a mensagem de "sem problemas" em caso de erro
+                noTransformationsMessage.style.display = 'none';
             }
         );
     }
 
-
     // Atualiza UI com base no estado de autenticação
     function updateAuthUI(user) {
       const authButton = document.getElementById('authButton');
+      const profileLink = document.getElementById('profileLink');
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
 
       if (user) {
-        authButton.textContent = 'Meu Perfil';
-        authButton.href = 'profile.html';
+        authButton.textContent = 'Sair';
+        authButton.href = '#';
+        authButton.classList.remove('btn-outline-secondary-dark');
+        authButton.classList.add('btn-main');
+        authButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          firebase.auth().signOut().then(() => {
+            alert('Você saiu com sucesso!');
+            window.location.reload();
+          }).catch((error) => {
+            console.error('Erro ao sair:', error);
+            alert('Erro ao sair. Tente novamente.');
+          });
+        }, { once: true });
+        profileLink.style.display = 'block';
       } else {
         authButton.textContent = 'Entrar';
         authButton.href = 'login.html';
+        authButton.classList.add('btn-outline-secondary-dark');
+        authButton.classList.remove('btn-main');
+        profileLink.style.display = 'none';
       }
 
       if (!document.querySelector('.navbar').classList.contains('scrolled')) {
@@ -1413,7 +1424,6 @@
 
     // Inicialização da página
     window.addEventListener('load', () => {
-      // Inicializar Firebase
       if (typeof firebase !== 'undefined') {
         const app = firebase.initializeApp(firebaseConfig);
 
@@ -1458,15 +1468,17 @@
       const btnOutline = document.getElementById('authButton');
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
 
-      if (window.scrollY > 80) { /* Aumentei o threshold para a mudança ser mais perceptível */
+      if (window.scrollY > 80) {
         navbar.classList.add('scrolled');
         navBrand.style.color = 'var(--secondary-dark)';
         navTogglerIcon.style.color = 'var(--secondary-dark)';
         navLinks.forEach(link => link.style.color = 'var(--text-main)');
         btnMain.style.background = 'var(--primary-accent)';
         btnMain.style.color = 'var(--text-white)';
-        btnOutline.style.color = 'var(--secondary-dark)';
-        btnOutline.style.borderColor = 'var(--secondary-dark)';
+        if (btnOutline.classList.contains('btn-outline-secondary-dark')) {
+          btnOutline.style.color = 'var(--secondary-dark)';
+          btnOutline.style.borderColor = 'var(--secondary-dark)';
+        }
       } else {
         navbar.classList.remove('scrolled');
         navBrand.style.color = 'var(--text-white)';
@@ -1474,8 +1486,10 @@
         navLinks.forEach(link => link.style.color = 'rgba(255,255,255,0.9)');
         btnMain.style.background = 'var(--primary-accent)';
         btnMain.style.color = 'var(--text-white)';
-        btnOutline.style.color = 'var(--text-white)';
-        btnOutline.style.borderColor = 'rgba(255,255,255,0.7)';
+        if (btnOutline.classList.contains('btn-outline-secondary-dark')) {
+          btnOutline.style.color = 'var(--text-white)';
+          btnOutline.style.borderColor = 'rgba(255,255,255,0.7)';
+        }
       }
     });
   </script>
