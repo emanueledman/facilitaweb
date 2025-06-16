@@ -555,28 +555,30 @@
       } else if (type === 'success') {
         notificationMessageDiv.classList.add('bg-green-100', 'text-green-700', 'border-success');
       }
+      notificationMessageDiv.classList.add('block'); // Garante que a div seja visível
     }
 
     function hideNotification() {
       notificationMessageDiv.classList.add('hidden');
+      notificationMessageDiv.classList.remove('block'); // Remove visibilidade explícita
       notificationMessageDiv.textContent = '';
     }
 
     function showError(element, message) {
       element.textContent = message;
       element.classList.remove('hidden');
+      element.classList.add('block'); // Garante que a div de erro seja visível
     }
 
     function hideError(element) {
       element.classList.add('hidden');
+      element.classList.remove('block'); // Remove visibilidade explícita
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
       // Inicialização do Firebase App
       if (typeof firebase !== 'undefined' && !firebase.apps.length) {
         firebaseApp = firebase.initializeApp(firebaseConfig);
-        // Não é necessário definir window.auth e window.db se o firebaseAuth.js usa firebase.auth() e firebase.firestore() diretamente.
-        // Se você precisar de acesso direto para depuração, pode mantê-los.
         console.log("Firebase App inicializado com sucesso.");
       } else if (firebase.apps.length) {
         firebaseApp = firebase.app();
@@ -675,13 +677,16 @@
 
         try {
           if (isPhone) {
-            // Usa a função atualizada sendVerificationCode do firebaseAuth
+            // Tenta enviar o código de verificação para o número de telefone.
+            // Se o número não estiver registrado, o sendVerificationCode (que envolve signInWithPhoneNumber)
+            // deve lançar um erro (ex: auth/user-not-found ou erro de rede/muitas tentativas).
             await firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
             showNotification('Um código de verificação foi enviado para o seu telefone. Por favor, verifique-o.', 'success');
-            // Redireciona para a página de verificação de telefone
+            // Redireciona para a página de verificação de telefone APENAS se o código for enviado com sucesso,
+            // o que implica que o número pode estar associado a um usuário existente.
             window.location.href = 'verify-phone.html'; 
           } else {
-            // Usa a função atualizada loginWithEmail do firebaseAuth
+            // Usa a função loginWithEmail para email/senha
             const result = await firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
             showNotification('Login realizado com sucesso! Bem-vindo(a) de volta ao FixABairro.', 'success');
             // Redireciona para o perfil após login bem-sucedido
@@ -694,7 +699,10 @@
             showError(emailOrPhoneError, error.message);
           } else if (error.message.includes("Senha incorreta") || error.message.includes("Credenciais inválidas")) {
             showError(passwordError, error.message);
-          } else {
+          } else if (error.message.includes("Usuário não encontrado")) { // Adicionado para lidar com user-not-found para email/telefone
+            showError(emailOrPhoneError, error.message + " Por favor, crie uma conta.");
+          }
+          else {
             showNotification(error.message, 'error');
           }
         } finally {
