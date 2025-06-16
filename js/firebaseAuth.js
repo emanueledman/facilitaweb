@@ -145,6 +145,33 @@ const firebaseAuth = {
   },
 
   /**
+   * Verifica se o número de telefone está associado a uma conta existente.
+   * @param {string} phoneNumber - Número de telefone normalizado.
+   * @returns {Promise<object|null>} - Dados do usuário se encontrado, null se não encontrado.
+   * @throws {Error} - Erro do Firestore.
+   */
+  async checkPhoneNumberExists(phoneNumber) {
+    try {
+      const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+      const querySnapshot = await firebase.firestore().collection('users')
+        .where('phoneNumber', '==', normalizedPhone)
+        .limit(1)
+        .get();
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        return {
+          uid: userDoc.id,
+          data: userDoc.data()
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error("Erro ao verificar número de telefone:", error);
+      throw new Error("Erro ao verificar número de telefone.");
+    }
+  },
+
+  /**
    * Realiza o login com email e senha.
    * @param {string} email - Email do usuário.
    * @param {string} password - Senha do usuário.
@@ -236,7 +263,7 @@ const firebaseAuth = {
   },
 
   /**
-   * Envia o código de verificação OTP para o número de telefone.
+   * Envia o código de verificação OTP para o número de telefone após verificar a existência da conta.
    * @param {string} phoneNumber - Número de telefone para verificação.
    * @returns {Promise<firebase.auth.ConfirmationResult>} - Objeto de resultado da confirmação.
    * @throws {Error} - Erro específico do Firebase ou de validação.
@@ -247,12 +274,24 @@ const firebaseAuth = {
 
     const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
 
+    // Verificar se o número está associado a uma conta
+    const userData = await this.checkPhoneNumberExists(normalizedPhone);
+    if (!userData) {
+      throw new Error("Nenhuma conta encontrada com este número de telefone.");
+    }
+
     try {
       if (!recaptchaVerifierGlobal) {
         throw new Error("reCAPTCHA não inicializado.");
       }
       const confirmationResult = await firebase.auth().signInWithPhoneNumber(normalizedPhone, recaptchaVerifierGlobal);
       confirmationResultGlobal = confirmationResult;
+      tempRegistrationDataGlobal = {
+        name: userData.data.name,
+        municipio: userData.data.municipio,
+        bairro: userData.data.bairro,
+        phoneNumber: normalizedPhone,
+      };
       localStorage.setItem('pendingVerificationPhoneNumber', normalizedPhone);
       return confirmationResult;
     } catch (error) {

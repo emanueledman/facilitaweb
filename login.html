@@ -15,8 +15,7 @@
   <style type="text/tailwindcss">
     @layer base {
       :root {
-        -primary-accent: #FF5722;
-        --primary-accent: #ff2222;
+        --primary-accent: #FF5722;
         --secondary-dark: #2C3E50;
         --highlight-light: #FFC107;
         --success-green: #4CAF50;
@@ -290,7 +289,6 @@
         font-weight: 500;
       }
 
-      /* Estilos para a nova mensagem de notificação */
       .notification-message {
         padding: 0.75rem 1rem;
         border-radius: 0.5rem;
@@ -300,16 +298,15 @@
         border: 1px solid;
       }
       .notification-message.success {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-700 */
-        border-color: #34d399; /* green-400 */
+        background-color: #d1fae5;
+        color: #065f46;
+        border-color: #34d399;
       }
       .notification-message.error {
-        background-color: #fee2e2; /* red-100 */
-        color: #991b1b; /* red-700 */
-        border-color: #f87171; /* red-400 */
+        background-color: #fee2e2;
+        color: #991b1b;
+        border-color: #f87171;
       }
-
 
       @media (max-width: 992px) {
         .navbar-brand {
@@ -361,34 +358,14 @@
       theme: {
         extend: {
           colors: {
-            primary: {
-              accent: 'var(--primary-accent)',
-            },
-            secondary: {
-              dark: 'var(--secondary-dark)',
-            },
-            highlight: {
-              light: 'var(--highlight-light)',
-            },
-            success: {
-              DEFAULT: 'var(--success-green)',
-            },
-            warning: {
-              DEFAULT: 'var(--warning-orange)',
-            },
-            info: {
-              DEFAULT: 'var(--info-blue)',
-            },
-            bg: {
-              light: 'var(--bg-light)',
-              white: 'var(--bg-white)',
-              darkOverlay: 'var(--bg-dark-overlay)',
-            },
-            text: {
-              main: 'var(--text-main)',
-              secondary: 'var(--text-secondary)',
-              white: 'var(--text-white)',
-            },
+            primary: { accent: 'var(--primary-accent)' },
+            secondary: { dark: 'var(--secondary-dark)' },
+            highlight: { light: 'var(--highlight-light)' },
+            success: { DEFAULT: 'var(--success-green)' },
+            warning: { DEFAULT: 'var(--warning-orange)' },
+            info: { DEFAULT: 'var(--info-blue)' },
+            bg: { light: 'var(--bg-light)', white: 'var(--bg-white)', darkOverlay: 'var(--bg-dark-overlay)' },
+            text: { main: 'var(--text-main)', secondary: 'var(--text-secondary)', white: 'var(--text-white)' },
             error: 'var(--error-red)',
           },
           fontFamily: {
@@ -396,14 +373,8 @@
             montserrat: ['Montserrat', 'sans-serif'],
             inter: ['Inter', 'sans-serif'],
           },
-          borderRadius: {
-            'lg': 'var(--border-radius-lg)',
-            'md': 'var(--border-radius-md)',
-          },
-          boxShadow: {
-            soft: 'var(--shadow-soft)',
-            medium: 'var(--shadow-medium)',
-          },
+          borderRadius: { 'lg': 'var(--border-radius-lg)', 'md': 'var(--border-radius-md)' },
+          boxShadow: { soft: 'var(--shadow-soft)', medium: 'var(--shadow-medium)' },
         }
       }
     }
@@ -464,7 +435,6 @@
           <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
         </div>
         
-        <!-- Nova div para mensagens de notificação gerais -->
         <div id="notificationMessage" class="notification-message hidden" role="alert"></div>
 
         <form id="loginForm" class="space-y-5">
@@ -482,6 +452,8 @@
           
           <div class="text-right text-sm">
             <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
+            <span class="mx-2">|</span>
+            <a href="#" id="loginWithOtp" class="text-primary-accent hover:underline font-medium transition-all duration-200 hidden">Entrar com código OTP</a>
           </div>
           
           <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
@@ -506,211 +478,17 @@
           <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
         </p>
 
-        <!-- reCAPTCHA container, hidden as it's invisible reCAPTCHA -->
         <div id="recaptcha-container" class="mt-4 hidden"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Usando versões compatíveis do Firebase para manter a API v8 -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://unpkg.com/imask"></script>
-  <!-- Carregue seu arquivo firebaseAuth.js após os SDKs do Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/imask@7.6.1/dist/imask.min.js"></script>
   <script src="js/firebaseAuth.js"></script>
-
-  <script>
-    const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-};
-
-document.addEventListener('DOMContentLoaded', async () => {
-  // Inicializa o Firebase App
-  try {
-    window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-    console.log("Firebase App inicializado.");
-  } catch (error) {
-    console.error("Erro ao inicializar Firebase:", error);
-    showNotification("Erro: Firebase SDK não carregado.", 'error');
-    return;
-  }
-
-  // Verifica o estado de autenticação
-  window.firebaseAuth.checkAuthState('index.html', null);
-
-  // Inicializa o reCAPTCHA
-  try {
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-  } catch (error) {
-    console.error("Erro ao inicializar reCAPTCHA:", error);
-    showNotification("Erro ao carregar verificação de segurança.", 'error');
-  }
-
-  // Referências aos elementos da UI
-  const loginForm = document.getElementById('loginForm');
-  const emailOrPhoneInput = document.getElementById('emailOrPhone');
-  const passwordInput = document.getElementById('password');
-  const loginBtn = document.getElementById('loginBtn');
-  const googleLoginBtn = document.getElementById('googleLoginBtn');
-  const forgotPasswordLink = document.getElementById('forgotPassword');
-  const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-  const passwordError = document.getElementById('passwordError');
-  const notificationMessageDiv = document.getElementById('notificationMessage');
-
-  // Funções auxiliares para mostrar/ocultar mensagens
-  function showNotification(message, type) {
-    notificationMessageDiv.textContent = message;
-    notificationMessageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-error', 'bg-green-100', 'text-green-700', 'border-success');
-    notificationMessageDiv.classList.add(type === 'error' ? 'bg-red-100' : 'bg-green-100', type === 'error' ? 'text-red-700' : 'text-green-700', type === 'error' ? 'border-error' : 'border-success', 'block');
-  }
-
-  function hideNotification() {
-    notificationMessageDiv.classList.add('hidden');
-    notificationMessageDiv.textContent = '';
-  }
-
-  function showError(element, message) {
-    element.textContent = message;
-    element.classList.remove('hidden');
-    element.classList.add('block');
-  }
-
-  function hideError(element) {
-    element.classList.add('hidden');
-  }
-
-  // Máscara de telefone
-  IMask(emailOrPhoneInput, {
-    mask: '+244 900 000 000',
-    lazy: false
-  });
-
-  emailOrPhoneInput.addEventListener('focus', () => {
-    if (emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
-
-  emailOrPhoneInput.addEventListener('input', () => {
-    if (!emailOrPhoneInput.value.startsWith('+244')) {
-      emailOrPhoneInput.value = '+244' + emailOrPhoneInput.value.replace(/[^0-9]/g, '').substring(3);
-    } else if (emailOrPhoneInput.value.length < 4 && emailOrPhoneInput.value.startsWith('+244'.substring(0, emailOrPhoneInput.value.length))) {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
-
-  emailOrPhoneInput.addEventListener('blur', () => {
-    if (emailOrPhoneInput.value === '+244' || emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '';
-    }
-  });
-
-  // Event listener para o formulário de login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideError(passwordError);
-    hideNotification();
-
-    let isValid = true;
-    const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-    const password = passwordInput.value;
-
-    const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
-    const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneRaw) === null;
-
-    if (!emailOrPhoneRaw) {
-      showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-      isValid = false;
-    } else if (!isEmail && !isPhone) {
-      showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
-      isValid = false;
-    }
-
-    const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
-    if (passwordErrorMsg) {
-      showError(passwordError, passwordErrorMsg);
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
-
-    try {
-      if (isPhone) {
-        await window.firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
-        showNotification('Código de verificação enviado para o seu telefone.', 'success');
-        window.location.href = 'verify-phone.html';
-      } else {
-        const result = await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
-        showNotification('Login realizado com sucesso!', 'success');
-        window.location.href = 'profile.html';
-      }
-    } catch (error) {
-      console.error("Erro no login:", error);
-      if (error.message.includes("Email inválido") || error.message.includes("telefone inválido")) {
-        showError(emailOrPhoneError, error.message);
-      } else if (error.message.includes("Senha incorreta")) {
-        showError(passwordError, error.message);
-      } else {
-        showNotification(error.message, 'error');
-      }
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
-    }
-  });
-
-  // Event listener para o login com Google
-  googleLoginBtn.addEventListener('click', async () => {
-    hideNotification();
-    googleLoginBtn.disabled = true;
-    googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
-
-    try {
-      await window.firebaseAuth.loginWithGoogle();
-      showNotification('Login com Google realizado com sucesso!', 'success');
-      window.location.href = 'profile.html';
-    } catch (error) {
-      console.error("Erro no login com Google:", error);
-      showNotification(error.message, 'error');
-    } finally {
-      googleLoginBtn.disabled = false;
-      googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
-    }
-  });
-
-  // Event listener para "Esqueceu a senha?"
-  forgotPasswordLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideNotification();
-
-    const emailInputVal = emailOrPhoneInput.value.trim();
-    const emailValidationResult = window.firebaseAuth.validateEmail(emailInputVal);
-    if (!emailInputVal || emailValidationResult) {
-      showError(emailOrPhoneError, emailValidationResult || 'Digite um email válido.');
-      return;
-    }
-
-    try {
-      await window.firebaseAuth.resetPassword(emailInputVal);
-      showNotification('Email para redefinição de senha enviado.', 'success');
-    } catch (error) {
-      console.error("Erro ao resetar senha:", error);
-      showNotification(error.message, 'error');
-    }
-  });
-});
-  </script>
+  <script src="js/login.js"></script>
 </body>
 </html>
