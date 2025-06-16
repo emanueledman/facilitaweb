@@ -522,6 +522,16 @@
         return;
       }
 
+      // Check if user is already logged in and redirect to index.html
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log("Usuário já está logado:", user.uid);
+          window.location.href = 'index.html';
+        } else {
+          console.log("Nenhum usuário logado, exibindo página de login.");
+        }
+      });
+
       if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
           'size': 'invisible',
