@@ -9,13 +9,55 @@
 // Certifique-se também de que 'firebase.initializeApp(firebaseConfig)' seja chamado
 // em algum lugar do seu aplicativo (geralmente na sua página HTML principal) antes de usar as funções deste objeto.
 
-// Variáveis globais para o reCAPTCHA e dados temporários de registro (mantendo a estrutura original)
+// Variáveis globais para o reCAPTCHA e dados temporários de registro
 let recaptchaVerifierGlobal = null;
 let confirmationResultGlobal = null; // Para armazenar o resultado da confirmação do telefone
 let tempRegistrationDataGlobal = null; // Para armazenar dados temporários de registro por telefone
 
 // Exporta um objeto contendo funções relacionadas à autenticação
 const firebaseAuth = {
+
+  /**
+   * Inicializa o Firebase App com a configuração fornecida.
+   * @param {object} firebaseConfig - Configuração do Firebase.
+   * @returns {firebase.app.App} - Instância do Firebase App.
+   * @throws {Error} - Se o Firebase SDK não estiver carregado.
+   */
+  initializeFirebaseApp(firebaseConfig) {
+    if (typeof firebase === 'undefined') {
+      console.error("Firebase SDK não carregado.");
+      throw new Error("Firebase SDK não carregado. Verifique os scripts CDN.");
+    }
+    if (!firebase.apps.length) {
+      return firebase.initializeApp(firebaseConfig);
+    }
+    return firebase.app();
+  },
+
+  /**
+   * Verifica o estado de autenticação e redireciona conforme necessário.
+   * @param {string} redirectIfLoggedIn - URL para redirecionar se o usuário estiver logado.
+   * @param {string} redirectIfNotLoggedIn - URL para redirecionar se o usuário não estiver logado.
+   */
+  checkAuthState(redirectIfLoggedIn, redirectIfNotLoggedIn) {
+    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
+      console.error("Firebase Auth SDK não carregado.");
+      return;
+    }
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log("Usuário logado:", user.uid);
+        if (redirectIfLoggedIn) {
+          window.location.href = redirectIfLoggedIn;
+        }
+      } else {
+        console.log("Nenhum usuário logado.");
+        if (redirectIfNotLoggedIn) {
+          window.location.href = redirectIfNotLoggedIn;
+        }
+      }
+    });
+  },
 
   /**
    * Normaliza o número de telefone removendo espaços.
@@ -70,37 +112,32 @@ const firebaseAuth = {
 
   /**
    * Inicializa o reCAPTCHA para autenticação por telefone.
-   * Deve ser chamado uma vez na sua página HTML (ex: window.onload) antes de
-   * `sendVerificationCode` ou `initiatePhoneRegistration` serem usados.
    * @param {string} recaptchaContainerId - O ID do elemento HTML onde o reCAPTCHA será renderizado.
-   * Este elemento pode ser visível ou invisível.
+   * @param {object} options - Opções adicionais para o reCAPTCHA (ex: size).
    */
-  async initializeRecaptcha(recaptchaContainerId) {
+  async initializeRecaptcha(recaptchaContainerId, options = { size: 'invisible' }) {
     if (recaptchaVerifierGlobal) {
       console.log("reCAPTCHA já inicializado.");
       return;
     }
 
-    // Verifica se o SDK do Firebase Auth está carregado
     if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.auth.RecaptchaVerifier === 'undefined') {
-        console.error("Firebase Auth SDK não carregado. Certifique-se de que o CDN do Firebase Auth está incluído antes deste script.");
-        throw new Error("Firebase Auth SDK não carregado. Verifique os scripts CDN.");
+      console.error("Firebase Auth SDK não carregado.");
+      throw new Error("Firebase Auth SDK não carregado.");
     }
 
     recaptchaVerifierGlobal = new firebase.auth.RecaptchaVerifier(recaptchaContainerId, {
-      size: 'invisible', // Pode ser 'invisible' ou 'normal'
+      size: options.size,
       callback: (response) => {
-        // reCAPTCHA resolvido
         console.log("reCAPTCHA resolvido:", response);
       },
       'expired-callback': () => {
-        console.warn("reCAPTCHA expirou. Limpando e recarregando...");
-        recaptchaVerifierGlobal.clear(); // Limpa o reCAPTCHA expirado
-        recaptchaVerifierGlobal = null; // Zera a referência para forçar uma nova inicialização
+        console.warn("reCAPTCHA expirou.");
+        recaptchaVerifierGlobal.clear();
+        recaptchaVerifierGlobal = null;
       },
       'error-callback': (error) => {
         console.error("Erro no reCAPTCHA:", error);
-        // Lidar com erros do reCAPTCHA
       }
     });
     await recaptchaVerifierGlobal.render();
@@ -128,24 +165,24 @@ const firebaseAuth = {
       };
     } catch (error) {
       console.error("Erro no login com email:", error);
-      let errorMessage = "Erro ao fazer login. Por favor, tente novamente.";
+      let errorMessage = "Erro ao fazer login.";
       switch (error.code) {
-          case 'auth/invalid-email':
-              errorMessage = "Email inválido.";
-              break;
-          case 'auth/user-disabled':
-              errorMessage = "Este usuário foi desabilitado.";
-              break;
-          case 'auth/user-not-found':
-              errorMessage = "Usuário não encontrado. Crie uma conta.";
-              break;
-          case 'auth/wrong-password':
-              errorMessage = "Senha incorreta.";
-              break;
-          default:
-              errorMessage = "Erro desconhecido. Por favor, tente novamente.";
+        case 'auth/invalid-email':
+          errorMessage = "Email inválido.";
+          break;
+        case 'auth/user-disabled':
+          errorMessage = "Este usuário foi desabilitado.";
+          break;
+        case 'auth/user-not-found':
+          errorMessage = "Usuário não encontrado. Crie uma conta.";
+          break;
+        case 'auth/wrong-password':
+          errorMessage = "Senha incorreta.";
+          break;
+        default:
+          errorMessage = "Erro desconhecido.";
       }
-      throw new Error(errorMessage); // Re-lança o erro com mensagem amigável
+      throw new Error(errorMessage);
     }
   },
 
@@ -157,9 +194,7 @@ const firebaseAuth = {
   async loginWithGoogle() {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
-      provider.setCustomParameters({
-        prompt: 'select_account',
-      });
+      provider.setCustomParameters({ prompt: 'select_account' });
       const userCredential = await firebase.auth().signInWithPopup(provider);
       return {
         user: userCredential.user,
@@ -167,11 +202,11 @@ const firebaseAuth = {
       };
     } catch (error) {
       console.error("Erro no login com Google:", error);
-      let errorMessage = "Erro ao fazer login com Google. Por favor, tente novamente.";
+      let errorMessage = "Erro ao fazer login com Google.";
       if (error.code === 'auth/popup-closed-by-user') {
-          errorMessage = "O popup de login foi fechado.";
+        errorMessage = "O popup de login foi fechado.";
       } else if (error.code === 'auth/cancelled-popup-request') {
-          errorMessage = "Requisição de popup cancelada.";
+        errorMessage = "Requisição de popup cancelada.";
       }
       throw new Error(errorMessage);
     }
@@ -189,12 +224,12 @@ const firebaseAuth = {
 
     try {
       await firebase.auth().sendPasswordResetEmail(email);
-      return true; // Sucesso
+      return true;
     } catch (error) {
       console.error("Erro ao redefinir senha:", error);
-      let errorMessage = "Erro ao redefinir senha. Por favor, tente novamente.";
+      let errorMessage = "Erro ao redefinir senha.";
       if (error.code === 'auth/user-not-found') {
-          errorMessage = "Nenhum usuário encontrado com este email.";
+        errorMessage = "Nenhum usuário encontrado com este email.";
       }
       throw new Error(errorMessage);
     }
@@ -202,10 +237,9 @@ const firebaseAuth = {
 
   /**
    * Envia o código de verificação OTP para o número de telefone.
-   * Requer que `firebaseAuth.initializeRecaptcha()` tenha sido chamado e resolvido.
    * @param {string} phoneNumber - Número de telefone para verificação.
    * @returns {Promise<firebase.auth.ConfirmationResult>} - Objeto de resultado da confirmação.
-   * @throws {Error} - Erro específico do Firebase, de validação ou se o reCAPTCHA não estiver inicializado.
+   * @throws {Error} - Erro específico do Firebase ou de validação.
    */
   async sendVerificationCode(phoneNumber) {
     const phoneValidation = this.validatePhone(phoneNumber);
@@ -215,18 +249,19 @@ const firebaseAuth = {
 
     try {
       if (!recaptchaVerifierGlobal) {
-        throw new Error("reCAPTCHA não inicializado. Chame firebaseAuth.initializeRecaptcha() primeiro.");
+        throw new Error("reCAPTCHA não inicializado.");
       }
       const confirmationResult = await firebase.auth().signInWithPhoneNumber(normalizedPhone, recaptchaVerifierGlobal);
-      confirmationResultGlobal = confirmationResult; // Armazena globalmente para `verifyPhoneNumber`
+      confirmationResultGlobal = confirmationResult;
+      localStorage.setItem('pendingVerificationPhoneNumber', normalizedPhone);
       return confirmationResult;
     } catch (error) {
       console.error("Erro ao enviar código de verificação:", error);
-      let errorMessage = "Erro ao enviar código de verificação. Por favor, tente novamente.";
+      let errorMessage = "Erro ao enviar código de verificação.";
       if (error.code === 'auth/too-many-requests') {
-          errorMessage = "Muitas requisições. Tente novamente mais tarde ou verifique o número.";
+        errorMessage = "Muitas requisições.";
       } else if (error.code === 'auth/invalid-phone-number') {
-          errorMessage = "Número de telefone inválido.";
+        errorMessage = "Número de telefone inválido.";
       }
       throw new Error(errorMessage);
     }
@@ -248,7 +283,6 @@ const firebaseAuth = {
     const passwordValidation = this.validatePassword(password);
     if (passwordValidation) { throw new Error(passwordValidation); }
 
-    // Validação de campos obrigatórios adicionais
     if (!name || !municipio || !bairro) {
       throw new Error("Por favor, preencha todos os campos: Nome, Município e Bairro.");
     }
@@ -258,17 +292,15 @@ const firebaseAuth = {
       await userCredential.user.updateProfile({ displayName: name });
       await userCredential.user.sendEmailVerification();
 
-      // Salva dados do usuário no Firestore
-      // Certifique-se de que `firebase.firestore()` esteja disponível (SDK do Firestore carregado)
       await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
         name,
         email,
         municipio,
         bairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        notificationPreferences: { // Define preferências iniciais
-            email: true,
-            phone: false,
+        notificationPreferences: {
+          email: true,
+          phone: false,
         }
       });
 
@@ -278,11 +310,11 @@ const firebaseAuth = {
       };
     } catch (error) {
       console.error("Erro ao registrar usuário com email:", error);
-      let errorMessage = "Erro ao registrar usuário. Por favor, tente novamente.";
+      let errorMessage = "Erro ao registrar usuário.";
       if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "Este email já está registrado. Tente fazer login.";
+        errorMessage = "Este email já está registrado.";
       } else if (error.code === 'auth/weak-password') {
-          errorMessage = "A senha é muito fraca.";
+        errorMessage = "A senha é muito fraca.";
       }
       throw new Error(errorMessage);
     }
@@ -290,13 +322,12 @@ const firebaseAuth = {
 
   /**
    * Inicia o processo de registro de um usuário com número de telefone.
-   * Envia o código de verificação e armazena os dados temporários do usuário.
    * @param {string} name - Nome completo do usuário.
    * @param {string} phoneNumber - Número de telefone para registro.
    * @param {string} municipio - Município do usuário.
    * @param {string} bairro - Bairro do usuário.
    * @returns {Promise<firebase.auth.ConfirmationResult>} - Objeto de resultado da confirmação.
-   * @throws {Error} - Erro específico do Firebase, de validação ou se o reCAPTCHA não estiver inicializado.
+   * @throws {Error} - Erro específico do Firebase ou de validação.
    */
   async initiatePhoneRegistration(name, phoneNumber, municipio, bairro) {
     const phoneValidation = this.validatePhone(phoneNumber);
@@ -304,28 +335,24 @@ const firebaseAuth = {
 
     const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
 
-    // Validação de campos obrigatórios adicionais
     if (!name || !municipio || !bairro) {
       throw new Error("Por favor, preencha todos os campos: Nome, Município e Bairro.");
     }
 
     try {
-      // Requer que initializeRecaptcha tenha sido chamado
       if (!recaptchaVerifierGlobal) {
-        throw new Error("reCAPTCHA não inicializado. Chame firebaseAuth.initializeRecaptcha() primeiro.");
+        throw new Error("reCAPTCHA não inicializado.");
       }
 
       const confirmationResult = await firebase.auth().signInWithPhoneNumber(normalizedPhone, recaptchaVerifierGlobal);
-      confirmationResultGlobal = confirmationResult; // Armazena globalmente para `verifyPhoneNumber`
+      confirmationResultGlobal = confirmationResult;
 
-      // Armazena dados temporários do usuário para uso após a verificação OTP
       tempRegistrationDataGlobal = {
         name,
         municipio,
         bairro,
         phoneNumber: normalizedPhone,
       };
-      // Opcional: armazenar o número pendente no localStorage para cenários de recarga de página
       localStorage.setItem('pendingVerificationPhoneNumber', normalizedPhone);
 
       return confirmationResult;
@@ -333,7 +360,7 @@ const firebaseAuth = {
       console.error("Erro ao iniciar registro por telefone:", error);
       let errorMessage = "Erro ao iniciar registro por telefone.";
       if (error.code === 'auth/too-many-requests') {
-        errorMessage = "Muitas tentativas. Tente novamente mais tarde.";
+        errorMessage = "Muitas tentativas.";
       }
       throw new Error(errorMessage);
     }
@@ -341,15 +368,13 @@ const firebaseAuth = {
 
   /**
    * Verifica o número de telefone com o código OTP fornecido.
-   * Assume que `confirmationResultGlobal` e `tempRegistrationDataGlobal` foram definidos
-   * por uma chamada anterior a `initiatePhoneRegistration`.
    * @param {string} code - O código OTP de 6 dígitos.
    * @returns {Promise<object>} - Objeto com o user.
    * @throws {Error} - Erro específico do Firebase ou de validação.
    */
   async verifyPhoneNumber(code) {
     if (!confirmationResultGlobal) {
-      throw new Error("Nenhuma verificação de telefone pendente. Inicie o processo de registro novamente.");
+      throw new Error("Nenhuma verificação de telefone pendente.");
     }
     if (!code || code.length !== 6) {
       throw new Error("Por favor, insira um código OTP de 6 dígitos válido.");
@@ -360,14 +385,12 @@ const firebaseAuth = {
       const userData = tempRegistrationDataGlobal;
 
       if (!userData) {
-        throw new Error("Dados de registro temporários não encontrados. Por favor, tente novamente o registro de telefone.");
+        throw new Error("Dados de registro temporários não encontrados.");
       }
 
-      // Salva dados no Firestore após a verificação bem-sucedida
-      // Certifique-se de que `firebase.firestore()` esteja disponível (SDK do Firestore carregado)
       await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
         name: userData.name,
-        phoneNumber: userCredential.user.phoneNumber, // O número de telefone será preenchido pelo Firebase Auth após a verificação
+        phoneNumber: userCredential.user.phoneNumber,
         municipio: userData.municipio,
         bairro: userData.bairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -375,11 +398,10 @@ const firebaseAuth = {
           email: userCredential.user.email ? true : false,
           phone: true,
         },
-      }, { merge: true }); // Usa merge: true para atualizar ou criar o documento
+      }, { merge: true });
 
       await userCredential.user.updateProfile({ displayName: userData.name });
 
-      // Limpa dados temporários e referências globais após o sucesso
       confirmationResultGlobal = null;
       tempRegistrationDataGlobal = null;
       localStorage.removeItem('pendingVerificationPhoneNumber');
@@ -389,13 +411,13 @@ const firebaseAuth = {
       };
     } catch (error) {
       console.error("Erro ao verificar telefone:", error);
-      let errorMessage = "Erro ao verificar código. Por favor, tente novamente.";
+      let errorMessage = "Erro ao verificar código.";
       if (error.code === 'auth/invalid-verification-code') {
-          errorMessage = "Código de verificação inválido.";
+        errorMessage = "Código de verificação inválido.";
       } else if (error.code === 'auth/code-expired') {
-          errorMessage = "O código expirou. Por favor, reenvie.";
+        errorMessage = "O código expirou.";
       } else if (error.code === 'auth/missing-verification-code') {
-          errorMessage = "Código de verificação ausente.";
+        errorMessage = "Código de verificação ausente.";
       }
       throw new Error(errorMessage);
     }
@@ -403,6 +425,7 @@ const firebaseAuth = {
 
   /**
    * Realiza o logout do usuário autenticado.
+   * @returns {Promise<boolean>} - True se o logout for bem-sucedido.
    * @throws {Error} - Erro específico do Firebase.
    */
   async signOutUser() {
@@ -411,7 +434,7 @@ const firebaseAuth = {
       return true;
     } catch (error) {
       console.error("Erro ao sair:", error);
-      throw new Error("Erro ao desconectar. Por favor, tente novamente.");
+      throw new Error("Erro ao desconectar.");
     }
   },
 
@@ -426,24 +449,21 @@ const firebaseAuth = {
       return { user: userCredential.user };
     } catch (error) {
       console.error("Erro ao entrar como visitante:", error);
-      throw new Error("Erro ao entrar como visitante. Por favor, tente novamente.");
+      throw new Error("Erro ao entrar como visitante.");
     }
   },
 
   /**
    * Configura um ouvinte para alterações no estado de autenticação do Firebase.
-   * Use isto para manter o status do usuário logado/visitante em sua UI.
    * @param {function(firebase.User|null)} callback - Função a ser chamada quando o estado de autenticação muda.
-   * Recebe o objeto `user` (ou `null` se deslogado).
    */
   onAuthStateChangedListener(callback) {
-    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined' || typeof firebase.auth().onAuthStateChanged === 'undefined') {
-        console.error("Firebase Auth SDK não carregado. Não é possível registrar o ouvinte. Certifique-se de que o CDN do Firebase Auth está incluído.");
-        return; // Não pode registrar o ouvinte sem o SDK
+    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
+      console.error("Firebase Auth SDK não carregado.");
+      return;
     }
     firebase.auth().onAuthStateChanged(callback);
   }
 };
 
-// Torna o objeto firebaseAuth disponível globalmente (como solicitado)
 window.firebaseAuth = firebaseAuth;

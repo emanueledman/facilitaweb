@@ -697,350 +697,290 @@
   <script src="https://unpkg.com/imask"></script>
   <script src="js/firebaseAuth.js"></script>
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-    };
+   const firebaseConfig = {
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+  authDomain: "facilita-479b3.firebaseapp.com",
+  projectId: "facilita-479b3",
+  storageBucket: "facilita-479b3.appspot.com",
+  messagingSenderId: "385676676886",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+};
 
-    let firebaseApp;
-    let isSubmitting = false;
+let isSubmitting = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // Initialize Firebase
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebaseApp = firebase.initializeApp(firebaseConfig);
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
-        console.log("Firebase App e Firestore inicializados com sucesso.");
-      } else if (firebase.apps.length) {
-        firebaseApp = firebase.app();
-        window.auth = firebase.auth();
-        window.db = firebase.firestore();
-        console.log("Firebase App já estava inicializado.");
-      } else {
-        console.error("Firebase SDK não carregado.");
-        alert("Erro: Firebase SDK não carregado.");
-        return;
-      }
+document.addEventListener('DOMContentLoaded', async () => {
+  // Inicializa o Firebase App
+  try {
+    window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+    console.log("Firebase App inicializado.");
+  } catch (error) {
+    console.error("Erro ao inicializar Firebase:", error);
+    alert("Erro: Firebase SDK não carregado.");
+    return;
+  }
 
-      // Check if user is already logged in and redirect to index.html
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          console.log("Usuário já está logado:", user.uid);
-          window.location.href = 'index.html';
-        } else {
-          console.log("Nenhum usuário logado, exibindo página de registro.");
-        }
-      });
+  // Verifica o estado de autenticação
+  window.firebaseAuth.checkAuthState('index.html', null);
 
-      // Initialize reCAPTCHA
-      if (typeof firebase !== 'undefined' && typeof firebase.auth !== 'undefined' && firebaseApp) {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-          size: 'normal',
-          callback: (response) => {
-            console.log("reCAPTCHA resolvido:", response);
-            toggleRegisterButtonAndTerms();
-          },
-          'expired-callback': () => {
-            console.warn("reCAPTCHA expirou.");
-            alert("Verificação de segurança expirada. Tente novamente.");
-            if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-              grecaptcha.reset(window.recaptchaWidgetId);
-            }
-            registerBtn.disabled = true;
-          },
-        });
+  // Inicializa o reCAPTCHA
+  try {
+    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+  } catch (error) {
+    console.error("Erro ao inicializar reCAPTCHA:", error);
+    alert("Erro ao carregar verificação de segurança.");
+  }
 
-        window.recaptchaVerifier.render().then((widgetId) => {
-          window.recaptchaWidgetId = widgetId;
-          console.log("reCAPTCHA renderizado com ID:", widgetId);
-          document.getElementById('recaptcha-container').classList.remove('hidden');
-        }).catch((error) => {
-          console.error("Erro ao renderizar reCAPTCHA:", error);
-          alert("Erro ao carregar verificação de segurança. Tente novamente.");
-        });
-      }
+  // Referências aos elementos da UI
+  const registerForm = document.getElementById('registerForm');
+  const nameInput = document.getElementById('name');
+  const emailOrPhoneInput = document.getElementById('emailOrPhone');
+  const municipioSelect = document.getElementById('municipio');
+  const bairroInput = document.getElementById('bairro');
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const registerBtn = document.getElementById('registerBtn');
+  const registerText = document.getElementById('registerText');
+  const registerSpinner = document.getElementById('registerSpinner');
+  const nameError = document.getElementById('nameError');
+  const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+  const municipioError = document.getElementById('municipioError');
+  const bairroError = document.getElementById('bairroError');
+  const passwordError = document.getElementById('passwordError');
+  const confirmPasswordError = document.getElementById('confirmPasswordError');
+  const termsCheckbox = document.getElementById('termsCheckbox');
+  const termsError = document.getElementById('termsError');
+  const showTermsLink = document.getElementById('showTermsLink');
+  const termsModal = document.getElementById('termsModal');
+  const closeTermsModalBtn = document.getElementById('closeTermsModal');
+  const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
 
-      const registerForm = document.getElementById('registerForm');
-      const nameInput = document.getElementById('name');
-      const emailOrPhoneInput = document.getElementById('emailOrPhone');
-      const municipioSelect = document.getElementById('municipio');
-      const bairroInput = document.getElementById('bairro');
-      const passwordInput = document.getElementById('password');
-      const confirmPasswordInput = document.getElementById('confirmPassword');
-      const registerBtn = document.getElementById('registerBtn');
-      const registerText = document.getElementById('registerText');
-      const registerSpinner = document.getElementById('registerSpinner');
-      const nameError = document.getElementById('nameError');
-      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-      const municipioError = document.getElementById('municipioError');
-      const bairroError = document.getElementById('bairroError');
-      const passwordError = document.getElementById('passwordError');
-      const confirmPasswordError = document.getElementById('confirmPasswordError');
-      const termsCheckbox = document.getElementById('termsCheckbox');
-      const termsError = document.getElementById('termsError');
-      const showTermsLink = document.getElementById('showTermsLink');
-      const termsModal = document.getElementById('termsModal');
-      const closeTermsModalBtn = document.getElementById('closeTermsModal');
-      const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
-      const recaptchaDiv = document.getElementById('recaptcha-container');
+  let termsRead = false;
+  let termsAccepted = false;
 
-      let termsRead = false;
-      let termsAccepted = false;
+  const municipiosDeLuanda = [
+    "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi", "Cazenga"
+  ];
 
-      const municipiosDeLuanda = [
-        "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi", "Cazenga"
-      ];
-
-      function populateMunicipios() {
-        municipiosDeLuanda.sort().forEach((municipio) => {
-          const option = document.createElement('option');
-          option.value = municipio;
-          option.textContent = municipio;
-          municipioSelect.appendChild(option);
-        });
-      }
-
-      populateMunicipios();
-      const phoneMask = IMask(emailOrPhoneInput, {
-        mask: [
-          {
-            mask: '+244 000 000 000',
-            startsWith: '+244',
-            lazy: true,
-          },
-          {
-            mask: /^\S+@\S+\.\S+$/,
-            startsWith: '',
-            lazy: false,
-          },
-        ],
-        dispatch: (appended, dynamicMasked) => {
-          const value = (dynamicMasked.value + appended).trim();
-          if (value.startsWith('+244') || value.startsWith('+')) {
-            return dynamicMasked.compiledMasks[0];
-          }
-          return dynamicMasked.compiledMasks[1];
-        },
-      });
-
-      emailOrPhoneInput.addEventListener('input', () => {
-        const value = emailOrPhoneInput.value.trim();
-        if (value === '') {
-          phoneMask.updateOptions({ lazy: true });
-        } else if (value.startsWith('+244')) {
-          phoneMask.updateOptions({ lazy: false });
-        }
-      });
-
-      function showError(element, message) {
-        element.textContent = message;
-        element.style.display = 'block';
-      }
-
-      function hideError(element) {
-        element.style.display = 'none';
-      }
-
-      function toggleRegisterButtonAndTerms() {
-        termsCheckbox.checked = termsAccepted;
-        registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
-        if (!termsAccepted) {
-          showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
-        } else {
-          hideError(termsError);
-        }
-      }
-
-      termsCheckbox.addEventListener('change', () => {
-        if (!termsRead) {
-          termsCheckbox.checked = false;
-          termsModal.classList.add('show');
-        } else {
-          termsAccepted = termsCheckbox.checked;
-          toggleRegisterButtonAndTerms();
-        }
-      });
-
-      showTermsLink.addEventListener('click', () => {
-        termsModal.classList.add('show');
-      });
-
-      closeTermsModalBtn.addEventListener('click', () => {
-        termsModal.classList.remove('show');
-        if (!termsRead) {
-          termsAccepted = false;
-          toggleRegisterButtonAndTerms();
-        }
-      });
-
-      acceptTermsModalBtn.addEventListener('click', () => {
-        termsRead = true;
-        termsAccepted = true;
-        termsModal.classList.remove('show');
-        toggleRegisterButtonAndTerms();
-      });
-
-      termsModal.addEventListener('click', (e) => {
-        if (e.target === termsModal) {
-          termsModal.classList.remove('show');
-          if (!termsRead) {
-            termsAccepted = false;
-            toggleRegisterButtonAndTerms();
-          }
-        }
-      });
-
-      registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (isSubmitting) return;
-        isSubmitting = true;
-
-        document.querySelectorAll('.error-message').forEach((el) => hideError(el));
-
-        let isValid = true;
-
-        if (!nameInput.value.trim()) {
-          showError(nameError, "Nome completo é obrigatório.");
-          isValid = false;
-        }
-
-        let emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-        let emailOrPhoneProcessed = emailOrPhoneRaw;
-        if (emailOrPhoneRaw.startsWith('+244')) {
-          emailOrPhoneProcessed = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-        }
-
-        const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneProcessed) === null;
-        const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneProcessed) === null;
-
-        if (!emailOrPhoneRaw) {
-          showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-          isValid = false;
-        } else if (!isEmail && !isPhone) {
-          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
-          isValid = false;
-        }
-
-        if (!municipioSelect.value) {
-          showError(municipioError, "Por favor, selecione seu município.");
-          isValid = false;
-        }
-
-        if (!bairroInput.value.trim()) {
-          showError(bairroError, "O nome do bairro é obrigatório.");
-          isValid = false;
-        }
-
-        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
-        if (passwordErrorMsg) {
-          showError(passwordError, passwordErrorMsg);
-          isValid = false;
-        }
-
-        if (passwordInput.value !== confirmPasswordInput.value) {
-          showError(confirmPasswordError, "As senhas não coincidem.");
-          isValid = false;
-        }
-
-        if (!termsAccepted) {
-          showError(termsError, "Você precisa aceitar os Termos e Condições de Serviço para continuar.");
-          isValid = false;
-        }
-
-        if (!isValid) {
-          console.log("Validação falhou:", {
-            name: nameInput.value.trim(),
-            emailOrPhone: emailOrPhoneRaw,
-            municipio: municipioSelect.value,
-            bairro: bairroInput.value.trim(),
-            password: passwordInput.value,
-          });
-          isSubmitting = false;
-          return;
-        }
-
-        registerBtn.disabled = true;
-        registerText.classList.add('hidden');
-        registerSpinner.classList.remove('hidden');
-        registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
-
-        try {
-          if (typeof firebaseAuth === 'undefined' || !firebaseApp) {
-            throw new Error("Módulo firebaseAuth ou Firebase App não inicializado.");
-          }
-
-          const result = await firebaseAuth.registerUser(
-            nameInput.value.trim(),
-            emailOrPhoneProcessed,
-            passwordInput.value.trim(),
-            municipioSelect.value,
-            bairroInput.value.trim(),
-            firebaseApp
-          );
-
-          if (result.requiresEmailVerification) {
-            alert('Conta criada com sucesso! Verifique seu email para ativar sua conta.');
-            window.location.href = 'verify-email.html';
-          } else if (result.requiresPhoneVerification) {
-            alert('Um código de verificação foi enviado para o seu telefone. Por favor, insira o código.');
-            window.location.href = 'verify-phone.html';
-          } else {
-            alert('Conta criada com sucesso! Bem-vindo(a) ao FixABairro.');
-            window.location.href = 'profile.html';
-          }
-        } catch (error) {
-          let userFacingMessage = "Ocorreu um erro inesperado. Por favor, tente novamente.";
-          console.error("Erro no registo:", error);
-
-          if (error.code) {
-            switch (error.code) {
-              case 'auth/email-already-in-use':
-                userFacingMessage = 'Este email já está registado. Tente fazer login ou use outro email.';
-                showError(emailOrPhoneError, userFacingMessage);
-                break;
-              case 'auth/invalid-email':
-                userFacingMessage = 'O formato do email é inválido.';
-                showError(emailOrPhoneError, userFacingMessage);
-                break;
-              case 'auth/weak-password':
-                userFacingMessage = 'A senha é muito fraca. Escolha uma senha com pelo menos 6 caracteres.';
-                showError(passwordError, userFacingMessage);
-                break;
-              case 'auth/invalid-phone-number':
-                userFacingMessage = 'O número de telefone fornecido é inválido. Certifique-se de usar +2449XXXXXXXX.';
-                showError(emailOrPhoneError, userFacingMessage);
-                break;
-              case 'auth/quota-exceeded':
-              case 'auth/too-many-requests':
-                userFacingMessage = 'Muitas tentativas. Por favor, tente novamente mais tarde.';
-                alert(userFacingMessage);
-                break;
-              case 'auth/network-request-failed':
-                userFacingMessage = 'Erro de rede. Verifique sua conexão à internet.';
-                alert(userFacingMessage);
-                break;
-              default:
-                userFacingMessage = `Erro: ${error.message}`;
-                alert(userFacingMessage);
-            }
-          } else {
-            userFacingMessage = error.message;
-            showError(emailOrPhoneError, userFacingMessage);
-          }
-        } finally {
-          registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
-          registerText.classList.remove('hidden');
-          registerSpinner.classList.add('hidden');
-          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
-          isSubmitting = false;
-        }
-      });
+  function populateMunicipios() {
+    municipiosDeLuanda.sort().forEach((municipio) => {
+      const option = document.createElement('option');
+      option.value = municipio;
+      option.textContent = municipio;
+      municipioSelect.appendChild(option);
     });
+  }
+
+  populateMunicipios();
+
+  const phoneMask = IMask(emailOrPhoneInput, {
+    mask: [
+      {
+        mask: '+244 000 000 000',
+        startsWith: '+244',
+        lazy: true,
+      },
+      {
+        mask: /^\S+@\S+\.\S+$/,
+        startsWith: '',
+        lazy: false,
+      },
+    ],
+    dispatch: (appended, dynamicMasked) => {
+      const value = (dynamicMasked.value + appended).trim();
+      if (value.startsWith('+244') || value.startsWith('+')) {
+        return dynamicMasked.compiledMasks[0];
+      }
+      return dynamicMasked.compiledMasks[1];
+    },
+  });
+
+  emailOrPhoneInput.addEventListener('input', () => {
+    const value = emailOrPhoneInput.value.trim();
+    if (value === '') {
+      phoneMask.updateOptions({ lazy: true });
+    } else if (value.startsWith('+244')) {
+      phoneMask.updateOptions({ lazy: false });
+    }
+  });
+
+  function showError(element, message) {
+    element.textContent = message;
+    element.style.display = 'block';
+  }
+
+  function hideError(element) {
+    element.style.display = 'none';
+  }
+
+  function toggleRegisterButtonAndTerms() {
+    termsCheckbox.checked = termsAccepted;
+    registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+    if (!termsAccepted) {
+      showError(termsError, "Aceite os Termos de Serviço.");
+    } else {
+      hideError(termsError);
+    }
+  }
+
+  termsCheckbox.addEventListener('change', () => {
+    if (!termsRead) {
+      termsCheckbox.checked = false;
+      termsModal.classList.add('show');
+    } else {
+      termsAccepted = termsCheckbox.checked;
+      toggleRegisterButtonAndTerms();
+    }
+  });
+
+  showTermsLink.addEventListener('click', () => {
+    termsModal.classList.add('show');
+  });
+
+  closeTermsModalBtn.addEventListener('click', () => {
+    termsModal.classList.remove('show');
+    if (!termsRead) {
+      termsAccepted = false;
+      toggleRegisterButtonAndTerms();
+    }
+  });
+
+  acceptTermsModalBtn.addEventListener('click', () => {
+    termsRead = true;
+    termsAccepted = true;
+    termsModal.classList.remove('show');
+    toggleRegisterButtonAndTerms();
+  });
+
+  termsModal.addEventListener('click', (e) => {
+    if (e.target === termsModal) {
+      termsModal.classList.remove('show');
+      if (!termsRead) {
+        termsAccepted = false;
+        toggleRegisterButtonAndTerms();
+      }
+    }
+  });
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    isSubmitting = true;
+
+    document.querySelectorAll('.error-message').forEach(hideError);
+
+    let isValid = true;
+    const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+    const emailOrPhoneProcessed = emailOrPhoneRaw.startsWith('+244') ? window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw) : emailOrPhoneRaw;
+
+    if (!nameInput.value.trim()) {
+      showError(nameError, "Nome completo é obrigatório.");
+      isValid = false;
+    }
+
+    const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneProcessed) === null;
+    const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneProcessed) === null;
+
+    if (!emailOrPhoneRaw) {
+      showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
+      isValid = false;
+    } else if (!isEmail && !isPhone) {
+      showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+      isValid = false;
+    }
+
+    if (!municipioSelect.value) {
+      showError(municipioError, "Selecione seu município.");
+      isValid = false;
+    }
+
+    if (!bairroInput.value.trim()) {
+      showError(bairroError, "O nome do bairro é obrigatório.");
+      isValid = false;
+    }
+
+    const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+    if (passwordErrorMsg) {
+      showError(passwordError, passwordErrorMsg);
+      isValid = false;
+    }
+
+    if (passwordInput.value !== confirmPasswordInput.value) {
+      showError(confirmPasswordError, "As senhas não coincidem.");
+      isValid = false;
+    }
+
+    if (!termsAccepted) {
+      showError(termsError, "Aceite os Termos e Condições.");
+      isValid = false;
+    }
+
+    if (!isValid) {
+      isSubmitting = false;
+      return;
+    }
+
+    registerBtn.disabled = true;
+    registerText.classList.add('hidden');
+    registerSpinner.classList.remove('hidden');
+    registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
+
+    try {
+      if (isEmail) {
+        const result = await window.firebaseAuth.registerUserWithEmail(
+          nameInput.value.trim(),
+          emailOrPhoneProcessed,
+          passwordInput.value,
+          municipioSelect.value,
+          bairroInput.value.trim()
+        );
+        alert('Conta criada com sucesso! Verifique seu email.');
+        window.location.href = 'verify-email.html';
+      } else {
+        await window.firebaseAuth.initiatePhoneRegistration(
+          nameInput.value.trim(),
+          emailOrPhoneProcessed,
+          municipioSelect.value,
+          bairroInput.value.trim()
+        );
+        alert('Código de verificação enviado para o seu telefone.');
+        window.location.href = 'verify-phone.html';
+      }
+    } catch (error) {
+      console.error("Erro no registo:", error);
+      let userFacingMessage = error.message;
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            userFacingMessage = 'Este email já está registado.';
+            showError(emailOrPhoneError, userFacingMessage);
+            break;
+          case 'auth/invalid-email':
+            userFacingMessage = 'O formato do email é inválido.';
+            showError(emailOrPhoneError, userFacingMessage);
+            break;
+          case 'auth/weak-password':
+            userFacingMessage = 'A senha é muito fraca.';
+            showError(passwordError, userFacingMessage);
+            break;
+          case 'auth/invalid-phone-number':
+            userFacingMessage = 'Número de telefone inválido.';
+            showError(emailOrPhoneError, userFacingMessage);
+            break;
+          default:
+            alert(userFacingMessage);
+        }
+      } else {
+        showError(emailOrPhoneError, userFacingMessage);
+      }
+    } finally {
+      registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+      registerText.classList.remove('hidden');
+      registerSpinner.classList.add('hidden');
+      registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+      isSubmitting = false;
+    }
+  });
+});
   </script>
 </body>
 </html>
