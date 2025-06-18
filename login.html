@@ -1,716 +1,559 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="FixABairro - Faça login para gerenciar problemas e ajudar sua comunidade.">
-  <meta name="keywords" content="fixabairro, angola, login, entrar, conta, email, telefone, google">
-  <meta name="author" content="FixABairro Team">
-  <title>FixABairro | Entrar</title>
-  
-  <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style type="text/tailwindcss">
-    @layer base {
-      :root {
-        -primary-accent: #FF5722;
-        --primary-accent: #ff2222;
-        --secondary-dark: #2C3E50;
-        --highlight-light: #FFC107;
-        --success-green: #4CAF50;
-        --warning-orange: #FF9800;
-        --info-blue: #2196F3;
-        --bg-light: #F8F9FA;
-        --bg-white: #FFFFFF;
-        --bg-dark-overlay: rgba(0, 0, 0, 0.7);
-        --text-main: #34495E;
-        --text-secondary: #7F8C8D;
-        --text-white: #FFFFFF;
-        --font-heading: 'Montserrat', sans-serif;
-        --font-body: 'Poppins', sans-serif;
-        --border-radius-lg: 15px;
-        --border-radius-md: 10px;
-        --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
-        --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
-        --error-red: #DC3545;
-      }
-      
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      
-      body {
-        font-family: var(--font-body);
-        background: var(--bg-light);
-        color: var(--text-main);
-        line-height: 1.7;
-        overflow-x: hidden;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
-        color: var(--secondary-dark);
-        line-height: 1.2;
-      }
-
-      ::-webkit-scrollbar {
-          width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-          background: var(--bg-light);
-      }
-      ::-webkit-scrollbar-thumb {
-          background: var(--primary-accent);
-          border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-          background: #E64A19;
-      }
-
-      .navbar {
-        background: var(--secondary-dark);
-        padding: 0.8rem 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-        transition: all 0.4s ease-in-out;
-      }
-
-      .navbar-brand {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--text-white);
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        transition: color 0.3s ease-in-out;
-      }
-
-      .logo {
-        width: 40px;
-        height: 40px;
-        margin-right: 10px;
-        background: var(--primary-accent);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-white);
-        font-size: 1.5rem;
-        font-weight: 700;
-        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
-      }
-
-      .nav-link {
-        font-size: 1.05rem;
-        color: rgba(255,255,255,0.9);
-        font-weight: 500;
-        padding: 0.6rem 1.2rem;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        position: relative;
-      }
-
-      .nav-link::after {
-          content: '';
-          position: absolute;
-          width: 0;
-          height: 3px;
-          background: var(--primary-accent);
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          transition: width 0.3s ease;
-      }
-
-      .nav-link:hover::after, .nav-link.active::after {
-          width: 70%;
-      }
-
-      .nav-link:hover {
-        color: var(--primary-accent);
-      }
-
-      .btn-main {
-        background: var(--primary-accent);
-        color: var(--text-white);
-        padding: 0.9rem 2.5rem;
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-decoration: none;
-        border: none;
-        display: inline-block;
-        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
-        transition: all 0.3s ease;
-      }
-
-      .btn-main:hover {
-        background: #E64A19;
-        transform: translateY(-3px);
-        box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
-      }
-
-      .btn-outline-secondary-dark {
-        background: transparent;
-        color: var(--text-white);
-        padding: 0.9rem 2.5rem;
-        border: 2px solid rgba(255,255,255,0.7);
-        border-radius: 30px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-decoration: none;
-        display: inline-block;
-        transition: all 0.3s ease;
-      }
-
-      .btn-outline-secondary-dark:hover {
-        background: rgba(255,255,255,0.1);
-        border-color: var(--text-white);
-        color: var(--text-white);
-        transform: translateY(-3px);
-      }
-
-      .spinner-border {
-        display: inline-block;
-        width: 1.25rem;
-        height: 1.25rem;
-        vertical-align: -0.125em;
-        border: 0.25em solid currentColor;
-        border-right-color: transparent;
-        border-radius: 50%;
-        animation: .75s linear infinite spinner-border;
-      }
-      @keyframes spinner-border {
-        to { transform: rotate(360deg); }
-      }
-      .spinner-border-sm {
-        width: 1rem;
-        height: 1rem;
-        border-width: 0.2em;
-      }
-
-      .form-container-wrapper {
-        flex-grow: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem 0;
-        margin-top: 80px;
-      }
-
-      .form-card {
-        background: var(--bg-white);
-        border-radius: var(--border-radius-lg);
-        padding: 3rem;
-        box-shadow: var(--shadow-medium);
-        border: 1px solid #ECEFF1;
-        transition: all 0.4s ease;
-        width: 100%;
-        max-width: 900px;
-      }
-      
-      .form-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-      }
-      
-      .section-title {
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: var(--secondary-dark);
-        margin-bottom: 2rem;
-        text-align: center;
-        position: relative;
-        padding-bottom: 10px;
-      }
-      .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 4px;
-        background: var(--primary-accent);
-        border-radius: 2px;
-      }
-      
-      .form-group {
-        margin-bottom: 1.8rem;
-        position: relative;
-      }
-      
-      .form-group label {
-        font-weight: 500;
-        color: var(--text-main);
-        margin-bottom: 0.5rem;
-        display: block;
-        font-size: 1.05rem;
-      }
-
-      .form-control {
-        background: var(--bg-light);
-        border: 1px solid #CED4DA;
-        color: var(--text-main);
-        border-radius: var(--border-radius-md);
-        padding: 0.9rem 1.2rem;
-        transition: all 0.3s ease;
-        font-size: 1rem;
-      }
-      
-      .form-control:focus {
-        background: var(--bg-white);
-        border-color: var(--primary-accent);
-        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
-        color: var(--text-main);
-      }
-      
-      .form-control::placeholder {
-        color: var(--text-secondary);
-        opacity: 0.7;
-      }
-      
-      .error-message {
-        color: var(--error-red);
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-        display: none;
-        font-weight: 500;
-      }
-
-      /* Estilos para a nova mensagem de notificação */
-      .notification-message {
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        font-weight: 500;
-        text-align: center;
-        margin-top: 1rem;
-        border: 1px solid;
-      }
-      .notification-message.success {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-700 */
-        border-color: #34d399; /* green-400 */
-      }
-      .notification-message.error {
-        background-color: #fee2e2; /* red-100 */
-        color: #991b1b; /* red-700 */
-        border-color: #f87171; /* red-400 */
-      }
-
-
-      @media (max-width: 992px) {
-        .navbar-brand {
-            color: var(--secondary-dark);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - FixABairro</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#4F46E5', // Azul índigo vibrante
+                        'primary-dark': '#4338CA', // Versão mais escura do primário
+                        'secondary': '#6B7280', // Cinza neutro
+                        'success': '#10B981', // Verde para sucesso
+                        'error': '#EF4444', // Vermelho para erro
+                        'text-primary': '#1F2937', // Texto principal escuro
+                        'text-secondary': '#4B5563', // Texto secundário
+                        'bg-light': '#F9FAFB', // Fundo claro
+                        'border-light': '#E5E7EB', // Borda clara
+                    }
+                }
+            }
         }
-        .navbar-toggler {
-            color: var(--secondary-dark);
-        }
-        .navbar {
-            background: var(--bg-white);
-        }
-        .nav-link {
-            color: var(--text-main);
-        }
-        .btn-outline-secondary-dark {
-            color: var(--secondary-dark);
-            border-color: var(--secondary-dark);
-        }
-        .navbar-nav {
-            background-color: var(--bg-white);
+    </script>
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: theme('colors.bg-light');
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 1rem;
-            border-radius: 0.5rem;
-            margin-top: 0.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-      }
+        .container-wrapper {
+            max-width: 450px; /* Largura otimizada para login */
+            width: 100%;
+            background-color: #ffffff;
+            padding: 2.5rem; /* Padding generoso */
+            border-radius: 1.5rem; /* Cantos bem arredondados */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); /* Sombra suave e profunda */
+            border: 1px solid theme('colors.border-light');
+            animation: fadeIn 0.8s ease-out; /* Animação de fade-in */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="password"] {
+            border: 1px solid theme('colors.border-light');
+            border-radius: 0.75rem; /* Cantos arredondados */
+            padding: 0.875rem 1.25rem; /* Padding confortável */
+            width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #fcfcfc; /* Levemente cinza */
+        }
+        input:focus {
+            outline: none;
+            border-color: theme('colors.primary');
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Sombra de foco com cor primária */
+        }
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 1.5rem; /* Mais padding para botões */
+            border-radius: 0.75rem; /* Cantos arredondados */
+            font-weight: 700; /* Mais negrito */
+            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra de texto sutil */
+        }
+        button:hover:not(:disabled) {
+            transform: translateY(-3px); /* Efeito de levantamento mais pronunciado */
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* Sombra ao hover */
+        }
+        button:active:not(:disabled) {
+            transform: translateY(0); /* Efeito de clique */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background-color: theme('colors.primary');
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: theme('colors.primary-dark');
+        }
+        .btn-google {
+            background-color: #DB4437; /* Cor do Google */
+            color: white;
+            box-shadow: 0 4px 10px rgba(219, 68, 55, 0.2);
+        }
+        .btn-google:hover:not(:disabled) {
+            background-color: #C23321;
+        }
 
-      @media (max-width: 768px) {
-        .form-card {
-          padding: 2rem;
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            width: 1.25rem; /* Tamanho maior para o spinner */
+            height: 1.25rem;
+            animation: spin 1s linear infinite;
+            margin-right: 0.75rem; /* Mais espaço */
         }
-        .form-card h1 {
-          font-size: 2rem;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        .form-card p {
-          font-size: 0.95rem;
+        .error-message {
+            color: theme('colors.error');
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
         }
-      }
-      
-      @media (max-width: 576px) {
-        .form-card {
-          padding: 1.5rem;
+        .border-error {
+            border-color: theme('colors.error') !important;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
         }
-      }
-    }
-  </style>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              accent: 'var(--primary-accent)',
-            },
-            secondary: {
-              dark: 'var(--secondary-dark)',
-            },
-            highlight: {
-              light: 'var(--highlight-light)',
-            },
-            success: {
-              DEFAULT: 'var(--success-green)',
-            },
-            warning: {
-              DEFAULT: 'var(--warning-orange)',
-            },
-            info: {
-              DEFAULT: 'var(--info-blue)',
-            },
-            bg: {
-              light: 'var(--bg-light)',
-              white: 'var(--bg-white)',
-              darkOverlay: 'var(--bg-dark-overlay)',
-            },
-            text: {
-              main: 'var(--text-main)',
-              secondary: 'var(--text-secondary)',
-              white: 'var(--text-white)',
-            },
-            error: 'var(--error-red)',
-          },
-          fontFamily: {
-            poppins: ['Poppins', 'sans-serif'],
-            montserrat: ['Montserrat', 'sans-serif'],
-            inter: ['Inter', 'sans-serif'],
-          },
-          borderRadius: {
-            'lg': 'var(--border-radius-lg)',
-            'md': 'var(--border-radius-md)',
-          },
-          boxShadow: {
-            soft: 'var(--shadow-soft)',
-            medium: 'var(--shadow-medium)',
-          },
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            min-width: 320px; /* Largura mínima para notificações */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
         }
-      }
-    }
-  </script>
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .message-box.success {
+            border: 1px solid theme('colors.success');
+            color: #065F46; /* Cor de texto mais escura para contraste */
+            background-color: #ECFDF5; /* Fundo verde claro */
+        }
+        .message-box.error {
+            border: 1px solid theme('colors.error');
+            color: #991B1B; /* Cor de texto mais escura para contraste */
+            background-color: #FEF2F2; /* Fundo vermelho claro */
+        }
+        .message-box .icon {
+            font-size: 1.75rem; /* Ícone maior */
+        }
+        .message-box.success .icon {
+            color: theme('colors.success');
+        }
+        .message-box.error .icon {
+            color: theme('colors.error');
+        }
+    </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container mx-auto px-4">
-      <a class="navbar-brand flex items-center" href="index.html">
-        <div class="logo">F</div>
-        FixABairro
-      </a>
-      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars text-secondary-dark"></i>
-      </button>
-      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
-        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html#impact">Impacto</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
-          </li>
-          <li class="nav-item ml-auto md:ml-3">
-            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
-          </li>
-          <li class="nav-item md:ml-2">
-            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+    <div class="container-wrapper">
+        <h2 class="text-3xl font-extrabold text-center text-text-primary mb-8">Bem-vindo(a) de Volta!</h2>
+        <p class="text-center text-text-secondary mb-8">Faça login para continuar.</p>
 
-  <div class="form-container-wrapper w-full px-4">
-    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
-      <div class="hidden md:flex p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
-        <div class="absolute inset-0 opacity-10"></div>
-        <i class="fas fa-chart-line text-6xl text-white mb-6 transform scale-110"></i>
-        <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
-          Conecte-se com Sua Comunidade!
-        </h2>
-        <p class="text-lg font-poppins opacity-90 mb-8">
-          Faça login para acompanhar e resolver problemas, e construir um bairro melhor.
-        </p>
-        <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Login" alt="Ilustração de login" class="w-64 h-64 object-contain">
-      </div>
+        <form id="loginForm" class="space-y-6">
+            <!-- Campo Email ou Telefone -->
+            <div>
+                <label for="emailOrPhone" class="block text-sm font-medium text-text-secondary mb-2">Email ou Número de Telefone (+2449XXXXXXXX)</label>
+                <input type="text" id="emailOrPhone" placeholder="seu.email@exemplo.com ou +244912345678" required autocomplete="username">
+                <p id="emailOrPhoneError" class="error-message">Formato inválido. Use um email ou +2449XXXXXXXX.</p>
+            </div>
 
-      <div class="w-full p-8 md:p-12 flex flex-col justify-center bg-white z-20">
-        <div class="text-center mb-8">
-          <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <i class="fas fa-sign-in-alt text-3xl text-white"></i>
-          </div>
-          <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Bem-vindo(a) de Volta!</h1>
-          <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
-        </div>
-        
-        <!-- Nova div para mensagens de notificação gerais -->
-        <div id="notificationMessage" class="notification-message hidden" role="alert"></div>
+            <!-- Campo Senha -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-text-secondary mb-2">Senha</label>
+                <input type="password" id="password" placeholder="Sua senha secreta" required autocomplete="current-password">
+                <p id="passwordError" class="error-message">A senha é obrigatória e deve ter pelo menos 8 caracteres.</p>
+            </div>
 
-        <form id="loginForm" class="space-y-5">
-          <div>
-            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
-            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
-            <p id="emailOrPhoneError" class="error-message">Erro de email/telefone</p>
-          </div>
-          
-          <div>
-            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
-            <p id="passwordError" class="error-message">Erro de senha</p>
-          </div>
-          
-          <div class="text-right text-sm">
-            <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
-          </div>
-          
-          <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
-            <span id="loginText"><i class="fas fa-sign-in-alt"></i> Entrar</span>
-            <span id="loginSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
-          </button>
+            <!-- Link Esqueceu a Senha -->
+            <div class="text-right">
+                <a href="#" id="forgotPassword" class="text-sm font-medium text-primary hover:underline">Esqueceu a senha?</a>
+            </div>
+
+            <!-- Botão de Login -->
+            <button type="submit" id="loginBtn" class="btn-primary">
+                <span id="loginText"><i class="fas fa-sign-in-alt mr-3"></i> Entrar</span>
+                <span id="loginSpinner" class="spinner hidden"></span>
+            </button>
         </form>
-        
-        <div class="relative flex py-5 items-center">
-          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
-          <span class="flex-shrink mx-4 text-text-secondary text-sm font-medium">OU</span>
-          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+
+        <div class="relative flex items-center justify-center my-6">
+            <div class="w-full border-t border-border-light"></div>
+            <span class="absolute px-3 bg-white text-text-secondary text-sm">Ou</span>
         </div>
 
-        <button type="button" id="googleLoginBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md">
-          <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
-          <span>Entrar com Google</span>
+        <!-- Botão de Login com Google -->
+        <button type="button" id="googleLoginBtn" class="btn-google">
+            <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
+            <span>Entrar com Google</span>
         </button>
-        
-        <p class="text-center text-text-secondary text-sm mt-6">
-          Não tem uma conta? 
-          <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
+
+        <p class="mt-8 text-center text-sm text-text-secondary">
+            Não tem uma conta? <a href="register.html" class="font-medium text-primary hover:underline">Registe-se aqui</a>
         </p>
-
-        <!-- reCAPTCHA container, hidden as it's invisible reCAPTCHA -->
-        <div id="recaptcha-container" class="mt-4 hidden"></div>
-      </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Usando versões compatíveis do Firebase para manter a API v8 -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://unpkg.com/imask"></script>
-  <!-- Carregue seu arquivo firebaseAuth.js após os SDKs do Firebase -->
-  <script src="js/firebaseAuth.js"></script>
+    <!-- Message Box for Notifications -->
+    <div id="notificationMessageBox" class="message-box">
+        <i id="notificationIcon" class="icon"></i>
+        <span id="notificationMessage"></span>
+    </div>
 
-  <script>
-    const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-};
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <!-- IMask.js CDN for input masking -->
+    <script src="https://unpkg.com/imask"></script>
+    <!-- Inclui o seu arquivo firebaseAuth.js -->
+    <script src="firebaseAuth.js"></script>
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // Inicializa o Firebase App
-  try {
-    window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-    console.log("Firebase App inicializado.");
-  } catch (error) {
-    console.error("Erro ao inicializar Firebase:", error);
-    showNotification("Erro: Firebase SDK não carregado.", 'error');
-    return;
-  }
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Inicializa Firebase usando a configuração e o objeto do firebaseAuth.js
+            try {
+                if (typeof window.firebaseAuth === 'undefined' || typeof window.firebaseConfig === 'undefined') {
+                    throw new Error("Erro: firebaseAuth.js ou firebaseConfig não definidos. Verifique a inclusão dos scripts.");
+                }
+                window.firebaseAuth.initializeFirebaseApp(window.firebaseConfig);
+                console.log("Firebase inicializado com sucesso.");
+            } catch (error) {
+                console.error("Erro ao inicializar Firebase:", error);
+                showNotification('error', 'Erro ao carregar o sistema. Tente novamente.');
+                return;
+            }
 
-  // Verifica o estado de autenticação
-  window.firebaseAuth.checkAuthState('index.html', null);
+            // Verifica o estado de autenticação e redireciona se já estiver logado
+            window.firebaseAuth.checkAuthState('dashboard.html', null); // Redireciona para dashboard.html se logado
 
-  // Inicializa o reCAPTCHA
-  try {
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-  } catch (error) {
-    console.error("Erro ao inicializar reCAPTCHA:", error);
-    showNotification("Erro ao carregar verificação de segurança.", 'error');
-  }
+            // Referências aos elementos da UI
+            const loginForm = document.getElementById('loginForm');
+            const emailOrPhoneInput = document.getElementById('emailOrPhone');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const googleLoginBtn = document.getElementById('googleLoginBtn');
+            const forgotPasswordLink = document.getElementById('forgotPassword');
 
-  // Referências aos elementos da UI
-  const loginForm = document.getElementById('loginForm');
-  const emailOrPhoneInput = document.getElementById('emailOrPhone');
-  const passwordInput = document.getElementById('password');
-  const loginBtn = document.getElementById('loginBtn');
-  const googleLoginBtn = document.getElementById('googleLoginBtn');
-  const forgotPasswordLink = document.getElementById('forgotPassword');
-  const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-  const passwordError = document.getElementById('passwordError');
-  const notificationMessageDiv = document.getElementById('notificationMessage');
+            const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+            const passwordError = document.getElementById('passwordError');
+            const notificationMessageBox = document.getElementById('notificationMessageBox');
+            const notificationIcon = document.getElementById('notificationIcon');
+            const notificationMessage = document.getElementById('notificationMessage');
 
-  // Funções auxiliares para mostrar/ocultar mensagens
-  function showNotification(message, type) {
-    notificationMessageDiv.textContent = message;
-    notificationMessageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-error', 'bg-green-100', 'text-green-700', 'border-success');
-    notificationMessageDiv.classList.add(type === 'error' ? 'bg-red-100' : 'bg-green-100', type === 'error' ? 'text-red-700' : 'text-green-700', type === 'error' ? 'border-error' : 'border-success', 'block');
-  }
+            let isSubmitting = false; // Flag para prevenir múltiplos envios
 
-  function hideNotification() {
-    notificationMessageDiv.classList.add('hidden');
-    notificationMessageDiv.textContent = '';
-  }
+            // Máscara para o campo de email ou telefone (inicia como telefone para Angola)
+            const emailOrPhoneMask = IMask(emailOrPhoneInput, {
+                mask: [
+                    {
+                        mask: /^\S+@\S+\.\S+$/, // Regex para email
+                        prepare: (value, masked) => value.toLowerCase(), // Converte para minúsculas
+                        lazy: true, // Começa sem máscara visível para emails
+                        overwrite: true,
+                        autofix: true,
+                        definitions: {
+                            '@': /[a-zA-Z0-9_.-]/, // Caracteres permitidos para email
+                        }
+                    },
+                    {
+                        mask: '+244 000 000 000', // Máscara para telefone angolano
+                        lazy: false,
+                        placeholderChar: '_',
+                        prepare: (value, masked) => {
+                            if (!value.startsWith('+244')) {
+                                return '+244' + value.replace(/[^0-9]/g, '');
+                            }
+                            return value;
+                        }
+                    }
+                ],
+                dispatch: (appended, dynamicMasked) => {
+                    // Decide qual máscara aplicar com base na entrada do utilizador
+                    if (appended === '@' && dynamicMasked.value.indexOf('@') === -1) {
+                        return dynamicMasked.compiledMasks[0]; // Email
+                    }
+                    if (appended.match(/[a-zA-Z]/)) {
+                        return dynamicMasked.compiledMasks[0]; // Email
+                    }
+                    if (appended.match(/[0-9]/) && dynamicMasked.value.length < 4 && !dynamicMasked.value.startsWith('+244')) {
+                        return dynamicMasked.compiledMasks[1]; // Telefone
+                    }
+                    return dynamicMasked.compiledMasks[1]; // Default para telefone
+                }
+            });
 
-  function showError(element, message) {
-    element.textContent = message;
-    element.classList.remove('hidden');
-    element.classList.add('block');
-  }
+            // Adiciona um listener para preencher o prefixo quando o campo é focado e vazio
+            emailOrPhoneInput.addEventListener('focus', () => {
+                if (emailOrPhoneInput.value === '') {
+                    emailOrPhoneMask.updateValue('+244', { force: true });
+                }
+            });
 
-  function hideError(element) {
-    element.classList.add('hidden');
-  }
+            // Limpa o prefixo se o usuário não digitar mais nada
+            emailOrPhoneInput.addEventListener('blur', () => {
+                if (emailOrPhoneInput.value === '+244' || emailOrPhoneInput.value.trim() === '') {
+                    emailOrPhoneMask.updateValue('');
+                    emailOrPhoneMask.updateValue(); // Força a atualização da máscara
+                }
+            });
 
-  // Máscara de telefone
-  IMask(emailOrPhoneInput, {
-    mask: '+244 900 000 000',
-    lazy: false
-  });
 
-  emailOrPhoneInput.addEventListener('focus', () => {
-    if (emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
+            // --- Funções auxiliares para UI ---
+            function showNotification(type, message) {
+                notificationIcon.className = `icon fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}`;
+                notificationMessageBox.classList.remove('success', 'error');
+                notificationMessageBox.classList.add(type);
+                notificationMessage.textContent = message;
+                notificationMessageBox.classList.add('show');
+                setTimeout(() => {
+                    hideNotification();
+                }, 5000); // Esconde a notificação após 5 segundos
+            }
 
-  emailOrPhoneInput.addEventListener('input', () => {
-    if (!emailOrPhoneInput.value.startsWith('+244')) {
-      emailOrPhoneInput.value = '+244' + emailOrPhoneInput.value.replace(/[^0-9]/g, '').substring(3);
-    } else if (emailOrPhoneInput.value.length < 4 && emailOrPhoneInput.value.startsWith('+244'.substring(0, emailOrPhoneInput.value.length))) {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
+            function hideNotification() {
+                notificationMessageBox.classList.remove('show');
+            }
 
-  emailOrPhoneInput.addEventListener('blur', () => {
-    if (emailOrPhoneInput.value === '+244' || emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '';
-    }
-  });
+            function showError(element, message) {
+                element.textContent = message;
+                element.style.display = 'block';
+                const inputElement = element.parentElement.querySelector('input');
+                if (inputElement) {
+                    inputElement.setAttribute('aria-invalid', 'true');
+                    inputElement.classList.add('border-error');
+                }
+            }
 
-  // Event listener para o formulário de login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideError(passwordError);
-    hideNotification();
+            function hideError(element) {
+                element.style.display = 'none';
+                const inputElement = element.parentElement.querySelector('input');
+                if (inputElement) {
+                    inputElement.setAttribute('aria-invalid', 'false');
+                    inputElement.classList.remove('border-error');
+                }
+            }
 
-    let isValid = true;
-    const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-    const password = passwordInput.value;
+            function toggleButtonState(button, textSpan, spinnerSpan, isLoading, defaultTextHtml) {
+                if (isLoading) {
+                    button.disabled = true;
+                    textSpan.classList.add('hidden');
+                    spinnerSpan.classList.remove('hidden');
+                } else {
+                    button.disabled = false;
+                    textSpan.classList.remove('hidden');
+                    spinnerSpan.classList.add('hidden');
+                    button.innerHTML = defaultTextHtml; // Restaura o HTML original do botão
+                }
+            }
 
-    const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
-    const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneRaw) === null;
+            // Event listener para o envio do formulário de login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (isSubmitting) return;
 
-    if (!emailOrPhoneRaw) {
-      showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-      isValid = false;
-    } else if (!isEmail && !isPhone) {
-      showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
-      isValid = false;
-    }
+                isSubmitting = true;
+                hideError(emailOrPhoneError);
+                hideError(passwordError);
+                hideNotification();
 
-    const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
-    if (passwordErrorMsg) {
-      showError(passwordError, passwordErrorMsg);
-      isValid = false;
-    }
+                let isValid = true;
+                const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+                const password = passwordInput.value;
 
-    if (!isValid) return;
+                // Validação de email/telefone
+                const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
+                const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneRaw) === null;
 
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+                if (!emailOrPhoneRaw) {
+                    showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
+                    isValid = false;
+                } else if (!isEmail && !isPhone) {
+                    showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+                    isValid = false;
+                }
 
-    try {
-      if (isPhone) {
-        await window.firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
-        showNotification('Código de verificação enviado para o seu telefone.', 'success');
-        window.location.href = 'verify-phone.html';
-      } else {
-        const result = await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
-        showNotification('Login realizado com sucesso!', 'success');
-        window.location.href = 'profile.html';
-      }
-    } catch (error) {
-      console.error("Erro no login:", error);
-      if (error.message.includes("Email inválido") || error.message.includes("telefone inválido")) {
-        showError(emailOrPhoneError, error.message);
-      } else if (error.message.includes("Senha incorreta")) {
-        showError(passwordError, error.message);
-      } else {
-        showNotification(error.message, 'error');
-      }
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
-    }
-  });
+                // Validação de senha
+                const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
+                if (passwordErrorMsg) {
+                    showError(passwordError, passwordErrorMsg);
+                    isValid = false;
+                }
 
-  // Event listener para o login com Google
-  googleLoginBtn.addEventListener('click', async () => {
-    hideNotification();
-    googleLoginBtn.disabled = true;
-    googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+                if (!isValid) {
+                    isSubmitting = false;
+                    return;
+                }
 
-    try {
-      await window.firebaseAuth.loginWithGoogle();
-      showNotification('Login com Google realizado com sucesso!', 'success');
-      window.location.href = 'profile.html';
-    } catch (error) {
-      console.error("Erro no login com Google:", error);
-      showNotification(error.message, 'error');
-    } finally {
-      googleLoginBtn.disabled = false;
-      googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
-    }
-  });
+                toggleButtonState(loginBtn, loginText, loginSpinner, true, `<i class="fas fa-sign-in-alt mr-3"></i> Entrar`);
 
-  // Event listener para "Esqueceu a senha?"
-  forgotPasswordLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideNotification();
+                try {
+                    if (isEmail) {
+                        const result = await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
+                        if (result.requiresEmailVerification) {
+                            localStorage.setItem('pendingVerificationEmail', emailOrPhoneRaw); // Guardar email para página de verificação
+                            showNotification('success', 'Login realizado! Por favor, verifique seu email.');
+                            setTimeout(() => {
+                                window.location.href = 'verify-email.html';
+                            }, 2000);
+                        } else {
+                            showNotification('success', 'Login realizado com sucesso!');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 2000);
+                        }
+                    } else if (isPhone) {
+                        // Para login por telefone, iniciamos o fluxo de envio de código OTP
+                        // e redirecionamos para a página de verificação de telefone.
+                        // A senha não é usada diretamente neste fluxo de login por telefone (OTP).
+                        // O utilizador será autenticado no Firebase Authentication na página verify-phone.html.
 
-    const emailInputVal = emailOrPhoneInput.value.trim();
-    const emailValidationResult = window.firebaseAuth.validateEmail(emailInputVal);
-    if (!emailInputVal || emailValidationResult) {
-      showError(emailOrPhoneError, emailValidationResult || 'Digite um email válido.');
-      return;
-    }
+                        // O reCAPTCHA Verifier precisa ser inicializado para enviar o código de telefone
+                        await window.firebaseAuth.initializeRecaptcha('recaptcha-container-login-page'); // Pode ser um div invisível
+                        // Envia o código de verificação. A `confirmationResult` será usada na página de verificação.
+                        // Não armazenamos `confirmationResult` no localStorage pois não é serializável.
+                        // A página verify-phone.html irá pedir o número novamente para re-iniciar o fluxo de OTP
+                        // ou usar o número armazenado temporariamente para isso.
+                        
+                        // Guardar o número de telefone temporariamente para a página de verificação
+                        localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhoneRaw);
 
-    try {
-      await window.firebaseAuth.resetPassword(emailInputVal);
-      showNotification('Email para redefinição de senha enviado.', 'success');
-    } catch (error) {
-      console.error("Erro ao resetar senha:", error);
-      showNotification(error.message, 'error');
-    }
-  });
-});
-  </script>
+                        await window.firebaseAuth.sendPhoneVerificationCode(emailOrPhoneRaw);
+                        showNotification('success', 'Código de verificação enviado para o seu telefone.');
+                        setTimeout(() => {
+                            window.location.href = 'verify-phone.html';
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.error("Erro no login:", error);
+                    let userFacingMessage = error.message || 'Erro ao fazer login. Tente novamente.';
+                    
+                    // Tratamento de erros específicos para campos
+                    if (error.code) {
+                        switch (error.code) {
+                            case 'auth/user-not-found':
+                            case 'auth/invalid-email':
+                                showError(emailOrPhoneError, 'Utilizador não encontrado ou email inválido.');
+                                break;
+                            case 'auth/wrong-password':
+                                showError(passwordError, 'Senha incorreta.');
+                                break;
+                            case 'auth/invalid-phone-number':
+                                showError(emailOrPhoneError, 'Número de telefone inválido.');
+                                break;
+                            case 'auth/too-many-requests':
+                                showNotification('error', 'Muitas tentativas. Tente novamente mais tarde ou use "Esqueceu a senha?".');
+                                break;
+                            case 'auth/captcha-check-failed':
+                                showNotification('error', 'Falha na verificação de segurança. Tente novamente.');
+                                break;
+                            case 'auth/network-request-failed':
+                                showNotification('error', 'Problema de conexão com a internet. Verifique sua conexão e tente novamente.');
+                                break;
+                            default:
+                                showNotification('error', userFacingMessage);
+                        }
+                    } else {
+                        showNotification('error', userFacingMessage);
+                    }
+                } finally {
+                    toggleButtonState(loginBtn, loginText, loginSpinner, false, `<i class="fas fa-sign-in-alt mr-3"></i> Entrar`);
+                    isSubmitting = false;
+                }
+            });
+
+            // Event listener para o login com Google
+            googleLoginBtn.addEventListener('click', async () => {
+                hideNotification();
+                toggleButtonState(googleLoginBtn, googleLoginBtn.querySelector('span:nth-of-type(2)'), googleLoginBtn.querySelector('.spinner'), true, `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`);
+
+                try {
+                    await window.firebaseAuth.loginWithGoogle();
+                    showNotification('success', 'Login com Google realizado com sucesso!');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } catch (error) {
+                    console.error("Erro no login com Google:", error);
+                    let userFacingMessage = error.message || 'Erro ao fazer login com Google. Tente novamente.';
+                    if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+                        userFacingMessage = "Login com Google cancelado.";
+                    } else if (error.code === 'auth/account-exists-with-different-credential') {
+                        userFacingMessage = "Já existe uma conta com este email. Faça login com outro método.";
+                    }
+                    showNotification('error', userFacingMessage);
+                } finally {
+                    toggleButtonState(googleLoginBtn, googleLoginBtn.querySelector('span:nth-of-type(2)'), googleLoginBtn.querySelector('.spinner'), false, `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`);
+                }
+            });
+
+            // Event listener para "Esqueceu a senha?"
+            forgotPasswordLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                hideError(emailOrPhoneError);
+                hideNotification();
+
+                const emailInputVal = emailOrPhoneInput.value.trim();
+                const emailValidationResult = window.firebaseAuth.validateEmail(emailInputVal);
+                
+                if (!emailInputVal || emailValidationResult) {
+                    showError(emailOrPhoneError, emailValidationResult || 'Digite um email válido para redefinir a senha.');
+                    return;
+                }
+
+                // Desabilita o link temporariamente
+                forgotPasswordLink.style.pointerEvents = 'none';
+                forgotPasswordLink.textContent = 'Enviando...';
+
+                try {
+                    await window.firebaseAuth.resetPassword(emailInputVal);
+                    showNotification('success', 'Email para redefinição de senha enviado. Verifique sua caixa de entrada.');
+                } catch (error) {
+                    console.error("Erro ao resetar senha:", error);
+                    showNotification('error', error.message || 'Erro ao redefinir senha. Tente novamente.');
+                } finally {
+                    // Reabilita o link
+                    forgotPasswordLink.style.pointerEvents = 'auto';
+                    forgotPasswordLink.textContent = 'Esqueceu a senha?';
+                }
+            });
+
+            // Div invisível para o reCAPTCHA para o fluxo de login de telefone
+            const recaptchaContainerLoginPage = document.createElement('div');
+            recaptchaContainerLoginPage.id = 'recaptcha-container-login-page';
+            recaptchaContainerLoginPage.classList.add('hidden'); // Garante que é invisível
+            document.body.appendChild(recaptchaContainerLoginPage);
+        });
+    </script>
 </body>
 </html>
