@@ -21,20 +21,20 @@
       :root {
         --primary-accent: #F4511E;
         --secondary-dark: #1A2A44;
-        --success-green: #28A745;
-        --error-red: #DC3545;
+        --success-green: #25D75;
+        --error: #cc3545;
         --bg-light: #F9FAFB;
         --bg-white: #FFFFFF;
         --bg-dark-overlay: rgba(0, 0, 0, 0.75);
-        --text-main: #1F2A44;
-        --text-secondary: #6B7280;
-        --text-white: #FFFFFF;
+        --text-main: #1F2a44;
+        --text-secondary: #6b7280;
+        --text-white: #ffffff;
         --font-heading: 'Roboto', sans-serif;
         --font-body: 'Open Sans', sans-serif;
         --border-radius-lg: 12px;
         --border-radius-md: 8px;
-        --shadow-soft: 0 4px 12px rgba(0,0,0,0.1);
-        --shadow-medium: 0 6px 20px rgba(0,0,0,0.15);
+        --shadow-soft: 0 4px 15px rgba(0,0,0,0.2);
+        --shadow-md-shadow: 0 6px 20px rgba(56, 125, 255, 0.3);
       }
       
       * {
@@ -158,7 +158,7 @@
       .btn-main:hover {
         background: #D84315;
         transform: translateY(-2px);
-        box-shadow: var(--shadow-medium);
+        box-shadow: var(--shadow-md-shadow);
       }
 
       .btn-outline-secondary-dark {
@@ -226,7 +226,7 @@
         background: var(--bg-white);
         border-radius: var(--border-radius-lg);
         padding: 2.5rem;
-        box-shadow: var(--shadow-medium);
+        box-shadow: var(--shadow-md-shadow);
         border: 1px solid #E5E7EB;
         transition: all 0.3s ease;
         width: 100%;
@@ -296,11 +296,11 @@
       }
       
       .form-control[aria-invalid="true"] {
-        border-color: var(--error-red);
+        border-color: var(--error);
       }
       
       .error-message {
-        color: var(--error-red);
+        color: var(--error);
         font-size: 0.85rem;
         margin-top: 0.4rem;
         display: none;
@@ -404,7 +404,7 @@
           max-height: 90vh;
           display: flex;
           flex-direction: column;
-          box-shadow: var(--shadow-medium);
+          box-shadow: var(--shadow-md-shadow);
           transform: translateY(20px);
           transition: transform 0.3s ease;
       }
@@ -494,7 +494,7 @@
         color: var(--success-green);
       }
       .notification-modal.error i {
-        color: var(--error-red);
+        color: var(--error);
       }
     }
   </style>
@@ -506,7 +506,7 @@
             primary: { accent: 'var(--primary-accent)' },
             secondary: { dark: 'var(--secondary-dark)' },
             success: { DEFAULT: 'var(--success-green)' },
-            error: { DEFAULT: 'var(--error-red)' },
+            error: { DEFAULT: 'var(--error)' },
             bg: {
               light: 'var(--bg-light)',
               white: 'var(--bg-white)',
@@ -528,7 +528,7 @@
           },
           boxShadow: {
             soft: 'var(--shadow-soft)',
-            medium: 'var(--shadow-medium)',
+            medium: 'var(--shadow-md-shadow)',
           },
         }
       }
@@ -796,31 +796,57 @@
       };
 
       function populateMunicipios() {
-        const municipios = Object.keys(municipiosData).sort();
-        municipios.forEach((municipio) => {
-          const option = document.createElement('option');
-          option.value = municipio;
-          option.textContent = municipio;
-          municipioSelect.appendChild(option);
-        });
-      }
-
-      function updateBairros() {
-        const selectedMunicipio = municipioSelect.value;
-        bairroInput.value = '';
-        if (selectedMunicipio && municipiosData[selectedMunicipio]) {
-          const validBairros = municipiosData[selectedMunicipio];
-          bairroInput.addEventListener('input', () => {
-            const enteredBairro = bairroInput.value.trim();
-            if (enteredBairro && !validBairros.includes(enteredBairro)) {
-              showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`);
-            } else {
-              hideError(bairroError);
-            }
+        try {
+          if (!municipioSelect) {
+            console.error("Elemento #municipio não encontrado.");
+            showNotification('error', 'Erro ao carregar o formulário. Recarregue a página.');
+            return;
+          }
+          console.log('Populando municípios...');
+          municipioSelect.innerHTML = '<option value="" class="bg-white text-text-secondary">Selecione</option>';
+          const municipios = Object.keys(municipiosData).sort();
+          if (!municipios.length) {
+            console.error("Nenhum município encontrado em municipiosData.");
+            showNotification('error', 'Erro ao carregar municípios. Tente novamente.');
+            return;
+          }
+          municipios.forEach((municipio) => {
+            const option = document.createElement('option');
+            option.value = municipio;
+            option.textContent = municipio;
+            municipioSelect.appendChild(option);
+            console.log(`Município adicionado: ${municipio}`);
           });
+          console.log('Municípios populados:', municipioSelect.innerHTML);
+        } catch (error) {
+          console.error("Erro ao popular municípios:", error);
+          showNotification('error', 'Erro ao carregar municípios. Tente novamente.');
         }
       }
 
+      function updateBairros() {
+        try {
+          const selectedMunicipio = municipioSelect.value;
+          bairroInput.value = '';
+          console.log(`Município selecionado: ${selectedMunicipio}`);
+          if (selectedMunicipio && municipiosData[selectedMunicipio]) {
+            const validBairros = municipiosData[selectedMunicipio];
+            console.log(`Bairros válidos para ${selectedMunicipio}:`, validBairros);
+            bairroInput.addEventListener('input', () => {
+              const enteredBairro = bairroInput.value.trim();
+              if (enteredBairro && !validBairros.includes(enteredBairro)) {
+                showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`);
+              } else {
+                hideError(bairroError);
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Erro ao atualizar bairros:", error);
+        }
+      }
+
+      // Chama a função para popular municípios
       populateMunicipios();
       municipioSelect.addEventListener('change', updateBairros);
 
@@ -849,7 +875,7 @@
       function showNotification(type, message) {
         notificationIcon.className = `fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}`;
         notificationModal.classList.add(type);
-        notificationMessage.textContent = mensagem;
+        notificationMessage.textContent = message;
         notificationModal.classList.add('show');
       }
 
@@ -873,7 +899,6 @@
       }
 
       termsCheckbox.addEventListener('change', toggleRegisterButton);
-
       notifyEmail.addEventListener('change', toggleRegisterButton);
       notifyWhatsApp.addEventListener('change', toggleRegisterButton);
 
@@ -884,8 +909,7 @@
 
       closeTermsModalBtn.addEventListener('click', () => {
         termsModal.classList.remove('show');
-        if (!termsRead) {
-          termsAccepted = false;
+        if (!termsAccepted) {
           toggleRegisterButton();
         }
       });
@@ -900,7 +924,6 @@
         if (e.target === termsModal) {
           termsModal.classList.remove('show');
           if (!termsAccepted) {
-            termsAccepted = false;
             toggleRegisterButton();
           }
         }
@@ -921,7 +944,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               token: 'dklefhlqae1key9l',
-              to: phoneNumberTo,
+              to: phoneNumber,
               body: `Seu código de verificação FixABairro é: ${verificationCode}`
             })
           });
