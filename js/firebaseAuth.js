@@ -1,112 +1,93 @@
+// firebaseAuth.js
+
 const firebaseAuth = {
-  /**
-   * Inicializa o aplicativo Firebase.
-   * @param {Object} firebaseConfig - Configuração do Firebase.
-   * @returns {Object} Instância do aplicativo Firebase.
-   */
+  _app: null,
+  _auth: null,
+  _firestore: null,
+
   initializeFirebaseApp(firebaseConfig) {
     if (typeof firebase === 'undefined') {
-      console.error("Firebase SDK não carregado.");
-      throw new Error("Firebase SDK não carregado. Verifique os scripts CDN.");
+      console.error("Firebase SDK não carregado. Verifique os scripts CDN.");
+      throw new Error("Firebase SDK não carregado. Certifique-se de que os scripts CDN do Firebase Auth e Firestore estejam incluídos no seu HTML.");
     }
+
     if (!firebase.apps.length) {
-      return firebase.initializeApp(firebaseConfig);
+      this._app = firebase.initializeApp(firebaseConfig);
+    } else {
+      this._app = firebase.app();
     }
-    return firebase.app();
+
+    this._auth = firebase.auth();
+    this._firestore = firebase.firestore();
+
+    console.log("Firebase App, Auth e Firestore inicializados.");
   },
 
-  /**
-   * Inicializa o reCAPTCHA invisível.
-   * @param {string} containerId - ID do contêiner do reCAPTCHA.
-   * @returns {Promise<string>} ID do reCAPTCHA.
-   */
-  async initializeRecaptcha(containerId) {
-    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
-      console.error("Firebase Auth SDK não carregado.");
-      throw new Error("Firebase Auth SDK não carregado.");
+  _getAuth() {
+    if (!this._auth) {
+      throw new Error("Firebase Auth não inicializado. Chame initializeFirebaseApp primeiro.");
     }
-    try {
-      return firebase.auth().RecaptchaVerifier(containerId, {
-        size: 'invisible',
-        callback: () => {
-          console.log("reCAPTCHA verificado com sucesso.");
-        },
-        'expired-callback': () => {
-          console.warn("reCAPTCHA expirou. Reinicie o processo.");
-        },
-      });
-    } catch (error) {
-      console.error("Erro ao inicializar reCAPTCHA:", error);
-      throw new Error("Erro ao inicializar verificação de segurança.");
-    }
+    return this._auth;
   },
 
-  /**
-   * Verifica o estado de autenticação do usuário.
-   * @param {string|null} redirectIfLoggedIn - URL para redirecionar se logado.
-   * @param {string|null} redirectIfNotLoggedIn - URL para redirecionar se não logado.
-   */
+  _getFirestore() {
+    if (!this._firestore) {
+      throw new Error("Firebase Firestore não inicializado. Chame initializeFirebaseApp primeiro.");
+    }
+    return this._firestore;
+  },
+
   checkAuthState(redirectIfLoggedIn, redirectIfNotLoggedIn) {
-    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
-      console.error("Firebase Auth SDK não carregado.");
-      return;
-    }
-    firebase.auth().onAuthStateChanged((user) => {
+    this._getAuth().onAuthStateChanged((user) => {
       if (user) {
         console.log("Usuário logado:", user.uid);
-        if (redirectIfLoggedIn) {
+        if (redirectIfLoggedIn && window.location.href !== redirectIfLoggedIn) {
           window.location.href = redirectIfLoggedIn;
         }
       } else {
         console.log("Nenhum usuário logado.");
-        if (redirectIfNotLoggedIn) {
+        if (redirectIfNotLoggedIn && window.location.href !== redirectIfNotLoggedIn) {
           window.location.href = redirectIfNotLoggedIn;
         }
       }
     });
   },
 
-  /**
-   * Normaliza o número de telefone removendo espaços.
-   * @param {string} phone - Número de telefone.
-   * @returns {string} Número normalizado.
-   */
   normalizePhoneNumber(phone) {
-    return phone.replace(/\s/g, '');
+    let normalized = phone.replace(/[^\d+]/g, '');
+    if (!normalized.startsWith('+')) {
+      if (normalized.startsWith('244')) {
+        normalized = '+' + normalized;
+      } else if (normalized.startsWith('9')) { // Assumes 9XX XXX XXX is Angolan
+        normalized = '+244' + normalized;
+      } else {
+        throw new Error("Formato de telefone inválido. Deve começar com '+' ou ser um número angolano.");
+      }
+    }
+    return normalized;
   },
 
-  /**
-   * Valida o formato do email.
-   * @param {string} email - Email a validar.
-   * @returns {string|null} Mensagem de erro ou null se válido.
-   */
   validateEmail(email) {
-    const emailRegex = /^\S+@\S+\.\S+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return "O formato do email é inválido.";
     }
     return null;
   },
 
-  /**
-   * Valida o formato do número de telefone (+2449XXXXXXXX).
-   * @param {string} phone - Número de telefone.
-   * @returns {string|null} Mensagem de erro ou null se válido.
-   */
   validatePhone(phone) {
-    const normalizedPhone = this.normalizePhoneNumber(phone);
-    const phoneRegex = /^\+2449[0-9]{8}$/;
-    if (!phoneRegex.test(normalizedPhone)) {
-      return "O número de telefone fornecido é inválido. Use o formato +2449XXXXXXXX.";
+    try {
+      const normalizedPhone = this.normalizePhoneNumber(phone);
+      const phoneRegex = /^\+\d{7,15}$/; // E.164 format, 7 to 15 digits
+      if (!phoneRegex.test(normalizedPhone)) {
+        return "O número de telefone fornecido é inválido. Use o formato +2449XXXXXXXX (Ex: +244923123456).";
+      }
+      return null;
+    } catch (error) {
+      return error.message;
     }
-    return null;
   },
 
-  /**
-   * Valida a senha (mínimo 8 caracteres).
-   * @param {string} password - Senha a validar.
-   * @returns {string|null} Mensagem de erro ou null se válida.
-   */
   validatePassword(password) {
     if (!password) {
       return "A senha é obrigatória.";
@@ -117,15 +98,10 @@ const firebaseAuth = {
     return null;
   },
 
-  /**
-   * Verifica se o número de telefone já está registrado.
-   * @param {string} phoneNumber - Número de telefone.
-   * @returns {Promise<Object|null>} Dados do usuário ou null se não existe.
-   */
   async checkPhoneNumberExists(phoneNumber) {
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      const querySnapshot = await firebase.firestore().collection('users')
+      const querySnapshot = await this._getFirestore().collection('users')
         .where('phoneNumber', '==', normalizedPhone)
         .limit(1)
         .get();
@@ -138,17 +114,11 @@ const firebaseAuth = {
       }
       return null;
     } catch (error) {
-      console.error("Erro ao verificar número de telefone:", error);
+      console.error("Erro ao verificar número de telefone no Firestore:", error);
       throw new Error("Erro ao verificar número de telefone.");
     }
   },
 
-  /**
-   * Realiza login com email e senha.
-   * @param {string} email - Email do usuário.
-   * @param {string} password - Senha do usuário.
-   * @returns {Promise<Object>} Dados do usuário e status de verificação.
-   */
   async loginWithEmail(email, password) {
     const emailValidation = this.validateEmail(email);
     if (emailValidation) throw new Error(emailValidation);
@@ -156,7 +126,7 @@ const firebaseAuth = {
     if (passwordValidation) throw new Error(passwordValidation);
 
     try {
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+      const userCredential = await this._getAuth().signInWithEmailAndPassword(email, password);
       return {
         user: userCredential.user,
         requiresEmailVerification: !userCredential.user.emailVerified,
@@ -177,6 +147,9 @@ const firebaseAuth = {
         case 'auth/wrong-password':
           errorMessage = "Senha incorreta.";
           break;
+        case 'auth/invalid-credential':
+          errorMessage = "Email ou senha inválidos.";
+          break;
         default:
           errorMessage = "Erro desconhecido.";
       }
@@ -184,33 +157,34 @@ const firebaseAuth = {
     }
   },
 
-  /**
-   * Realiza login com Google.
-   * @returns {Promise<Object>} Dados do usuário.
-   */
   async loginWithGoogle() {
     try {
       const provider = new firebase.auth.GoogleAuthProvider();
-      const userCredential = await firebase.auth().signInWithPopup(provider);
+      const userCredential = await this._getAuth().signInWithPopup(provider);
       const user = userCredential.user;
 
-      const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      const userDoc = await userDocRef.get();
+
       if (!userDoc.exists) {
-        await firebase.firestore().collection('users').doc(user.uid).set({
+        await userDocRef.set({
           name: user.displayName || 'Usuário Google',
           email: user.email,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          registrationMethod: 'google', // Novo campo
           notificationPreferences: {
             email: true,
             phone: false,
           },
+          municipio: 'Não informado',
+          bairro: 'Não informado',
         });
       }
       return { user };
     } catch (error) {
       console.error("Erro no login com Google:", error);
       let errorMessage = "Erro ao fazer login com Google.";
-      if (error.code === 'auth/popup-closed-by-user') {
+      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
         errorMessage = "O login foi cancelado.";
       } else if (error.code === 'auth/network-request-failed') {
         errorMessage = "Problema de conexão com a internet.";
@@ -219,222 +193,213 @@ const firebaseAuth = {
     }
   },
 
-  /**
-   * Envia um código de verificação para o telefone.
-   * @param {string} phoneNumber - Número de telefone.
-   * @returns {Promise<string>} ID de verificação.
-   */
-  async sendVerificationCode(phoneNumber) {
+  async sendPhoneVerificationCode(phoneNumber) {
     const phoneValidation = this.validatePhone(phoneNumber);
     if (phoneValidation) throw new Error(phoneValidation);
 
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      const userExists = await this.checkPhoneNumberExists(normalizedPhone);
-      if (!userExists) {
-        throw new Error("Número de telefone não registrado. Crie uma conta.");
-      }
-
-      const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-      await firebase.firestore().collection('pendingVerifications').doc(normalizedPhone).set({
-        verificationCode,
-        phoneNumber: normalizedPhone,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      });
-
-      const response = await fetch('https://api.ultramsg.com/instance126366/messages/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: 'dklefhlqae1key9l',
-          to: normalizedPhone,
-          body: `Seu código de verificação FixABairro é: ${verificationCode}`,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Falha ao enviar código via WhatsApp: ${errorData.error || 'Erro desconhecido'}`);
-      }
-
-      return verificationCode;
+      // **Aviso:** Sem reCAPTCHA/App Check, este método pode estar sujeito a abusos ou bloqueios
+      // pelo Firebase.
+      const confirmationResult = await this._getAuth().signInWithPhoneNumber(normalizedPhone);
+      console.log("Código de verificação enviado para:", normalizedPhone);
+      return confirmationResult;
     } catch (error) {
-      console.error("Erro ao enviar código de verificação:", error);
-      throw new Error(error.message || "Erro ao enviar código de verificação.");
+      console.error("Erro ao enviar código de verificação por telefone:", error);
+      let errorMessage = "Erro ao enviar código de verificação.";
+      switch (error.code) {
+        case 'auth/invalid-phone-number':
+          errorMessage = "Número de telefone inválido.";
+          break;
+        case 'auth/missing-phone-number':
+          errorMessage = "Número de telefone ausente.";
+          break;
+        case 'auth/quota-exceeded':
+          errorMessage = "Cota de SMS excedida. Tente novamente mais tarde.";
+          break;
+        case 'auth/app-not-authorized':
+          errorMessage = "Este aplicativo não está autorizado a usar Autenticação por Telefone. Verifique as configurações do Firebase (App Check/reCAPTCHA).";
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = "Muitas tentativas. Tente novamente mais tarde.";
+          break;
+        default:
+          errorMessage = error.message || "Erro desconhecido ao enviar código de verificação.";
+      }
+      throw new Error(errorMessage);
     }
   },
 
-  /**
-   * Verifica o código de telefone e faz login.
-   * @param {string} phoneNumber - Número de telefone.
-   * @param {string} verificationCode - Código de verificação.
-   * @returns {Promise<Object>} Dados do usuário.
-   */
-  async verifyPhoneCode(phoneNumber, verificationCode) {
-    const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+  async confirmPhoneVerificationCode(confirmationResult, verificationCode) {
+    if (!confirmationResult || !verificationCode) {
+      throw new Error("Resultado da confirmação ou código de verificação ausente.");
+    }
+
     try {
-      const doc = await firebase.firestore().collection('pendingVerifications').doc(normalizedPhone).get();
-      if (!doc.exists) {
-        throw new Error("Nenhum código de verificação encontrado para este número.");
-      }
-      const data = doc.data();
-      if (data.verificationCode !== verificationCode) {
-        throw new Error("Código de verificação inválido.");
+      const userCredential = await confirmationResult.confirm(verificationCode);
+      const user = userCredential.user;
+
+      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      const userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) {
+        // This block should ideally only run if a user logs in via phone
+        // for the very first time and no Firestore record was created during registration
+        // (e.g., if registration was handled by a different flow or not done via createUserWithEmailAndPassword for phone)
+        console.warn("Usuário autenticado por telefone, mas documento Firestore não encontrado. Criando novo documento.");
+        await userDocRef.set({
+          phoneNumber: user.phoneNumber,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          registrationMethod: 'phone', // Novo campo
+          notificationPreferences: {
+            email: false,
+            phone: true,
+          },
+          name: 'Usuário Telefone',
+          municipio: 'Não informado',
+          bairro: 'Não informado',
+        });
       }
 
-      const userDoc = await firebase.firestore().collection('users')
-        .where('phoneNumber', '==', normalizedPhone)
-        .limit(1)
-        .get();
-      if (userDoc.empty) {
-        throw new Error("Usuário não encontrado.");
-      }
-
-      const userData = userDoc.docs[0].data();
-      const email = `${normalizedPhone}@fixabairro.co.ao`;
-      const password = data.password || 'defaultPassword';
-      const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-      await firebase.firestore().collection('pendingVerifications').doc(normalizedPhone).delete();
-      return { user: userCredential.user };
+      return { user };
     } catch (error) {
-      console.error("Erro ao verificar código:", error);
-      throw new Error(error.message || "Erro ao verificar código.");
+      console.error("Erro ao verificar código de telefone:", error);
+      let errorMessage = "Erro ao verificar código.";
+      switch (error.code) {
+        case 'auth/invalid-verification-code':
+          errorMessage = "Código de verificação inválido.";
+          break;
+        case 'auth/code-expired':
+          errorMessage = "O código de verificação expirou. Envie um novo.";
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = "Muitas tentativas. Tente novamente mais tarde.";
+          break;
+        default:
+          errorMessage = error.message || "Erro desconhecido ao verificar código.";
+      }
+      throw new Error(errorMessage);
     }
   },
 
-  /**
-   * Redefine a senha enviando um email de redefinição.
-   * @param {string} email - Email do usuário.
-   * @returns {Promise<boolean>} Sucesso da operação.
-   */
   async resetPassword(email) {
     const emailValidation = this.validateEmail(email);
     if (emailValidation) throw new Error(emailValidation);
 
     try {
-      await firebase.auth().sendPasswordResetEmail(email);
+      await this._getAuth().sendPasswordResetEmail(email);
       return true;
     } catch (error) {
       console.error("Erro ao redefinir senha:", error);
       let errorMessage = "Erro ao redefinir senha.";
       if (error.code === 'auth/user-not-found') {
         errorMessage = "Nenhum usuário encontrado com este email.";
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = "Email inválido.";
       }
       throw new Error(errorMessage);
     }
   },
 
   /**
-   * Registra um usuário com email.
-  * @param {string} name - Nome completo.
-   * @param {string} email - Email do usuário.
+   * Registra um usuário com email ou telefone.
+   * @param {string} name - Nome completo.
+   * @param {string|null} email - Email do usuário (obrigatório se method é 'email').
+   * @param {string|null} phoneNumber - Número de telefone (obrigatório se method é 'phone').
    * @param {string} password - Senha do usuário.
    * @param {string} municipio - Município.
    * @param {string} bairro - Bairro.
+   * @param {'email'|'phone'} method - Método de registro (email ou phone).
+   * @param {'gmail'|'whatsapp'} notificationPreference - Preferência de notificação.
    * @returns {Promise<Object>} Dados do usuário e status de verificação.
    */
-  async registerUserWithEmail(name, email, password, municipio, bairro) {
-    const emailValidation = this.validateEmail(email);
-    if (emailValidation) throw new Error(emailValidation);
-    const passwordValidation = this.validatePassword(password);
-    if (passwordValidation) throw new Error(passwordValidation);
-
-    if (!name || !municipio || !bairro) {
-      throw new Error("Por favor, preencha todos os campos: Nome, Município e Bairro.");
+  async registerUser({ name, email = null, phoneNumber = null, password, municipio, bairro, method, notificationPreference }) {
+    if (!name || !password || !municipio || !bairro || !method || !notificationPreference) {
+      throw new Error("Por favor, preencha todos os campos obrigatórios.");
     }
 
-    try {
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await userCredential.user.updateProfile({ displayName: name });
-      await userCredential.user.sendEmailVerification();
+    let userCredential;
+    let user;
+    let requiresEmailVerification = false;
+    let finalEmail = email; // Usado para salvar no Firestore se for um email fictício
 
-      await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
-        name,
-        email,
-        municipio,
-        bairro,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        notificationPreferences: {
-          email: true,
-          phone: false,
-        },
-      });
+    try {
+      if (method === 'email') {
+        const emailValidation = this.validateEmail(email);
+        if (emailValidation) throw new Error(emailValidation);
+        userCredential = await this._getAuth().createUserWithEmailAndPassword(email, password);
+        user = userCredential.user;
+        await user.updateProfile({ displayName: name });
+        await user.sendEmailVerification();
+        requiresEmailVerification = true;
+      } else if (method === 'phone') {
+        const phoneValidation = this.validatePhone(phoneNumber);
+        if (phoneValidation) throw new Error(phoneValidation);
+        const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+        // Para contas baseadas apenas em telefone, Firebase Auth requer um email.
+        // Criamos um email fictício.
+        finalEmail = `${normalizedPhone.replace(/\D/g, '')}@fixabairro.co.ao`;
+        userCredential = await this._getAuth().createUserWithEmailAndPassword(finalEmail, password);
+        user = userCredential.user;
+        await user.updateProfile({ displayName: name });
+        // Não envia verificação de email para contas de telefone, a verificação é via SMS
+      } else {
+        throw new Error("Método de registro inválido.");
+      }
+
+      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      // Verifica se o documento já existe para não sobrescrever dados
+      const userDoc = await userDocRef.get();
+
+      if (!userDoc.exists) { // Cria o documento de usuário apenas se não existir
+        await userDocRef.set({
+          name,
+          email: finalEmail,
+          phoneNumber: phoneNumber ? this.normalizePhoneNumber(phoneNumber) : null,
+          municipio,
+          bairro,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          registrationMethod: method,
+          notificationPreferences: {
+            email: notificationPreference === 'gmail',
+            phone: notificationPreference === 'whatsapp',
+          },
+        });
+      } else {
+        // Se o documento existir (ex: usuário Google que agora se registra com email/phone),
+        // você pode atualizar os campos necessários. Para simplificar, estamos criando apenas se não existe.
+        console.warn("Documento de usuário já existe no Firestore. Considerar lógica de atualização.");
+      }
 
       return {
-        user: userCredential.user,
-        requiresEmailVerification: true,
+        user: user,
+        requiresEmailVerification: requiresEmailVerification,
+        registrationMethod: method
       };
+
     } catch (error) {
-      console.error("Erro ao registrar usuário com email:", error);
+      console.error("Erro ao registrar usuário:", error);
       let errorMessage = "Erro ao registrar usuário.";
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "Este email já está registrado.";
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "A senha é muito fraca.";
+      switch (error.code) {
+        case 'auth/email-already-in-use':
+          errorMessage = "Este email/telefone já está registrado. Tente fazer login.";
+          break;
+        case 'auth/weak-password':
+          errorMessage = "A senha é muito fraca. Por favor, use uma senha mais forte.";
+          break;
+        case 'auth/invalid-email':
+          errorMessage = "O formato do email é inválido.";
+          break;
+        default:
+          errorMessage = error.message || "Erro desconhecido.";
       }
       throw new Error(errorMessage);
     }
   },
 
-  /**
-   * Registra um usuário com número de telefone.
-   * @param {string} name - Nome completo.
-   * @param {string} phoneNumber - Número de telefone.
-   * @param {string} password - Senha do usuário.
-   * @param {string} municipio - Município.
-   * @param {string} bairro - Bairro.
-   * @returns {Promise<Object>} Dados do usuário.
-   */
-  async registerUserWithPhone(name, phoneNumber, password, municipio, bairro) {
-    const phoneValidation = this.validatePhone(phoneNumber);
-    if (phoneValidation) throw new Error(phoneValidation);
-    const passwordValidation = this.validatePassword(password);
-    if (passwordValidation) throw new Error(passwordValidation);
-
-    if (!name || !municipio || !bairro) {
-      throw new Error("Por favor, preencha todos os campos: Nome, Município e Bairro.");
-    }
-
-    try {
-      const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(
-        `${normalizedPhone}@fixabairro.co.ao`,
-        password
-      );
-      await userCredential.user.updateProfile({ displayName: name });
-
-      await firebase.firestore().collection('users').doc(userCredential.user.uid).set({
-        name,
-        phoneNumber: normalizedPhone,
-        municipio,
-        bairro,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        notificationPreferences: {
-          email: false,
-          phone: true,
-        },
-      });
-
-      return { user: userCredential.user };
-    } catch (error) {
-      console.error("Erro ao registrar usuário com telefone:", error);
-      let errorMessage = "Erro ao registrar usuário.";
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "Este número de telefone já está registrado.";
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "A senha é muito fraca.";
-      }
-      throw new Error(errorMessage);
-    }
-  },
-
-  /**
-   * Desconecta o usuário.
-   * @returns {Promise<boolean>} Sucesso da operação.
-   */
   async signOutUser() {
     try {
-      await firebase.auth().signOut();
+      await this._getAuth().signOut();
       return true;
     } catch (error) {
       console.error("Erro ao sair:", error);
@@ -442,16 +407,8 @@ const firebaseAuth = {
     }
   },
 
-  /**
-   * Adiciona um listener para mudanças no estado de autenticação.
-   * @param {Function} callback - Função de callback.
-   */
   onAuthStateChangedListener(callback) {
-    if (typeof firebase === 'undefined' || typeof firebase.auth === 'undefined') {
-      console.error("Firebase Auth SDK não carregado.");
-      return;
-    }
-    firebase.auth().onAuthStateChanged(callback);
+    return this._getAuth().onAuthStateChanged(callback);
   },
 };
 
