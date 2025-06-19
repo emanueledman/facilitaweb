@@ -16,7 +16,7 @@
     @layer base {
       :root {
         -primary-accent: #FF5722;
-        --primary-accent: #ff2222;
+        --primary-accent: #ff2222; /* Mantido conforme seu original, se quiser a cor laranja/vermelho use #FF5722 */
         --secondary-dark: #2C3E50;
         --highlight-light: #FFC107;
         --success-green: #4CAF50;
@@ -310,6 +310,10 @@
         border-color: #f87171; /* red-400 */
       }
 
+      /* Adicionado para a borda de erro no input */
+      .border-error {
+        border-color: var(--error-red) !important;
+      }
 
       @media (max-width: 992px) {
         .navbar-brand {
@@ -464,20 +468,19 @@
           <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
         </div>
         
-        <!-- Nova div para mensagens de notificação gerais -->
         <div id="notificationMessage" class="notification-message hidden" role="alert"></div>
 
         <form id="loginForm" class="space-y-5">
           <div>
             <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
             <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
-            <p id="emailOrPhoneError" class="error-message">Erro de email/telefone</p>
+            <p id="emailOrPhoneError" class="error-message hidden">Erro de email/telefone</p>
           </div>
           
           <div>
             <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
             <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
-            <p id="passwordError" class="error-message">Erro de senha</p>
+            <p id="passwordError" class="error-message hidden">Erro de senha</p>
           </div>
           
           <div class="text-right text-sm">
@@ -506,211 +509,360 @@
           <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
         </p>
 
-        <!-- reCAPTCHA container, hidden as it's invisible reCAPTCHA -->
         <div id="recaptcha-container" class="mt-4 hidden"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Usando versões compatíveis do Firebase para manter a API v8 -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
   <script src="https://unpkg.com/imask"></script>
-  <!-- Carregue seu arquivo firebaseAuth.js após os SDKs do Firebase -->
   <script src="js/firebaseAuth.js"></script>
 
   <script>
+    // A configuração do Firebase deve vir do seu arquivo config.js ou ser definida aqui
     const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-};
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw", // Substitua pela sua chave
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+    };
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // Inicializa o Firebase App
-  try {
-    window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-    console.log("Firebase App inicializado.");
-  } catch (error) {
-    console.error("Erro ao inicializar Firebase:", error);
-    showNotification("Erro: Firebase SDK não carregado.", 'error');
-    return;
-  }
-
-  // Verifica o estado de autenticação
-  window.firebaseAuth.checkAuthState('index.html', null);
-
-  // Inicializa o reCAPTCHA
-  try {
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-  } catch (error) {
-    console.error("Erro ao inicializar reCAPTCHA:", error);
-    showNotification("Erro ao carregar verificação de segurança.", 'error');
-  }
-
-  // Referências aos elementos da UI
-  const loginForm = document.getElementById('loginForm');
-  const emailOrPhoneInput = document.getElementById('emailOrPhone');
-  const passwordInput = document.getElementById('password');
-  const loginBtn = document.getElementById('loginBtn');
-  const googleLoginBtn = document.getElementById('googleLoginBtn');
-  const forgotPasswordLink = document.getElementById('forgotPassword');
-  const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-  const passwordError = document.getElementById('passwordError');
-  const notificationMessageDiv = document.getElementById('notificationMessage');
-
-  // Funções auxiliares para mostrar/ocultar mensagens
-  function showNotification(message, type) {
-    notificationMessageDiv.textContent = message;
-    notificationMessageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-error', 'bg-green-100', 'text-green-700', 'border-success');
-    notificationMessageDiv.classList.add(type === 'error' ? 'bg-red-100' : 'bg-green-100', type === 'error' ? 'text-red-700' : 'text-green-700', type === 'error' ? 'border-error' : 'border-success', 'block');
-  }
-
-  function hideNotification() {
-    notificationMessageDiv.classList.add('hidden');
-    notificationMessageDiv.textContent = '';
-  }
-
-  function showError(element, message) {
-    element.textContent = message;
-    element.classList.remove('hidden');
-    element.classList.add('block');
-  }
-
-  function hideError(element) {
-    element.classList.add('hidden');
-  }
-
-  // Máscara de telefone
-  IMask(emailOrPhoneInput, {
-    mask: '+244 900 000 000',
-    lazy: false
-  });
-
-  emailOrPhoneInput.addEventListener('focus', () => {
-    if (emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
-
-  emailOrPhoneInput.addEventListener('input', () => {
-    if (!emailOrPhoneInput.value.startsWith('+244')) {
-      emailOrPhoneInput.value = '+244' + emailOrPhoneInput.value.replace(/[^0-9]/g, '').substring(3);
-    } else if (emailOrPhoneInput.value.length < 4 && emailOrPhoneInput.value.startsWith('+244'.substring(0, emailOrPhoneInput.value.length))) {
-      emailOrPhoneInput.value = '+244';
-    }
-  });
-
-  emailOrPhoneInput.addEventListener('blur', () => {
-    if (emailOrPhoneInput.value === '+244' || emailOrPhoneInput.value === '') {
-      emailOrPhoneInput.value = '';
-    }
-  });
-
-  // Event listener para o formulário de login
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideError(passwordError);
-    hideNotification();
-
-    let isValid = true;
-    const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-    const password = passwordInput.value;
-
-    const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
-    const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneRaw) === null;
-
-    if (!emailOrPhoneRaw) {
-      showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-      isValid = false;
-    } else if (!isEmail && !isPhone) {
-      showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
-      isValid = false;
-    }
-
-    const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
-    if (passwordErrorMsg) {
-      showError(passwordError, passwordErrorMsg);
-      isValid = false;
-    }
-
-    if (!isValid) return;
-
-    loginBtn.disabled = true;
-    loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
-
-    try {
-      if (isPhone) {
-        await window.firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
-        showNotification('Código de verificação enviado para o seu telefone.', 'success');
-        window.location.href = 'verify-phone.html';
-      } else {
-        const result = await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
-        showNotification('Login realizado com sucesso!', 'success');
-        window.location.href = 'profile.html';
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Inicializa o Firebase App
+      try {
+        window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+        console.log("Firebase App inicializado.");
+      } catch (error) {
+        console.error("Erro ao inicializar Firebase:", error);
+        showNotification("Erro: Firebase SDK não carregado.", 'error');
+        return;
       }
-    } catch (error) {
-      console.error("Erro no login:", error);
-      if (error.message.includes("Email inválido") || error.message.includes("telefone inválido")) {
-        showError(emailOrPhoneError, error.message);
-      } else if (error.message.includes("Senha incorreta")) {
-        showError(passwordError, error.message);
-      } else {
-        showNotification(error.message, 'error');
+
+      // Inicializa o reCAPTCHA
+      try {
+        await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+      } catch (error) {
+        console.error("Erro ao inicializar reCAPTCHA:", error);
+        showNotification("Erro ao carregar verificação de segurança.", 'error');
       }
-    } finally {
-      loginBtn.disabled = false;
-      loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
-    }
-  });
 
-  // Event listener para o login com Google
-  googleLoginBtn.addEventListener('click', async () => {
-    hideNotification();
-    googleLoginBtn.disabled = true;
-    googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+      // Referências aos elementos da UI
+      const loginForm = document.getElementById('loginForm');
+      const emailOrPhoneInput = document.getElementById('emailOrPhone');
+      const passwordInput = document.getElementById('password');
+      const loginBtn = document.getElementById('loginBtn');
+      const googleLoginBtn = document.getElementById('googleLoginBtn');
+      const forgotPasswordLink = document.getElementById('forgotPassword');
+      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+      const passwordError = document.getElementById('passwordError');
+      const notificationMessageDiv = document.getElementById('notificationMessage');
 
-    try {
-      await window.firebaseAuth.loginWithGoogle();
-      showNotification('Login com Google realizado com sucesso!', 'success');
-      window.location.href = 'profile.html';
-    } catch (error) {
-      console.error("Erro no login com Google:", error);
-      showNotification(error.message, 'error');
-    } finally {
-      googleLoginBtn.disabled = false;
-      googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
-    }
-  });
+      // Funções auxiliares para mostrar/ocultar mensagens
+      function showNotification(message, type) {
+        notificationMessageDiv.textContent = message;
+        // Remova classes de estado anteriores e adicione as novas
+        notificationMessageDiv.classList.remove('hidden', 'success', 'error'); 
+        notificationMessageDiv.classList.add(type); 
+        notificationMessageDiv.classList.add('block');
+      }
 
-  // Event listener para "Esqueceu a senha?"
-  forgotPasswordLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-    hideError(emailOrPhoneError);
-    hideNotification();
+      function hideNotification() {
+        notificationMessageDiv.classList.add('hidden');
+        notificationMessageDiv.textContent = '';
+      }
 
-    const emailInputVal = emailOrPhoneInput.value.trim();
-    const emailValidationResult = window.firebaseAuth.validateEmail(emailInputVal);
-    if (!emailInputVal || emailValidationResult) {
-      showError(emailOrPhoneError, emailValidationResult || 'Digite um email válido.');
-      return;
-    }
+      function showError(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+        element.classList.add('block');
+        // Adiciona borda de erro ao input associado
+        element.previousElementSibling.classList.add('border-error'); 
+      }
 
-    try {
-      await window.firebaseAuth.resetPassword(emailInputVal);
-      showNotification('Email para redefinição de senha enviado.', 'success');
-    } catch (error) {
-      console.error("Erro ao resetar senha:", error);
-      showNotification(error.message, 'error');
-    }
-  });
-});
+      function hideError(element) {
+        element.classList.add('hidden');
+        // Remove borda de erro do input associado
+        element.previousElementSibling.classList.remove('border-error'); 
+      }
+
+      // Máscara de telefone e tratamento de input Email/Telefone
+      const phoneMaskOptions = {
+          mask: '+244 900 000 000',
+          lazy: false,
+          placeholderChar: '_'
+      };
+      const emailOrPhoneMask = IMask(emailOrPhoneInput, {
+          mask: [
+              { mask: /^\S*@?\S*$/ }, // Máscara para email (mais flexível)
+              phoneMaskOptions // Máscara para telefone
+          ],
+          dispatch: function (appended, dynamicMasked) {
+              const value = dynamicMasked.value + appended;
+              // Se começar com +244 ou tiver 9 depois do +244, assume telefone
+              if (value.startsWith('+244') || (value.length > 4 && value.substring(4,5) === '9')) { 
+                  return dynamicMasked.compiledMasks[1]; // Máscara de telefone
+              }
+              return dynamicMasked.compiledMasks[0]; // Máscara de email
+          }
+      });
+
+      emailOrPhoneInput.addEventListener('focus', () => {
+          if (!emailOrPhoneMask.value || emailOrPhoneMask.value.length < 4) {
+              emailOrPhoneMask.value = '+244';
+          }
+      });
+      emailOrPhoneInput.addEventListener('blur', () => {
+          if (emailOrPhoneMask.value === '+244' || !emailOrPhoneMask.value.trim()) {
+              emailOrPhoneMask.value = ''; // Limpa se for só '+244' ou vazio
+          }
+      });
+
+      // Event listener para o formulário de login
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError(emailOrPhoneError);
+        hideError(passwordError);
+        hideNotification();
+
+        let isValid = true;
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        const password = passwordInput.value;
+
+        // Limpa o telefone para validação (remove espaços e máscara)
+        const cleanPhone = emailOrPhoneRaw.replace(/\D/g, ''); 
+        
+        // Verifica se é um formato de email válido ou telefone angolano válido
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
+        // Telefone angolano deve ter 12 dígitos após o '+', começando com 244
+        const isPhone = cleanPhone.length === 12 && cleanPhone.startsWith('244');
+
+        if (!emailOrPhoneRaw) {
+          showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
+          isValid = false;
+        } else if (!isEmail && !isPhone) {
+          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+          isValid = false;
+        }
+
+        // Validação da senha é crucial, exceto se for login por telefone sem senha
+        if (password.length === 0 && isEmail) { // Se for email, a senha é sempre obrigatória e não pode ser vazia
+            showError(passwordError, "A senha é obrigatória para login com email.");
+            isValid = false;
+        } else if (password.length > 0) { // Se a senha foi digitada, valida o formato
+            const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
+            if (passwordErrorMsg) {
+                showError(passwordError, passwordErrorMsg);
+                isValid = false;
+            }
+        } 
+        // Se for telefone e a senha não foi digitada, não consideramos erro neste ponto,
+        // pois pode ser um fluxo de login por código.
+
+        if (!isValid) return;
+
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+
+        try {
+            if (isPhone) {
+                // Prepara o número de telefone no formato +244XXXXXXXXX
+                const fullPhoneNumber = `+${cleanPhone}`;
+                localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); // Salva para a próxima página
+
+                const docRef = firebase.firestore().collection('users').doc(fullPhoneNumber);
+                const userDoc = await docRef.get();
+
+                // Verifica se o usuário existe e se tem uma senha definida
+                if (userDoc.exists && userDoc.data().hasPassword) {
+                    // Se o usuário existe e tem senha, tenta login com email/senha (telefone como email)
+                    if (!password) { // Se o usuário tem senha mas não a digitou, pede para digitar
+                        showError(passwordError, "Por favor, insira sua senha.");
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
+                        return;
+                    }
+                    await window.firebaseAuth.loginWithEmail(fullPhoneNumber, password); // Tenta login
+                    showNotification('Login realizado com sucesso!', 'success');
+                    window.location.href = 'profile.html';
+                } else {
+                    // Se o usuário não existe, não tem senha, ou quer logar por código, envia o código
+                    const verificationCode = await window.firebaseAuth.sendVerificationCode(fullPhoneNumber);
+                    // Atualiza ou cria um registro temporário no Firestore para a verificação
+                    await firebase.firestore().collection('pendingVerifications').doc(fullPhoneNumber).set({
+                        phoneNumber: fullPhoneNumber,
+                        verificationCode: verificationCode,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        notificationMethod: 'whatsapp' 
+                    }, { merge: true }); // Usa merge para não apagar dados existentes
+
+                    showNotification('Código de verificação enviado para o seu WhatsApp. Você será redirecionado.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'verify-phone.html';
+                    }, 2000);
+                }
+            } else { // Se for email, tenta login com email e senha
+                await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
+                showNotification('Login realizado com sucesso!', 'success');
+                window.location.href = 'profile.html';
+            }
+        } catch (error) {
+          console.error("Erro no login:", error);
+          let errorMessage = "Ocorreu um erro inesperado. Tente novamente.";
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/user-not-found':
+              case 'auth/wrong-password':
+              case 'auth/invalid-credential':
+                errorMessage = "Credenciais inválidas. Verifique seu email/telefone e senha.";
+                showError(emailOrPhoneError, errorMessage); 
+                hideError(passwordError); // Oculta erro da senha se for erro geral de credenciais
+                break;
+              case 'auth/invalid-email':
+                errorMessage = "Endereço de email inválido.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/too-many-requests':
+                errorMessage = "Muitas tentativas de login. Tente novamente mais tarde.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/network-request-failed':
+                errorMessage = "Erro de conexão. Verifique sua internet.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/requires-recent-login':
+                errorMessage = "Por favor, faça login novamente para realizar esta ação.";
+                showNotification(errorMessage, 'error');
+                break;
+              default:
+                errorMessage = error.message; 
+                showNotification(errorMessage, 'error');
+                break;
+            }
+          } else {
+              errorMessage = error.message; 
+              showNotification(errorMessage, 'error');
+          }
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
+        }
+      });
+
+      // Event listener para o login com Google
+      googleLoginBtn.addEventListener('click', async () => {
+        hideNotification();
+        googleLoginBtn.disabled = true;
+        googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+
+        try {
+          await window.firebaseAuth.loginWithGoogle();
+          showNotification('Login com Google realizado com sucesso!', 'success');
+          window.location.href = 'profile.html';
+        } catch (error) {
+          console.error("Erro no login com Google:", error);
+          let errorMessage = "Erro ao entrar com Google. Tente novamente.";
+          if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = "Login cancelado. A janela pop-up foi fechada.";
+          } else if (error.code === 'auth/cancelled-popup-request') {
+              errorMessage = "A solicitação de login com Google foi cancelada. Tente novamente.";
+          }
+          showNotification(errorMessage, 'error');
+        } finally {
+          googleLoginBtn.disabled = false;
+          googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
+        }
+      });
+
+      // Event listener para "Esqueceu a senha?"
+      forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        hideError(emailOrPhoneError);
+        hideError(passwordError); 
+        hideNotification();
+
+        const inputVal = emailOrPhoneInput.value.trim();
+        
+        if (!inputVal) {
+          showError(emailOrPhoneError, 'Por favor, digite seu email ou número de telefone.');
+          return;
+        }
+
+        // Limpa o telefone para validação
+        const cleanPhone = inputVal.replace(/\D/g, '');
+        // Verifica se é um formato de email válido ou telefone angolano válido
+        const isEmailFormat = window.firebaseAuth.validateEmail(inputVal) === null;
+        const isPhoneFormat = cleanPhone.length === 12 && cleanPhone.startsWith('244');
+
+        // Desabilita o link enquanto a ação está em andamento
+        forgotPasswordLink.style.pointerEvents = 'none'; 
+        forgotPasswordLink.textContent = 'Processando...';
+
+        try {
+          if (isPhoneFormat) {
+              const fullPhoneNumber = `+${cleanPhone}`;
+              localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); // Salva para a próxima página
+              
+              const verificationCode = await window.firebaseAuth.sendVerificationCode(fullPhoneNumber);
+              
+              // Salva o código no Firestore para a página de verificação (ou atualiza)
+              await firebase.firestore().collection('pendingVerifications').doc(fullPhoneNumber).set({ 
+                  phoneNumber: fullPhoneNumber, 
+                  verificationCode: verificationCode,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  notificationMethod: 'whatsapp' 
+              }, { merge: true }); // Usa merge para não apagar dados existentes
+              
+              showNotification('Um novo código de verificação foi enviado para o seu WhatsApp. Você será redirecionado.', 'success');
+              // Redireciona para a página de verificação de telefone
+              setTimeout(() => {
+                  window.location.href = 'verify-phone.html';
+              }, 2000);
+              
+          } else if (isEmailFormat) {
+              await window.firebaseAuth.resetPassword(inputVal);
+              showNotification('Um email para redefinição de senha foi enviado para seu endereço.', 'success');
+          } else {
+              showError(emailOrPhoneError, 'Formato inválido. Digite um email ou um número de telefone angolano válido.');
+          }
+        } catch (error) {
+          console.error("Erro ao processar 'Esqueceu a senha?':", error);
+          let errorMessage = "Erro ao processar sua solicitação. Tente novamente.";
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/user-not-found':
+              case 'auth/invalid-email':
+                errorMessage = "Não encontramos uma conta associada a este email/telefone.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/missing-email':
+                errorMessage = "Por favor, digite seu email.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/network-request-failed':
+                errorMessage = "Erro de conexão. Verifique sua internet.";
+                showNotification(errorMessage, 'error');
+                break;
+              default:
+                errorMessage = error.message;
+                showNotification(errorMessage, 'error');
+                break;
+            }
+          } else {
+            errorMessage = error.message;
+            showNotification(errorMessage, 'error');
+          }
+        } finally {
+            // Reabilita o link após a conclusão (com ou sem erro)
+            forgotPasswordLink.style.pointerEvents = 'auto'; 
+            forgotPasswordLink.textContent = 'Esqueceu a senha?';
+        }
+      });
+    });
   </script>
 </body>
 </html>
