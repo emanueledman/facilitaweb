@@ -1,129 +1,147 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-AO">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro e Login FixABairro</title>
-    <link rel="stylesheet" href="/cadastro.css">
+    <title>Criar Conta - FixABairro</title>
+    <link rel="stylesheet" href="css/style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/imask"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="form-card" id="register-form-card">
-            <h2>Cadastre-se na FixABairro</h2>
-            <form id="register-form">
-                <div class="input-group">
-                    <label for="reg-name">Nome Completo:</label>
-                    <input type="text" id="reg-name" placeholder="Seu nome completo" required>
-                </div>
+<body class="flex items-center justify-center min-h-screen bg-background">
 
-                <div class="input-group">
-                    <label for="reg-password">Senha:</label>
-                    <input type="password" id="reg-password" required>
-                </div>
-                <div class="input-group">
-                    <label for="reg-confirm-password">Confirmar Senha:</label>
-                    <input type="password" id="reg-confirm-password" required>
-                </div>
+    <div class="main-container bg-surface p-8 rounded-lg shadow-lg max-w-md w-full relative">
+        <h2 class="text-2xl font-bold text-center text-text-primary mb-6">Criar Conta</h2>
 
-                <div class="input-group">
-                    <label for="reg-municipio">Município:</label>
-                    <input type="text" id="reg-municipio" placeholder="Seu município" required>
-                </div>
-                <div class="input-group">
-                    <label for="reg-bairro">Bairro:</label>
-                    <input type="text" id="reg-bairro" placeholder="Seu bairro" required>
-                </div>
+        <form id="register-form" class="space-y-4">
+            <div>
+                <label for="reg-name" class="block text-sm font-medium text-text-secondary mb-1">Nome Completo</label>
+                <input type="text" id="reg-name" name="name" placeholder="Seu nome e apelido"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="nameError">
+                <p id="nameError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
 
-                <div class="input-group">
-                    <label>Como deseja se cadastrar e receber notificações?</label>
-                    <div class="radio-group">
-                        <input type="radio" id="method-email" name="reg-method" value="email" checked>
-                        <label for="method-email">Gmail</label>
-                        <input type="radio" id="method-phone" name="reg-method" value="phone">
-                        <label for="method-phone">Número de Telefone (WhatsApp)</label>
-                    </div>
+            <div>
+                <label for="reg-municipio" class="block text-sm font-medium text-text-secondary mb-1">Município</label>
+                <select id="reg-municipio" name="municipio"
+                        class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                        aria-describedby="municipioError">
+                    <option value="" class="bg-white text-text-secondary">Selecione</option>
+                    </select>
+                <p id="municipioError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
+
+            <div>
+                <label for="reg-bairro" class="block text-sm font-medium text-text-secondary mb-1">Bairro</label>
+                <input type="text" id="reg-bairro" name="bairro" placeholder="Seu bairro" list="bairrosList"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="bairroError">
+                <datalist id="bairrosList"></datalist> <p id="bairroError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-text-secondary mb-2">Como prefere ser notificado?</label>
+                <div class="flex items-center space-x-4">
+                    <label class="inline-flex items-center">
+                        <input type="radio" id="method-email" name="notificationMethod" value="email" class="form-radio text-primary" checked>
+                        <span class="ml-2 text-text-primary">Email (Gmail)</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" id="method-phone" name="notificationMethod" value="whatsapp" class="form-radio text-primary">
+                        <span class="ml-2 text-text-primary">WhatsApp</span>
+                    </label>
                 </div>
+                <p id="notificationError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
 
-                <div class="input-group" id="email-fields">
-                    <label for="reg-email">Gmail:</label>
-                    <input type="email" id="reg-email" placeholder="seuemail@gmail.com">
+            <div id="email-fields">
+                <label for="reg-email" class="block text-sm font-medium text-text-secondary mb-1">Email (Gmail)</label>
+                <input type="email" id="reg-email" name="email" placeholder="seu.email@gmail.com"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="emailError">
+                <p id="emailError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
+
+            <div id="phone-fields" class="hidden">
+                <label for="reg-phone" class="block text-sm font-medium text-text-secondary mb-1">Número de Telefone (WhatsApp)</label>
+                <input type="tel" id="reg-phone" name="phoneNumber" placeholder="+244 9XX XXX XXX"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="phoneNumberError">
+                <p id="phoneNumberError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+                <div id="recaptcha-container" class="mt-2"></div> 
+            </div>
+
+            <div>
+                <label for="reg-password" class="block text-sm font-medium text-text-secondary mb-1">Senha</label>
+                <input type="password" id="reg-password" name="password" placeholder="Mínimo 8 caracteres"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="passwordError">
+                <p id="passwordError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
+
+            <div>
+                <label for="reg-confirm-password" class="block text-sm font-medium text-text-secondary mb-1">Confirmar Senha</label>
+                <input type="password" id="reg-confirm-password" name="confirmPassword" placeholder="Confirme sua senha"
+                       class="w-full p-3 border border-border rounded-md focus:ring-2 focus:ring-primary focus:border-primary bg-input-background text-text-primary"
+                       aria-describedby="confirmPasswordError">
+                <p id="confirmPasswordError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input type="checkbox" id="termsCheckbox" name="terms" class="form-checkbox text-primary">
+                    <label for="termsCheckbox" class="ml-2 text-sm text-text-secondary">
+                        Li e aceito os <a href="#" id="showTermsLink" class="text-primary hover:underline">Termos de Serviço</a>
+                    </label>
                 </div>
+            </div>
+            <p id="termsError" class="error-message text-error text-xs mt-1 hidden" role="alert"></p>
 
-                <div class="input-group hidden" id="phone-fields">
-                    <label for="reg-phone">Número de Telefone (WhatsApp):</label>
-                    <input type="tel" id="reg-phone" placeholder="+244 9XX XXX XXX">
-                    <small>Ex: +244 923 123 456 (Formato internacional, para WhatsApp)</small>
-                </div>
+            <button type="submit" id="main-login-button"
+                    class="w-full bg-primary text-white p-3 rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-opacity-50 transition duration-300 ease-in-out flex items-center justify-center"
+                    disabled>
+                <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
+                <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+            </button>
+        </form>
 
-                <button type="submit">Cadastrar</button>
-                <p class="message" id="register-message"></p>
-            </form>
-            <p>Já tem uma conta? <a href="#" id="show-login">Faça Login</a></p>
-            <button id="google-login-button">Entrar com Google</button>
-            <p class="message" id="google-login-message"></p>
-        </div>
+        <p class="text-center text-text-secondary text-sm mt-4">
+            Já tem uma conta? <a href="login.html" class="text-primary hover:underline">Faça login aqui</a>
+        </p>
+    </div>
 
-        <div class="form-card hidden" id="login-form-card">
-            <h2>Login na FixABairro</h2>
-            <form id="login-form">
-                <div class="input-group">
-                    <label for="login-type">Tipo de Login:</label>
-                    <div class="radio-group">
-                        <input type="radio" id="login-email-radio" name="login-type" value="email" checked>
-                        <label for="login-email-radio">Email</label>
-                        <input type="radio" id="login-phone-radio" name="login-type" value="phone">
-                        <label for="login-phone-radio">Telefone</label>
-                    </div>
-                </div>
-
-                <div class="input-group" id="login-email-fields">
-                    <label for="login-email">Email:</label>
-                    <input type="email" id="login-email" placeholder="seuemail@gmail.com" required>
-                    <label for="login-password">Senha:</label>
-                    <input type="password" id="login-password" required>
-                </div>
-
-                <div class="input-group hidden" id="login-phone-request-fields">
-                    <label for="login-phone">Número de Telefone:</label>
-                    <input type="tel" id="login-phone" placeholder="+244 9XX XXX XXX" required>
-                    <button type="button" id="request-code-button">Solicitar Código</button>
-                </div>
-
-                <div class="input-group hidden" id="login-phone-verify-fields">
-                    <label for="verification-code">Código de Verificação:</label>
-                    <input type="text" id="verification-code" placeholder="Insira o código" required>
-                    <button type="button" id="verify-code-button">Verificar Código e Entrar</button>
-                </div>
-
-                <button type="submit" id="main-login-button">Entrar</button>
-                <p class="message" id="login-message"></p>
-                <p><a href="#" id="forgot-password-link">Esqueceu a senha?</a></p>
-            </form>
-            <p>Não tem uma conta? <a href="#" id="show-register">Cadastre-se</a></p>
-        </div>
-
-        <div class="form-card hidden" id="reset-password-card">
-            <h2>Redefinir Senha</h2>
-            <form id="reset-password-form">
-                <div class="input-group">
-                    <label for="reset-email">Email:</label>
-                    <input type="email" id="reset-email" placeholder="seuemail@gmail.com" required>
-                </div>
-                <button type="submit">Redefinir Senha</button>
-                <p class="message" id="reset-password-message"></p>
-            </form>
-            <p><a href="#" id="back-to-login">Voltar ao Login</a></p>
+    <div id="termsModal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-xl max-w-lg w-full">
+            <h3 class="text-xl font-bold text-text-primary mb-4">Termos de Serviço FixABairro</h3>
+            <div class="modal-body max-h-96 overflow-y-auto text-text-secondary text-sm space-y-3">
+                <p>Bem-vindo ao FixABairro! Ao criar uma conta, você concorda com os seguintes termos:</p>
+                <p>1. **Uso do Serviço:** O FixABairro conecta utilizadores com prestadores de serviços. Não somos responsáveis diretos pelos serviços prestados, mas facilitamos a comunicação.</p>
+                <p>2. **Privacidade:** Coletamos e usamos seus dados conforme nossa Política de Privacidade. Ao se registar, você concorda com a nossa coleta e uso de suas informações, incluindo nome, localização (município e bairro), email e/ou número de telefone para fins de notificação e conexão com serviços.</p>
+                <p>3. **Comunicações:** Ao fornecer seu email e/ou número de telefone, você consente em receber notificações, atualizações e comunicações relacionadas ao serviço do FixABairro, incluindo códigos de verificação via email ou WhatsApp.</p>
+                <p>4. **Conduta do Usuário:** Você é responsável por sua conduta e por garantir que todas as informações fornecidas sejam precisas e verdadeiras. Comportamentos inadequados ou fraudulentos resultarão na suspensão ou encerramento da conta.</p>
+                <p>5. **Segurança da Conta:** Mantenha suas credenciais de login seguras. Qualquer atividade em sua conta é de sua responsabilidade.</p>
+                <p>6. **Alterações nos Termos:** Reservamo-nos o direito de modificar estes termos a qualquer momento. Notificações sobre alterações serão feitas através do aplicativo ou por email.</p>
+                <p>Ao clicar em "Aceitar e Continuar", você reconhece ter lido, compreendido e concordado com todos os termos e condições acima.</p>
+            </div>
+            <div class="modal-footer flex justify-end space-x-3 mt-6">
+                <button id="closeTermsModal" type="button" class="px-4 py-2 bg-gray-300 text-text-secondary rounded-md hover:bg-gray-400">Fechar</button>
+                <button id="acceptTermsModal" type="button" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Aceitar e Continuar</button>
+            </div>
         </div>
     </div>
 
-    <div id="recaptcha-container"></div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <div id="notificationModal" class="modal-notification hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-white p-6 rounded-lg shadow-xl text-center flex flex-col items-center max-w-xs w-full">
+            <i id="notificationIcon" class="fas text-4xl mb-4"></i>
+            <p id="notificationMessage" class="text-text-primary text-lg font-semibold mb-4"></p>
+            <button id="closeNotificationModal" type="button" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-primary-dark">Ok</button>
+        </div>
+    </div>
 
     <script src="js/config.js"></script>
     <script src="js/firebaseAuth.js"></script>
-    <script src="js/register.js"></script>
-</body>
+    <script src="js/register.js"></script> </body>
 </html>

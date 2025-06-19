@@ -1,4 +1,4 @@
-// firebaseAuth.js
+// firebaseAuth.js (Mesma versão anterior, sem UltraMsg aqui)
 
 const firebaseAuth = {
   _app: null,
@@ -26,14 +26,10 @@ const firebaseAuth = {
     this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
         'size': 'invisible', // Torna o reCAPTCHA invisível
         'callback': (response) => {
-            // Este callback é acionado quando o reCAPTCHA é resolvido.
-            // Para um reCAPTCHA invisível, ele pode ser acionado automaticamente.
             console.log("reCAPTCHA resolvido!");
         },
         'expired-callback': () => {
-            // Opcional: callback quando o token reCAPTCHA expira
             console.warn("reCAPTCHA expirou. Por favor, tente novamente.");
-            // Você pode querer re-renderizar ou sinalizar para o usuário.
         }
     });
 
@@ -112,20 +108,9 @@ const firebaseAuth = {
     }
   },
 
-  validatePassword(password) {
-    if (!password) {
-      return "A senha é obrigatória.";
-    }
-    if (password.length < 8) {
-      return "A senha deve ter pelo menos 8 caracteres.";
-    }
-    return null;
-  },
-
   async checkPhoneNumberExists(phoneNumber) {
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      // ALTERADO: Consulta agora a coleção 'usuarios'
       const querySnapshot = await this._getFirestore().collection('usuarios')
         .where('phoneNumber', '==', normalizedPhone)
         .limit(1)
@@ -188,7 +173,6 @@ const firebaseAuth = {
       const userCredential = await this._getAuth().signInWithPopup(provider);
       const user = userCredential.user;
 
-      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
@@ -219,18 +203,17 @@ const firebaseAuth = {
     }
   },
 
+  // ESTA FUNÇÃO AINDA SERÁ DO FIREBASE AUTH SMS. SE QUER USAR ULTRA MSG, NAO VAI CHAMAR ELA
   async sendPhoneVerificationCode(phoneNumber) {
     const phoneValidation = this.validatePhone(phoneNumber);
     if (phoneValidation) throw new Error(phoneValidation);
 
-    // Certifique-se de que o reCAPTCHA Verifier está inicializado
     if (!this._recaptchaVerifier) {
         throw new Error("reCAPTCHA Verifier não foi inicializado.");
     }
 
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      // Passa o recaptchaVerifier como segundo argumento para signInWithPhoneNumber
       const confirmationResult = await this._getAuth().signInWithPhoneNumber(normalizedPhone, this._recaptchaVerifier);
       console.log("Código de verificação enviado para:", normalizedPhone);
       return confirmationResult;
@@ -259,6 +242,9 @@ const firebaseAuth = {
         case 'auth/captcha-check-failed':
             errorMessage = "A verificação de segurança falhou. Tente novamente.";
             break;
+        case 'auth/billing-not-enabled':
+            errorMessage = "A autenticação por telefone requer o plano Blaze (pago). Por favor, use os números de telefone de teste para desenvolvimento.";
+            break;
         default:
           errorMessage = error.message || "Erro desconhecido.";
       }
@@ -266,6 +252,7 @@ const firebaseAuth = {
     }
   },
 
+  // ESTA FUNÇÃO AINDA SERÁ DO FIREBASE AUTH SMS. SE QUER USAR ULTRA MSG, NAO VAI CHAMAR ELA
   async confirmPhoneVerificationCode(confirmationResult, verificationCode) {
     if (!confirmationResult || !verificationCode) {
       throw new Error("Resultado da confirmação ou código de verificação ausente.");
@@ -275,7 +262,6 @@ const firebaseAuth = {
       const userCredential = await confirmationResult.confirm(verificationCode);
       const user = userCredential.user;
 
-      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
@@ -337,14 +323,16 @@ const firebaseAuth = {
 
   /**
    * Registra um usuário com email ou telefone.
-   * @param {string} name - Nome completo.
-   * @param {string|null} email - Email do usuário (obrigatório se method é 'email').
-   * @param {string|null} phoneNumber - Número de telefone (obrigatório se method é 'phone').
-   * @param {string} password - Senha do usuário.
-   * @param {string} municipio - Município.
-   * @param {string} bairro - Bairro.
-   * @param {'email'|'phone'} method - Método de registro (email ou phone).
-   * @param {'gmail'|'whatsapp'} notificationPreference - Preferência de notificação.
+   * Este é o método principal de registro.
+   * @param {Object} userData - Objeto com os dados do usuário.
+   * @param {string} userData.name - Nome completo.
+   * @param {string|null} userData.email - Email do usuário (obrigatório se method é 'email').
+   * @param {string|null} userData.phoneNumber - Número de telefone (obrigatório se method é 'phone').
+   * @param {string} userData.password - Senha do usuário.
+   * @param {string} userData.municipio - Município.
+   * @param {string} userData.bairro - Bairro.
+   * @param {'email'|'phone'} userData.method - Método de registro (email ou phone).
+   * @param {'gmail'|'whatsapp'} userData.notificationPreference - Preferência de notificação.
    * @returns {Promise<Object>} Dados do usuário e status de verificação.
    */
   async registerUser({ name, email = null, phoneNumber = null, password, municipio, bairro, method, notificationPreference }) {
@@ -373,15 +361,26 @@ const firebaseAuth = {
         // Para contas baseadas apenas em telefone, Firebase Auth requer um email.
         // Criamos um email fictício.
         finalEmail = `${normalizedPhone.replace(/\D/g, '')}@fixabairro.co.ao`;
+
+        // Antes de criar a conta, verifique se o email fictício já existe
+        try {
+            await this._getAuth().fetchSignInMethodsForEmail(finalEmail);
+            throw new Error("Já existe uma conta com este número de telefone.");
+        } catch (fetchError) {
+            if (fetchError.code !== 'auth/user-not-found') {
+                throw fetchError; // Re-throw outros erros de fetchSignInMethodsForEmail
+            }
+            // Se 'auth/user-not-found', o email fictício não existe, pode prosseguir
+        }
+        
         userCredential = await this._getAuth().createUserWithEmailAndPassword(finalEmail, password);
         user = userCredential.user;
         await user.updateProfile({ displayName: name });
-        // Não envia verificação de email para contas de telefone, a verificação é via SMS
+        // Não envia verificação de email para contas de telefone, a verificação é via SMS (testes)
       } else {
         throw new Error("Método de registro inválido.");
       }
 
-      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
@@ -400,7 +399,19 @@ const firebaseAuth = {
           },
         });
       } else {
-        console.warn("Documento de usuário já existe no Firestore. Considerar lógica de atualização.");
+        // Se o documento já existe (e.g., usuário de telefone que já fez login), atualize
+        await userDocRef.update({
+            name,
+            email: finalEmail, // Pode ser que o email fictício já existisse
+            phoneNumber: phoneNumber ? this.normalizePhoneNumber(phoneNumber) : null,
+            municipio,
+            bairro,
+            notificationPreferences: {
+                email: notificationPreference === 'gmail',
+                phone: notificationPreference === 'whatsapp',
+            },
+        });
+        console.warn("Documento de usuário já existe no Firestore. Atualizando dados.");
       }
 
       return {
