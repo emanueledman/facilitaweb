@@ -4,6 +4,7 @@ const firebaseAuth = {
   _app: null,
   _auth: null,
   _firestore: null,
+  _recaptchaVerifier: null, // Adicionado para o reCAPTCHA
 
   initializeFirebaseApp(firebaseConfig) {
     if (typeof firebase === 'undefined') {
@@ -20,7 +21,30 @@ const firebaseAuth = {
     this._auth = firebase.auth();
     this._firestore = firebase.firestore();
 
-    console.log("Firebase App, Auth e Firestore inicializados.");
+    // Inicialize o reCAPTCHA Verifier aqui
+    // Ele será renderizado em um elemento div com o ID 'recaptcha-container'
+    this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+        'size': 'invisible', // Torna o reCAPTCHA invisível
+        'callback': (response) => {
+            // Este callback é acionado quando o reCAPTCHA é resolvido.
+            // Para um reCAPTCHA invisível, ele pode ser acionado automaticamente.
+            console.log("reCAPTCHA resolvido!");
+        },
+        'expired-callback': () => {
+            // Opcional: callback quando o token reCAPTCHA expira
+            console.warn("reCAPTCHA expirou. Por favor, tente novamente.");
+            // Você pode querer re-renderizar ou sinalizar para o usuário.
+        }
+    });
+
+    // Renderize o reCAPTCHA
+    this._recaptchaVerifier.render().then(widgetId => {
+        console.log("reCAPTCHA renderizado com o widget ID:", widgetId);
+    }).catch(error => {
+        console.error("Erro ao renderizar reCAPTCHA:", error);
+    });
+
+    console.log("Firebase App, Auth, Firestore e reCAPTCHA inicializados.");
   },
 
   _getAuth() {
@@ -101,6 +125,7 @@ const firebaseAuth = {
   async checkPhoneNumberExists(phoneNumber) {
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+      // ALTERADO: Consulta agora a coleção 'usuarios'
       const querySnapshot = await this._getFirestore().collection('usuarios')
         .where('phoneNumber', '==', normalizedPhone)
         .limit(1)
@@ -163,6 +188,7 @@ const firebaseAuth = {
       const userCredential = await this._getAuth().signInWithPopup(provider);
       const user = userCredential.user;
 
+      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
@@ -197,11 +223,15 @@ const firebaseAuth = {
     const phoneValidation = this.validatePhone(phoneNumber);
     if (phoneValidation) throw new Error(phoneValidation);
 
+    // Certifique-se de que o reCAPTCHA Verifier está inicializado
+    if (!this._recaptchaVerifier) {
+        throw new Error("reCAPTCHA Verifier não foi inicializado.");
+    }
+
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      // **Aviso:** Sem reCAPTCHA/App Check, este método pode estar sujeito a abusos ou bloqueios
-      // pelo Firebase.
-      const confirmationResult = await this._getAuth().signInWithPhoneNumber(normalizedPhone);
+      // Passa o recaptchaVerifier como segundo argumento para signInWithPhoneNumber
+      const confirmationResult = await this._getAuth().signInWithPhoneNumber(normalizedPhone, this._recaptchaVerifier);
       console.log("Código de verificação enviado para:", normalizedPhone);
       return confirmationResult;
     } catch (error) {
@@ -223,8 +253,14 @@ const firebaseAuth = {
         case 'auth/too-many-requests':
           errorMessage = "Muitas tentativas. Tente novamente mais tarde.";
           break;
+        case 'auth/web-storage-unsupported':
+            errorMessage = "O navegador não suporta o armazenamento necessário para reCAPTCHA. Tente outro navegador.";
+            break;
+        case 'auth/captcha-check-failed':
+            errorMessage = "A verificação de segurança falhou. Tente novamente.";
+            break;
         default:
-          errorMessage = error.message || "Erro desconhecido ao enviar código de verificação.";
+          errorMessage = error.message || "Erro desconhecido.";
       }
       throw new Error(errorMessage);
     }
@@ -239,13 +275,11 @@ const firebaseAuth = {
       const userCredential = await confirmationResult.confirm(verificationCode);
       const user = userCredential.user;
 
+      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
       if (!userDoc.exists) {
-        // This block should ideally only run if a user logs in via phone
-        // for the very first time and no Firestore record was created during registration
-        // (e.g., if registration was handled by a different flow or not done via createUserWithEmailAndPassword for phone)
         console.warn("Usuário autenticado por telefone, mas documento Firestore não encontrado. Criando novo documento.");
         await userDocRef.set({
           phoneNumber: user.phoneNumber,
@@ -347,11 +381,11 @@ const firebaseAuth = {
         throw new Error("Método de registro inválido.");
       }
 
+      // ALTERADO: Consulta agora a coleção 'usuarios'
       const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
-      // Verifica se o documento já existe para não sobrescrever dados
       const userDoc = await userDocRef.get();
 
-      if (!userDoc.exists) { // Cria o documento de usuário apenas se não existir
+      if (!userDoc.exists) {
         await userDocRef.set({
           name,
           email: finalEmail,
@@ -366,8 +400,6 @@ const firebaseAuth = {
           },
         });
       } else {
-        // Se o documento existir (ex: usuário Google que agora se registra com email/phone),
-        // você pode atualizar os campos necessários. Para simplificar, estamos criando apenas se não existe.
         console.warn("Documento de usuário já existe no Firestore. Considerar lógica de atualização.");
       }
 
