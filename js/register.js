@@ -161,12 +161,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   municipioSelect.addEventListener('change', () => municipioSelect.value ? hideError(municipioError) : null);
   bairroInput.addEventListener('input', () => {
-    const selectedMunicipio = municipioSelect.value;
     const enteredBairro = bairroInput.value.trim();
     if (!enteredBairro) {
       showError(bairroError, "O nome do bairro é obrigatório.");
-    } else if (selectedMunicipio && municipiosData[selectedMunicipio] && !municipiosData[selectedMunicipio].includes(enteredBairro)) {
-      showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`);
     } else {
       hideError(bairroError);
     }
@@ -211,7 +208,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    console.log("### Formulário submetido");
+    if (isSubmitting) {
+      console.log("### Submissão já em andamento, ignorando");
+      return;
+    }
     isSubmitting = true;
 
     document.querySelectorAll('.error-message').forEach(hideError);
@@ -226,11 +227,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const password = passwordInput.value;
     const confirmPassword = confirmPasswordInput.value;
 
+    console.log("### Dados do formulário:", { name, email, phoneNumber, notificationMethod, selectedMunicipio, bairro, passwordLength: password.length });
+
     if (!name) { showError(nameError, "Nome completo é obrigatório."); isValid = false; }
     if (!selectedMunicipio) { showError(municipioError, "Selecione seu município."); isValid = false; }
     if (!bairro) { showError(bairroError, "O nome do bairro é obrigatório."); isValid = false; }
-    else if (municipiosData[selectedMunicipio] && !municipiosData[selectedMunicipio].includes(bairro)) {
-      showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`); isValid = false; }
     if (password.length < 8) { showError(passwordError, "A senha deve ter pelo menos 8 caracteres."); isValid = false; }
     if (password !== confirmPassword) { showError(confirmPasswordError, "As senhas não coincidem."); isValid = false; }
     if (!notificationMethod) { showError(notificationError, "Selecione um método de notificação."); isValid = false; }
@@ -244,8 +245,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       else if (!/^\+2449[0-9]{8}$/.test(phoneNumber)) { showError(phoneNumberError, "Formato inválido. Use +2449XXXXXXXX."); isValid = false; }
     }
 
+    console.log("### Validação concluída, isValid:", isValid);
+
     if (!isValid) {
       isSubmitting = false;
+      console.log("### Formulário inválido, interrompendo");
       return;
     }
 
@@ -255,6 +259,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     registerBtn.innerHTML = `<span class="spinner-border" role="status" aria-hidden="true"></span> A criar...`;
 
     try {
+      console.log("### Iniciando registro com", notificationMethod);
       const verificationData = {
         name,
         municipio: selectedMunicipio,
@@ -266,32 +271,39 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
 
       if (notificationMethod === 'email') {
+        console.log("### Registrando com email:", email);
         await window.firebaseAuth.registerUserWithEmail(name, email, password, selectedMunicipio, bairro);
         localStorage.setItem('pendingVerificationEmail', email);
         showNotification('success', 'Conta criada! Verifique seu email para o código de confirmação.');
         setTimeout(() => {
+          console.log("### Redirecionando para verify-email.html");
           window.location.href = 'verify-email.html';
         }, 2000);
       } else {
+        console.log("### Verificando se telefone existe:", phoneNumber);
         const userExists = await window.firebaseAuth.checkPhoneNumberExists(phoneNumber);
         if (userExists) {
           throw new Error("Este número de telefone já está registrado.");
         }
-        const verificationCode = await window.firebaseAuth.registerUserWithPhone(name, phoneNumber, password, selectedMunicipio, bairro);
+        console.log("### Registrando com telefone:", phoneNumber);
+        await window.firebaseAuth.registerUserWithPhone(name, phoneNumber, password, selectedMunicipio, bairro);
+        console.log("### Salvando dados de verificação pendente");
         await firebase.firestore().collection('pendingVerifications').doc(phoneNumber).set({
           ...verificationData,
           verificationCode: Math.floor(100000 + Math.random() * 900000).toString(),
           password,
         });
+        console.log("### Enviando código de verificação");
         await window.firebaseAuth.sendVerificationCode(phoneNumber);
         localStorage.setItem('pendingVerificationPhoneNumber', phoneNumber);
         showNotification('success', 'Código de verificação enviado para o seu WhatsApp.');
         setTimeout(() => {
+          console.log("### Redirecionando para verify-phone.html");
           window.location.href = 'verify-phone.html';
         }, 2000);
       }
     } catch (error) {
-      console.error("Erro no registro:", error);
+      console.error("### Erro no registro:", error);
       let userFacingMessage = error.message || 'Erro ao criar conta. Tente novamente.';
       if (error.code) {
         switch (error.code) {
@@ -323,6 +335,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       registerSpinner.classList.add('hidden');
       registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
       isSubmitting = false;
+      console.log("### Submissão concluída");
     }
   });
 });
