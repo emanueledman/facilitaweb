@@ -4,158 +4,137 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="FixABairro - Visualizar Problemas Relatados no seu Bairro">
-  <meta name="keywords" content="fixabairro, angola, serviços públicos, cidadania, denúncias">
+  <meta name="keywords" content="fixabairro, angola, problemas urbanos, comunidade, cidadania">
   <meta name="author" content="FixABairro Team">
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  
-  <!-- Font Awesome -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- AOS Animation Library -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-
-  <!-- Leaflet CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
-  <title>FixABairro | Problemas Relatados</title>
+  <title>FixABairro | Mapa de Problemas</title>
   <style>
     :root {
-      --primary-red: #f39200;
-      --primary-black: #1a1a1a;
-      --accent-yellow: #ffcd00;
-      --light-gray: #f8f9fa;
-      --medium-gray: #6c757d;
-      --dark-gray: #343a40;
-      --white: #ffffff;
-      --border-color: #e9ecef;
-      --text-dark: #212529;
-      --text-muted: #6c757d;
-      --card-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      --border-radius: 12px;
+      --primary-accent: #FF5722;
+      --secondary-dark: #2C3E50;
+      --highlight-light: #FFC107;
+      --success-green: #4CAF50;
+      --warning-orange: #FF9800;
+      --info-blue: #2196F3;
+      --bg-light: #F8F9FA;
+      --bg-white: #FFFFFF;
+      --text-main: #34495E;
+      --text-secondary: #7F8C8D;
+      --text-white: #FFFFFF;
+      --font-heading: 'Montserrat', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      --border-radius: 15px;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--light-gray);
-      color: var(--text-dark);
+      font-family: var(--font-body);
+      background: var(--bg-light);
+      color: var(--text-main);
       margin: 0;
       overflow-x: hidden;
     }
 
-    /* Navbar */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--secondary-dark);
+    }
+
     .navbar {
-      background: var(--white);
-      border-bottom: 1px solid var(--border-color);
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: padding 0.3s ease;
+      background: var(--bg-white);
+      border-bottom: 1px solid #ECEFF1;
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: fixed;
+      width: 100%;
       z-index: 1000;
     }
 
-    .navbar.scrolled {
-      padding: 0.5rem 2rem;
-    }
-
     .navbar-brand {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
       display: flex;
       align-items: center;
-      font-weight: 700;
-      font-size: 1.75rem;
-      color: var(--primary-black);
       text-decoration: none;
     }
 
     .logo {
       width: 40px;
       height: 40px;
-      margin-right: 12px;
-      transition: transform 0.3s ease;
-    }
-
-    .navbar-brand:hover .logo {
-      transform: scale(1.1);
+      margin-right: 10px;
+      background: var(--primary-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-white);
+      font-size: 1.5rem;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
     }
 
     .nav-link {
+      font-size: 1rem;
+      color: var(--text-main);
       font-weight: 500;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      padding: 0.5rem 1rem !important;
+      padding: 0.5rem 1rem;
       text-decoration: none;
       position: relative;
       transition: color 0.3s ease;
     }
 
-    .nav-link:not(.btn)::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       width: 0;
-      height: 2px;
+      height: 3px;
+      background: var(--primary-accent);
       bottom: 0;
       left: 50%;
-      background-color: var(--primary-red);
-      transition: all 0.3s ease;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
     }
 
-    .nav-link:not(.btn):hover::after {
-      width: 80%;
-      left: 10%;
+    .nav-link:hover::after {
+      width: 70%;
     }
 
-    .nav-link:not(.btn):hover {
-      color: var(--primary-red);
+    .nav-link:hover {
+      color: var(--primary-accent);
     }
 
-    .nav-link.btn {
-      background-color: var(--primary-red);
-      color: var(--white);
-      border-radius: 6px;
-      padding: 0.6rem 1.75rem !important;
+    .btn-main {
+      background: var(--primary-accent);
+      color: var(--text-white);
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
       font-weight: 600;
+      font-size: 1rem;
       text-decoration: none;
-      transition: background-color 0.3s ease;
-    }
-
-    .nav-link.btn:hover {
-      background-color: #b30e20;
-    }
-
-    .dropdown-menu {
-      background: var(--white);
-      border: 1px solid var(--border-color);
-      box-shadow: var(--card-shadow);
-      border-radius: 8px;
-    }
-
-    .dropdown-item {
-      color: var(--text-dark);
+      border: none;
+      box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
       transition: all 0.3s ease;
-      padding: 0.5rem 1rem;
-      font-size: 0.9rem;
     }
 
-    .dropdown-item:hover {
-      background: var(--light-gray);
-      color: var(--primary-red);
+    .btn-main:hover {
+      background: #E64A19;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
     }
 
-    /* Map */
     #map {
-      height: calc(100vh - 76px);
-      width: 100vw;
+      height: calc(100vh - 60px);
+      width: 100%;
       z-index: 1;
-      background: var(--light-gray);
+      background: var(--bg-light);
     }
 
-    /* Button Report */
     .btn-report {
       position: fixed;
       bottom: 20px;
@@ -163,96 +142,87 @@
       z-index: 1000;
       padding: 0.8rem 1.8rem;
       font-size: 1rem;
-      border-radius: 6px;
-      background: var(--primary-red);
-      box-shadow: var(--card-shadow);
-      border: none;
-      color: var(--white);
+      border-radius: 30px;
+      background: var(--primary-accent);
+      color: var(--text-white);
       font-weight: 600;
+      border: none;
+      box-shadow: var(--card-shadow);
       transition: all 0.3s ease;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); box-shadow: var(--card-shadow); }
-      50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(243, 146, 0, 0.7); }
-      100% { transform: scale(1); box-shadow: var(--card-shadow); }
     }
 
     .btn-report:hover {
-      background: #b30e20;
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 12px 25px rgba(243, 146, 0, 0.6);
+      background: #E64A19;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
     }
 
-    .btn-report i {
-      margin-right: 0.5rem;
-    }
-
-    /* Error Message */
     .error-message {
       color: #dc3545;
       font-size: 1rem;
       text-align: center;
       padding: 2rem;
       background: rgba(220, 53, 69, 0.1);
-      border-radius: 8px;
+      border-radius: var(--border-radius);
       margin: 1rem;
       border: 1px solid rgba(220, 53, 69, 0.3);
       box-shadow: var(--card-shadow);
     }
 
-    /* Loading Container */
     .loading-container {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 1000;
-      background: var(--white);
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border-color);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-container.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .spinner {
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      border: 4px solid var(--border-color);
+      width: 50px;
+      height: 50px;
+      border: 5px solid #E0E0E0;
+      border-top: 5px solid var(--primary-accent);
       border-radius: 50%;
-      border-top-color: var(--primary-red);
-      animation: spin 1s ease-in-out infinite;
+      animation: spin 1s linear infinite;
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
-    /* Leaflet Popup */
     .leaflet-popup-content-wrapper {
-      background: var(--white);
-      color: var(--text-dark);
-      border-radius: 10px;
+      background: var(--bg-white);
+      color: var(--text-main);
+      border-radius: var(--border-radius);
       box-shadow: var(--card-shadow);
-      border: 1px solid var(--border-color);
-      overflow: hidden;
+      border: 1px solid #E0E0E0;
     }
 
     .leaflet-popup-content {
       margin: 15px;
-      max-width: 300px;
-      font-family: 'Inter', sans-serif;
+      max-width: 280px;
     }
 
     .leaflet-popup-tip {
-      background: var(--white);
+      background: var(--bg-white);
     }
 
     .leaflet-popup-close-button {
-      color: var(--text-dark) !important;
+      color: var(--text-main);
       font-size: 1.2rem;
       padding: 5px;
     }
@@ -262,10 +232,10 @@
     }
 
     .problem-popup-header {
-      background: var(--light-gray);
+      background: var(--bg-light);
       margin: -15px -15px 15px -15px;
-      padding: 15px;
-      border-bottom: 1px solid var(--border-color);
+      padding: 10px 15px;
+      border-bottom: 1px solid #E0E0E0;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -275,169 +245,68 @@
       font-weight: 700;
       font-size: 1.2rem;
       margin: 0;
-      color: var(--text-dark);
+      color: var(--secondary-dark);
     }
 
     .problem-popup-badge {
-      display: inline-block;
       padding: 4px 10px;
-      border-radius: 50px;
+      border-radius: 25px;
       font-size: 0.8rem;
       font-weight: 600;
+      color: var(--text-white);
     }
 
     .problem-popup-content {
-      margin: 10px 0;
-    }
-
-    .problem-popup-info {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 15px;
+      font-size: 0.95rem;
     }
 
     .problem-popup-item {
       display: flex;
       align-items: center;
-      font-size: 0.95rem;
+      margin-bottom: 8px;
     }
 
     .problem-popup-item i {
       margin-right: 10px;
-      min-width: 20px;
-      text-align: center;
-      color: var(--primary-red);
+      color: var(--primary-accent);
     }
 
     .problem-popup-img {
       width: 100%;
       border-radius: 8px;
+      border: 1px solid #E0E0E0;
       margin-top: 10px;
-      border: 2px solid var(--border-color);
-      box-shadow: var(--card-shadow);
-      transition: transform 0.3s ease;
     }
 
-    .problem-popup-img:hover {
-      transform: scale(1.03);
-    }
+    .status-Aguardando { background: var(--warning-orange); }
+    .status-EmAndamento { background: var(--info-blue); }
+    .status-Resolvido { background: var(--success-green); }
+    .category-Buraco { background: var(--highlight-light); color: var(--text-main); }
+    .category-Lixo { background: #10b981; color: var(--text-main); }
+    .category-Iluminação { background: #f59e0b; color: var(--text-main); }
+    .category-Água { background: #0ea5e9; color: var(--text-main); }
+    .category-Segurança { background: #dc3545; }
 
-    /* Category and Status Classes */
-    .category-buraco {
-      background-color: var(--accent-yellow);
-      color: var(--primary-black);
-    }
-
-    .category-lixo {
-      background-color: #10b981;
-      color: var(--primary-black);
-    }
-
-    .category-iluminacao {
-      background-color: #f59e0b;
-      color: var(--primary-black);
-    }
-
-    .category-agua {
-      background-color: #0ea5e9;
-      color: var(--primary-black);
-    }
-
-    .category-seguranca {
-      background-color: #dc3545;
-      color: var(--white);
-    }
-
-    .status-aberto {
-      background-color: #dc3545;
-      color: var(--white);
-    }
-
-    .status-andamento {
-      background-color: var(--accent-yellow);
-      color: var(--primary-black);
-    }
-
-    .status-resolvido {
-      background-color: #28a745;
-      color: var(--white);
-    }
-
-    /* Map Legend */
-    .map-legend {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: var(--white);
-      padding: 12px;
-      border-radius: 12px;
-      z-index: 1000;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      max-width: 220px;
-      transition: transform 0.3s ease;
-    }
-
-    .map-legend:hover {
-      transform: translateY(-5px);
-    }
-
-    .legend-title {
-      font-weight: 700;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border-color);
-      text-align: center;
-      color: var(--primary-red);
-      font-size: 0.9rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .legend-icon {
-      width: 20px;
-      text-align: center;
-      margin-right: 10px;
-    }
-
-    .legend-text {
-      font-weight: 500;
-    }
-
-    /* Map Controls */
     .map-controls {
       position: fixed;
-      top: 100px;
+      top: 80px;
       right: 20px;
-      background: var(--white);
-      padding: 12px;
-      border-radius: 12px;
+      background: var(--bg-white);
+      padding: 15px;
+      border-radius: var(--border-radius);
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      max-width: 260px;
-      transition: transform 0.3s ease;
-    }
-
-    .map-controls:hover {
-      transform: translateY(-5px);
+      border: 1px solid #E0E0E0;
+      max-width: 250px;
     }
 
     .filter-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
       font-weight: 700;
+      color: var(--secondary-dark);
       margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border-color);
       text-align: center;
-      color: var(--primary-red);
-      font-size: 0.9rem;
     }
 
     .filter-group {
@@ -447,8 +316,8 @@
     .filter-label {
       font-size: 0.9rem;
       font-weight: 600;
+      color: var(--text-main);
       margin-bottom: 6px;
-      color: var(--text-dark);
     }
 
     .filter-options {
@@ -458,133 +327,87 @@
     }
 
     .filter-button {
-      background: var(--light-gray);
-      border: 1px solid var(--medium-gray);
-      color: var(--text-dark);
-      border-radius: 18px;
+      background: var(--bg-light);
+      border: 1px solid var(--text-secondary);
+      color: var(--text-main);
+      border-radius: 20px;
       padding: 5px 12px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .filter-button:hover {
-      background: var(--primary-red);
-      color: var(--white);
-      border-color: var(--primary-red);
-    }
-
-    .filter-button.active {
-      background: var(--primary-red);
-      border-color: var(--primary-red);
-      color: var(--white);
-      box-shadow: 0 2px 5px rgba(243, 146, 0, 0.3);
-    }
-
-    /* Problem Count */
-    .problem-count {
-      position: fixed;
-      top: 380px;
-      left: 20px;
-      background: var(--white);
-      padding: 10px 18px;
-      border-radius: 12px;
-      z-index: 1000;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: transform 0.3s ease;
-      color: var(--text-muted);
-    }
-
-    .problem-count:hover {
-      transform: translateY(-5px);
-    }
-
-    .problem-count-number {
-      color: var(--primary-red);
-      font-weight: 700;
-    }
-
-    /* Map View Toggle */
-    .map-view-toggle {
-      position: fixed;
-      top: 440px;
-      left: 20px;
-      background: var(--white);
-      padding: 8px;
-      border-radius: 50px;
-      z-index: 1000;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      display: flex;
-      gap: 6px;
-      transition: transform 0.3s ease;
-    }
-
-    .map-view-toggle:hover {
-      transform: translateY(-5px);
-    }
-
-    .view-option {
-      padding: 8px 18px;
-      border-radius: 50px;
       font-size: 0.85rem;
-      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      border: none;
-      background: var(--light-gray);
-      color: var(--text-muted);
     }
 
-    .view-option.active {
-      background: var(--primary-red);
-      color: var(--white);
-      box-shadow: 0 2px 5px rgba(243, 146, 0, 0.3);
+    .filter-button.active, .filter-button:hover {
+      background: var(--primary-accent);
+      color: var(--text-white);
+      border-color: var(--primary-accent);
     }
 
-    .view-option:hover:not(.active) {
-      background: var(--primary-red);
-      color: var(--white);
+    .map-legend {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: var(--bg-white);
+      padding: 12px;
+      border-radius: var(--border-radius);
+      z-index: 1000;
+      box-shadow: var(--card-shadow);
+      border: 1px solid #E0E0E0;
+      max-width: 200px;
     }
 
-    /* Search Container */
+    .legend-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .legend-icon {
+      width: 20px;
+      text-align: center;
+      margin-right: 10px;
+    }
+
     .search-container {
       position: fixed;
-      top: 500px;
+      top: 80px;
       left: 20px;
-      z-index: 1000;
-      width: 260px;
-      background: var(--white);
-      border-radius: 50px;
+      background: var(--bg-white);
+      border-radius: 30px;
       padding: 6px;
       box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      transition: transform 0.3s ease;
-    }
-
-    .search-container:hover {
-      transform: translateY(-5px);
+      border: 1px solid #E0E0E0;
+      width: 250px;
+      z-index: 1000;
     }
 
     .search-input {
       background: transparent;
       border: none;
-      color: var(--text-dark);
+      color: var(--text-main);
       font-size: 0.9rem;
       padding: 6px 12px;
-      width: 100%;
+      width: calc(100% - 40px);
       outline: none;
     }
 
     .search-input::placeholder {
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
 
     .search-button {
-      background: var(--primary-red);
+      background: var(--primary-accent);
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -592,46 +415,56 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text-white);
       transition: all 0.3s ease;
     }
 
     .search-button:hover {
-      background: #b30e20;
-      transform: scale(1.1);
+      background: #E64A19;
     }
 
-    /* Weather Overlay */
-    .weather-overlay {
+    .stats-overlay {
       position: fixed;
-      top: 560px;
+      top: 140px;
       left: 20px;
-      background: var(--white);
-      padding: 10px 18px;
-      border-radius: 12px;
+      background: var(--bg-white);
+      padding: 12px;
+      border-radius: var(--border-radius);
       z-index: 1000;
       box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
+      border: 1px solid #E0E0E0;
+      max-width: 250px;
+    }
+
+    .stats-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .stat-item {
+      background: var(--bg-light);
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-accent);
+    }
+
+    .stat-label {
       font-size: 0.85rem;
-      transition: transform 0.3s ease;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
     }
 
-    .weather-overlay:hover {
-      transform: translateY(-5px);
-    }
-
-    .weather-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .weather-icon {
-      font-size: 1.1rem;
-      color: var(--primary-red);
-    }
-
-    /* Zoom Controls */
     .zoom-controls {
       position: fixed;
       top: 20px;
@@ -643,183 +476,30 @@
     }
 
     .zoom-button {
-      background: var(--white);
-      border: 1px solid var(--medium-gray);
+      background: var(--bg-white);
+      border: 1px solid #E0E0E0;
       border-radius: 8px;
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-dark);
+      color: var(--text-main);
       font-size: 1.2rem;
       cursor: pointer;
-      transition: all 0.3s ease;
       box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
     }
 
     .zoom-button:hover {
-      background: var(--primary-red);
-      border-color: var(--primary-red);
-      color: var(--white);
+      background: var(--primary-accent);
+      color: var(--text-white);
+      border-color: var(--primary-accent);
     }
 
-    /* Stats Overlay */
-    .stats-overlay {
-      position: fixed;
-      top: 80px;
-      left: 20px;
-      background: var(--light-gray);
-      padding: 12px;
-      border-radius: 12px;
-      z-index: 1000;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--medium-gray);
-      max-width: 300px;
-      transition: transform 0.3s ease;
-    }
-
-    .stats-overlay:hover {
-      transform: translateY(-5px);
-    }
-
-    .stats-toggle {
-      background: var(--primary-red);
-      color: var(--white);
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .stats-toggle:hover {
-      background: #b30e20;
-    }
-
-    .stats-title {
-      font-weight: 700;
-      margin-bottom: 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border-color);
-      text-align: center;
-      color: var(--primary-red);
-      font-size: 0.9rem;
-    }
-
-    .stat-item {
-      background: var(--white);
-      border: 1px solid var(--medium-gray);
-      border-radius: 8px;
-      padding: 10px;
-      margin-bottom: 8px;
-      text-align: center;
-    }
-
-    .stat-number {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary-red);
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--medium-gray);
-      font-weight: 500;
-      margin-top: 0.5rem;
-    }
-
-    /* Marker Animation */
-    @keyframes markerPulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.8; transform: scale(1.3); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .marker-urgent {
-      animation: markerPulse 1.5s infinite;
-    }
-
-    /* Responsive Design */
     @media (max-width: 768px) {
-      .map-controls {
-        top: auto;
-        bottom: 240px;
-        right: 10px;
-        max-width: calc(100% - 20px);
-        padding: 10px;
-      }
-
-      .map-legend {
-        bottom: 20px;
-        left: 10px;
-        max-width: calc(100% - 20px);
-        padding: 8px;
-      }
-
-      .problem-count {
-        top: auto;
-        bottom: 180px;
-        left: 10px;
-        padding: 8px 15px;
-        font-size: 0.85rem;
-      }
-
-      .map-view-toggle {
-        top: auto;
-        bottom: 140px;
-        left: 10px;
-        padding: 6px;
-      }
-
-      .search-container {
-        top: auto;
-        bottom: 100px;
-        left: 10px;
-        width: calc(100% - 20px);
-        padding: 5px;
-      }
-
-      .weather-overlay {
-        top: auto;
-        bottom: 60px;
-        left: 10px;
-        padding: 8px 15px;
-        font-size: 0.8rem;
-      }
-
-      .stats-overlay {
-        top: auto;
-        bottom: 300px;
-        left: 10px;
-        max-width: calc(100% - 20px);
-        padding: 10px;
-      }
-
-      .zoom-controls {
-        top: 10px;
-        right: 10px;
-      }
-
-      .btn-report {
-        bottom: 15px;
-        right: 15px;
-        padding: 0.7rem 1.5rem;
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 576px) {
       .navbar {
-        padding: 0.75rem 1rem;
+        padding: 0.75rem;
       }
 
       .navbar-brand {
@@ -831,138 +511,192 @@
         height: 36px;
       }
 
-      .btn-report {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.85rem;
-      }
-
-      #map {
-        height: calc(100vh - 64px);
+      .nav-link {
+        padding: 0.5rem;
       }
 
       .map-controls {
-        bottom: 220px;
-        padding: 8px;
-      }
-
-      .map-legend {
+        top: auto;
         bottom: 20px;
-        padding: 6px;
-      }
-
-      .problem-count {
-        bottom: 160px;
-        padding: 6px 12px;
-        font-size: 0.8rem;
-      }
-
-      .map-view-toggle {
-        bottom: 120px;
-        padding: 5px;
+        right: 10px;
+        max-width: calc(100% - 20px);
       }
 
       .search-container {
-        bottom: 80px;
-        padding: 4px;
-      }
-
-      .weather-overlay {
-        bottom: 40px;
-        padding: 6px 12px;
+        top: auto;
+        bottom: 180px;
+        left: 10px;
+        width: calc(100% - 20px);
       }
 
       .stats-overlay {
-        bottom: 280px;
-        padding: 8px;
+        top: auto;
+        bottom: 260px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+      }
+
+      .map-legend {
+        bottom: 100px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+      }
+
+      .btn-report {
+        bottom: 10px;
+        right: 10px;
+        padding: 0.7rem 1.5rem;
+        font-size: 0.9rem;
       }
 
       .zoom-controls {
-        top: 8px;
-        right: 8px;
+        top: 10px;
+        right: 10px;
       }
 
+      #map {
+        height: calc(100vh - 56px);
+      }
+    }
+
+    @media (max-width: 576px) {
       .filter-button {
         padding: 4px 8px;
         font-size: 0.75rem;
       }
 
-      .view-option {
-        padding: 6px 14px;
-        font-size: 0.8rem;
-      }
-
       .search-input {
         font-size: 0.85rem;
-        padding: 5px 10px;
       }
 
       .search-button {
         width: 28px;
         height: 28px;
       }
-    }
 
-    @media (max-width: 992px) {
-      .navbar-collapse {
-        background: var(--white);
-        border-radius: 0 0 10px 10px;
-        padding: 1rem;
-        margin-top: 0.5rem;
-        box-shadow: var(--card-shadow);
+      .map-controls, .map-legend, .stats-overlay {
+        padding: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg fixed-top">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">
-        <img src="icons/Icon-192.png" alt="Logo FixABairro" class="logo">
-        FixABairro
-      </a>
-      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center">
-          <li class="nav-item">
-            <a class="nav-link" href="report.html">Mapa de Problemas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="dashboard.html">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="list.html">Lista dos Casos</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link btn" href="new-report.html"><i class="fas fa-bullhorn me-1"></i> Relatar Problema</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do perfil">
-              Perfil
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-              <li><a class="dropdown-item" href="profile.html">Ver Perfil</a></li>
-              <li><a class="dropdown-item" href="#" id="logoutLink">Sair</a></li>
-            </ul>
-          </li>
-        </ul>
+  <div id="loadingScreen" class="loading-container">
+    <div class="spinner"></div>
+    <p class="mt-3" style="color: var(--text-secondary);">Carregando Mapa de Problemas...</p>
+  </div>
+
+  <div id="content" style="display: none;">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">
+          <div class="logo">F</div>
+          FixABairro
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars" style="color: var(--secondary-dark);"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#impact">Impacto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="report.html">Mapa de Problemas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn-main" href="new-report.html" aria-label="Relatar um problema">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do perfil">
+                Perfil
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                <li><a class="dropdown-item" href="profile.html">Ver Perfil</a></li>
+                <li><a class="dropdown-item" href="#" id="logoutLink">Sair</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div id="map" role="region" aria-label="Mapa interativo de problemas relatados"></div>
+    <div id="noProblemsMessage" class="error-message" style="display: none;">
+      Nenhum problema encontrado com os filtros selecionados.
+    </div>
+
+    <div class="map-controls" role="complementary" aria-label="Filtros de problemas">
+      <div class="filter-title">Filtrar Problemas</div>
+      <div class="filter-group">
+        <div class="filter-label">Categoria:</div>
+        <div class="filter-options" id="categoryFilters">
+          <button class="filter-button active" data-filter="all" aria-label="Todos os problemas">Todos</button>
+          <button class="filter-button" data-filter="Buraco" aria-label="Buracos">Buracos</button>
+          <button class="filter-button" data-filter="Lixo" aria-label="Lixo">Lixo</button>
+          <button class="filter-button" data-filter="Iluminação" aria-label="Iluminação">Iluminação</button>
+          <button class="filter-button" data-filter="Água" aria-label="Água">Água</button>
+          <button class="filter-button" data-filter="Segurança" aria-label="Segurança">Segurança</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Status:</div>
+        <div class="filter-options" id="statusFilters">
+          <button class="filter-button active" data-filter="all" aria-label="Todos os status">Todos</button>
+          <button class="filter-button" data-filter="Aguardando" aria-label="Aberto">Aberto</button>
+          <button class="filter-button" data-filter="Em andamento" aria-label="Em andamento">Em andamento</button>
+          <button class="filter-button" data-filter="Resolvido" aria-label="Resolvido">Resolvido</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <div class="filter-label">Data:</div>
+        <div class="filter-options" id="dateFilters">
+          <button class="filter-button active" data-filter="all" aria-label="Todas as datas">Todas</button>
+          <button class="filter-button" data-filter="last7d" aria-label="Últimos 7 dias">Últimos 7 dias</button>
+          <button class="filter-button" data-filter="last30d" aria-label="Últimos 30 dias">Últimos 30 dias</button>
+        </div>
       </div>
     </div>
-  </nav>
 
-  <!-- Map Section -->
-  <div id="map" role="region" aria-label="Mapa interativo de problemas relatados"></div>
-  <!-- Mensagem para quando não houver problemas -->
-  <div id="noProblemsMessage" class="error-message" style="display: none;">Nenhum problema encontrado com os filtros selecionados.</div>
-  
-  <!-- Stats Overlay -->
-  <div class="stats-overlay" id="statsOverlay" role="complementary" aria-label="Estatísticas de problemas">
-    <button class="stats-toggle" id="statsToggle" aria-label="Alternar visibilidade das estatísticas" aria-expanded="true">
-      <i class="fas fa-chevron-up"></i>
-    </button>
-    <div class="stats-content" id="statsContent">
+    <div class="map-legend" role="complementary" aria-label="Legenda do mapa">
+      <div class="legend-title">Legenda</div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-exclamation-triangle" style="color: var(--highlight-light);"></i></div>
+        <div>Buracos</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-trash" style="color: #10b981;"></i></div>
+        <div>Lixo</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-lightbulb" style="color: #f59e0b;"></i></div>
+        <div>Iluminação</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-tint" style="color: #0ea5e9;"></i></div>
+        <div>Água</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-shield-alt" style="color: #dc3545;"></i></div>
+        <div>Segurança</div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon"><i class="fas fa-user-circle" style="color: var(--success-green);"></i></div>
+        <div>Sua localização</div>
+      </div>
+    </div>
+
+    <div class="search-container" role="search" aria-label="Pesquisar problemas">
+      <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição..." aria-label="Pesquisar por título ou descrição">
+      <button class="search-button" id="searchBtn" aria-label="Executar pesquisa">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+
+    <div class="stats-overlay" role="complementary" aria-label="Estatísticas de problemas">
       <div class="stats-title">Estatísticas</div>
       <div class="stat-item">
         <span class="stat-number" id="totalReports">0</span>
@@ -977,684 +711,316 @@
         <div class="stat-label">Usuários Ativos</div>
       </div>
     </div>
-  </div>
 
-  <!-- Map Controls -->
-  <div class="map-controls" role="complementary" aria-label="Filtros de problemas">
-    <div class="filter-title">Filtrar Problemas</div>
-    
-    <div class="filter-group">
-      <div class="filter-label">Categoria:</div>
-      <div class="filter-options" id="categoryFilters">
-        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todos os problemas">Todos</button>
-        <button class="filter-button" data-filter="Buraco" aria-label="Filtrar por buracos">Buracos</button>
-        <button class="filter-button" data-filter="Lixo" aria-label="Filtrar por lixo">Lixo</button>
-        <button class="filter-button" data-filter="Iluminação" aria-label="Filtrar por iluminação">Iluminação</button>
-        <button class="filter-button" data-filter="Água" aria-label="Filtrar por água">Água</button>
-        <button class="filter-button" data-filter="Segurança" aria-label="Filtrar por segurança">Segurança</button>
-      </div>
+    <div class="zoom-controls" role="complementary" aria-label="Controles de zoom">
+      <button class="zoom-button" id="zoomIn" aria-label="Aumentar zoom"><i class="fas fa-plus"></i></button>
+      <button class="zoom-button" id="zoomOut" aria-label="Diminuir zoom"><i class="fas fa-minus"></i></button>
     </div>
-    
-    <div class="filter-group">
-      <div class="filter-label">Status:</div>
-      <div class="filter-options" id="statusFilters">
-        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todos os status">Todos</button>
-        <button class="filter-button" data-filter="Aguardando" aria-label="Filtrar por status aberto">Aberto</button>
-        <button class="filter-button" data-filter="Em andamento" aria-label="Filtrar por status em andamento">Em andamento</button>
-        <button class="filter-button" data-filter="Resolvido" aria-label="Filtrar por status resolvido">Resolvido</button>
-      </div>
-    </div>
-    
-    <div class="filter-group">
-      <div class="filter-label">Urgência:</div>
-      <div class="filter-options" id="urgencyFilters">
-        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todas as urgências">Todos</button>
-        <button class="filter-button" data-filter="Baixa" aria-label="Filtrar por urgência baixa">Baixa</button>
-        <button class="filter-button" data-filter="Média" aria-label="Filtrar por urgência média">Média</button>
-        <button class="filter-button" data-filter="Alta" aria-label="Filtrar por urgência alta">Alta</button>
-      </div>
-    </div>
-    
-    <div class="filter-group">
-      <div class="filter-label">Data:</div>
-      <div class="filter-options" id="dateFilters">
-        <button class="filter-button active" data-filter="all" aria-label="Filtrar por todas as datas">Todas</button>
-        <button class="filter-button" data-filter="last24h" aria-label="Filtrar por últimas 24 horas">Últimas 24h</button>
-        <button class="filter-button" data-filter="last7d" aria-label="Filtrar por últimos 7 dias">Últimos 7 dias</button>
-        <button class="filter-button" data-filter="last30d" aria-label="Filtrar por últimos 30 dias">Últimos 30 dias</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Map Legend -->
-  <div class="map-legend" role="complementary" aria-label="Legenda do mapa">
-    <div class="legend-title">Legenda</div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-exclamation-triangle" style="color: var(--accent-yellow);"></i></div>
-      <div class="legend-text">Buracos</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-trash" style="color: #10b981;"></i></div>
-      <div class="legend-text">Lixo</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-lightbulb" style="color: #f59e0b;"></i></div>
-      <div class="legend-text">Iluminação</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-tint" style="color: #0ea5e9;"></i></div>
-      <div class="legend-text">Água</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-shield-alt" style="color: #dc3545;"></i></div>
-      <div class="legend-text">Segurança</div>
-    </div>
-    <div class="legend-item">
-      <div class="legend-icon"><i class="fas fa-user-circle" style="color: #28a745;"></i></div>
-      <div class="legend-text">Sua localização</div>
-    </div>
-  </div>
-  
-  <!-- Problem Count -->
-  <div class="problem-count" role="status" aria-label="Contagem total de problemas">
-    <i class="fas fa-exclamation-circle me-2"></i>
-    Total: <span id="totalProblems" class="problem-count-number">0</span> problemas
-  </div>
-  
-  <!-- View Toggle -->
-  <div class="map-view-toggle" role="tablist" aria-label="Alternar visualização do mapa">
-    <button class="view-option active" data-view="markers" role="tab" aria-selected="true" aria-label="Visualizar como marcadores">
-      <i class="fas fa-map-marker-alt me-1"></i> Marcadores
-    </button>
-    <button class="view-option" data-view="heat" role="tab" aria-selected="false" aria-label="Visualizar como mapa de calor">
-      <i class="fas fa-fire me-1"></i> Mapa de Calor
+
+    <button class="btn-report" id="newReportBtn" aria-label="Reportar novo problema">
+      <i class="fas fa-plus me-2"></i> Reportar Problema
     </button>
   </div>
-  
-  <!-- Search Bar -->
-  <div class="search-container" role="search" aria-label="Pesquisar problemas">
-    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por título ou descrição..." aria-label="Pesquisar por título ou descrição">
-    <button class="search-button" id="searchBtn" aria-label="Executar pesquisa">
-      <i class="fas fa-search"></i>
-    </button>
-  </div>
-  
-  <!-- Weather Overlay -->
-  <div class="weather-overlay" id="weatherOverlay" role="complementary" aria-label="Informações do clima">
-    <div class="weather-info">
-      <i class="fas fa-cloud weather-icon"></i>
-      <span id="weatherText">Carregando clima...</span>
-    </div>
-  </div>
 
-  <!-- Zoom Controls -->
-  <div class="zoom-controls" role="complementary" aria-label="Controles de zoom">
-    <button class="zoom-button" id="zoomIn" aria-label="Aumentar zoom"><i class="fas fa-plus"></i></button>
-    <button class="zoom-button" id="zoomOut" aria-label="Diminuir zoom"><i class="fas fa-minus"></i></button>
-  </div>
-
-  <button class="btn-report" id="newReportBtn" aria-label="Reportar novo problema">
-    <i class="fas fa-plus me-2"></i> Reportar Novo Problema
-  </button>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-  <!-- AOS Animation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-
-  <!-- Leaflet JS -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  
-  <!-- Leaflet Heat -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
-
   <script>
-    // Initialize AOS animation library
-    try {
-      AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: true
-      });
-    } catch (error) {
-      console.error("Erro ao inicializar AOS:", error.message);
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize AOS after DOM is loaded
+      AOS.init({ duration: 800, once: true });
 
-    // Navbar scroll effect
-    window.addEventListener('scroll', function() {
-      try {
-        const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      } catch (error) {
-        console.error("Erro no scroll da navbar:", error.message);
+      // Ensure Firebase is loaded before initializing
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase SDK not loaded. Check script sources.');
+        document.getElementById('loadingScreen').innerHTML = `
+          <div class="error-message">Erro ao carregar Firebase. Verifique sua conexão e tente novamente.</div>
+        `;
+        return;
       }
-    });
 
-    // Função para exibir erro na UI
-    function showError(message) {
-      try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+
+      function showError(message) {
         const mapContainer = document.getElementById('map');
         mapContainer.innerHTML = `<div class="error-message">${message}</div>`;
-      } catch (error) {
-        console.error("Erro ao exibir mensagem de erro:", error.message);
       }
-    }
 
-    // Função para obter ícone baseado na categoria
-    function getProblemIcon(category) {
-      switch (category) {
-        case 'Buraco':
-          return { icon: 'exclamation-triangle', color: 'var(--accent-yellow)' };
-        case 'Lixo':
-          return { icon: 'trash', color: '#10b981' };
-        case 'Iluminação':
-          return { icon: 'lightbulb', color: '#f59e0b' };
-        case 'Água':
-          return { icon: 'tint', color: '#0ea5e9' };
-        case 'Segurança':
-          return { icon: 'shield-alt', color: '#dc3545' };
-        default:
-          return { icon: 'map-pin', color: 'var(--medium-gray)' };
-      }
-    }
-
-    // Função para obter classe de status
-    function getStatusClass(status) {
-      switch (status) {
-        case 'Aguardando':
-          return 'status-aberto';
-        case 'Em andamento':
-          return 'status-andamento';
-        case 'Resolvido':
-          return 'status-resolvido';
-        default:
-          return '';
-      }
-    }
-
-    // Função para obter classe de categoria
-    function getCategoryClass(category) {
-      switch (category) {
-        case 'Buraco':
-          return 'category-buraco';
-        case 'Lixo':
-          return 'category-lixo';
-        case 'Iluminação':
-          return 'category-iluminacao';
-        case 'Água':
-          return 'category-agua';
-        case 'Segurança':
-          return 'category-seguranca';
-        default:
-          return '';
-      }
-    }
-
-    // Função para buscar clima
-    async function fetchWeather(lat, lon) {
-      try {
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=your_openweathermap_api_key&units=metric&lang=pt_br`);
-        if (!response.ok) throw new Error('Erro ao buscar clima');
-        const data = await response.json();
-        const temp = Math.round(data.main.temp);
-        const description = data.weather[0].description;
-        const icon = data.weather[0].icon;
-        document.getElementById('weatherText').innerHTML = `${temp}°C, ${description}`;
-        document.querySelector('.weather-icon').className = `fas fa-${icon.includes('d') ? 'sun' : 'moon'} weather-icon`;
-      } catch (error) {
-        console.error("Erro ao carregar clima:", error.message);
-        document.getElementById('weatherText').innerHTML = 'Clima indisponível';
-      }
-    }
-
-    // Função para carregar estatísticas
-    function loadStats(firebase) {
-      const db = firebase.database();
-      
-      // Count total problems
-      db.ref('problems').once('value', (snapshot) => {
-        const total = snapshot.numChildren();
-        animateCounter(document.getElementById('totalReports'), total);
-      }).catch(error => {
-        console.error('Erro ao carregar total de problemas:', error);
-        document.getElementById('totalReports').textContent = 'Erro';
-      });
-
-      // Count solved problems
-      db.ref('problems').orderByChild('status').equalTo('Resolvido').once('value', (snapshot) => {
-        const solved = snapshot.numChildren();
-        animateCounter(document.getElementById('solvedReports'), solved);
-      }).catch(error => {
-        console.error('Erro ao carregar problemas resolvidos:', error);
-        document.getElementById('solvedReports').textContent = 'Erro';
-      });
-
-      // Count users
-      db.ref('users').once('value', (snapshot) => {
-        const users = snapshot.numChildren();
-        animateCounter(document.getElementById('activeUsers'), users);
-      }).catch(error => {
-        console.error('Erro ao carregar usuários ativos:', error);
-        document.getElementById('activeUsers').textContent = 'Erro';
-      });
-    }
-
-    // Animate counter
-    function animateCounter(element, target, duration = 2000) {
-      let start = 0;
-      const increment = target / (duration / 16);
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-          element.textContent = target;
-          clearInterval(timer);
-        } else {
-          element.textContent = Math.floor(start);
+      function getProblemIcon(category) {
+        switch (category) {
+          case 'Buraco': return { icon: 'exclamation-triangle', color: 'var(--highlight-light)' };
+          case 'Lixo': return { icon: 'trash', color: '#10b981' };
+          case 'Iluminação': return { icon: 'lightbulb', color: '#f59e0b' };
+          case 'Água': return { icon: 'tint', color: '#0ea5e9' };
+          case 'Segurança': return { icon: 'shield-alt', color: '#dc3545' };
+          default: return { icon: 'map-pin', color: 'var(--text-secondary)' };
         }
-      }, 16);
-    }
+      }
 
-    // Função para mostrar mapa com problemas relatados
-    function showProblemsMap(user, firebase) {
-      try {
-        // Initialize Leaflet map
-        let map, markersLayer, heatLayer;
-        try {
-          map = L.map('map', {
-            zoomControl: false,
-            attributionControl: true
-          }).setView([-8.838333, 13.234444], 13); // Default: Luanda
-          
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19
-          }).addTo(map);
+      function getStatusClass(status) {
+        switch (status) {
+          case 'Aguardando': return 'status-Aguardando';
+          case 'Em andamento': return 'status-EmAndamento';
+          case 'Resolvido': return 'status-Resolvido';
+          default: return '';
+        }
+      }
 
-          // Initialize layers
-          markersLayer = L.layerGroup().addTo(map);
-          heatLayer = L.heatLayer([], {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17
-          });
+      function getCategoryClass(category) {
+        switch (category) {
+          case 'Buraco': return 'category-Buraco';
+          case 'Lixo': return 'category-Lixo';
+          case 'Iluminação': return 'category-Iluminação';
+          case 'Água': return 'category-Água';
+          case 'Segurança': return 'category-Segurança';
+          default: return '';
+        }
+      }
 
-          // Zoom controls
-          document.getElementById('zoomIn').addEventListener('click', () => {
-            map.setZoom(map.getZoom() + 1);
-          });
-          document.getElementById('zoomOut').addEventListener('click', () => {
-            map.setZoom(map.getZoom() - 1);
-          });
-
-          // Try to get user's location
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                const { latitude, longitude } = position.coords;
-                map.setView([latitude, longitude], 13);
-                L.marker([latitude, longitude], {
-                  icon: L.divIcon({
-                    className: 'user-location',
-                    html: '<i class="fas fa-user-circle" style="color: #28a745; font-size: 32px;"></i>',
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                  })
-                }).addTo(markersLayer);
-                fetchWeather(latitude, longitude);
-              },
-              () => {
-                console.warn("Não foi possível obter localização do usuário.");
-                fetchWeather(-8.838333, 13.234444);
-              }
-            );
+      function animateCounter(element, target, duration = 1500) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        const timer = setInterval(() => {
+          start += increment;
+          if (start >= target) {
+            element.textContent = target.toLocaleString('pt-BR');
+            clearInterval(timer);
           } else {
-            fetchWeather(-8.838333, 13.234444);
+            element.textContent = Math.floor(start).toLocaleString('pt-BR');
           }
-        } catch (error) {
-          console.error("Erro ao inicializar mapa:", error.message);
-          showError("Erro ao carregar mapa");
-          return;
+        }, 16);
+      }
+
+      function loadStats(firebase) {
+        const db = firebase.database();
+        db.ref('problems').once('value', (snapshot) => {
+          animateCounter(document.getElementById('totalReports'), snapshot.numChildren());
+        }).catch(error => {
+          console.error('Erro ao carregar total de problemas:', error);
+          document.getElementById('totalReports').textContent = 'Erro';
+        });
+
+        db.ref('problems').orderByChild('status').equalTo('Resolvido').once('value', (snapshot) => {
+          animateCounter(document.getElementById('solvedReports'), snapshot.numChildren());
+        }).catch(error => {
+          console.error('Erro ao carregar problemas resolvidos:', error);
+          document.getElementById('solvedReports').textContent = 'Erro';
+        });
+
+        db.ref('users').once('value', (snapshot) => {
+          animateCounter(document.getElementById('activeUsers'), snapshot.numChildren());
+        }).catch(error => {
+          console.error('Erro ao carregar usuários ativos:', error);
+          document.getElementById('activeUsers').textContent = 'Erro';
+        });
+      }
+
+      function showProblemsMap(user, firebase) {
+        const map = L.map('map', {
+          zoomControl: false,
+          attributionControl: true
+        }).setView([-8.838333, 13.234444], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          maxZoom: 19
+        }).addTo(map);
+
+        const markersLayer = L.layerGroup().addTo(map);
+        let allProblems = [];
+
+        document.getElementById('zoomIn').addEventListener('click', () => map.setZoom(map.getZoom() + 1));
+        document.getElementById('zoomOut').addEventListener('click', () => map.setZoom(map.getZoom() - 1));
+
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords;
+              map.setView([latitude, longitude], 13);
+              L.marker([latitude, longitude], {
+                icon: L.divIcon({
+                  className: 'user-location',
+                  html: '<i class="fas fa-user-circle" style="color: var(--success-green); font-size: 32px;"></i>',
+                  iconSize: [32, 32],
+                  iconAnchor: [16, 16]
+                })
+              }).addTo(markersLayer);
+            },
+            () => console.warn("Não foi possível obter localização do usuário.")
+          );
         }
 
-        // Fetch problems from Realtime Database
-        const problemsRef = firebase.database().ref('problems');
-        let allProblems = [];
-        
-        function updateMap(viewMode, filters) {
-          try {
-            markersLayer.clearLayers();
-            heatLayer.setLatLngs([]);
-            
-            let filteredProblems = allProblems;
-            
-            // Apply filters
-            if (filters.category && filters.category !== 'all') {
-              filteredProblems = filteredProblems.filter(p => p.category === filters.category);
-            }
-            if (filters.status && filters.status !== 'all') {
-              filteredProblems = filteredProblems.filter(p => p.status === filters.status);
-            }
-            if (filters.urgency && filters.urgency !== 'all') {
-              filteredProblems = filteredProblems.filter(p => p.urgency === filters.urgency);
-            }
-            if (filters.date && filters.date !== 'all') {
-              const now = Date.now();
-              let timeThreshold;
-              switch (filters.date) {
-                case 'last24h':
-                  timeThreshold = now - 24 * 60 * 60 * 1000;
-                  break;
-                case 'last7d':
-                  timeThreshold = now - 7 * 24 * 60 * 60 * 1000;
-                  break;
-                case 'last30d':
-                  timeThreshold = now - 30 * 24 * 60 * 60 * 1000;
-                  break;
-              }
-              filteredProblems = filteredProblems.filter(p => p.createdAt >= timeThreshold);
-            }
-            if (filters.search) {
-              const searchTerm = filters.search.toLowerCase();
-              filteredProblems = filteredProblems.filter(p => 
-                p.title.toLowerCase().includes(searchTerm) || 
-                p.description.toLowerCase().includes(searchTerm)
-              );
-            }
+        function updateMap(filters) {
+          markersLayer.clearLayers();
+          let filteredProblems = allProblems;
 
-            // Update problem count
-            document.getElementById('totalProblems').textContent = filteredProblems.length;
+          if (filters.category && filters.category !== 'all') {
+            filteredProblems = filteredProblems.filter(p => p.category === filters.category);
+          }
+          if (filters.status && filters.status !== 'all') {
+            filteredProblems = filteredProblems.filter(p => p.status === filters.status);
+          }
+          if (filters.date && filters.date !== 'all') {
+            const now = Date.now();
+            const timeThreshold = filters.date === 'last7d' ? now - 7 * 24 * 60 * 60 * 1000 : now - 30 * 24 * 60 * 60 * 1000;
+            filteredProblems = filteredProblems.filter(p => p.createdAt >= timeThreshold);
+          }
+          if (filters.search) {
+            const searchTerm = filters.search.toLowerCase();
+            filteredProblems = filteredProblems.filter(p =>
+              p.title?.toLowerCase().includes(searchTerm) || p.description?.toLowerCase().includes(searchTerm)
+            );
+          }
 
-            // Verificar se não há problemas para exibir mensagem e ocultar mapa
-            if (filteredProblems.length === 0) {
-              document.getElementById('map').style.display = 'none';
-              document.getElementById('noProblemsMessage').style.display = 'block';
-              return;
-            }
+          document.getElementById('noProblemsMessage').style.display = filteredProblems.length ? 'none' : 'block';
+          document.getElementById('map').style.display = filteredProblems.length ? 'block' : 'none';
+          if (filteredProblems.length) map.invalidateSize();
 
-            // Mostrar mapa e ocultar mensagem quando há problemas
-            document.getElementById('map').style.display = 'block';
-            document.getElementById('noProblemsMessage').style.display = 'none';
-            map.invalidateSize();
-
-            // Add markers based on view mode
-            filteredProblems.forEach(problem => {
-              if (problem.location && problem.location.latitude && problem.location.longitude) {
-                const { icon, color } = getProblemIcon(problem.category);
-                const markerIcon = L.divIcon({
-                  className: `problem-marker ${problem.urgency === 'Alta' ? 'marker-urgent' : ''}`,
+          filteredProblems.forEach(problem => {
+            if (problem.location?.latitude && problem.location?.longitude) {
+              const { icon, color } = getProblemIcon(problem.category);
+              const marker = L.marker([problem.location.latitude, problem.location.longitude], {
+                icon: L.divIcon({
+                  className: 'problem-marker',
                   html: `<i class="fas fa-${icon}" style="color: ${color}; font-size: 32px;"></i>`,
                   iconSize: [32, 32],
                   iconAnchor: [16, 16]
-                });
-                const marker = L.marker([problem.location.latitude, problem.location.longitude], { 
-                  icon: markerIcon,
-                  data: problem
-                });
-                
-                const popupContent = `
-                  <div class="problem-popup">
-                    <div class="problem-popup-header">
-                      <h3 class="problem-popup-title">${problem.title}</h3>
-                      <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status}</span>
-                    </div>
-                    <div class="problem-popup-content">
-                      <div class="problem-popup-info">
-                        <div class="problem-popup-item">
-                          <i class="fas fa-tag"></i>
-                          <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category}</span></span>
-                        </div>
-                        <div class="problem-popup-item">
-                          <i class="fas fa-exclamation-circle"></i>
-                          <span>Urgência: ${problem.urgency}</span>
-                        </div>
-                        <div class="problem-popup-item">
-                          <i class="fas fa-map-marker-alt"></i>
-                          <span>Bairro: ${problem.neighborhood || 'Desconhecido'}</span>
-                        </div>
-                        <div class="problem-popup-item">
-                          <i class="fas fa-comment"></i>
-                          <span>Descrição: ${problem.description}</span>
-                        </div>
-                        ${problem.suggestion ? `
-                          <div class="problem-popup-item">
-                            <i class="fas fa-lightbulb"></i>
-                            <span>Sugestão: ${problem.suggestion}</span>
-                          </div>
-                        ` : ''}
-                      </div>
-                      ${problem.imageUrl ? `
-                        <img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img">
-                      ` : ''}
-                    </div>
+                }),
+                data: problem
+              });
+
+              const popupContent = `
+                <div class="problem-popup">
+                  <div class="problem-popup-header">
+                    <h3 class="problem-popup-title">${problem.title || 'Problema'}</h3>
+                    <span class="problem-popup-badge ${getStatusClass(problem.status)}">${problem.status || 'Aguardando'}</span>
                   </div>
-                `;
-                marker.bindPopup(popupContent, { maxWidth: 300 });
-
-                if (viewMode === 'markers') {
-                  marker.addTo(markersLayer);
-                } else if (viewMode === 'heat') {
-                  const intensity = problem.urgency === 'Alta' ? 1 : problem.urgency === 'Média' ? 0.6 : 0.3;
-                  heatLayer.addLatLng([problem.location.latitude, problem.location.longitude, intensity]);
-                }
-              }
-            });
-
-            if (viewMode === 'heat') {
-              map.addLayer(heatLayer);
+                  <div class="problem-popup-content">
+                    <div class="problem-popup-item">
+                      <i class="fas fa-tag"></i>
+                      <span>Categoria: <span class="problem-popup-badge ${getCategoryClass(problem.category)}">${problem.category || 'Desconhecida'}</span></span>
+                    </div>
+                    <div class="problem-popup-item">
+                      <i class="fas fa-comment"></i>
+                      <span>Descrição: ${problem.description || 'Sem descrição'}</span>
+                    </div>
+                    ${problem.imageUrl ? `<img src="${problem.imageUrl}" alt="Imagem do problema" class="problem-popup-img" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/280x180/cccccc/ffffff?text=Sem+Imagem';">` : ''}
+                  </div>
+                </div>
+              `;
+              marker.bindPopup(popupContent, { maxWidth: 280 }).addTo(markersLayer);
             }
-          } catch (error) {
-            console.error("Erro ao atualizar mapa:", error.message);
-          }
+          });
         }
 
-        problemsRef.on('value', (snapshot) => {
-          try {
-            const problems = snapshot.val();
-            allProblems = [];
-            if (problems) {
-              Object.entries(problems).forEach(([id, problem]) => {
-                if (problem.location && problem.location.latitude && problem.location.longitude) {
-                  allProblems.push({ id, ...problem });
-                }
-              });
-            }
-            updateMap('markers', {
-              category: 'all',
-              status: 'all',
-              urgency: 'all',
-              date: 'all',
-              search: ''
+        firebase.database().ref('problems').on('value', (snapshot) => {
+          allProblems = [];
+          if (snapshot.val()) {
+            Object.entries(snapshot.val()).forEach(([id, problem]) => {
+              if (problem.location?.latitude && problem.location?.longitude) {
+                allProblems.push({ id, ...problem });
+              }
             });
-          } catch (error) {
-            console.error("Erro ao carregar problemas:", error.message);
-            showError("Erro ao carregar problemas");
           }
-        });
-
-        // Handle view toggles
-        document.querySelectorAll('.view-option').forEach(button => {
-          button.addEventListener('click', () => {
-            document.querySelectorAll('.view-option').forEach(btn => {
-              btn.classList.remove('active');
-              btn.setAttribute('aria-selected', 'false');
-            });
-            button.classList.add('active');
-            button.setAttribute('aria-selected', 'true');
-            const viewMode = button.dataset.view;
-            updateMap(viewMode, {
-              category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
-              status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
-              urgency: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
-              date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
-              search: document.getElementById('searchInput').value
-            });
+          updateMap({
+            category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+            status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+            date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+            search: document.getElementById('searchInput').value
           });
+        }, error => {
+          console.error('Erro ao carregar problemas:', error);
+          showError('Erro ao carregar problemas. Tente novamente.');
         });
 
-        // Handle filters
-        ['categoryFilters', 'statusFilters', 'urgencyFilters', 'dateFilters'].forEach(filterId => {
-          document.getElementById(filterId).addEventListener('click', (e) => {
+        ['categoryFilters', 'statusFilters', 'dateFilters'].forEach(filterId => {
+          document.getElementById(filterId).addEventListener('click', e => {
             if (e.target.classList.contains('filter-button')) {
               document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
               e.target.classList.add('active');
-              updateMap(
-                document.querySelector('.view-option.active').dataset.view,
-                {
-                  category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
-                  status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
-                  urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
-                  date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
-                  search: document.getElementById('searchInput').value
-                }
-              );
+              updateMap({
+                category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+                status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+                date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+                search: document.getElementById('searchInput').value
+              });
             }
           });
         });
 
-        // Handle search
-        document.getElementById('searchBtn').addEventListener('click', () => {
-          updateMap(
-            document.querySelector('.view-option.active').dataset.view,
-            {
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            updateMap({
               category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
               status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
-              urgency: document.querySelector('#urgencyFilters .active')?.dataset.filter || 'all',
               date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
               search: document.getElementById('searchInput').value
-            }
-          );
+            });
+          }, 300);
         });
 
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') {
-            document.getElementById('searchBtn').click();
-          }
+        document.getElementById('searchBtn').addEventListener('click', () => {
+          clearTimeout(searchTimeout);
+          updateMap({
+            category: document.querySelector('#categoryFilters .active')?.dataset.filter || 'all',
+            status: document.querySelector('#statusFilters .active')?.dataset.filter || 'all',
+            date: document.querySelector('#dateFilters .active')?.dataset.filter || 'all',
+            search: document.getElementById('searchInput').value
+          });
         });
 
-        // Handle new report button click
         document.getElementById('newReportBtn').addEventListener('click', () => {
           window.location.href = 'new-report.html';
         });
-
-        // Load stats
-        loadStats(firebase);
-      } catch (error) {
-        console.error("Erro ao mostrar mapa de problemas:", error.message);
-        showError("Erro ao carregar visualização de problemas");
       }
-    }
 
-    // Carregar dados da página
-    function loadReportData() {
-      try {
-        firebase.auth().onAuthStateChanged(async user => {
-          const mapContainer = document.getElementById('map');
-          
+      function loadReportData() {
+        firebase.auth().onAuthStateChanged(user => {
           if (!user) {
-            mapContainer.innerHTML = `
-              <div class="error-message">Por favor, faça login para visualizar problemas.</div>
-            `;
+            showError('Por favor, faça login para visualizar o mapa.');
             setTimeout(() => window.location.href = 'login.html', 2000);
             return;
           }
-
-          try {
-            const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
-            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
-            showProblemsMap(user, firebase);
-          } catch (error) {
-            console.error("Erro ao carregar dados:", error.message);
-            showError(`Erro ao carregar dados: ${error.message}`);
-            mapContainer.insertAdjacentHTML('afterend', `
-              <button class="btn btn-primary mt-2" onclick="loadReportData()">Tentar Novamente</button>
-            `);
-          }
+          showProblemsMap(user, firebase);
+          loadStats(firebase);
         });
-      } catch (error) {
-        console.error("Erro na inicialização do carregamento:", error.message);
-        showError("Erro ao iniciar carregamento");
       }
-    }
 
-    // Manipular logout
-    function handleLogout(e) {
-      try {
+      document.getElementById('logoutLink').addEventListener('click', e => {
         e.preventDefault();
-        const logoutBtn = document.getElementById('logoutLink');
-        const logoutText = logoutBtn.querySelector('span') || logoutBtn;
-        const logoutSpinner = document.createElement('span');
-        logoutSpinner.className = 'spinner';
-        
-        logoutText.style.display = 'none';
-        logoutBtn.appendChild(logoutSpinner);
-        logoutBtn.disabled = true;
-
         firebase.auth().signOut().then(() => {
           window.location.href = 'login.html';
         }).catch(error => {
-          console.error("Erro ao fazer logout:", error.message);
-          showError("Erro ao fazer logout");
-          logoutText.style.display = 'inline';
-          logoutBtn.removeChild(logoutSpinner);
-          logoutBtn.disabled = false;
+          console.error('Erro ao fazer logout:', error);
+          showError('Erro ao fazer logout. Tente novamente.');
         });
-      } catch (error) {
-        console.error("Erro ao iniciar logout:", error.message);
-        showError("Erro ao fazer logout");
-      }
-    }
-
-    // Toggle stats overlay
-    document.addEventListener('DOMContentLoaded', () => {
-      const statsToggle = document.getElementById('statsToggle');
-      const statsContent = document.getElementById('statsContent');
-      statsToggle.addEventListener('click', () => {
-        if (statsContent.style.display === 'none') {
-          statsContent.style.display = 'block';
-          statsToggle.innerHTML = '<i class="fas fa-chevron-up"></i>';
-          statsToggle.setAttribute('aria-expanded', 'true');
-        } else {
-          statsContent.style.display = 'none';
-          statsToggle.innerHTML = '<i class="fas fa-chevron-down"></i>';
-          statsToggle.setAttribute('aria-expanded', 'false');
-        }
       });
-    });
 
-    // Inicializar página
-    window.addEventListener('load', function() {
-      try {
-        const firebaseConfig = {
-          apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-          authDomain: "facilita-479b3.firebaseapp.com",
-          databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
-          projectId: "facilita-479b3",
-          storageBucket: "facilita-479b3.appspot.com",
-          messagingSenderId: "385676676886",
-          appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-        };
-        
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-
-        document.getElementById('logoutLink').addEventListener('click', handleLogout);
-        loadReportData();
-      } catch (error) {
-        console.error("Erro ao inicializar página:", error.message);
-        showError("Erro ao carregar página");
-      }
+      // Fade out loading screen and show content
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        document.getElementById('loadingScreen').addEventListener('transitionend', () => {
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+          loadReportData();
+        }, { once: true });
+      }, 800);
     });
   </script>
 </body>

@@ -208,7 +208,6 @@
       background: rgba(255,255,255,0.1);
       border-color: var(--text-white);
       color: var(--text-white);
-      transform: translateY(-3px);
     }
 
     .navbar.scrolled .btn-outline-secondary-dark:hover {
@@ -385,15 +384,62 @@
         position: absolute;
         top: 0;
         left: 0;
-        transition: opacity 0.6s ease-in-out;
     }
 
-    .image-comparison .after-image {
-        opacity: 0;
+    .before-image {
+        width: 100%;
+        z-index: 1;
     }
 
-    .before-after-card:hover .after-image {
-        opacity: 1;
+    .after-image {
+        width: 50%;
+        z-index: 2;
+        clip-path: inset(0 50% 0 0);
+    }
+
+    .slider-handle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 4px;
+        height: 100%;
+        background: var(--primary-accent);
+        z-index: 3;
+        cursor: ew-resize;
+        transform: translateX(-50%);
+    }
+
+    .slider-handle::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        background: var(--primary-accent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slider-handle::after {
+        content: '\\f337'; /* FontAwesome arrows left-right */
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: var(--text-white);
+        font-size: 20px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .slider-handle:focus {
+        outline: 2px solid var(--highlight-light);
+        outline-offset: 2px;
     }
 
     .card-content {
@@ -904,6 +950,13 @@
         .section-title {
             font-size: 2.2rem;
         }
+        .slider-handle::before {
+            width: 30px;
+            height: 30px;
+        }
+        .slider-handle::after {
+            font-size: 16px;
+        }
     }
   </style>
 </head>
@@ -1277,79 +1330,137 @@
       );
     }
 
-    // Carregamento de Transformações Visíveis (Problemas Resolvidos com Antes e Depois)
     // Carregamento de Transformações Visíveis (3 Casos Resolvidos - Qualquer Data)
-function loadResolvedIssues(firebaseApp) {
-    const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
-    const noTransformationsMessage = document.getElementById('noTransformationsMessage');
-    let html = '';
-    const resolvedProblems = [];
+    function loadResolvedIssues(firebaseApp) {
+      const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
+      const noTransformationsMessage = document.getElementById('noTransformationsMessage');
+      let html = '';
+      const resolvedProblems = [];
 
-    // MUDANÇA 1: Remover limitToLast(10) para pegar todos os registros
-    firebaseApp.database().ref('problems').orderByChild('status').equalTo('Resolvido').on('value',
+      firebaseApp.database().ref('problems').orderByChild('status').equalTo('Resolvido').on('value',
         (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-                const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-                
-                // MUDANÇA 2: Relaxar as condições - só verificar se tem imagem "antes"
-                // Para casos que só têm imageUrlBefore, usar a mesma imagem para "depois"
-                if (problem.status === 'Resolvido' && 
-                    problem.imageUrlBefore && 
-                    typeof problem.imageUrlBefore === 'string' && 
-                    problem.imageUrlBefore.trim() !== '') {
-                    
-                    // Se não tem imageUrlAfter, usar a imageUrlBefore para ambas
-                    if (!problem.imageUrlAfter || 
-                        typeof problem.imageUrlAfter !== 'string' || 
-                        problem.imageUrlAfter.trim() === '') {
-                        problem.imageUrlAfter = problem.imageUrlBefore;
-                    }
-                    
-                    resolvedProblems.push(problem);
-                }
-            });
-
-            // MUDANÇA 3: Ordenar por data (mais recente primeiro) e pegar exatamente 3
-            resolvedProblems.sort((a, b) => b.createdAt - a.createdAt);
-            const displayResolved = resolvedProblems.slice(0, 3);
-
-            if (displayResolved.length === 0) {
-                noTransformationsMessage.style.display = 'block';
-                resolvedIssuesGallery.innerHTML = '';
-            } else {
-                noTransformationsMessage.style.display = 'none';
-                displayResolved.forEach((problem) => {
-                    const title = problem.title || 'Problema Resolvido';
-                    const location = problem.location?.neighborhood || 'Bairro Desconhecido';
-                    const municipality = problem.location?.municipality || 'Município Desconhecido';
-                    const imageUrlBefore = problem.imageUrlBefore;
-                    const imageUrlAfter = problem.imageUrlAfter;
-
-                    html += `
-                        <div class="before-after-card" data-aos="fade-up">
-                            <div class="image-comparison">
-                                <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
-                                <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
-                            </div>
-                            <div class="card-content">
-                                <h4 class="card-title">${title}</h4>
-                                <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
-                                <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    `;
-                });
-                resolvedIssuesGallery.innerHTML = html;
+          snapshot.forEach((childSnapshot) => {
+            const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+            if (problem.status === 'Resolvido' && 
+                problem.imageUrlBefore && 
+                typeof problem.imageUrlBefore === 'string' && 
+                problem.imageUrlBefore.trim() !== '') {
+              if (!problem.imageUrlAfter || 
+                  typeof problem.imageUrlAfter !== 'string' || 
+                  problem.imageUrlAfter.trim() === '') {
+                problem.imageUrlAfter = problem.imageUrlBefore;
+              }
+              resolvedProblems.push(problem);
             }
+          });
+
+          resolvedProblems.sort((a, b) => b.createdAt - a.createdAt);
+          const displayResolved = resolvedProblems.slice(0, 3);
+
+          if (!displayResolved.length) {
+            noTransformationsMessage.style.display = 'block';
+            resolvedIssuesGallery.innerHTML = '';
+          } else {
+            noTransformationsMessage.style.display = 'none';
+            displayResolved.forEach((problem, index) => {
+              const title = problem.title || 'Problema Resolvido';
+              const location = problem.location?.neighborhood || 'Bairro Desconhecido';
+              const municipality = problem.location?.municipality || 'Município Desconhecido';
+              const imageUrlBefore = problem.imageUrlBefore;
+              const imageUrlAfter = problem.imageUrlAfter;
+
+              html += `
+                <div class="before-after-card" data-aos="fade-up" data-aos-delay="${100 * (index + 1)}">
+                  <div class="image-comparison" role="region" aria-label="Comparação Antes e Depois: ${title}">
+                    <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
+                    <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
+                    <div class="slider-handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Controlador de comparação antes e depois"></div>
+                  </div>
+                  <div class="card-content">
+                    <h4 class="card-title">${title}</h4>
+                    <p class="card-location"><i class="fas fa-map-marker-alt me-2"></i>${location}, ${municipality}</p>
+                    <a href="case-details.html?caseId=${problem.key}" class="card-link">Ver História Completa <i class="fas fa-arrow-right ms-2"></i></a>
+                  </div>
+                </div>
+              `;
+            });
+            resolvedIssuesGallery.innerHTML = html;
+            initImageSliders();
+          }
         },
         (error) => {
-            console.error('Erro ao carregar transformações visíveis:', error);
-            resolvedIssuesGallery.innerHTML =
-                '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
-            noTransformationsMessage.style.display = 'none';
+          console.error('Erro ao carregar transformações visíveis:', error);
+          resolvedIssuesGallery.innerHTML =
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+          noTransformationsMessage.style.display = 'none';
         }
-    );
-}
+      );
+    }
+
+    // Inicialização dos Sliders de Comparação
+    function initImageSliders() {
+      const sliders = document.querySelectorAll('.image-comparison');
+      sliders.forEach((slider, index) => {
+        const beforeImage = slider.querySelector('.before-image');
+        const afterImage = slider.querySelector('.after-image');
+        const handle = slider.querySelector('.slider-handle');
+        let isDragging = false;
+
+        function updateSliderPosition(x, containerWidth) {
+          const percentage = Math.max(0, Math.min(100, (x / containerWidth) * 100));
+          afterImage.style.clipPath = `inset(0 ${100 - percentage}% 0 0)`;
+          handle.style.left = `${percentage}%`;
+          handle.setAttribute('aria-valuenow', Math.round(percentage));
+        }
+
+        function handleMove(e) {
+          if (!isDragging) return;
+          const rect = slider.getBoundingClientRect();
+          let x = (e.clientX || e.touches[0].clientX) - rect.left;
+          updateSliderPosition(x, rect.width);
+        }
+
+        handle.addEventListener('mousedown', () => {
+          isDragging = true;
+        });
+
+        handle.addEventListener('touchstart', (e) => {
+          isDragging = true;
+          e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('touchmove', handleMove, { passive: false });
+
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
+
+        document.addEventListener('touchend', () => {
+          isDragging = false;
+        });
+
+        handle.addEventListener('keydown', (e) => {
+          const rect = slider.getBoundingClientRect();
+          const currentLeft = parseFloat(handle.style.left || '50');
+          let newPercentage = currentLeft;
+
+          if (e.key === 'ArrowLeft') {
+            newPercentage = Math.max(0, currentLeft - 5);
+          } else if (e.key === 'ArrowRight') {
+            newPercentage = Math.min(100, currentLeft + 5);
+          }
+
+          afterImage.style.clipPath = `inset(0 ${100 - newPercentage}% 0 0)`;
+          handle.style.left = `${newPercentage}%`;
+          handle.setAttribute('aria-valuenow', Math.round(newPercentage));
+        });
+
+        // Inicializa na posição 50%
+        const rect = slider.getBoundingClientRect();
+        updateSliderPosition(rect.width / 2, rect.width);
+      });
+    }
 
     // Atualiza UI com base no estado de autenticação
     function updateAuthUI(user) {
