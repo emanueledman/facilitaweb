@@ -101,7 +101,7 @@ const firebaseAuth = {
   async checkPhoneNumberExists(phoneNumber) {
     try {
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-      const querySnapshot = await this._getFirestore().collection('users')
+      const querySnapshot = await this._getFirestore().collection('usuarios')
         .where('phoneNumber', '==', normalizedPhone)
         .limit(1)
         .get();
@@ -163,7 +163,7 @@ const firebaseAuth = {
       const userCredential = await this._getAuth().signInWithPopup(provider);
       const user = userCredential.user;
 
-      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
       if (!userDoc.exists) {
@@ -239,7 +239,7 @@ const firebaseAuth = {
       const userCredential = await confirmationResult.confirm(verificationCode);
       const user = userCredential.user;
 
-      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       const userDoc = await userDocRef.get();
 
       if (!userDoc.exists) {
@@ -347,7 +347,7 @@ const firebaseAuth = {
         throw new Error("Método de registro inválido.");
       }
 
-      const userDocRef = this._getFirestore().collection('users').doc(user.uid);
+      const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
       // Verifica se o documento já existe para não sobrescrever dados
       const userDoc = await userDocRef.get();
 
