@@ -308,6 +308,12 @@
         color: #991b1b; /* red-700 */
         border-color: #f87171; /* red-400 */
       }
+      .notification-message.warning { /* Adicionado para avisos */
+        background-color: #fffbeb; /* yellow-100 */
+        color: #92400e; /* yellow-700 */
+        border-color: #fbbf24; /* yellow-400 */
+      }
+
 
       /* Adicionado para a borda de erro no input */
       .border-error {
@@ -540,12 +546,12 @@
     const forgotPasswordLink = document.getElementById('forgotPassword');
     const emailOrPhoneError = document.getElementById('emailOrPhoneError');
     const passwordError = document.getElementById('passwordError');
-    const notificationMessageDiv = document.getElementById('notificationMessage'); // Correção aqui!
+    const notificationMessageDiv = document.getElementById('notificationMessage'); 
 
     // Funções auxiliares para mostrar/ocultar mensagens
     function showNotification(message, type) {
         notificationMessageDiv.textContent = message;
-        notificationMessageDiv.classList.remove('hidden', 'success', 'error'); 
+        notificationMessageDiv.classList.remove('hidden', 'success', 'error', 'warning'); 
         notificationMessageDiv.classList.add(type); 
         notificationMessageDiv.classList.add('block');
     }
@@ -560,7 +566,7 @@
         element.classList.remove('hidden');
         element.classList.add('block');
         // Adiciona borda de erro ao input associado
-        if (element.previousElementSibling) { // Verifica se existe um elemento anterior (o input)
+        if (element.previousElementSibling) { 
             element.previousElementSibling.classList.add('border-error'); 
         }
     }
@@ -568,37 +574,26 @@
     function hideError(element) {
         element.classList.add('hidden');
         // Remove borda de erro do input associado
-        if (element.previousElementSibling) { // Verifica se existe um elemento anterior (o input)
+        if (element.previousElementSibling) { 
             element.previousElementSibling.classList.remove('border-error'); 
         }
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      // Inicializa o Firebase App
+      // Inicializa o Firebase App através da sua instância de firebaseAuth
       try {
-        window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-        console.log("Firebase App inicializado.");
-      } catch (error) {
-        console.error("Erro ao inicializar Firebase:", error);
-        showNotification("Erro: Firebase SDK não carregado. Verifique sua conexão.", 'error');
-        return; // Impede a continuação do script se o Firebase não inicializar
-      }
-
-      // Inicializa o reCAPTCHA APENAS DEPOIS que o Firebase for inicializado e window.firebaseAuth estiver disponível
-      // (O erro 'initializeRecaptcha is not a function' sugere que firebaseAuth.js não expôs essa função globalmente ou foi chamado muito cedo)
-      // Certifique-se de que initializeRecaptcha está definida e anexada a window.firebaseAuth em firebaseAuth.js
-      try {
-        if (window.firebaseAuth && typeof window.firebaseAuth.initializeRecaptcha === 'function') {
-            await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+        if (window.firebaseAuth) {
+            window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+            console.log("Firebase App inicializado (via window.firebaseAuth).");
         } else {
-            console.warn("window.firebaseAuth.initializeRecaptcha não é uma função. reCAPTCHA pode não funcionar.");
-            showNotification("Aviso: Falha ao carregar verificação de segurança (reCAPTCHA).", 'warning');
+            throw new Error("window.firebaseAuth não carregado. Verifique o caminho do script.");
         }
       } catch (error) {
-        console.error("Erro ao inicializar reCAPTCHA:", error);
-        showNotification("Erro ao carregar verificação de segurança (reCAPTCHA).", 'error');
+        console.error("Erro ao inicializar Firebase no login.html:", error);
+        showNotification("Erro: Firebase SDK não carregado. Verifique sua conexão.", 'error');
+        return; 
       }
-
+      
       // Máscara de telefone e tratamento de input Email/Telefone
       const phoneMaskOptions = {
           mask: '+244 900 000 000',
@@ -694,15 +689,13 @@
                 const fullPhoneNumber = `+${cleanPhone}`;
                 localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); // Salva para a próxima página
 
-                // **Lógica aprimorada para Login/Cadastro com Telefone:**
-                // 1. Tentar fazer login com senha se uma senha foi fornecida.
-                // 2. Se não houver senha OU se o login com senha falhar (ou for uma nova conta), iniciar o fluxo de verificação por código.
-
                 let loggedIn = false;
                 if (password.length > 0) { // Se uma senha foi fornecida, tenta login com ela
                     try {
-                        // Firebase Auth não diferencia email de phone number diretamente em signInWithEmailAndPassword.
-                        // Ele tenta autenticar a string como 'email'. Se você usa o número de telefone como 'email' no Firebase, funciona.
+                        // Tentar autenticar o número de telefone como um email se uma senha for fornecida
+                        // ATENÇÃO: Se o seu Firebase Auth não suporta telefone como 'email', isso falhará.
+                        // O ideal é que o Firebase Auth aceite o telefone como email (com um email fictício)
+                        // ou que você crie um login apenas com telefone usando SMS.
                         await firebase.auth().signInWithEmailAndPassword(fullPhoneNumber, password);
                         loggedIn = true;
                         showNotification('Login realizado com sucesso!', 'success');
@@ -718,15 +711,11 @@
                 }
                 
                 if (!loggedIn) { // Se não logou com senha ou senha não foi fornecida
-                    const verificationCode = await window.firebaseAuth.sendVerificationCode(fullPhoneNumber);
+                    // Chama a função de envio de código de verificação por telefone
+                    const confirmationResult = await window.firebaseAuth.sendPhoneVerificationCode(fullPhoneNumber);
                     
-                    // Salva ou atualiza o registro temporário no Firestore para a verificação
-                    await firebase.firestore().collection('pendingVerifications').doc(fullPhoneNumber).set({
-                        phoneNumber: fullPhoneNumber,
-                        verificationCode: verificationCode,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        notificationMethod: 'whatsapp' // Ou outro método padrão
-                    }, { merge: true }); 
+                    // Armazena o confirmationResult para ser usado na próxima página (verify-phone.html)
+                    localStorage.setItem('confirmationResultJson', JSON.stringify(confirmationResult)); 
 
                     showNotification('Código de verificação enviado para o seu WhatsApp. Você será redirecionado.', 'success');
                     setTimeout(() => {
@@ -771,6 +760,14 @@
                 errorMessage = "O Firebase App não foi inicializado corretamente.";
                 showNotification(errorMessage, 'error');
                 break;
+              case 'auth/captcha-check-failed': // Novo erro para reCAPTCHA
+                  errorMessage = "Verificação de segurança falhou. Por favor, tente novamente.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              case 'auth/web-storage-unsupported': // Novo erro para reCAPTCHA
+                  errorMessage = "Seu navegador não suporta a verificação de segurança (reCAPTCHA). Tente outro navegador.";
+                  showNotification(errorMessage, 'error');
+                  break;
               default:
                 errorMessage = error.message; 
                 showNotification(errorMessage, 'error');
@@ -831,7 +828,6 @@
         const isEmailFormat = window.firebaseAuth.validateEmail(inputVal) === null;
         const isPhoneFormat = cleanPhone.length === 12 && cleanPhone.startsWith('244');
 
-        // Desabilita o link enquanto a ação está em andamento
         forgotPasswordLink.style.pointerEvents = 'none'; 
         forgotPasswordLink.textContent = 'Processando...';
 
@@ -840,14 +836,11 @@
               const fullPhoneNumber = `+${cleanPhone}`;
               localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); 
               
-              const verificationCode = await window.firebaseAuth.sendVerificationCode(fullPhoneNumber);
+              // Chama a função de envio de código de verificação por telefone
+              const confirmationResult = await window.firebaseAuth.sendPhoneVerificationCode(fullPhoneNumber);
               
-              await firebase.firestore().collection('pendingVerifications').doc(fullPhoneNumber).set({ 
-                  phoneNumber: fullPhoneNumber, 
-                  verificationCode: verificationCode,
-                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                  notificationMethod: 'whatsapp' 
-              }, { merge: true }); 
+              // Armazena o confirmationResult para ser usado na próxima página (verify-phone.html)
+              localStorage.setItem('confirmationResultJson', JSON.stringify(confirmationResult)); 
               
               showNotification('Um novo código de verificação foi enviado para o seu WhatsApp. Você será redirecionado para concluir a recuperação.', 'success');
               setTimeout(() => {
@@ -878,6 +871,14 @@
                 errorMessage = "Erro de conexão. Verifique sua internet.";
                 showNotification(errorMessage, 'error');
                 break;
+              case 'auth/captcha-check-failed':
+                  errorMessage = "A verificação de segurança falhou. Tente novamente.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              case 'auth/web-storage-unsupported':
+                  errorMessage = "Seu navegador não suporta a verificação de segurança (reCAPTCHA). Tente outro navegador.";
+                  showNotification(errorMessage, 'error');
+                  break;
               default:
                 errorMessage = error.message;
                 showNotification(errorMessage, 'error');
