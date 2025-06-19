@@ -1,856 +1,325 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registo - FixABairro</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        'primary': '#4F46E5', // Azul índigo vibrante
-                        'primary-dark': '#4338CA', // Versão mais escura do primário
-                        'secondary': '#6B7280', // Cinza neutro
-                        'success': '#10B981', // Verde para sucesso
-                        'error': '#EF4444', // Vermelho para erro
-                        'text-primary': '#1F2937', // Texto principal escuro
-                        'text-secondary': '#4B5563', // Texto secundário
-                        'bg-light': '#F9FAFB', // Fundo claro
-                        'border-light': '#E5E7EB', // Borda clara
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Font Awesome para ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: theme('colors.bg-light');
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
-        }
-        .container-wrapper {
-            max-width: 500px; /* Largura ligeiramente maior para o formulário */
-            width: 100%;
-            background-color: #ffffff;
-            padding: 2rem; /* Padding generoso */
-            border-radius: 1.5rem; /* Cantos bem arredondados */
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15); /* Sombra suave e profunda */
-            border: 1px solid theme('colors.border-light');
-            animation: fadeIn 0.8s ease-out; /* Animação de fade-in */
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="password"], select {
-            border: 1px solid theme('colors.border-light');
-            border-radius: 0.75rem; /* Cantos arredondados */
-            padding: 0.875rem 1.25rem; /* Padding confortável */
-            width: 100%;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            background-color: #fcfcfc; /* Levemente cinza */
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: theme('colors.primary');
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); /* Sombra de foco com cor primária */
-        }
-        button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 1rem 1.5rem; /* Mais padding para botões */
-            border-radius: 0.75rem; /* Cantos arredondados */
-            font-weight: 700; /* Mais negrito */
-            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Sombra de texto sutil */
-        }
-        button:hover:not(:disabled) {
-            transform: translateY(-3px); /* Efeito de levantamento mais pronunciado */
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* Sombra ao hover */
-        }
-        button:active:not(:disabled) {
-            transform: translateY(0); /* Efeito de clique */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .btn-primary {
-            background-color: theme('colors.primary');
-            color: white;
-            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
-        }
-        .btn-primary:hover:not(:disabled) {
-            background-color: theme('colors.primary-dark');
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crie sua conta no FixABairro e ajude a transformar sua comunidade em Angola. Reporte problemas e receba atualizações via Gmail ou WhatsApp.">
+  <meta name="keywords" content="fixabairro, angola, cadastro, email, telefone, comunidade, cidadania, luanda, verificação">
+  <meta name="author" content="FixABairro Team">
+  <meta property="og:title" content="FixABairro | Junte-se à Mudança em Angola">
+  <meta property="og:description" content="Crie sua conta, reporte problemas e receba atualizações via Gmail ou WhatsApp. Transforme seu bairro com FixABairro!">
+  <meta property="og:image" content="https://placehold.co/1200x630/F4511E/FFFFFF?text=FixABairro">
+  <meta property="og:url" content="https://fixabairro.co.ao/register.html">
+  <title>FixABairro | Criar Conta</title>
+  
+  <link rel="icon" type="image/png" href="https://placehold.co/32x32/F4511E/FFFFFF?text=F"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --primary-accent: #F4511E;
+      --secondary-dark: #2C3E50;
+      --success-green: #28A745;
+      --error: #DC3545;
+      --bg-light: #F8F9FA;
+      --bg-white: #FFFFFF;
+      --bg-dark-overlay: rgba(0, 0, 0, 0.6);
+      --text-main: #343A40;
+      --text-secondary: #6C757D;
+      --text-white: #FFFFFF;
+      --border-radius-lg: 1.5rem;
+      --border-radius-md: 0.5rem;
+      --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-md-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
 
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #ffffff;
-            border-radius: 50%;
-            width: 1.25rem; /* Tamanho maior para o spinner */
-            height: 1.25rem;
-            animation: spin 1s linear infinite;
-            margin-right: 0.75rem; /* Mais espaço */
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    /* All Tailwind utility classes should be used directly in the HTML elements.
+       If you want to keep some custom styles, write them in plain CSS here. */
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+
+    .spinner-border {
+      display: inline-block;
+      width: 1.5rem;
+      height: 1.5rem;
+      vertical-align: -0.125em;
+      border: 0.2em solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      -webkit-animation: .75s linear infinite spinner-border;
+      animation: .75s linear infinite spinner-border;
+    }
+
+    @-webkit-keyframes spinner-border {
+      to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+    }
+
+    @keyframes spinner-border {
+      to { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { accent: 'var(--primary-accent)' },
+            secondary: { dark: 'var(--secondary-dark)' },
+            success: { DEFAULT: 'var(--success-green)' },
+            error: { DEFAULT: 'var(--error)' },
+            bg: {
+              light: 'var(--bg-light)',
+              white: 'var(--bg-white)',
+              darkOverlay: 'var(--bg-dark-overlay)',
+            },
+            text: {
+              main: 'var(--text-main)',
+              secondary: 'var(--text-secondary)',
+              white: 'var(--text-white)',
+            },
+          },
+          fontFamily: {
+            roboto: ['Roboto', 'sans-serif'],
+            opensans: ['Open Sans', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': 'var(--border-radius-lg)',
+            'md': 'var(--border-radius-md)',
+          },
+          boxShadow: {
+            soft: 'var(--shadow-soft)',
+            medium: 'var(--shadow-md-shadow)',
+          },
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error-message {
-            color: theme('colors.error');
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-        .border-error {
-            border-color: theme('colors.error') !important;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
-        }
-        .message-box {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ffffff;
-            padding: 1rem 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            z-index: 1000;
-            min-width: 320px; /* Largura mínima para notificações */
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-        }
-        .message-box.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-        .message-box.success {
-            border: 1px solid theme('colors.success');
-            color: #065F46; /* Cor de texto mais escura para contraste */
-            background-color: #ECFDF5; /* Fundo verde claro */
-        }
-        .message-box.error {
-            border: 1px solid theme('colors.error');
-            color: #991B1B; /* Cor de texto mais escura para contraste */
-            background-color: #FEF2F2; /* Fundo vermelho claro */
-        }
-        .message-box .icon {
-            font-size: 1.75rem; /* Ícone maior */
-        }
-        .message-box.success .icon {
-            color: theme('colors.success');
-        }
-        .message-box.error .icon {
-            color: theme('colors.error');
-        }
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
-        .modal.show .modal-content {
-            transform: translateY(0);
-        }
-    </style>
+      }
+    }
+  </script>
 </head>
 <body>
-    <div class="container-wrapper">
-        <h2 class="text-3xl font-extrabold text-center text-text-primary mb-8">Crie Sua Conta Gratuita</h2>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container mx-auto px-4">
+      <a class="navbar-brand flex items-center" href="index.html">
+        <div class="logo">F</div>
+        FixABairro
+      </a>
+      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary-dark"></i>
+      </button>
+      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
+        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#impact">Impacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+          </li>
+          <li class="nav-item ml-auto md:ml-3">
+            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
+          </li>
+          <li class="nav-item md:ml-2">
+            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-        <form id="registerForm" class="space-y-6">
-            <!-- Campo Nome Completo -->
-            <div>
-                <label for="name" class="block text-sm font-medium text-text-secondary mb-2">Nome Completo</label>
-                <input type="text" id="name" placeholder="Seu nome e sobrenome" required autocomplete="name">
-                <p id="nameError" class="error-message">Nome completo é obrigatório.</p>
-            </div>
-
-            <!-- Seleção de Município -->
-            <div>
-                <label for="municipio" class="block text-sm font-medium text-text-secondary mb-2">Município</label>
-                <select id="municipio" required class="cursor-pointer">
-                    <option value="" class="text-text-secondary">Selecione seu município</option>
-                </select>
-                <p id="municipioError" class="error-message">Selecione seu município.</p>
-            </div>
-
-            <!-- Campo Bairro (com datalist) -->
-            <div>
-                <label for="bairro" class="block text-sm font-medium text-text-secondary mb-2">Bairro</label>
-                <input type="text" id="bairro" placeholder="Digite ou selecione seu bairro" list="bairrosList" required autocomplete="address-level2">
-                <datalist id="bairrosList"></datalist>
-                <p id="bairroError" class="error-message">O nome do bairro é obrigatório e deve ser válido para o município selecionado.</p>
-            </div>
-
-            <!-- Opções de Notificação -->
-            <div class="space-y-3">
-                <label class="block text-sm font-medium text-text-secondary mb-2">Como prefere receber notificações?</label>
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="notifyEmail" class="h-4 w-4 text-primary rounded focus:ring-primary focus:ring-offset-0 transition duration-150 ease-in-out">
-                        <label for="notifyEmail" class="ml-2 block text-sm text-text-primary">Email (Gmail)</label>
-                    </div>
-                    <div class="flex items-center">
-                        <input type="checkbox" id="notifyWhatsApp" class="h-4 w-4 text-primary rounded focus:ring-primary focus:ring-offset-0 transition duration-150 ease-in-out">
-                        <label for="notifyWhatsApp" class="ml-2 block text-sm text-text-primary">WhatsApp</label>
-                    </div>
-                </div>
-                <p id="notificationError" class="error-message">Selecione pelo menos um método de notificação.</p>
-            </div>
-
-            <!-- Campo Email (Condicional) -->
-            <div id="emailField" class="hidden">
-                <label for="email" class="block text-sm font-medium text-text-secondary mb-2">Email (Apenas Gmail)</label>
-                <input type="email" id="email" placeholder="seu.email@gmail.com" autocomplete="email">
-                <p id="emailError" class="error-message">Email é obrigatório e deve ser um endereço Gmail válido.</p>
-            </div>
-
-            <!-- Campo Telefone (Condicional) -->
-            <div id="phoneNumberField" class="hidden">
-                <label for="phoneNumber" class="block text-sm font-medium text-text-secondary mb-2">Número de Telefone (WhatsApp)</label>
-                <input type="tel" id="phoneNumber" placeholder="+244912345678" autocomplete="tel">
-                <p id="phoneNumberError" class="error-message">Número de telefone é obrigatório e deve ser no formato +2449XXXXXXXX.</p>
-                <div id="recaptcha-container" class="hidden"></div> <!-- reCAPTCHA invisível para Phone Auth -->
-            </div>
-
-            <!-- Campo Senha -->
-            <div>
-                <label for="password" class="block text-sm font-medium text-text-secondary mb-2">Senha</label>
-                <input type="password" id="password" placeholder="Mínimo 8 caracteres" required autocomplete="new-password">
-                <p id="passwordError" class="error-message">A senha deve ter pelo menos 8 caracteres.</p>
-            </div>
-
-            <!-- Campo Confirmar Senha -->
-            <div>
-                <label for="confirmPassword" class="block text-sm font-medium text-text-secondary mb-2">Confirmar Senha</label>
-                <input type="password" id="confirmPassword" placeholder="Confirme sua senha" required autocomplete="new-password">
-                <p id="confirmPasswordError" class="error-message">As senhas não coincidem.</p>
-            </div>
-
-            <!-- Termos de Serviço -->
-            <div class="flex items-start gap-2">
-                <input type="checkbox" id="termsCheckbox" class="h-4 w-4 text-primary rounded focus:ring-primary focus:ring-offset-0 transition duration-150 ease-in-out mt-1">
-                <label for="termsCheckbox" class="block text-sm text-text-primary">
-                    Eu li e concordo com os <a href="#" id="showTermsLink" class="text-primary hover:underline font-semibold">Termos de Serviço</a>.
-                </label>
-            </div>
-            <p id="termsError" class="error-message -mt-4">Você deve aceitar os Termos de Serviço para continuar.</p>
-
-            <!-- Botão de Registro -->
-            <button type="submit" id="registerBtn" class="btn-primary" disabled>
-                <span id="registerText"><i class="fas fa-user-plus mr-3"></i> Criar Conta</span>
-                <span id="registerSpinner" class="spinner hidden"></span>
-            </button>
-        </form>
-
-        <p class="mt-8 text-center text-sm text-text-secondary">
-            Já tem uma conta? <a href="login.html" class="font-medium text-primary hover:underline">Faça Login</a>
+  <div class="form-container-wrapper w-full px-4">
+    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
+      <div class="hidden md:flex p-10 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#D84315] text-white text-center relative z-10">
+        <div class="absolute inset-0 opacity-10"></div>
+        <i class="fas fa-handshake text-5xl text-white mb-6"></i>
+        <h2 class="text-3xl font-roboto font-bold leading-tight mb-4">
+          Transforme Sua Comunidade
+        </h2>
+        <p class="text-base font-opensans opacity-90 mb-8">
+          Cadastre-se no FixABairro e reporte problemas para melhorar seu bairro em Angola.
         </p>
-    </div>
+        <img src="https://placehold.co/250x250/F4511E/FFFFFF?text=Comunidade" alt="Ilustração de comunidade engajada" class="w-56 h-56 object-contain">
+      </div>
 
-    <!-- Message Box for Notifications -->
-    <div id="notificationMessageBox" class="message-box">
-        <i id="notificationIcon" class="icon"></i>
-        <span id="notificationMessage"></span>
-    </div>
-
-    <!-- Modal de Termos de Serviço -->
-    <div id="termsModal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h3 class="text-2xl font-bold text-text-primary">Termos de Serviço</h3>
-                <button id="closeTermsModal" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-            </div>
-            <div class="text-text-secondary text-sm space-y-4">
-                <p>Bem-vindo ao FixABairro! Ao utilizar nossos serviços, você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso. Por favor, leia-os atentamente.</p>
-                <h4 class="font-semibold text-text-primary text-base">1. Aceitação dos Termos</h4>
-                <p>Ao aceder ou utilizar o FixABairro, você reconhece que leu, entendeu e concorda em estar vinculado a estes Termos de Serviço, à nossa Política de Privacidade e a quaisquer outras diretrizes ou regras operacionais que possamos publicar periodicamente.</p>
-                <h4 class="font-semibold text-text-primary text-base">2. Descrição do Serviço</h4>
-                <p>O FixABairro é uma plataforma que conecta cidadãos a serviços públicos e prestadores de serviços locais para facilitar a resolução de problemas no bairro. Não somos responsáveis pela qualidade ou resultado dos serviços prestados por terceiros através da plataforma.</p>
-                <h4 class="font-semibold text-text-primary text-base">3. Registo de Conta</h4>
-                <p>Para aceder a certas funcionalidades do serviço, você pode ser obrigado a registar uma conta. Você concorda em fornecer informações precisas, completas e atualizadas durante o processo de registo e manter essas informações atualizadas. Você é responsável por manter a confidencialidade da sua senha e por todas as atividades que ocorram sob a sua conta.</p>
-                <h4 class="font-semibold text-text-primary text-base">4. Conduta do Utilizador</h4>
-                <p>Você concorda em não utilizar o serviço para qualquer finalidade que seja ilegal ou proibida por estes Termos. Isso inclui, mas não se limita a, assédio, envio de spam, upload de conteúdo prejudicial ou difamatório.</p>
-                <h4 class="font-semibold text-text-primary text-base">5. Limitação de Responsabilidade</h4>
-                <p>O FixABairro e seus afiliados não serão responsáveis por quaisquer danos diretos, indiretos, incidentais, especiais, consequenciais ou exemplares resultantes do uso ou da incapacidade de usar o serviço.</p>
-                <h4 class="font-semibold text-text-primary text-base">6. Modificações dos Termos</h4>
-                <p>Reservamos o direito de modificar estes Termos a qualquer momento. Quaisquer alterações serão efetivas imediatamente após a publicação dos termos revisados no site. É sua responsabilidade revisar estes Termos periodicamente.</p>
-                <h4 class="font-semibold text-text-primary text-base">7. Lei Aplicável</h4>
-                <p>Estes Termos serão regidos e interpretados de acordo com as leis de Angola, sem levar em conta seus conflitos de disposições legais.</p>
-                <p class="font-semibold mt-4">Ao clicar em "Aceitar e Continuar", você concorda com estes Termos de Serviço.</p>
-            </div>
-            <div class="flex justify-end mt-8 pt-6 border-t">
-                <button id="acceptTermsModalBtn" class="btn-primary w-auto px-6 py-2">Aceitar e Continuar</button>
-            </div>
+      <div class="w-full p-8 md:p-10 flex flex-col justify-center bg-white z-20">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+            <i class="fas fa-user-plus text-2xl text-white"></i>
+          </div>
+          <h1 class="section-title">Crie Sua Conta</h1>
+          <p class="text-text-secondary text-sm mt-2">Junte-se à mudança em poucos passos.</p>
         </div>
+        
+        <form id="registerForm" class="space-y-5">
+          <div class="form-group">
+            <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
+            <input type="text" id="name" class="form-control" placeholder="Seu nome e apelido" required aria-describedby="nameError">
+            <p id="nameError" class="error-message">Nome completo é obrigatório.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="email" class="block text-text-main text-sm font-medium mb-1">Email (Gmail)</label>
+            <input type="email" id="email" class="form-control" placeholder="Ex: seu.email@gmail.com" aria-describedby="emailError">
+            <p id="emailError" class="error-message">Formato de email inválido.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber" class="block text-text-main text-sm font-medium mb-1">Número de Telefone</label>
+            <div class="phone-input-wrapper">
+              <svg class="flag-icon" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                <rect width="900" height="600" fill="#CE1126"/>
+                <rect y="300" width="900" height="300" fill="#000"/>
+                <path d="M450 150c-83 0-150 67-150 150s67 150 150 150 150-67 150-150-67-150-150-150zm0 50c14 0 25 11 25 25s-11 25-25 25-25-11-25-25 11-25 25-25zm-75 100h150v50H375v-50z" fill="#FFC107"/>
+              </svg>
+              <input type="tel" id="phoneNumber" class="form-control phone-input" placeholder="+244 912 345 678" aria-describedby="phoneNumberError">
+            </div>
+            <p id="phoneNumberError" class="error-message">Formato inválido. Use +2449XXXXXXXX.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-group">
+              <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
+              <div class="relative select-wrapper">
+                <select id="municipio" class="form-control" required aria-describedby="municipioError">
+                  <option value="" class="bg-white text-text-secondary">Selecione</option>
+                </select>
+              </div>
+              <p id="municipioError" class="error-message">Selecione seu município.</p>
+            </div>
+            <div class="form-group">
+              <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
+              <input type="text" id="bairro" class="form-control" placeholder="Ex: Morro Bento" list="bairrosList" required aria-describedby="bairroError">
+              <datalist id="bairrosList"></datalist>
+              <p id="bairroError" class="error-message">O nome do bairro é obrigatório.</p>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+            <input type="password" id="password" class="form-control" placeholder="Mín. 8 caracteres" required aria-describedby="passwordError">
+            <p id="passwordError" class="error-message">A senha deve ter pelo menos 8 caracteres.</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
+            <input type="password" id="confirmPassword" class="form-control" placeholder="Confirme sua senha" required aria-describedby="confirmPasswordError">
+            <p id="confirmPasswordError" class="error-message">As senhas não coincidem.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="block text-text-main text-sm font-medium mb-2">Receber notificações por:</label>
+            <div class="radio-group">
+              <input type="radio" id="notifyEmail" name="notificationMethod" value="email" required aria-describedby="notificationError">
+              <label for="notifyEmail">Gmail</label>
+              <input type="radio" id="notifyWhatsApp" name="notificationMethod" value="whatsapp" aria-describedby="notificationError">
+              <label for="notifyWhatsApp">WhatsApp</label>
+            </div>
+            <p id="notificationError" class="error-message">Selecione um método de notificação.</p>
+          </div>
+
+          <div class="flex items-start">
+            <input type="checkbox" id="termsCheckbox" class="mt-1 rounded text-primary-accent focus:ring-primary-accent" required aria-describedby="termsError">
+            <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
+              Eu li e concordo com os 
+              <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium">Termos e Condições de Serviço</a>
+              do FixABairro.
+            </label>
+          </div>
+          <p id="termsError" class="error-message">Aceite os Termos de Serviço.</p>
+          
+          <button type="submit" id="registerBtn" class="w-full btn-main flex items-center justify-center gap-2">
+            <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
+            <span id="registerSpinner" class="spinner-border hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+        
+        <p class="text-center text-text-secondary text-sm mt-6">
+          Já tem uma conta? 
+          <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
+        </p>
+
+        <div id="recaptcha-container" class="mt-4 hidden"></div>
+      </div>
     </div>
+  </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <!-- IMask.js CDN for input masking -->
-    <script src="https://unpkg.com/imask"></script>
-    <!-- Inclui o seu arquivo firebaseAuth.js -->
-    <script src="firebaseAuth.js"></script>
+  <div id="termsModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Termos e Condições</h3>
+        <button id="closeTermsModal" class="modal-close-btn" aria-label="Fechar modal">×</button>
+      </div>
+      <div class="modal-body custom-scrollbar">
+        <h4>1. O Que É o FixABairro?</h4>
+        <p>O FixABairro é uma plataforma que permite aos cidadãos de Angola reportar problemas em seus bairros, como buracos nas ruas, lixo acumulado ou iluminação pública defeituosa, para facilitar a comunicação com as autoridades.</p>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Inicializa Firebase usando a configuração e o objeto do firebaseAuth.js
-            try {
-                if (typeof window.firebaseAuth === 'undefined' || typeof window.firebaseConfig === 'undefined') {
-                    throw new Error("Erro: firebaseAuth.js ou firebaseConfig não definidos. Verifique a inclusão dos scripts.");
-                }
-                window.firebaseAuth.initializeFirebaseApp(window.firebaseConfig);
-                console.log("Firebase inicializado com sucesso.");
-            } catch (error) {
-                console.error("Erro ao inicializar Firebase:", error);
-                showNotification('error', 'Erro ao carregar o sistema. Tente novamente.');
-                return;
-            }
+        <h4>2. Sua Conta e Seus Dados</h4>
+        <p>Ao criar uma conta, forneça informações verdadeiras (nome, email, telefone, município e bairro). Sua senha é de sua responsabilidade e deve ser mantida segura.</p>
 
-            // Elementos da UI
-            const registerForm = document.getElementById('registerForm');
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const phoneNumberInput = document.getElementById('phoneNumber');
-            const municipioSelect = document.getElementById('municipio');
-            const bairroInput = document.getElementById('bairro');
-            const bairrosList = document.getElementById('bairrosList');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const notifyEmail = document.getElementById('notifyEmail');
-            const notifyWhatsApp = document.getElementById('notifyWhatsApp');
-            const emailField = document.getElementById('emailField');
-            const phoneNumberField = document.getElementById('phoneNumberField');
-            const recaptchaContainer = document.getElementById('recaptcha-container');
+        <h4>3. Notificações</h4>
+        <p>Você pode escolher receber notificações por Gmail ou WhatsApp. Um código de verificação será enviado ao método escolhido para confirmar sua conta.</p>
 
-            const registerBtn = document.getElementById('registerBtn');
-            const registerText = document.getElementById('registerText');
-            const registerSpinner = document.getElementById('registerSpinner');
+        <h4>4. Uso Adequado</h4>
+        <p>Publique conteúdos respeitosos e verificáveis. Não são permitidos spam, ofensas ou informações falsas. Conteúdos inadequados podem ser removidos.</p>
 
-            const nameError = document.getElementById('nameError');
-            const emailError = document.getElementById('emailError');
-            const phoneNumberError = document.getElementById('phoneNumberError');
-            const municipioError = document.getElementById('municipioError');
-            const bairroError = document.getElementById('bairroError');
-            const passwordError = document.getElementById('passwordError');
-            const confirmPasswordError = document.getElementById('confirmPasswordError');
-            const notificationError = document.getElementById('notificationError');
-            const termsCheckbox = document.getElementById('termsCheckbox');
-            const termsError = document.getElementById('termsError');
+        <h4>5. Privacidade</h4>
+        <p>Seus dados são protegidos conforme nossa <a href="privacy-policy.html" class="text-primary-accent hover:underline font-medium" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>.</p>
 
-            const showTermsLink = document.getElementById('showTermsLink');
-            const termsModal = document.getElementById('termsModal');
-            const closeTermsModalBtn = document.getElementById('closeTermsModal');
-            const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
+        <h4>6. Responsabilidade</h4>
+        <p>O FixABairro não garante a resolução de problemas reportados, mas amplifica sua voz. Você é responsável pelos conteúdos publicados.</p>
 
-            const notificationMessageBox = document.getElementById('notificationMessageBox');
-            const notificationIcon = document.getElementById('notificationIcon');
-            const notificationMessage = document.getElementById('notificationMessage');
+        <h4>7. Contato</h4>
+        <p>Para dúvidas, entre em contato: suporte@fixabairro.co.ao</p>
+      </div>
+      <div class="modal-footer">
+        <button id="acceptTermsModal" class="btn-main">Aceitar e Fechar</button>
+      </div>
+    </div>
+  </div>
 
-            let isSubmitting = false;
-            let termsAccepted = false; // Estado inicial: termos não aceites
-            let confirmationResult; // Para armazenar o resultado da confirmação do telefone
+  <div id="notificationModal" class="modal-overlay notification-modal">
+    <div class="modal-content">
+      <div class="modal-body">
+        <i id="notificationIcon" class="fas"></i>
+        <p id="notificationMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="closeNotificationModal" class="btn-main">Fechar</button>
+      </div>
+    </div>
+  </div>
 
-            // Dados de municípios e bairros
-            const municipiosData = {
-                "Luanda": ["Maianga", "Rangel", "Samba", "Ingombota", "Neves Bendinha", "Benfica", "Cazenga", "Viana", "Cacuaco", "Kilamba Kiaxi", "Talatona", "Belo Horizonte", "Nova Vida", "Patriota"],
-                "Benguela": ["Benguela Sede", "Baía Farta", "Catumbela", "Lobito"],
-                "Huambo": ["Huambo Sede", "Caála", "Longonjo"],
-                "Cabinda": ["Cabinda Sede", "Malembo"],
-                "Kwanza Sul": ["Sumbe", "Amboim", "Quibala"],
-                "Uíge": ["Uíge Sede", "Negage", "Damba"],
-                "Zaire": ["Mbanza Congo", "Soyo"],
-                "Cunene": ["Ondjiva", "Cahama"],
-                "Lunda Norte": ["Dundo", "Lucapa"],
-                "Lunda Sul": ["Saurimo", "Cacolo"],
-                "Moxico": ["Luena", "Camanongue"],
-                "Namibe": ["Namibe Sede", "Tômbua"],
-                "Cuando Cubango": ["Menongue", "Cuito Cuanavale"],
-                "Bié": ["Cuito", "Andulo"],
-                "Malanje": ["Malanje Sede", "Cacuso"]
-            };
-
-            /**
-             * Popula o dropdown de municípios.
-             */
-            function populateMunicipios() {
-                if (!municipioSelect) {
-                    console.error("Elemento #municipio não encontrado.");
-                    showNotification('error', 'Erro ao carregar o formulário. Recarregue a página.');
-                    return;
-                }
-                municipioSelect.innerHTML = '<option value="" disabled selected class="text-text-secondary">Selecione seu município</option>';
-                const municipios = Object.keys(municipiosData).sort();
-                if (!municipios.length) {
-                    console.error("Nenhum município encontrado em municipiosData.");
-                    showNotification('error', 'Erro ao carregar municípios. Tente novamente.');
-                    return;
-                }
-                municipios.forEach((municipio) => {
-                    const option = document.createElement('option');
-                    option.value = municipio;
-                    option.textContent = municipio;
-                    municipioSelect.appendChild(option);
-                });
-            }
-
-            /**
-             * Atualiza o datalist de bairros com base no município selecionado.
-             */
-            function updateBairrosDatalist() {
-                const selectedMunicipio = municipioSelect.value;
-                bairrosList.innerHTML = ''; // Limpa as opções existentes
-                if (selectedMunicipio && municipiosData[selectedMunicipio]) {
-                    const bairros = municipiosData[selectedMunicipio].sort();
-                    bairros.forEach(bairro => {
-                        const option = document.createElement('option');
-                        option.value = bairro;
-                        bairrosList.appendChild(option);
-                    });
-                }
-                bairroInput.value = ''; // Limpa o campo de bairro ao mudar o município
-                hideError(bairroError); // Oculta o erro de bairro
-            }
-
-            // Inicializa populando municípios e adiciona listeners
-            populateMunicipios();
-            municipioSelect.addEventListener('change', updateBairrosDatalist);
-
-            // Máscara para telefone
-            const phoneMask = IMask(phoneNumberInput, {
-                mask: '+244 000 000 000',
-                lazy: false,
-                placeholderChar: '_',
-            });
-
-            // Adiciona um listener para preencher o prefixo quando o campo é focado e vazio
-            phoneNumberInput.addEventListener('focus', () => {
-                if (phoneNumberInput.value === '') {
-                    phoneNumberInput.value = '+244';
-                }
-            });
-
-            // Limpa o prefixo se o usuário não digitar mais nada
-            phoneNumberInput.addEventListener('blur', () => {
-                if (phoneNumberInput.value === '+244' || phoneNumberInput.value.trim() === '') {
-                    phoneNumberInput.value = '';
-                    phoneMask.updateValue(); // Atualiza a máscara para refletir o valor vazio
-                }
-            });
-
-            // --- Funções auxiliares para UI ---
-            function showNotification(type, message) {
-                notificationIcon.className = `icon fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}`;
-                notificationMessageBox.classList.remove('success', 'error');
-                notificationMessageBox.classList.add(type);
-                notificationMessage.textContent = message;
-                notificationMessageBox.classList.add('show');
-                setTimeout(() => {
-                    hideNotification();
-                }, 5000); // Esconde a notificação após 5 segundos
-            }
-
-            function hideNotification() {
-                notificationMessageBox.classList.remove('show');
-            }
-
-            function showError(element, message) {
-                element.textContent = message;
-                element.style.display = 'block';
-                const inputElement = element.parentElement.querySelector('input, select');
-                if (inputElement) {
-                    inputElement.setAttribute('aria-invalid', 'true');
-                    inputElement.classList.add('border-error');
-                }
-            }
-
-            function hideError(element) {
-                element.style.display = 'none';
-                const inputElement = element.parentElement.querySelector('input, select');
-                if (inputElement) {
-                    inputElement.setAttribute('aria-invalid', 'false');
-                    inputElement.classList.remove('border-error');
-                }
-            }
-
-            function toggleButtonState(button, textSpan, spinnerSpan, isLoading, defaultTextHtml) {
-                if (isLoading) {
-                    button.disabled = true;
-                    textSpan.classList.add('hidden');
-                    spinnerSpan.classList.remove('hidden');
-                } else {
-                    button.disabled = false;
-                    textSpan.classList.remove('hidden');
-                    spinnerSpan.classList.add('hidden');
-                    button.innerHTML = defaultTextHtml;
-                }
-            }
-
-            // Lógica para mostrar/ocultar campos de email/telefone
-            function toggleNotificationFields() {
-                const emailChecked = notifyEmail.checked;
-                const whatsappChecked = notifyWhatsApp.checked;
-
-                if (emailChecked) {
-                    emailField.classList.remove('hidden');
-                } else {
-                    emailField.classList.add('hidden');
-                    emailInput.value = '';
-                    hideError(emailError);
-                }
-
-                if (whatsappChecked) {
-                    phoneNumberField.classList.remove('hidden');
-                    recaptchaContainer.classList.remove('hidden'); // reCAPTCHA deve ser visível para o inicializador
-                    // Inicializa reCAPTCHA APENAS se ainda não foi inicializado
-                    if (!window.firebaseAuth.getRecaptchaVerifier()) {
-                        window.firebaseAuth.initializeRecaptcha('recaptcha-container')
-                            .then(() => console.log('reCAPTCHA invisível inicializado para telefone.'))
-                            .catch(err => {
-                                console.error('Erro ao inicializar reCAPTCHA:', err);
-                                showNotification('error', 'Falha ao carregar a verificação de segurança. Recarregue a página.');
-                            });
-                    }
-                } else {
-                    phoneNumberField.classList.add('hidden');
-                    recaptchaContainer.classList.add('hidden');
-                    phoneNumberInput.value = '';
-                    phoneMask.updateValue();
-                    hideError(phoneNumberError);
-                }
-                toggleRegisterButton(); // Revalida o botão após mudança
-            }
-
-            // Adiciona listeners para toggles de notificação
-            notifyEmail.addEventListener('change', toggleNotificationFields);
-            notifyWhatsApp.addEventListener('change', toggleNotificationFields);
-
-            // Lógica para habilitar/desabilitar botão de registro
-            function toggleRegisterButton() {
-                const notificationSelected = notifyEmail.checked || notifyWhatsApp.checked;
-                const isEmailValid = !notifyEmail.checked || (emailInput.value.trim() !== '' && /^\S+@gmail\.com$/.test(emailInput.value.trim()));
-                const isPhoneValid = !notifyWhatsApp.checked || (phoneNumberInput.value.trim() !== '' && /^\+2449[0-9]{8}$/.test(phoneNumberInput.value.trim().replace(/\s/g, '')));
-                const isBairroValid = bairroInput.value.trim() && (municipioSelect.value && municipiosData[municipioSelect.value].includes(bairroInput.value.trim()));
-
-                const formFilled = nameInput.value.trim() !== '' &&
-                                   municipioSelect.value !== '' &&
-                                   isBairroValid &&
-                                   passwordInput.value.length >= 8 &&
-                                   passwordInput.value === confirmPasswordInput.value &&
-                                   notificationSelected &&
-                                   isEmailValid &&
-                                   isPhoneValid;
-
-                registerBtn.disabled = !(termsAccepted && formFilled && !isSubmitting);
-
-                // Feedback visual para termos e notificações
-                if (!termsAccepted) {
-                    showError(termsError, "Aceite os Termos de Serviço.");
-                } else {
-                    hideError(termsError);
-                }
-                if (!notificationSelected) {
-                    showError(notificationError, "Selecione um método de notificação.");
-                } else {
-                    hideError(notificationError);
-                }
-            }
-
-            // Adiciona listeners para validar campos dinamicamente
-            nameInput.addEventListener('input', () => { hideError(nameError); toggleRegisterButton(); });
-            emailInput.addEventListener('input', () => {
-                if (notifyEmail.checked) {
-                    if (!emailInput.value.trim()) {
-                        showError(emailError, "Email é obrigatório para notificações por Gmail.");
-                    } else if (!/^\S+@gmail\.com$/.test(emailInput.value.trim())) {
-                        showError(emailError, "Use um email do Gmail (ex: seu.email@gmail.com).");
-                    } else {
-                        hideError(emailError);
-                    }
-                }
-                toggleRegisterButton();
-            });
-            phoneNumberInput.addEventListener('input', () => {
-                if (notifyWhatsApp.checked) {
-                    const normalizedPhone = phoneNumberInput.value.trim().replace(/\s/g, '');
-                    if (!phoneNumberInput.value.trim() || normalizedPhone === '+244') {
-                        showError(phoneNumberError, "Número de telefone é obrigatório para notificações por WhatsApp.");
-                    } else if (!/^\+2449[0-9]{8}$/.test(normalizedPhone)) {
-                        showError(phoneNumberError, "Formato inválido. Use +2449XXXXXXXX.");
-                    } else {
-                        hideError(phoneNumberError);
-                    }
-                }
-                toggleRegisterButton();
-            });
-            municipioSelect.addEventListener('change', () => { hideError(municipioError); updateBairrosDatalist(); toggleRegisterButton(); });
-            bairroInput.addEventListener('input', () => {
-                const selectedMunicipio = municipioSelect.value;
-                const enteredBairro = bairroInput.value.trim();
-                if (!enteredBairro) {
-                    showError(bairroError, "O nome do bairro é obrigatório.");
-                } else if (selectedMunicipio && municipiosData[selectedMunicipio] && !municipiosData[selectedMunicipio].includes(enteredBairro)) {
-                    showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`);
-                } else {
-                    hideError(bairroError);
-                }
-                toggleRegisterButton();
-            });
-            passwordInput.addEventListener('input', () => {
-                if (passwordInput.value.length < 8) { showError(passwordError, "A senha deve ter pelo menos 8 caracteres."); } else { hideError(passwordError); }
-                if (confirmPasswordInput.value && passwordInput.value !== confirmPasswordInput.value) { showError(confirmPasswordError, "As senhas não coincidem."); } else { hideError(confirmPasswordError); }
-                toggleRegisterButton();
-            });
-            confirmPasswordInput.addEventListener('input', () => {
-                if (confirmPasswordInput.value !== passwordInput.value) { showError(confirmPasswordError, "As senhas não coincidem."); } else { hideError(confirmPasswordError); }
-                toggleRegisterButton();
-            });
-
-            termsCheckbox.addEventListener('change', () => {
-                termsAccepted = termsCheckbox.checked;
-                toggleRegisterButton();
-            });
-
-            // Lógica dos modais (Termos)
-            showTermsLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                termsModal.classList.add('show');
-            });
-
-            closeTermsModalBtn.addEventListener('click', () => {
-                termsModal.classList.remove('show');
-                toggleRegisterButton(); // Revalidar botão caso o modal seja fechado sem aceitar
-            });
-
-            acceptTermsModalBtn.addEventListener('click', () => {
-                termsAccepted = true;
-                termsCheckbox.checked = true; // Marca o checkbox ao aceitar no modal
-                termsModal.classList.remove('show');
-                toggleRegisterButton();
-            });
-
-            termsModal.addEventListener('click', (e) => {
-                if (e.target === termsModal) {
-                    termsModal.classList.remove('show');
-                    toggleRegisterButton();
-                }
-            });
-
-            // Event listener para o envio do formulário
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (isSubmitting) return; // Previne múltiplos envios
-
-                isSubmitting = true;
-                document.querySelectorAll('.error-message').forEach(hideError); // Esconde todos os erros antes de revalidar
-                hideNotification(); // Esconde notificações anteriores
-
-                let isValid = true;
-                const name = nameInput.value.trim();
-                const selectedMunicipio = municipioSelect.value;
-                const bairro = bairroInput.value.trim();
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                const email = emailInput.value.trim();
-                const phoneNumber = phoneMask.unmaskedValue; // Obtém o número sem a máscara
-
-                // Validações
-                if (!name) { showError(nameError, "Nome completo é obrigatório."); isValid = false; }
-                if (!selectedMunicipio) { showError(municipioError, "Selecione seu município."); isValid = false; }
-                if (!bairro) { showError(bairroError, "O nome do bairro é obrigatório."); isValid = false; }
-                else if (selectedMunicipio && municipiosData[selectedMunicipio] && !municipiosData[selectedMunicipio].includes(bairro)) {
-                    showError(bairroError, `Bairro inválido para ${selectedMunicipio}.`); isValid = false;
-                }
-                if (password.length < 8) { showError(passwordError, "A senha deve ter pelo menos 8 caracteres."); isValid = false; }
-                if (password !== confirmPassword) { showError(confirmPasswordError, "As senhas não coincidem."); isValid = false; }
-                if (!termsAccepted) { showError(termsError, "Aceite os Termos de Serviço."); isValid = false; }
-
-                const notifyEmailChecked = notifyEmail.checked;
-                const notifyWhatsAppChecked = notifyWhatsApp.checked;
-
-                if (!notifyEmailChecked && !notifyWhatsAppChecked) {
-                    showError(notificationError, "Selecione pelo menos um método de notificação.");
-                    isValid = false;
-                }
-
-                if (notifyEmailChecked) {
-                    const emailValidationMsg = window.firebaseAuth.validateEmail(email);
-                    if (emailValidationMsg) {
-                        showError(emailError, emailValidationMsg);
-                        isValid = false;
-                    } else if (!/^\S+@gmail\.com$/.test(email)) { // Força apenas Gmail
-                        showError(emailError, "Use um email do Gmail (ex: seu.email@gmail.com).");
-                        isValid = false;
-                    }
-                }
-
-                if (notifyWhatsAppChecked) {
-                    const phoneValidationMsg = window.firebaseAuth.validatePhone(phoneNumber);
-                    if (phoneValidationMsg) {
-                        showError(phoneNumberError, phoneValidationMsg);
-                        isValid = false;
-                    }
-                }
-
-                if (!isValid) {
-                    isSubmitting = false;
-                    toggleRegisterButton(); // Garante que o botão está no estado correto
-                    return;
-                }
-
-                // Habilita o spinner e desabilita o botão
-                toggleButtonState(registerBtn, registerText, registerSpinner, true, `<i class="fas fa-user-plus mr-3"></i> Criar Conta`);
-
-                try {
-                    if (notifyEmailChecked) {
-                        const result = await window.firebaseAuth.registerUserWithEmail(
-                            name,
-                            email,
-                            password,
-                            selectedMunicipio,
-                            bairro
-                        );
-                        if (result.requiresEmailVerification) {
-                            localStorage.setItem('pendingVerificationEmail', email);
-                            showNotification('success', 'Conta criada! Verifique seu email para o código de confirmação.');
-                            setTimeout(() => {
-                                window.location.href = 'verify-email.html'; // Redireciona para a página de verificação de email
-                            }, 2000);
-                        } else {
-                            showNotification('success', 'Conta criada e email verificado com sucesso!');
-                            setTimeout(() => {
-                                window.location.href = 'dashboard.html'; // Redireciona diretamente se já verificado
-                            }, 2000);
-                        }
-                    } else if (notifyWhatsAppChecked) {
-                        // Para registo por telefone, primeiro enviamos o código
-                        // Os dados do utilizador são guardados no localStorage temporariamente
-                        // e o utilizador é redirecionado para a página de verificação de telefone.
-                        // A criação final da conta Firebase Auth e o registo no Firestore
-                        // ocorrerão após a verificação bem-sucedida do OTP na página verify-phone.html.
-                        
-                        // Guardar os dados temporariamente para a página de verificação
-                        const tempUserData = {
-                            name,
-                            phoneNumber: phoneNumber, // O número já está normalizado pela máscara para ser seguro aqui
-                            password, // A senha será usada para criar a conta Firebase Auth APENAS após a verificação do telefone
-                            municipio: selectedMunicipio,
-                            bairro: bairro,
-                            notificationMethod: 'whatsapp'
-                        };
-                        localStorage.setItem('tempRegistrationData', JSON.stringify(tempUserData));
-
-                        // Enviar o código SMS
-                        confirmationResult = await window.firebaseAuth.sendPhoneVerificationCode(phoneNumber);
-                        // Armazenar o objeto confirmationResult (temporariamente)
-                        // Note: o objeto confirmationResult não é serializável diretamente para localStorage
-                        // Mas para a UX em um fluxo de página única, ele estaria na memória.
-                        // Para este fluxo multi-página, vamos para verify-phone.html e re-usaremos o phone number.
-                        // A página verify-phone.html vai re-iniciar o fluxo de confirmação.
-
-                        showNotification('success', 'Código de verificação enviado para o seu WhatsApp.');
-                        setTimeout(() => {
-                            window.location.href = 'verify-phone.html'; // Redireciona para a página de verificação de telefone
-                        }, 2000);
-                    }
-                } catch (error) {
-                    console.error("Erro no processo de registro:", error);
-                    let userFacingMessage = error.message || 'Erro ao criar conta. Tente novamente.';
-                    showNotification('error', userFacingMessage);
-
-                    // Adicionar feedback de erro específico para campos
-                    if (error.code) {
-                        switch (error.code) {
-                            case 'auth/email-already-in-use':
-                                showError(emailError, 'Este email já está registrado.');
-                                break;
-                            case 'auth/invalid-email':
-                                showError(emailError, 'Formato de email inválido.');
-                                break;
-                            case 'auth/weak-password':
-                                showError(passwordError, 'A senha é muito fraca.');
-                                break;
-                            case 'auth/invalid-phone-number':
-                                showError(phoneNumberError, 'Número de telefone inválido.');
-                                break;
-                            case 'auth/too-many-requests':
-                                showError(phoneNumberError, 'Bloqueado por muitas tentativas. Tente mais tarde.');
-                                break;
-                            case 'auth/captcha-check-failed':
-                                showNotification('error', 'Falha na verificação de segurança. Tente novamente.');
-                                break;
-                            // Casos gerais de erro de rede ou outros
-                            case 'auth/network-request-failed':
-                                showNotification('error', 'Problema de conexão com a internet. Verifique sua conexão e tente novamente.');
-                                break;
-                            default:
-                                // Fallback para erros não específicos
-                                showNotification('error', userFacingMessage);
-                        }
-                    }
-                } finally {
-                    toggleButtonState(registerBtn, registerText, registerSpinner, false, `<i class="fas fa-user-plus mr-3"></i> Criar Conta`);
-                    isSubmitting = false;
-                    toggleRegisterButton(); // Garante o estado correto do botão no final
-                }
-            });
-
-            // Chama toggleRegisterButton inicialmente para definir o estado do botão
-            toggleRegisterButton();
-            // Também oculta os campos de email/telefone até que a preferência seja selecionada
-            emailField.classList.add('hidden');
-            phoneNumberField.classList.add('hidden');
-            recaptchaContainer.classList.add('hidden'); // Certifica que reCAPTCHA está oculto inicialmente
-        });
-    </script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/imask@7.6.1/dist/imask.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/firebaseAuth.js"></script>
+  <script src="js/register.js"></script>
 </body>
 </html>
