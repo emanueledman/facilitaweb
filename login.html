@@ -522,21 +522,38 @@
   <script src="js/firebaseAuth.js"></script>
 
   <script>
+    const firebaseConfig = {
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+  authDomain: "facilita-479b3.firebaseapp.com",
+  projectId: "facilita-479b3",
+  storageBucket: "facilita-479b3.appspot.com",
+  messagingSenderId: "385676676886",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+};
 
-    // js/login.js
 document.addEventListener('DOMContentLoaded', async () => {
+  // Inicializa o Firebase App
   try {
     window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
     console.log("Firebase App inicializado.");
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
   } catch (error) {
-    console.error("Erro ao inicializar Firebase ou reCAPTCHA:", error);
-    showNotification("Erro ao carregar o sistema.", 'error');
+    console.error("Erro ao inicializar Firebase:", error);
+    showNotification("Erro: Firebase SDK não carregado.", 'error');
     return;
   }
 
+  // Verifica o estado de autenticação
   window.firebaseAuth.checkAuthState('index.html', null);
 
+  // Inicializa o reCAPTCHA
+  try {
+    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+  } catch (error) {
+    console.error("Erro ao inicializar reCAPTCHA:", error);
+    showNotification("Erro ao carregar verificação de segurança.", 'error');
+  }
+
+  // Referências aos elementos da UI
   const loginForm = document.getElementById('loginForm');
   const emailOrPhoneInput = document.getElementById('emailOrPhone');
   const passwordInput = document.getElementById('password');
@@ -547,6 +564,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const passwordError = document.getElementById('passwordError');
   const notificationMessageDiv = document.getElementById('notificationMessage');
 
+  // Funções auxiliares para mostrar/ocultar mensagens
   function showNotification(message, type) {
     notificationMessageDiv.textContent = message;
     notificationMessageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'border-error', 'bg-green-100', 'text-green-700', 'border-success');
@@ -568,9 +586,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     element.classList.add('hidden');
   }
 
+  // Máscara de telefone
   IMask(emailOrPhoneInput, {
     mask: '+244 900 000 000',
-    lazy: false,
+    lazy: false
   });
 
   emailOrPhoneInput.addEventListener('focus', () => {
@@ -593,6 +612,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Event listener para o formulário de login
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     hideError(emailOrPhoneError);
@@ -629,20 +649,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (isPhone) {
         await window.firebaseAuth.sendVerificationCode(emailOrPhoneRaw);
         showNotification('Código de verificação enviado para o seu telefone.', 'success');
-        localStorage.setItem('pendingVerificationPhoneNumber', emailOrPhoneRaw);
-        setTimeout(() => {
-          window.location.href = 'verify-phone.html';
-        }, 2000);
+        window.location.href = 'verify-phone.html';
       } else {
         const result = await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
-        if (result.requiresEmailVerification) {
-          showNotification('Por favor, verifique seu email antes de fazer login.', 'error');
-        } else {
-          showNotification('Login realizado com sucesso!', 'success');
-          setTimeout(() => {
-            window.location.href = 'profile.html';
-          }, 2000);
-        }
+        showNotification('Login realizado com sucesso!', 'success');
+        window.location.href = 'profile.html';
       }
     } catch (error) {
       console.error("Erro no login:", error);
@@ -659,6 +670,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Event listener para o login com Google
   googleLoginBtn.addEventListener('click', async () => {
     hideNotification();
     googleLoginBtn.disabled = true;
@@ -667,9 +679,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       await window.firebaseAuth.loginWithGoogle();
       showNotification('Login com Google realizado com sucesso!', 'success');
-      setTimeout(() => {
-        window.location.href = 'profile.html';
-      }, 2000);
+      window.location.href = 'profile.html';
     } catch (error) {
       console.error("Erro no login com Google:", error);
       showNotification(error.message, 'error');
@@ -679,6 +689,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Event listener para "Esqueceu a senha?"
   forgotPasswordLink.addEventListener('click', async (e) => {
     e.preventDefault();
     hideError(emailOrPhoneError);
