@@ -358,6 +358,7 @@
         }
       }
 
+      /* Modal Styles */
       .modal-overlay {
           position: fixed;
           top: 0;
@@ -460,6 +461,34 @@
       }
       .modal-footer .btn-accept-terms:hover {
           background-color: #E64A19;
+      }
+
+      /* Multi-step form specific styles */
+      .form-step {
+        display: none; /* Hidden by default */
+      }
+      .form-step.active {
+        display: block; /* Show active step */
+      }
+      .form-navigation {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+      }
+      .progress-bar-container {
+        width: 100%;
+        background-color: #e0e0e0;
+        border-radius: 5px;
+        height: 8px;
+        margin-bottom: 1.5rem;
+        overflow: hidden; /* Ensure rounded corners */
+      }
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background-color: var(--primary-accent);
+        border-radius: 5px;
+        transition: width 0.4s ease-in-out;
       }
     }
   </style>
@@ -571,84 +600,111 @@
           <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
         </div>
 
+        <div class="progress-bar-container">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
         <form id="registerForm" class="space-y-5">
-          <div>
-            <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
-            <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
-            <p id="nameError" class="error-message">Erro de nome</p>
-          </div>
-
-          <div>
-            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
-            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
-            <p id="emailOrPhoneError" class="error-message">Erro de email/telefone</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div id="step1" class="form-step active">
+            <h2 class="text-2xl font-montserrat font-bold text-secondary-dark mb-6 text-center">1. Seus Dados Pessoais</h2>
             <div>
-              <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
-              <div class="relative select-wrapper">
-                <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
-                  <option value="" class="bg-white text-text-secondary">Selecione</option>
-                </select>
+              <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
+              <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
+              <p id="nameError" class="error-message"></p>
+            </div>
+
+            <div>
+              <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+              <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
+              <p id="emailOrPhoneError" class="error-message"></p>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" id="nextStep1" class="btn-main w-full">Próximo <i class="fas fa-arrow-right ml-2"></i></button>
+            </div>
+          </div>
+
+          <div id="step2" class="form-step">
+            <h2 class="text-2xl font-montserrat font-bold text-secondary-dark mb-6 text-center">2. Localização e Segurança</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
+                <div class="relative select-wrapper">
+                  <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
+                    <option value="" class="bg-white text-text-secondary">Selecione</option>
+                  </select>
+                </div>
+                <p id="municipioError" class="error-message"></p>
               </div>
-              <p id="municipioError" class="error-message">Erro de município</p>
+              <div>
+                <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
+                <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+                <p id="bairroError" class="error-message"></p>
+              </div>
             </div>
+
             <div>
-              <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
-              <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
-              <p id="bairroError" class="error-message">Erro de bairro</p>
+              <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+              <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
+              <p id="passwordError" class="error-message"></p>
+            </div>
+
+            <div>
+              <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
+              <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
+              <p id="confirmPasswordError" class="error-message"></p>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" id="prevStep2" class="btn-outline-secondary-dark px-6 py-3 mr-auto"><i class="fas fa-arrow-left mr-2"></i> Anterior</button>
+              <button type="button" id="nextStep2" class="btn-main ml-auto">Próximo <i class="fas fa-arrow-right ml-2"></i></button>
             </div>
           </div>
 
-          <div>
-            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
-            <p id="passwordError" class="error-message">Erro de senha</p>
-          </div>
+          <div id="step3" class="form-step">
+            <h2 class="text-2xl font-montserrat font-bold text-secondary-dark mb-6 text-center">3. Preferências e Termos</h2>
+            <div class="mb-4">
+              <p class="text-text-main text-base font-medium mb-2">Preferências de Notificação:</p>
+              <div class="flex items-start mb-2">
+                <input type="checkbox" id="receiveEmail" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+                <label for="receiveEmail" class="ml-2 text-text-main text-sm">
+                  Desejo receber atualizações por Email.
+                </label>
+              </div>
+              <div class="flex items-start">
+                <input type="checkbox" id="receiveWhatsApp" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+                <label for="receiveWhatsApp" class="ml-2 text-text-main text-sm">
+                  Desejo receber atualizações por WhatsApp.
+                </label>
+              </div>
+            </div>
 
-          <div>
-            <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
-            <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
-            <p id="confirmPasswordError" class="error-message">Erro de confirmação de senha</p>
-          </div>
+            <div class="flex items-start mb-4">
+              <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+              <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
+                Eu li e concordo com os
+                <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium" onclick="event.preventDefault();">Termos e Condições de Serviço</a>
+                do FixABairro.
+              </label>
+            </div>
+            <p id="termsError" class="error-message"></p>
 
-          <div class="flex items-start">
-            <input type="checkbox" id="receiveEmail" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
-            <label for="receiveEmail" class="ml-2 text-text-main text-sm">
-              Desejo receber atualizações por Email.
-            </label>
-          </div>
+            <div id="recaptcha-container" class="mt-6 flex justify-center"></div>
 
-          <div class="flex items-start">
-            <input type="checkbox" id="receiveWhatsApp" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
-            <label for="receiveWhatsApp" class="ml-2 text-text-main text-sm">
-              Desejo receber atualizações por WhatsApp.
-            </label>
+            <div class="form-navigation">
+              <button type="button" id="prevStep3" class="btn-outline-secondary-dark px-6 py-3 mr-auto"><i class="fas fa-arrow-left mr-2"></i> Anterior</button>
+              <button type="submit" id="registerBtn" class="btn-main ml-auto flex items-center justify-center gap-2" disabled>
+                <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
+                <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+              </button>
+            </div>
           </div>
-
-          <div class="flex items-start">
-            <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
-            <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
-              Eu li e concordo com os
-              <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium" onclick="event.preventDefault();">Termos e Condições de Serviço</a>
-              do FixABairro.
-            </label>
-          </div>
-          <p id="termsError" class="error-message mt-1">Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.</p>
-
-          <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2" disabled>
-            <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
-            <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
-          </button>
         </form>
 
         <p class="text-center text-text-secondary text-sm mt-6">
           Já tem uma conta?
           <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
         </p>
-
-        <div id="recaptcha-container" class="mt-4"></div>
       </div>
     </div>
   </div>
@@ -722,6 +778,8 @@
     };
 
     let isSubmitting = false; // Flag to prevent multiple submissions
+    let currentStep = 1; // Start at the first step
+    const totalSteps = 3; // Total number of steps in the form
 
     document.addEventListener('DOMContentLoaded', async () => {
       console.log("DOM carregado.");
@@ -782,13 +840,21 @@
 
       // Terms and Conditions elements
       const termsCheckbox = document.getElementById('termsCheckbox');
-      const showTermsLink = document.getElementById('showTermsLink'); // Corrected ID
+      const showTermsLink = document.getElementById('showTermsLink');
       const termsModal = document.getElementById('termsModal');
       const closeTermsModalBtn = document.getElementById('closeTermsModal');
       const acceptTermsModalBtn = document.getElementById('acceptTermsModalBtn');
 
+      // Navigation buttons
+      const nextStep1Btn = document.getElementById('nextStep1');
+      const prevStep2Btn = document.getElementById('prevStep2');
+      const nextStep2Btn = document.getElementById('nextStep2');
+      const prevStep3Btn = document.getElementById('prevStep3');
+
+      const progressBar = document.getElementById('progressBar');
+
       // --- State Variable ---
-      let isTermsAccepted = false; // Consistent naming
+      let isTermsAccepted = false;
 
       // --- Data for Select Input ---
       const municipiosDeLuanda = [
@@ -798,7 +864,6 @@
       // --- Functions ---
       function populateMunicipios() {
         console.log("Populando municípios...");
-        // Sort and populate the dropdown
         municipiosDeLuanda.sort().forEach((muni) => {
           const opt = document.createElement('option');
           opt.value = muni;
@@ -815,7 +880,27 @@
 
       function hideError(element) {
         element.style.display = 'none';
-        element.textContent = ''; // Clear previous message
+        element.textContent = '';
+      }
+
+      function hideAllErrors() {
+        document.querySelectorAll('.error-message').forEach(hideError);
+      }
+
+      function updateProgressBar() {
+        const progress = (currentStep / totalSteps) * 100;
+        progressBar.style.width = `${progress}%`;
+      }
+
+      function showStep(stepNumber) {
+        document.querySelectorAll('.form-step').forEach(step => {
+          step.classList.remove('active');
+        });
+        document.getElementById(`step${stepNumber}`).classList.add('active');
+        currentStep = stepNumber;
+        updateProgressBar();
+        // Scroll to top of the form when navigating steps
+        document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
 
       function toggleRegisterButton() {
@@ -823,107 +908,24 @@
         termsCheckbox.checked = isTermsAccepted; // Ensure checkbox reflects the state
         registerBtn.disabled = !isTermsAccepted; // Disable if terms not accepted
 
-        if (!isTermsAccepted) {
+        if (!isTermsAccepted && currentStep === totalSteps) { // Only show error if on the last step
           showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
         } else {
           hideError(termsError);
         }
       }
 
-      // --- Event Listeners ---
+      // --- Step-specific Validation Functions ---
+      function validateStep1() {
+        hideAllErrors();
+        let isValid = true;
 
-      // Populate municipalities on page load
-      populateMunicipios();
-      // Set initial button state based on terms (should be disabled by default)
-      toggleRegisterButton();
-
-      // Show Terms Modal
-      showTermsLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default link behavior
-        console.log("Link de termos clicado.");
-        termsModal.classList.add('show');
-      });
-
-      // Close Terms Modal (X button)
-      closeTermsModalBtn.addEventListener('click', () => {
-        console.log("Fechando modal de termos.");
-        termsModal.classList.remove('show');
-        // If terms were not accepted, ensure checkbox is unchecked and button is disabled
-        if (!isTermsAccepted) {
-          termsCheckbox.checked = false; // Visually uncheck if not accepted
-          toggleRegisterButton();
-        }
-      });
-
-      // Accept Terms from Modal
-      acceptTermsModalBtn.addEventListener('click', () => {
-        console.log("Termos aceitos no modal.");
-        isTermsAccepted = true; // Set state to true
-        termsCheckbox.checked = true; // Check the checkbox visually
-        termsModal.classList.remove('show'); // Hide the modal
-        toggleRegisterButton(); // Update button state
-      });
-
-      // Close Modal on outside click
-      termsModal.addEventListener('click', (e) => {
-        if (e.target === termsModal) { // Check if click was directly on the overlay
-          console.log("Clicado fora do modal.");
-          termsModal.classList.remove('show');
-          if (!isTermsAccepted) {
-            termsCheckbox.checked = false; // Uncheck if closed without accepting
-            toggleRegisterButton();
-          }
-        }
-      });
-
-      // Terms Checkbox Interaction
-      termsCheckbox.addEventListener('change', () => {
-        console.log("Checkbox de termos alterado.");
-        if (termsCheckbox.checked) {
-          // If user checks the box, show modal to confirm acceptance
-          // This ensures they read terms before accepting.
-          if (!isTermsAccepted) { // Only show if not already accepted
-            termsModal.classList.add('show');
-          } else { // If already accepted and they just re-checked, no need to show modal
-             toggleRegisterButton(); // Just update button state
-          }
-        } else {
-          // If user unchecks, set state to false and update button
-          isTermsAccepted = false;
-          toggleRegisterButton();
-        }
-      });
-
-
-      // --- Form Submission Handler ---
-      registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Prevent default form submission
-        console.log("Formulário submetido.");
-
-        if (isSubmitting) {
-          console.log("Submissão já em andamento. Ignorando.");
-          return; // Prevent duplicate submissions
-        }
-        isSubmitting = true; // Set submission flag
-
-        // Clear all previous errors
-        document.querySelectorAll('.error-message').forEach(hideError);
-
-        let isValid = true; // Overall form validation status
-
-        // --- Input Validation ---
-        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-        let finalEmail = null;
-        let finalPhoneNumber = null;
-        let registrationMethod = null;
-
-        // Validate Name
         if (!nameInput.value.trim()) {
           showError(nameError, "Nome completo é obrigatório.");
           isValid = false;
         }
 
-        // Validate Email or Phone Input and determine method
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
         if (!emailOrPhoneRaw) {
           showError(emailOrPhoneError, "Email ou telefone é obrigatório.");
           isValid = false;
@@ -934,37 +936,32 @@
             if (emailValidationResult) {
               showError(emailOrPhoneError, emailValidationResult);
               isValid = false;
-            } else {
-              finalEmail = emailOrPhoneRaw;
-              registrationMethod = 'email';
             }
           } else { // Assume it's a phone number
             const phoneValidationResult = window.firebaseAuth.validatePhone(emailOrPhoneRaw);
             if (phoneValidationResult) {
               showError(emailOrPhoneError, phoneValidationResult);
               isValid = false;
-            } else {
-              finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-              // For phone sign-up, a synthetic email is still passed to Firebase Auth
-              finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`;
-              registrationMethod = 'phone';
             }
           }
         }
+        return isValid;
+      }
 
-        // Validate Municipality
+      function validateStep2() {
+        hideAllErrors();
+        let isValid = true;
+
         if (!municipioSelect.value) {
           showError(municipioError, "Selecione um município.");
           isValid = false;
         }
 
-        // Validate Bairro
         if (!bairroInput.value.trim()) {
           showError(bairroError, "O bairro é obrigatório.");
           isValid = false;
         }
 
-        // Validate Password
         const password = passwordInput.value;
         const confirmPassword = confirmPasswordInput.value;
 
@@ -974,59 +971,163 @@
           isValid = false;
         }
 
-        // Validate Confirm Password
         if (password !== confirmPassword) {
           showError(confirmPasswordError, "As senhas não coincidem.");
           isValid = false;
         }
+        return isValid;
+      }
 
-        // Validate Terms and Conditions
+      function validateStep3() {
+        hideAllErrors();
+        let isValid = true;
+
         if (!isTermsAccepted) {
           showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
           isValid = false;
         }
 
-        // Validate reCAPTCHA only if registrationMethod is 'phone' or if it needs to be explicitly verified
-        // For 'invisible' reCAPTCHA, it should ideally resolve automatically, but we check if a response exists.
-        if (registrationMethod === 'phone' && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
-          console.log("reCAPTCHA não resolvido para autenticação por telefone.");
-          showError(emailOrPhoneError, "Complete a verificação de segurança reCAPTCHA.");
+        // For phone authentication, reCAPTCHA is crucial and needs to be resolved
+        // Check if the current input is a phone number before checking reCAPTCHA for phone method
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        const looksLikePhone = emailOrPhoneRaw && (!emailOrPhoneRaw.includes('@') && (emailOrPhoneRaw.startsWith('+') || /^\d+$/.test(emailOrPhoneRaw)));
+
+        if (looksLikePhone && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
+          showError(termsError, "Complete a verificação de segurança reCAPTCHA."); // Show reCAPTCHA error near terms
           isValid = false;
         }
 
+        return isValid;
+      }
 
-        // If any validation failed, stop here
-        if (!isValid) {
-          console.log("Validação falhou. Submissão cancelada.");
-          isSubmitting = false; // Reset flag
+      // --- Initialization ---
+      populateMunicipios();
+      showStep(currentStep); // Show the first step initially
+      toggleRegisterButton(); // Set initial button state (disabled)
+
+      // --- Navigation Button Event Listeners ---
+      nextStep1Btn.addEventListener('click', () => {
+        if (validateStep1()) {
+          showStep(2);
+        }
+      });
+
+      prevStep2Btn.addEventListener('click', () => {
+        showStep(1);
+      });
+
+      nextStep2Btn.addEventListener('click', () => {
+        if (validateStep2()) {
+          showStep(3);
+        }
+      });
+
+      prevStep3Btn.addEventListener('click', () => {
+        showStep(2);
+      });
+
+
+      // --- Modal and Terms Checkbox Event Listeners ---
+      showTermsLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        termsModal.classList.add('show');
+      });
+
+      closeTermsModalBtn.addEventListener('click', () => {
+        termsModal.classList.remove('show');
+        if (!isTermsAccepted) {
+          termsCheckbox.checked = false;
+          toggleRegisterButton();
+        }
+      });
+
+      acceptTermsModalBtn.addEventListener('click', () => {
+        isTermsAccepted = true;
+        termsCheckbox.checked = true;
+        termsModal.classList.remove('show');
+        toggleRegisterButton();
+      });
+
+      termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) {
+          termsModal.classList.remove('show');
+          if (!isTermsAccepted) {
+            termsCheckbox.checked = false;
+            toggleRegisterButton();
+          }
+        }
+      });
+
+      termsCheckbox.addEventListener('change', () => {
+        if (termsCheckbox.checked) {
+          if (!isTermsAccepted) {
+            termsModal.classList.add('show');
+          } else {
+             toggleRegisterButton();
+          }
+        } else {
+          isTermsAccepted = false;
+          toggleRegisterButton();
+        }
+      });
+
+
+      // --- Final Form Submission Handler ---
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log("Formulário de registro final submetido.");
+
+        if (isSubmitting) {
+          console.log("Submissão já em andamento. Ignorando.");
           return;
         }
 
-        console.log("Validação bem-sucedida. Iniciando registro...");
+        // Final validation for the last step before submission
+        if (!validateStep3()) {
+          console.log("Validação da última etapa falhou.");
+          return;
+        }
+
+        isSubmitting = true;
+
         // --- UI Feedback during Submission ---
         registerBtn.disabled = true;
         registerText.classList.add('hidden');
         registerSpinner.classList.remove('hidden');
         registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Criando...`;
 
-        // --- Firebase User Registration ---
-        try {
-          const userData = {
+        // --- Prepare User Data ---
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        let finalEmail = null;
+        let finalPhoneNumber = null;
+        let registrationMethod = null;
+
+        if (emailOrPhoneRaw.includes('@')) {
+          finalEmail = emailOrPhoneRaw;
+          registrationMethod = 'email';
+        } else {
+          finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
+          finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`; // Synthetic email for phone registration
+          registrationMethod = 'phone';
+        }
+
+        const userData = {
             name: nameInput.value.trim(),
-            email: finalEmail, // This will be the actual email for Firebase Auth
-            phoneNumber: finalPhoneNumber, // This will be the actual phone number for Firestore
+            email: finalEmail,
+            phoneNumber: finalPhoneNumber,
             password: passwordInput.value,
             municipio: municipioSelect.value,
             bairro: bairroInput.value.trim(),
-            method: registrationMethod, // Determined method: 'email' or 'phone'
+            method: registrationMethod,
             notificationPreferences: {
               email: receiveEmailInput.checked,
               whatsapp: receiveWhatsAppInput.checked
             }
           };
 
-          console.log("Chamando registerUser com dados:", userData);
+        console.log("Chamando registerUser com dados:", userData);
 
+        try {
           const result = await window.firebaseAuth.registerUser(userData);
 
           console.log("Registro concluído:", result);
@@ -1034,47 +1135,47 @@
           // --- Post-Registration Actions ---
           if (result.requiresEmailVerification) {
             alert("Conta criada com sucesso! Por favor, verifique seu email para ativar sua conta.");
-            window.location.href = 'verify-email.html'; // Redirect to email verification page
+            window.location.href = 'verify-email.html';
           } else if (result.requiresPhoneVerification) {
-            // For phone verification, the 'confirmationResult' is needed to prompt for SMS code.
-            // You would typically redirect to a page where the user enters the SMS code.
-            // For simplicity, we'll just alert and redirect here. In a real app,
-            // `confirmationResult` would be used in `verify-phone.html`.
             alert("Código de verificação enviado para o seu telemóvel. Por favor, verifique-o.");
-            window.location.href = 'verify-phone.html'; // Redirect to phone verification page
+            // In a real app, you'd store confirmationResult in sessionStorage
+            // and redirect to a dedicated phone verification page.
+            window.location.href = 'verify-phone.html';
           } else {
-            // Fallback for cases where no explicit verification is immediately required
             alert("Conta criada com sucesso!");
-            window.location.href = 'index.html'; // Or dashboard, if applicable
+            window.location.href = 'index.html';
           }
-
 
         } catch (error) {
           console.error("Erro no registro:", error);
-          let errorMsg = "Ocorreu um erro inesperado. Tente novamente."; // Default error message
+          let errorMsg = "Ocorreu um erro inesperado. Tente novamente.";
 
-          // Handle specific Firebase authentication errors
           if (error.code) {
             switch (error.code) {
               case 'auth/email-already-in-use':
                 errorMsg = 'Este email já está registado. Por favor, faça login ou use outro email.';
                 showError(emailOrPhoneError, errorMsg);
+                // Redirect back to step 1 if the error is related to initial input
+                showStep(1);
                 break;
               case 'auth/invalid-email':
                 errorMsg = 'Formato de email inválido.';
                 showError(emailOrPhoneError, errorMsg);
+                showStep(1);
                 break;
               case 'auth/weak-password':
                 errorMsg = 'A senha é muito fraca. Por favor, use uma senha mais segura.';
-                showError(passwordError, errorMsg); // Show under password field
+                showError(passwordError, errorMsg);
+                showStep(2); // Redirect back to step 2 for password issues
                 break;
               case 'auth/invalid-phone-number':
                 errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato +2449XXXXXXXX.';
                 showError(emailOrPhoneError, errorMsg);
+                showStep(1);
                 break;
               case 'auth/captcha-check-failed':
                 errorMsg = 'A verificação de segurança reCAPTCHA falhou. Tente novamente ou recarregue a página.';
-                showError(emailOrPhoneError, errorMsg);
+                showError(termsError, errorMsg); // Display on last step
                 // Reset reCAPTCHA to allow another attempt
                 if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
                     grecaptcha.reset();
@@ -1083,29 +1184,26 @@
               case 'auth/too-many-requests':
                 errorMsg = 'Muitas tentativas de registro. Por favor, tente novamente mais tarde.';
                 showError(emailOrPhoneError, errorMsg);
+                showStep(1); // Redirect to first step for rate limiting
                 break;
               case 'auth/network-request-failed':
                   errorMsg = 'Problema de conexão com a internet. Verifique sua rede e tente novamente.';
-                  showError(emailOrPhoneError, errorMsg);
+                  alert(errorMsg); // Show a general alert for network issues
                   break;
               default:
-                // For other Firebase errors, use the Firebase message directly
                 errorMsg = error.message;
-                // If it's a generic Firebase error, show it generally
                 alert(`Erro: ${errorMsg}`);
             }
           } else {
-            // Non-Firebase errors (e.g., from your custom validation)
             alert(`Erro: ${error.message}`);
           }
         } finally {
           console.log("Finalizando submissão. Resetando UI.");
-          // Always reset UI elements
-          registerBtn.disabled = !isTermsAccepted; // Re-enable based on terms acceptance
+          registerBtn.disabled = !isTermsAccepted;
           registerText.classList.remove('hidden');
           registerSpinner.classList.add('hidden');
-          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`; // Reset button text
-          isSubmitting = false; // Reset submission flag
+          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+          isSubmitting = false;
         }
       });
     });
