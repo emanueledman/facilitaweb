@@ -2,210 +2,114 @@ const firebaseAuth = {
   _app: null,
   _auth: null,
   _firestore: null,
+  _recaptchaVerifier: null,
 
   initializeFirebaseApp(firebaseConfig) {
+    console.log("Inicializando Firebase...");
     if (typeof firebase === 'undefined') {
-      console.error("Firebase SDK não carregado. Verifique os scripts CDN.");
-      throw new Error("Firebase SDK não carregado. Certifique-se de que os scripts CDN do Firebase Auth e Firestore estejam incluídos no seu HTML.");
+      throw new Error("Firebase SDK não carregado.");
     }
-
-    if (!firebase.apps.length) {
-      this._app = firebase.initializeApp(firebaseConfig);
-    } else {
-      this._app = firebase.app();
-    }
-
+    this._app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
     this._auth = firebase.auth();
     this._firestore = firebase.firestore();
-
-    console.log("Firebase App, Auth e Firestore inicializados.");
+    console.log("Firebase inicializado.");
   },
 
-  _getAuth() {
-    if (!this._auth) {
-      throw new Error("Firebase Auth não inicializado. Chame initializeFirebaseApp primeiro.");
-    }
-    return this._auth;
-  },
-
-  _getFirestore() {
-    if (!this._firestore) {
-      throw new Error("Firebase Firestore não inicializado. Chame initializeFirebaseApp primeiro.");
-    }
-    return this._firestore;
-  },
-
-  checkAuthState(redirectIfLoggedIn, redirectIfNotLoggedIn) {
-    this._getAuth().onAuthStateChanged((user) => {
-      if (user) {
-        console.log("Usuário logado:", user.uid);
-        if (redirectIfLoggedIn && window.location.href !== redirectIfLoggedIn) {
-          window.location.href = redirectIfLoggedIn;
-        }
-      } else {
-        console.log("Nenhum usuário logado.");
-        if (redirectIfNotLoggedIn && window.location.href !== redirectIfNotLoggedIn) {
-          window.location.href = redirectIfNotLoggedIn;
-        }
-      }
+  initializeRecaptcha(containerId) {
+    console.log("Inicializando reCAPTCHA...");
+    if (!this._auth) throw new Error("Firebase Auth não inicializado.");
+    if (typeof grecaptcha === 'undefined') throw new Error("reCAPTCHA não carregado.");
+    this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier(containerId, {
+      size: 'invisible',
+      callback: () => {
+        document.getElementById('registerBtn').disabled = false;
+        console.log("reCAPTCHA resolvido.");
+      },
+      'expired-callback': () => {
+        document.getElementById('registerBtn').disabled = true;
+        console.warn("reCAPTCHA expirou.");
+      },
+    });
+    return this._recaptchaVerifier.render().catch((error) => {
+      console.error("Erro ao renderizar reCAPTCHA:", error);
+      throw new Error("Erro na verificação de segurança.");
     });
   },
 
+  normalizePhoneNumber(phone) {
+    console.log("Normalizando telefone:", phone);
+    let normalized = phone.replace(/\D/g, '');
+    if (normalized.startsWith('244')) normalized = '+' + normalized;
+    else if (normalized.startsWith('9')) normalized = '+244' + normalized;
+    else if (!normalized.startsWith('+244')) normalized = '+244' + normalized;
+    if (!/^\+2449\d{8}$/.test(normalized)) throw new Error("Formato de telefone inválido.");
+    return normalized;
+  },
+
   validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return "O formato do email é inválido.";
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email) ? null : "Email inválido.";
+  },
+
+  validatePhone(phone) {
+    try {
+      const normalized = this.normalizePhoneNumber(phone);
+      return null;
+    } catch (error) {
+      return error.message;
     }
-    return null;
   },
 
   validatePassword(password) {
-    if (!password || password.length < 6) {
-      return "A senha deve ter pelo menos 6 caracteres.";
-    }
-    return null;
+    return password.length >= 6 ? null : "Senha deve ter 6+ caracteres.";
   },
 
-  async loginWithEmail(email, password) {
-    const emailValidation = this.validateEmail(email);
-    if (emailValidation) throw new Error(emailValidation);
-    const passwordValidation = this.validatePassword(password);
-    if (passwordValidation) throw new Error(passwordValidation);
+  async registerUser({ name, email, phoneNumber, password, municipio, bairro, method, notificationPreferences }) {
+    console.log("Registrando usuário:", { name, method });
+    if (!name || !method || !municipio || !bairro || !password) throw new Error("Campos obrigatórios ausentes.");
 
+    let user, finalEmail = email;
     try {
-      const userCredential = await this._getAuth().signInWithEmailAndPassword(email, password);
-      return {
-        user: userCredential.user,
-        requiresEmailVerification: !userCredential.user.emailVerified,
-      };
-    } catch (error) {
-      console.error("Erro no login com email:", error);
-      let errorMessage = "Erro ao fazer login.";
-      switch (error.code) {
-        case 'auth/invalid-email':
-          errorMessage = "Email inválido.";
-          break;
-        case 'auth/user-disabled':
-          errorMessage = "Este usuário foi desabilitado.";
-          break;
-        case 'auth/user-not-found':
-          errorMessage = "Usuário não encontrado. Crie uma conta.";
-          break;
-        case 'auth/wrong-password':
-          errorMessage = "Senha incorreta.";
-          break;
-        case 'auth/invalid-credential':
-          errorMessage = "Email ou senha inválidos.";
-          break;
-        default:
-          errorMessage = "Erro desconhecido.";
-      }
-      throw new Error(errorMessage);
-    }
-  },
-
-  async registerUser({ name, email, password, municipio, bairro, notificationPreferences }) {
-    if (!name || !email || !password || !municipio || !bairro || !notificationPreferences) {
-      throw new Error("Por favor, preencha todos os campos obrigatórios.");
-    }
-
-    const emailValidation = this.validateEmail(email);
-    if (emailValidation) throw new Error(emailValidation);
-    const passwordValidation = this.validatePassword(password);
-    if (passwordValidation) throw new Error(passwordValidation);
-
-    try {
-      const userCredential = await this._getAuth().createUserWithEmailAndPassword(email, password);
-      const user = userCredential.user;
-      await user.updateProfile({ displayName: name });
-      await user.sendEmailVerification();
-
-      const userDocRef = this._getFirestore().collection('usuarios').doc(user.uid);
-      const userDoc = await userDocRef.get();
-
-      if (!userDoc.exists) {
-        await userDocRef.set({
-          name,
-          email,
-          municipio,
-          bairro,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          registrationMethod: 'email',
-          notificationPreferences: {
-            email: notificationPreferences.email || false,
-            whatsapp: notificationPreferences.whatsapp || false,
-          },
-        });
+      if (method === 'email') {
+        const emailError = this.validateEmail(email);
+        if (emailError) throw new Error(emailError);
+        const userCredential = await this._auth.createUserWithEmailAndPassword(email, password);
+        user = userCredential.user;
+        await user.updateProfile({ displayName: name });
+        await user.sendEmailVerification();
+      } else if (method === 'phone') {
+        const phoneError = this.validatePhone(phoneNumber);
+        if (phoneError) throw new Error(phoneError);
+        const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
+        finalEmail = `${normalizedPhone.replace(/\D/g, '')}@fixabairro.com`;
+        const userCredential = await this._auth.createUserWithEmailAndPassword(finalEmail, password);
+        user = userCredential.user;
+        await user.updateProfile({ displayName: name });
+        const confirmationResult = await this._auth.signInWithPhoneNumber(normalizedPhone, this._recaptchaVerifier);
+        return { confirmationResult, user, method: 'phone', requiresPhoneVerification: true };
       } else {
-        await userDocRef.update({
-          name,
-          email,
-          municipio,
-          bairro,
-          notificationPreferences: {
-            email: notificationPreferences.email || false,
-            whatsapp: notificationPreferences.whatsapp || false,
-          },
-        });
-        console.warn("Documento de usuário já existe no Firestore. Atualizando dados.");
+        throw new Error("Método inválido.");
       }
 
-      return {
-        user,
-        requiresEmailVerification: true,
-        registrationMethod: 'email',
-      };
+      await this._firestore.collection('users').doc(user.uid).set({
+        name,
+        email: finalEmail,
+        phoneNumber: phoneNumber ? this.normalizePhoneNumber(phoneNumber) : null,
+        municipio,
+        bairro,
+        createdAt: Date.now(),
+        registrationMethod: method,
+        notificationPreferences: {
+          email: notificationPreferences.email || false,
+          whatsapp: notificationPreferences.whatsapp || false,
+        },
+      });
+
+      return { user, method, requiresEmailVerification: method === 'email' };
     } catch (error) {
-      console.error("Erro ao registrar usuário:", error);
-      let errorMessage = "Erro ao registrar usuário.";
-      switch (error.code) {
-        case 'auth/email-already-in-use':
-          errorMessage = "Este email já está registrado. Tente fazer login.";
-          break;
-        case 'auth/weak-password':
-          errorMessage = "A senha é muito fraca. Por favor, use uma senha mais forte.";
-          break;
-        case 'auth/invalid-email':
-          errorMessage = "O formato do email é inválido.";
-          break;
-        default:
-          errorMessage = error.message || "Erro desconhecido.";
-      }
-      throw new Error(errorMessage);
+      console.error("Erro ao registrar:", error);
+      throw new Error(error.message || "Erro no registro.");
     }
-  },
-
-  async resetPassword(email) {
-    const emailValidation = this.validateEmail(email);
-    if (emailValidation) throw new Error(emailValidation);
-
-    try {
-      await this._getAuth().sendPasswordResetEmail(email);
-      return true;
-    } catch (error) {
-      console.error("Erro ao redefinir senha:", error);
-      let errorMessage = "Erro ao redefinir senha.";
-      if (error.code === 'auth/user-not-found') {
-        errorMessage = "Nenhum usuário encontrado com este email.";
-      } else if (error.code === 'auth/invalid-email') {
-        errorMessage = "Email inválido.";
-      }
-      throw new Error(errorMessage);
-    }
-  },
-
-  async signOutUser() {
-    try {
-      await this._getAuth().signOut();
-      return true;
-    } catch (error) {
-      console.error("Erro ao sair:", error);
-      throw new Error("Erro ao desconectar.");
-    }
-  },
-
-  onAuthStateChangedListener(callback) {
-    return this._getAuth().onAuthStateChanged(callback);
   },
 };
 
