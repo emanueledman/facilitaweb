@@ -7,7 +7,7 @@
   <meta name="keywords" content="fixabairro, angola, registro, criar conta, telefone, email, comunidade, cidadania">
   <meta name="author" content="FixABairro Team">
   <title>FixABairro | Junte-se a Nós</title>
-  
+
   <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -35,13 +35,13 @@
         --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
         --error-red: #DC3545;
       }
-      
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
-      
+
       body {
         font-family: var(--font-body);
         background: var(--bg-light);
@@ -53,7 +53,7 @@
         flex-direction: column;
         align-items: center;
       }
-      
+
       h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-heading);
         color: var(--secondary-dark);
@@ -238,12 +238,12 @@
         width: 100%;
         max-width: 900px;
       }
-      
+
       .form-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 12px 40px rgba(0,0,0,0.12);
       }
-      
+
       .section-title {
         font-size: 1.75rem;
         font-weight: 600;
@@ -264,12 +264,12 @@
         background: var(--primary-accent);
         border-radius: 2px;
       }
-      
+
       .form-group {
         margin-bottom: 1.8rem;
         position: relative;
       }
-      
+
       .form-group label {
         font-weight: 500;
         color: var(--text-main);
@@ -287,19 +287,19 @@
         transition: all 0.3s ease;
         font-size: 1rem;
       }
-      
+
       .form-control:focus {
         background: var(--bg-white);
         border-color: var(--primary-accent);
         box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
         color: var(--text-main);
       }
-      
+
       .form-control::placeholder {
         color: var(--text-secondary);
         opacity: 0.7;
       }
-      
+
       .error-message {
         color: var(--error-red);
         font-size: 0.9rem;
@@ -345,7 +345,7 @@
           font-size: 1rem;
         }
       }
-      
+
       @media (max-width: 576px) {
         .form-card {
           padding: 1.5rem;
@@ -570,14 +570,14 @@
           <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Crie Sua Conta</h1>
           <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
         </div>
-        
+
         <form id="registerForm" class="space-y-5">
           <div>
             <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
             <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
             <p id="nameError" class="error-message">Erro de nome</p>
           </div>
-          
+
           <div>
             <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
             <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
@@ -600,13 +600,13 @@
               <p id="bairroError" class="error-message">Erro de bairro</p>
             </div>
           </div>
-          
+
           <div>
             <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
             <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
             <p id="passwordError" class="error-message">Erro de senha</p>
           </div>
-          
+
           <div>
             <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
             <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
@@ -619,7 +619,7 @@
               Desejo receber atualizações por Email.
             </label>
           </div>
-          
+
           <div class="flex items-start">
             <input type="checkbox" id="receiveWhatsApp" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
             <label for="receiveWhatsApp" class="ml-2 text-text-main text-sm">
@@ -630,21 +630,21 @@
           <div class="flex items-start">
             <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
             <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
-              Eu li e concordo com os 
+              Eu li e concordo com os
               <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium" onclick="event.preventDefault();">Termos e Condições de Serviço</a>
               do FixABairro.
             </label>
           </div>
           <p id="termsError" class="error-message mt-1">Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.</p>
-          
+
           <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2" disabled>
             <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
             <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
           </button>
         </form>
-        
+
         <p class="text-center text-text-secondary text-sm mt-6">
-          Já tem uma conta? 
+          Já tem uma conta?
           <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
         </p>
 
@@ -713,7 +713,7 @@
   <script src="js/firebaseAuth.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw", // Substitua pela sua chave REAL
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
       projectId: "facilita-479b3",
       storageBucket: "facilita-479b3.appspot.com",
@@ -721,41 +721,44 @@
       appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
     };
 
-    let isSubmitting = false;
+    let isSubmitting = false; // Flag to prevent multiple submissions
 
     document.addEventListener('DOMContentLoaded', async () => {
       console.log("DOM carregado.");
 
-      // Verifica se firebaseAuth está carregado
+      // Check if firebaseAuth module is loaded
       if (!window.firebaseAuth) {
-        console.error("firebaseAuth.js não carregado.");
+        console.error("firebaseAuth.js não carregado ou module.exports não exportado corretamente.");
         alert("Erro: Módulo de autenticação não carregado.");
         return;
       }
 
-      // Inicializa Firebase
+      // Initialize Firebase
       try {
         window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
         console.log("Firebase inicializado.");
       } catch (error) {
         console.error("Erro ao inicializar Firebase:", error);
-        alert("Erro: Falha ao carregar o Firebase.");
+        alert("Erro: Falha ao carregar o Firebase. Tente novamente mais tarde.");
         return;
       }
 
-      // Inicializa reCAPTCHA
+      // Initialize reCAPTCHA
       try {
+        // reCAPTCHA container is initially hidden in your HTML,
+        // ensure it's made visible if needed or initialize it even if hidden.
         await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
         console.log("reCAPTCHA inicializado.");
       } catch (error) {
         console.error("Erro ao inicializar reCAPTCHA:", error);
-        alert("Erro: Falha na verificação de segurança.");
+        alert("Erro: Falha na verificação de segurança. Recarregue a página.");
         return;
       }
 
-      // Verifica estado de autenticação
+      // Check authentication state (e.g., redirect if already logged in)
       window.firebaseAuth.checkAuthState('index.html', null);
 
+      // --- Get DOM Elements ---
       const registerForm = document.getElementById('registerForm');
       const nameInput = document.getElementById('name');
       const emailOrPhoneInput = document.getElementById('emailOrPhone');
@@ -768,27 +771,35 @@
       const registerBtn = document.getElementById('registerBtn');
       const registerText = document.getElementById('registerText');
       const registerSpinner = document.getElementById('registerSpinner');
+
+      // Error message elements
       const nameError = document.getElementById('nameError');
       const emailOrPhoneError = document.getElementById('emailOrPhoneError');
       const municipioError = document.getElementById('municipioError');
       const bairroError = document.getElementById('bairroError');
       const passwordError = document.getElementById('passwordError');
       const confirmPasswordError = document.getElementById('confirmPasswordError');
-      const termsCheckbox = document.getElementById('termsCheckbox');
       const termsError = document.getElementById('termsError');
-      const showTermsModal = document.getElementById('showTermsLinkModal');
+
+      // Terms and Conditions elements
+      const termsCheckbox = document.getElementById('termsCheckbox');
+      const showTermsLink = document.getElementById('showTermsLink'); // Corrected ID
       const termsModal = document.getElementById('termsModal');
-      const closeTermsModalBtn = document.getElementById('closeTermsModalBtn');
+      const closeTermsModalBtn = document.getElementById('closeTermsModal'); // Corrected ID
       const acceptTermsModalBtn = document.getElementById('acceptTermsModalBtn');
 
-    let isTermsAccepted = false;
+      // --- State Variable ---
+      let isTermsAccepted = false; // Consistent naming
 
+      // --- Data for Select Input ---
       const municipiosDeLuanda = [
-        "Luanda', 'Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba", "Kiaxi", "Cazenga"
+        "Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Luanda", "Quissama", "Talatona", "Viana"
       ];
 
+      // --- Functions ---
       function populateMunicipios() {
-        console.log("Populando municipios...");
+        console.log("Populando municípios...");
+        // Sort and populate the dropdown
         municipiosDeLuanda.sort().forEach((muni) => {
           const opt = document.createElement('option');
           opt.value = muni;
@@ -797,229 +808,281 @@
         });
       }
 
-      populateMunicipios();
-
       function showError(element, message) {
-        console.log("Mostrando erro:", message);
-        element.documentTextContent = 'message';
+        console.log(`Mostrando erro para ${element.id}: ${message}`);
+        element.textContent = message; // Corrected typo here
         element.style.display = 'block';
       }
 
       function hideError(element) {
         element.style.display = 'none';
+        element.textContent = ''; // Clear previous message
       }
 
       function toggleRegisterButton() {
-        console.log("Atualizando botão: termsAccepted =", termsAccepted);
-        termsCheckbox.checked = termsAccepted;
-        registerBtn.disabled = !termsAccepted;
-        if (!termsAccepted) {
-          showError(termsError, "Aceite os Termos e Condições.");
+        console.log("Atualizando botão: isTermsAccepted =", isTermsAccepted);
+        termsCheckbox.checked = isTermsAccepted; // Ensure checkbox reflects the state
+        registerBtn.disabled = !isTermsAccepted; // Disable if terms not accepted
+
+        if (!isTermsAccepted) {
+          showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
         } else {
           hideError(termsError);
         }
       }
 
-      showTermsLinkModal.addEventListener('click', () => {
+      // --- Event Listeners ---
+
+      // Populate municipalities on page load
+      populateMunicipios();
+      // Set initial button state based on terms (should be disabled by default)
+      toggleRegisterButton();
+
+      // Show Terms Modal
+      showTermsLink.addEventListener('click', (e) => { // Corrected variable name
+        e.preventDefault(); // Prevent default link behavior
         console.log("Link de termos clicado.");
         termsModal.classList.add('show');
       });
 
+      // Close Terms Modal (X button)
       closeTermsModalBtn.addEventListener('click', () => {
         console.log("Fechando modal de termos.");
         termsModal.classList.remove('show');
-        if (!termsAccepted) {
-          termsAccepted = false;
+        // If terms were not accepted, ensure checkbox is unchecked and button is disabled
+        if (!isTermsAccepted) {
+          termsCheckbox.checked = false; // Visually uncheck if not accepted
           toggleRegisterButton();
         }
       });
 
+      // Accept Terms from Modal
       acceptTermsModalBtn.addEventListener('click', () => {
         console.log("Termos aceitos no modal.");
-        termsAccepted = true;
-        termsCheckbox.checked = true;
-        termsModal.classList.remove('show');
-        toggleRegisterButton();
+        isTermsAccepted = true; // Set state to true
+        termsCheckbox.checked = true; // Check the checkbox visually
+        termsModal.classList.remove('show'); // Hide the modal
+        toggleRegisterButton(); // Update button state
       });
 
-      termsModalBtn.addEventListener('click', (e) => {
-        if (e.target === termsModal) {
+      // Close Modal on outside click
+      termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) { // Check if click was directly on the overlay
           console.log("Clicado fora do modal.");
           termsModal.classList.remove('show');
-          if (!termsAccepted) {
-            termsAccepted = false;
+          if (!isTermsAccepted) {
+            termsCheckbox.checked = false; // Uncheck if closed without accepting
             toggleRegisterButton();
           }
         }
       });
 
+      // Terms Checkbox Interaction
       termsCheckbox.addEventListener('change', () => {
         console.log("Checkbox de termos alterado.");
-        if (!termsAccepted) {
-          termsCheckbox.checked = false;
+        if (termsCheckbox.checked) {
+          // If user checks the box, show modal to confirm acceptance
           termsModal.classList.add('show');
         } else {
-          termsAccepted = termsCheckbox.checked;
+          // If user unchecks, set state to false and update button
+          isTermsAccepted = false;
           toggleRegisterButton();
         }
       });
 
+
+      // --- Form Submission Handler ---
       registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission
         console.log("Formulário submetido.");
 
         if (isSubmitting) {
-          console.log("Submissão já em andamento.");
-          return;
+          console.log("Submissão já em andamento. Ignorando.");
+          return; // Prevent duplicate submissions
         }
-        isSubmitting = true;
+        isSubmitting = true; // Set submission flag
 
-        // Limpa erros
+        // Clear all previous errors
         document.querySelectorAll('.error-message').forEach(hideError);
 
-        let isValid = true;
-        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-        console.log("emailOrPhone:", emailOrPhoneRaw);
-        let emailOrPhone;
-        try {
-          emailOrPhone = emailOrPhoneRaw && (emailOrPhoneRaw.startsWith('+') || emailOrPhoneRaw.includes('@')) ? emailOrPhoneRaw : window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-        } catch (error) {
-          showError(emailOrPhoneError, "Formato de telefone inválido.");
-          isValid = false;
-        }
+        let isValid = true; // Overall form validation status
 
-        if (!nameInput.value || !nameInput.value.trim()) {
+        // --- Input Validation ---
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        let emailOrPhone = null; // Normalized value
+
+        // Validate Name
+        if (!nameInput.value.trim()) {
           showError(nameError, "Nome completo é obrigatório.");
           isValid = false;
         }
 
+        // Validate Email or Phone Input
         if (!emailOrPhoneRaw) {
           showError(emailOrPhoneError, "Email ou telefone é obrigatório.");
           isValid = false;
+        } else {
+          try {
+            // Attempt to normalize phone number if it looks like one, otherwise keep as is
+            emailOrPhone = emailOrPhoneRaw.startsWith('+') || emailOrPhoneRaw.includes('@') ? emailOrPhoneRaw : window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
+          } catch (error) {
+            showError(emailOrPhoneError, "Formato de telefone inválido.");
+            isValid = false;
+          }
         }
 
-        const isEmail = window.firebaseAuth.validateEmail(emailOrPhone);
-        const isPhone = window.firebaseAuth.validatePhone(emailOrPhone);
-        if (!isEmail && !isPhone) {
-          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+        const isEmail = emailOrPhone ? window.firebaseAuth.validateEmail(emailOrPhone) === null : false; // Check for null (no error)
+        const isPhone = emailOrPhone ? window.firebaseAuth.validatePhone(emailOrPhone) === null : false; // Check for null (no error)
+
+        if (emailOrPhoneRaw && !isEmail && !isPhone) { // Only show this if raw input exists and is invalid
+          showError(emailOrPhoneError, "Formato inválido. Use um email (ex: seu.email@exemplo.com) ou número de telefone no formato +2449XXXXXXXX.");
           isValid = false;
         }
 
+        // Validate Municipality
         if (!municipioSelect.value) {
           showError(municipioError, "Selecione um município.");
           isValid = false;
         }
 
+        // Validate Bairro
         if (!bairroInput.value.trim()) {
           showError(bairroError, "O bairro é obrigatório.");
           isValid = false;
         }
 
-        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+        // Validate Password
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
         if (passwordErrorMsg) {
-          showError('passwordError', passwordErrorMsg);
+          showError(passwordError, passwordErrorMsg);
           isValid = false;
         }
 
-        if (passwordInput.value !== confirmPasswordInput.value) {
-          showError('confirmPasswordError', "As senhas não coincidem.");
+        // Validate Confirm Password
+        if (password !== confirmPassword) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
           isValid = false;
         }
 
-        if (!termsAccepted) {
-          showError('termsError', "Aceite os Termos e Condições.");
+        // Validate Terms and Conditions
+        if (!isTermsAccepted) { // Use the consistent variable
+          showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
           isValid = false;
         }
 
-        if (!grecaptcha.getResponse()) {
+        // Validate reCAPTCHA
+        // Check if grecaptcha and getResponse exist before calling
+        if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse()) {
           console.log("reCAPTCHA não resolvido.");
-          showError('emailOrPhoneError', "Complete a verificação de segurança.");
+          showError(emailOrPhoneError, "Complete a verificação de segurança reCAPTCHA."); // Show under email/phone for visibility
           isValid = false;
         }
 
+        // If any validation failed, stop here
         if (!isValid) {
-          console.log("Validação falhou.");
-          isSubmitting = false;
+          console.log("Validação falhou. Submissão cancelada.");
+          isSubmitting = false; // Reset flag
           return;
         }
 
-        console.log("Iniciando registro.");
+        console.log("Validação bem-sucedida. Iniciando registro...");
+        // --- UI Feedback during Submission ---
         registerBtn.disabled = true;
         registerText.classList.add('hidden');
         registerSpinner.classList.remove('hidden');
         registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Criando...`;
 
+        // --- Firebase User Registration ---
         try {
-          console.log("Chamando registerUser:", {
+          const userData = {
             name: nameInput.value.trim(),
             email: isEmail ? emailOrPhone : null,
             phoneNumber: isPhone ? emailOrPhone : null,
             password: passwordInput.value,
             municipio: municipioSelect.value,
             bairro: bairroInput.value.trim(),
-            method: isEmail ? 'email' : 'phone',
+            method: isEmail ? 'email' : 'phone', // Indicate registration method
             notificationPreferences: {
               email: receiveEmailInput.checked,
               whatsapp: receiveWhatsAppInput.checked
             }
-          });
+          };
 
-          const result = await window.firebaseAuth.registerUser({
-            name: nameInput.value.trim(),
-            email: isEmail ? emailOrPhone : null,
-            phoneNumber: isPhone ? emailOrPhone : null,
-            password: passwordInput.value,
-            municipio: municipioSelect.value,
-            bairro: bairroInput.value.trim(),
-            method: isEmail ? 'email' : 'phone',
-            notificationPreferences: {
-              email: receiveEmailInput.checked,
-              whatsapp: receiveWhatsAppInput.checked
-            }
-          });
+          console.log("Chamando registerUser com dados:", userData);
+
+          const result = await window.firebaseAuth.registerUser(userData);
 
           console.log("Registro concluído:", result);
-          if (isEmail) {
-            alert("Conta criada! Verifique seu email.");
+
+          // --- Post-Registration Actions ---
+          if (result.requiresEmailVerification) {
+            alert("Conta criada com sucesso! Por favor, verifique seu email para ativar sua conta.");
             window.location.href = 'verify-email.html';
-          } else {
-            alert("Código de verificação enviado!");
+          } else if (result.requiresPhoneVerification) {
+            alert("Código de verificação enviado para o seu telemóvel. Por favor, verifique-o.");
             window.location.href = 'verify-phone.html';
+          } else {
+            // Fallback in case neither email nor phone verification is explicitly required
+            alert("Conta criada com sucesso!");
+            window.location.href = 'index.html'; // Or dashboard
           }
+
+
         } catch (error) {
           console.error("Erro no registro:", error);
-          let errorMsg = error.message;
+          let errorMsg = "Ocorreu um erro inesperado. Tente novamente."; // Default error message
+
+          // Handle specific Firebase authentication errors
           if (error.code) {
             switch (error.code) {
               case 'auth/email-already-in-use':
-                errorMsg = 'Este email já está registrado.';
+                errorMsg = 'Este email já está registado. Por favor, faça login ou use outro email.';
+                showError(emailOrPhoneError, errorMsg);
                 break;
               case 'auth/invalid-email':
                 errorMsg = 'Formato de email inválido.';
+                showError(emailOrPhoneError, errorMsg);
                 break;
               case 'auth/weak-password':
-                errorMsg = 'A senha é muito fraca.';
+                errorMsg = 'A senha é muito fraca. Por favor, use uma senha mais segura.';
+                showError(passwordError, errorMsg); // Show under password field
                 break;
               case 'auth/invalid-phone-number':
-                errorMsg = 'Número de telefone inválido.';
+                errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato +2449XXXXXXXX.';
+                showError(emailOrPhoneError, errorMsg);
                 break;
               case 'auth/captcha-check-failed':
-                errorMsg = 'Verificação de segurança falhou. Tente novamente.';
+                errorMsg = 'A verificação de segurança reCAPTCHA falhou. Tente novamente ou recarregue a página.';
+                showError(emailOrPhoneError, errorMsg);
+                // Consider re-rendering or resetting reCAPTCHA if necessary
+                if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
+                    grecaptcha.reset();
+                }
+                break;
+              case 'auth/too-many-requests':
+                errorMsg = 'Muitas tentativas de registro. Por favor, tente novamente mais tarde.';
+                showError(emailOrPhoneError, errorMsg);
                 break;
               default:
+                // For other Firebase errors, use the Firebase message directly
                 errorMsg = error.message;
+                alert(`Erro: ${errorMsg}`); // Generic alert for less common errors
             }
-            showError(emailOrPhoneError, errorMsg);
           } else {
-            alert(errorMsg);
+            // Non-Firebase errors (e.g., network issues)
+            alert(`Erro de rede ou conexão: ${errorMsg}`);
           }
         } finally {
-          console.log("Finalizando submissão.");
-          registerBtn.disabled = !termsAccepted;
+          console.log("Finalizando submissão. Resetando UI.");
+          // Always reset UI elements
+          registerBtn.disabled = !isTermsAccepted; // Re-enable based on terms acceptance
           registerText.classList.remove('hidden');
           registerSpinner.classList.add('hidden');
-          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
-          isSubmitting = false;
+          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`; // Reset button text
+          isSubmitting = false; // Reset submission flag
         }
       });
     });
