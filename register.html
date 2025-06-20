@@ -308,6 +308,64 @@
         font-weight: 500;
       }
 
+      /* Password toggle icon */
+      .password-toggle-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: color 0.2s ease;
+      }
+      .password-toggle-icon:hover {
+        color: var(--primary-accent);
+      }
+
+      /* Phone input with flag */
+      .phone-input-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-light);
+        border: 1px solid #CED4DA;
+        border-radius: var(--border-radius-md);
+        padding: 0.5rem; /* Adjust padding for inner elements */
+        transition: all 0.3s ease;
+      }
+      .phone-input-group:focus-within {
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+      }
+      .phone-input-group .flag-icon {
+        width: 30px;
+        height: 20px;
+        flex-shrink: 0;
+        margin-left: 0.5rem;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .phone-input-group .dial-code {
+        color: var(--text-main);
+        font-size: 1rem;
+        font-weight: 500;
+        padding-left: 0.2rem;
+        flex-shrink: 0;
+      }
+      .phone-input-group input {
+        border: none;
+        outline: none;
+        background: transparent;
+        padding: 0.4rem 0.5rem;
+        flex-grow: 1;
+        font-size: 1rem;
+        color: var(--text-main);
+      }
+      .phone-input-group input::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+
       @media (max-width: 992px) {
         .navbar-brand {
             color: var(--secondary-dark);
@@ -466,9 +524,14 @@
       /* Multi-step form specific styles */
       .form-step {
         display: none; /* Hidden by default */
+        animation: fadeIn 0.5s ease-out; /* Smooth transition */
       }
       .form-step.active {
         display: block; /* Show active step */
+      }
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
       }
       .form-navigation {
         display: flex;
@@ -615,7 +678,13 @@
 
             <div>
               <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
-              <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
+              <div class="relative">
+                <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou 9XXXXXXXX" required>
+                <div id="phonePrefix" class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 hidden pointer-events-none">
+                    <img src="https://flagcdn.com/ao.svg" alt="Angola Flag" class="w-6 h-auto rounded-[2px] shadow-sm">
+                    <span class="text-text-main font-semibold">+244</span>
+                </div>
+              </div>
               <p id="emailOrPhoneError" class="error-message"></p>
             </div>
 
@@ -643,15 +712,21 @@
               </div>
             </div>
 
-            <div>
+            <div class="relative">
               <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
-              <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
+              <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200 pr-10" placeholder="Mín. 6 caracteres" required>
+              <span class="password-toggle-icon" id="togglePassword">
+                <i class="fas fa-eye-slash"></i>
+              </span>
               <p id="passwordError" class="error-message"></p>
             </div>
 
-            <div>
+            <div class="relative">
               <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
-              <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
+              <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200 pr-10" placeholder="Confirme sua senha" required>
+              <span class="password-toggle-icon" id="toggleConfirmPassword">
+                <i class="fas fa-eye-slash"></i>
+              </span>
               <p id="confirmPasswordError" class="error-message"></p>
             </div>
 
@@ -804,6 +879,7 @@
       // Initialize reCAPTCHA
       try {
         // Ensure recaptcha-container is in the DOM. Its visibility is handled by reCAPTCHA itself for 'invisible' size.
+        // It's crucial that this container exists for Firebase Phone Auth.
         await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
         console.log("reCAPTCHA inicializado.");
       } catch (error) {
@@ -828,6 +904,12 @@
       const registerBtn = document.getElementById('registerBtn');
       const registerText = document.getElementById('registerText');
       const registerSpinner = document.getElementById('registerSpinner');
+
+      // Password toggle icons
+      const togglePassword = document.getElementById('togglePassword');
+      const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+      const phonePrefixDiv = document.getElementById('phonePrefix');
+
 
       // Error message elements
       const nameError = document.getElementById('nameError');
@@ -855,6 +937,7 @@
 
       // --- State Variable ---
       let isTermsAccepted = false;
+      let registrationMethod = null; // 'email' or 'phone'
 
       // --- Data for Select Input ---
       const municipiosDeLuanda = [
@@ -901,17 +984,9 @@
         updateProgressBar();
         // Scroll to top of the form when navigating steps
         document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      function toggleRegisterButton() {
-        console.log("Atualizando botão: isTermsAccepted =", isTermsAccepted);
-        termsCheckbox.checked = isTermsAccepted; // Ensure checkbox reflects the state
-        registerBtn.disabled = !isTermsAccepted; // Disable if terms not accepted
-
-        if (!isTermsAccepted && currentStep === totalSteps) { // Only show error if on the last step
-          showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
-        } else {
-          hideError(termsError);
+        // After showing a step, re-evaluate button state
+        if (currentStep === totalSteps) {
+            toggleRegisterButton();
         }
       }
 
@@ -930,20 +1005,31 @@
           showError(emailOrPhoneError, "Email ou telefone é obrigatório.");
           isValid = false;
         } else {
-          // Check if it's an email
-          if (emailOrPhoneRaw.includes('@')) {
-            const emailValidationResult = window.firebaseAuth.validateEmail(emailOrPhoneRaw);
-            if (emailValidationResult) {
-              showError(emailOrPhoneError, emailValidationResult);
-              isValid = false;
+            const isEmailFormat = emailOrPhoneRaw.includes('@');
+            const isPhoneFormat = /^\d+$/.test(emailOrPhoneRaw); // Check if contains only digits for basic phone check
+
+            if (isEmailFormat) {
+                const emailValidationResult = window.firebaseAuth.validateEmail(emailOrPhoneRaw);
+                if (emailValidationResult) {
+                    showError(emailOrPhoneError, emailValidationResult);
+                    isValid = false;
+                } else {
+                    registrationMethod = 'email';
+                }
+            } else if (isPhoneFormat) {
+                // If it looks like a number, validate it as a phone number
+                const phoneValidationResult = window.firebaseAuth.validatePhone(emailOrPhoneRaw);
+                if (phoneValidationResult) {
+                    showError(emailOrPhoneError, phoneValidationResult);
+                    isValid = false;
+                } else {
+                    registrationMethod = 'phone';
+                }
+            } else {
+                // If it's neither clear email nor clear phone number format
+                showError(emailOrPhoneError, "Formato inválido. Use um email (ex: seu.email@exemplo.com) ou um número de telefone (ex: 9XXXXXXXX).");
+                isValid = false;
             }
-          } else { // Assume it's a phone number
-            const phoneValidationResult = window.firebaseAuth.validatePhone(emailOrPhoneRaw);
-            if (phoneValidationResult) {
-              showError(emailOrPhoneError, phoneValidationResult);
-              isValid = false;
-            }
-          }
         }
         return isValid;
       }
@@ -987,23 +1073,70 @@
           isValid = false;
         }
 
-        // For phone authentication, reCAPTCHA is crucial and needs to be resolved
-        // Check if the current input is a phone number before checking reCAPTCHA for phone method
-        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-        const looksLikePhone = emailOrPhoneRaw && (!emailOrPhoneRaw.includes('@') && (emailOrPhoneRaw.startsWith('+') || /^\d+$/.test(emailOrPhoneRaw)));
-
-        if (looksLikePhone && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
-          showError(termsError, "Complete a verificação de segurança reCAPTCHA."); // Show reCAPTCHA error near terms
-          isValid = false;
+        // Only check reCAPTCHA response if it's a phone number registration
+        // Firebase Phone Auth explicitly requires reCAPTCHA
+        if (registrationMethod === 'phone' && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
+            showError(termsError, "Complete a verificação de segurança reCAPTCHA.");
+            isValid = false;
+            // Optionally, try to execute reCAPTCHA if it hasn't already
+            if (typeof grecaptcha !== 'undefined') {
+                 grecaptcha.execute(); // Try to force execution for invisible reCAPTCHA
+            }
         }
 
         return isValid;
       }
 
+      // --- Password Toggle ---
+      function setupPasswordToggle(inputElement, toggleElement) {
+        toggleElement.addEventListener('click', function () {
+          const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
+          inputElement.setAttribute('type', type);
+          // Toggle the eye icon
+          this.querySelector('i').classList.toggle('fa-eye');
+          this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+      }
+
+      // --- Phone Input Formatting and Flag ---
+      function handleEmailOrPhoneInput() {
+        const value = emailOrPhoneInput.value.trim();
+        const isLikelyPhoneNumber = /^\d{1,9}$/.test(value) || value.startsWith('+244'); // Basic check for digits or Angola prefix
+
+        if (isLikelyPhoneNumber) {
+            phonePrefixDiv.classList.remove('hidden');
+            // Adjust input padding to make space for the flag/prefix
+            emailOrPhoneInput.style.paddingLeft = '6.5rem'; // Enough space for flag + dial code + small gap
+        } else {
+            phonePrefixDiv.classList.add('hidden');
+            emailOrPhoneInput.style.paddingLeft = '0.9rem'; // Reset to default padding
+        }
+
+        // Auto-add +244 if user starts with '9' (common in Angola)
+        if (value.startsWith('9') && value.length <= 9 && !value.startsWith('+244')) {
+            emailOrPhoneInput.value = `+244${value}`;
+            // Move cursor to the end
+            setTimeout(() => {
+                emailOrPhoneInput.selectionStart = emailOrPhoneInput.selectionEnd = emailOrPhoneInput.value.length;
+            }, 0);
+        }
+      }
+
+
       // --- Initialization ---
       populateMunicipios();
       showStep(currentStep); // Show the first step initially
       toggleRegisterButton(); // Set initial button state (disabled)
+
+      // Setup password toggles
+      setupPasswordToggle(passwordInput, togglePassword);
+      setupPasswordToggle(confirmPasswordInput, toggleConfirmPassword);
+
+      // Handle emailOrPhone input events for formatting
+      emailOrPhoneInput.addEventListener('input', handleEmailOrPhoneInput);
+      // Run on load in case there's pre-filled data (e.g., from browser auto-fill)
+      handleEmailOrPhoneInput();
+
 
       // --- Navigation Button Event Listeners ---
       nextStep1Btn.addEventListener('click', () => {
@@ -1060,7 +1193,7 @@
 
       termsCheckbox.addEventListener('change', () => {
         if (termsCheckbox.checked) {
-          if (!isTermsAccepted) {
+          if (!isTermsAccepted) { // Only show modal if user just checked and terms weren't already accepted
             termsModal.classList.add('show');
           } else {
              toggleRegisterButton();
@@ -1100,25 +1233,32 @@
         const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
         let finalEmail = null;
         let finalPhoneNumber = null;
-        let registrationMethod = null;
 
-        if (emailOrPhoneRaw.includes('@')) {
+        // Determine method based on validation in step 1
+        if (registrationMethod === 'email') {
           finalEmail = emailOrPhoneRaw;
-          registrationMethod = 'email';
-        } else {
+        } else if (registrationMethod === 'phone') {
           finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-          finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`; // Synthetic email for phone registration
-          registrationMethod = 'phone';
+          // For phone sign-up, Firebase Auth still internally uses an email-like identifier
+          // This ensures a unique user record even if actual email isn't provided
+          finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`;
+        } else {
+            // This case should ideally not be reached if step 1 validation passes
+            console.error("Tipo de registro (email/phone) não determinado. Abortando.");
+            alert("Erro interno: Tipo de registro não reconhecido. Por favor, recarregue a página.");
+            isSubmitting = false;
+            return;
         }
+
 
         const userData = {
             name: nameInput.value.trim(),
             email: finalEmail,
-            phoneNumber: finalPhoneNumber,
+            phoneNumber: finalPhoneNumber, // This will be the actual phone number saved to Firestore
             password: passwordInput.value,
             municipio: municipioSelect.value,
             bairro: bairroInput.value.trim(),
-            method: registrationMethod,
+            method: registrationMethod, // Explicitly tell FirebaseAuth if it's 'email' or 'phone'
             notificationPreferences: {
               email: receiveEmailInput.checked,
               whatsapp: receiveWhatsAppInput.checked
@@ -1138,8 +1278,8 @@
             window.location.href = 'verify-email.html';
           } else if (result.requiresPhoneVerification) {
             alert("Código de verificação enviado para o seu telemóvel. Por favor, verifique-o.");
-            // In a real app, you'd store confirmationResult in sessionStorage
-            // and redirect to a dedicated phone verification page.
+            // In a real app, you'd typically pass confirmationResult to the next page
+            // For now, redirect and the next page (verify-phone.html) would handle the SMS code entry
             window.location.href = 'verify-phone.html';
           } else {
             alert("Conta criada com sucesso!");
@@ -1148,15 +1288,15 @@
 
         } catch (error) {
           console.error("Erro no registro:", error);
-          let errorMsg = "Ocorreu um erro inesperado. Tente novamente.";
+          let errorMsg = "Ocorreu um erro inesperado. Tente novamente."; // Default error message
 
+          // Handle specific Firebase authentication errors
           if (error.code) {
             switch (error.code) {
               case 'auth/email-already-in-use':
                 errorMsg = 'Este email já está registado. Por favor, faça login ou use outro email.';
                 showError(emailOrPhoneError, errorMsg);
-                // Redirect back to step 1 if the error is related to initial input
-                showStep(1);
+                showStep(1); // Go back to the first step for this error
                 break;
               case 'auth/invalid-email':
                 errorMsg = 'Formato de email inválido.';
@@ -1166,7 +1306,7 @@
               case 'auth/weak-password':
                 errorMsg = 'A senha é muito fraca. Por favor, use uma senha mais segura.';
                 showError(passwordError, errorMsg);
-                showStep(2); // Redirect back to step 2 for password issues
+                showStep(2); // Go back to password step
                 break;
               case 'auth/invalid-phone-number':
                 errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato +2449XXXXXXXX.';
@@ -1178,17 +1318,18 @@
                 showError(termsError, errorMsg); // Display on last step
                 // Reset reCAPTCHA to allow another attempt
                 if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-                    grecaptcha.reset();
+                    grecaptcha.reset(); // This is crucial for re-attempting reCAPTCHA
                 }
+                showStep(3); // Stay on the last step for reCAPTCHA
                 break;
               case 'auth/too-many-requests':
                 errorMsg = 'Muitas tentativas de registro. Por favor, tente novamente mais tarde.';
                 showError(emailOrPhoneError, errorMsg);
-                showStep(1); // Redirect to first step for rate limiting
+                showStep(1);
                 break;
               case 'auth/network-request-failed':
                   errorMsg = 'Problema de conexão com a internet. Verifique sua rede e tente novamente.';
-                  alert(errorMsg); // Show a general alert for network issues
+                  alert(errorMsg);
                   break;
               default:
                 errorMsg = error.message;
