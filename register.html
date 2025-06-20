@@ -861,6 +861,7 @@
     // --- DOM Elements (Declared globally or within a block that can access them after DOM load) ---
     // Will be assigned in DOMContentLoaded
     let registerBtn, registerText, registerSpinner, termsCheckbox, termsError;
+    let emailOrPhoneInput, phonePrefixDiv; // Added for global access
 
 
     // --- Functions (Declared globally to be accessible) ---
@@ -901,7 +902,6 @@
       }
     }
 
-    // This function must be accessible globally, so it's outside DOMContentLoaded
     function toggleRegisterButton() {
       // Ensure these elements are defined before use (they will be after DOMContentLoaded)
       if (!registerBtn || !termsCheckbox || !termsError) return;
@@ -956,7 +956,7 @@
       // --- Assign DOM Elements (now safe to do after DOMContentLoaded) ---
       const registerForm = document.getElementById('registerForm');
       const nameInput = document.getElementById('name');
-      const emailOrPhoneInput = document.getElementById('emailOrPhone');
+      emailOrPhoneInput = document.getElementById('emailOrPhone'); // Assigned to global variable
       const municipioSelect = document.getElementById('municipio');
       const bairroInput = document.getElementById('bairro');
       const passwordInput = document.getElementById('password');
@@ -964,17 +964,18 @@
       const receiveEmailInput = document.getElementById('receiveEmail');
       const receiveWhatsAppInput = document.getElementById('receiveWhatsApp');
       
-      // Assign the global variables
+      // Assigned to global variables
       registerBtn = document.getElementById('registerBtn');
       registerText = document.getElementById('registerText');
       registerSpinner = document.getElementById('registerSpinner');
       termsCheckbox = document.getElementById('termsCheckbox');
       termsError = document.getElementById('termsError');
+      phonePrefixDiv = document.getElementById('phonePrefix'); // Assigned to global variable
+
 
       // Password toggle icons
       const togglePassword = document.getElementById('togglePassword');
       const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-      const phonePrefixDiv = document.getElementById('phonePrefix');
 
 
       // Error message elements (these can stay local to DOMContentLoaded if only used here)
@@ -1035,7 +1036,8 @@
           isValid = false;
         } else {
             const isEmailFormat = emailOrPhoneRaw.includes('@');
-            const isPhoneFormat = /^\d+$/.test(emailOrPhoneRaw); // Basic check for digits or Angola prefix
+            // Check if it's purely digits or starts with + and digits, and not an email
+            const isPhoneFormat = (/^[0-9+]+$/.test(emailOrPhoneRaw) || emailOrPhoneRaw.startsWith('9')) && !isEmailFormat;
 
             if (isEmailFormat) {
                 const emailValidationResult = window.firebaseAuth.validateEmail(emailOrPhoneRaw);
@@ -1046,8 +1048,12 @@
                     registrationMethod = 'email';
                 }
             } else if (isPhoneFormat) {
-                // If it looks like a number, validate it as a phone number
-                const phoneValidationResult = window.firebaseAuth.validatePhone(emailOrPhoneRaw);
+                // Prepend +244 for validation if it's not already there and starts with '9'
+                let phoneForValidation = emailOrPhoneRaw;
+                if (phoneForValidation.startsWith('9') && !phoneForValidation.startsWith('+244')) {
+                    phoneForValidation = `+244${phoneForValidation}`;
+                }
+                const phoneValidationResult = window.firebaseAuth.validatePhone(phoneForValidation);
                 if (phoneValidationResult) {
                     showError(emailOrPhoneError, phoneValidationResult);
                     isValid = false;
@@ -1126,29 +1132,23 @@
 
       // --- Phone Input Formatting and Flag ---
       function handleEmailOrPhoneInput() {
-        const value = emailOrPhoneInput.value.trim();
-        // A user might start typing a phone number directly, or an email.
-        // If they start with '+', it's likely a phone. If it contains '@', it's an email.
-        // Otherwise, assume it's a phone number digits until an '@' is typed.
-        const isLikelyPhoneNumber = /^\d+$/.test(value) || value.startsWith('+'); // Basic check for digits or Angola prefix
+          const value = emailOrPhoneInput.value.trim();
+          const isEmail = value.includes('@');
+          // Considered a phone if it's digits or starts with '+' and is not an email
+          const isLikelyPhoneNumber = (/^[0-9+]+$/.test(value) || value.startsWith('9')) && !isEmail;
 
-        if (isLikelyPhoneNumber && !value.includes('@')) {
-            phonePrefixDiv.classList.remove('hidden');
-            // Adjust input padding to make space for the flag/prefix
-            emailOrPhoneInput.style.paddingLeft = '6.5rem'; // Enough space for flag + dial code + small gap
-        } else {
-            phonePrefixDiv.classList.add('hidden');
-            emailOrPhoneInput.style.paddingLeft = '0.9rem'; // Reset to default padding
-        }
-
-        // Auto-add +244 if user starts with '9' (common in Angola) and isn't already prefixed or clearly an email
-        if (value.startsWith('9') && value.length <= 9 && !value.startsWith('+244') && !value.includes('@')) {
-            emailOrPhoneInput.value = `+244${value}`;
-            // Move cursor to the end
-            setTimeout(() => {
-                emailOrPhoneInput.selectionStart = emailOrPhoneInput.selectionEnd = emailOrPhoneInput.value.length;
-            }, 0);
-        }
+          if (isLikelyPhoneNumber) {
+              phonePrefixDiv.classList.remove('hidden');
+              // Adjust input padding to make space for the flag/prefix
+              emailOrPhoneInput.style.paddingLeft = '6.5rem';
+              emailOrPhoneInput.placeholder = "Ex: 9XXXXXXXX"; // Clearer placeholder
+          } else {
+              phonePrefixDiv.classList.add('hidden');
+              emailOrPhoneInput.style.paddingLeft = '0.9rem'; // Reset to default padding
+              emailOrPhoneInput.placeholder = "Ex: seu.email@exemplo.com ou 9XXXXXXXX"; // Reset placeholder
+          }
+          // IMPORTANT: Removed the automatic prepending of '+244' to the input value itself.
+          // The `normalizePhoneNumber` in `firebaseAuth.js` will handle adding the prefix before sending to Firebase.
       }
 
 
@@ -1268,6 +1268,8 @@
         if (registrationMethod === 'email') {
           finalEmail = emailOrPhoneRaw;
         } else if (registrationMethod === 'phone') {
+          // IMPORTANT: `normalizePhoneNumber` in firebaseAuth.js should add the `+244` prefix if it's not present.
+          // This ensures the input field *only* contains the digits, while the system handles the full format.
           finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
           finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`;
         } else {
@@ -1333,7 +1335,7 @@
                 showStep(2);
                 break;
               case 'auth/invalid-phone-number':
-                errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato +2449XXXXXXXX.';
+                errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato 9XXXXXXXX.'; // Updated message
                 showError(emailOrPhoneError, errorMsg);
                 showStep(1);
                 break;
