@@ -10,7 +10,7 @@
   
   <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <style type="text/tailwindcss">
     @layer base {
@@ -75,7 +75,7 @@
       }
 
       .navbar {
-        background: var(--secondary-dark);
+        background: var(--navbar-bg);
         padding: 0.5rem 0;
         box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         position: fixed;
@@ -107,8 +107,9 @@
         justify-content: center;
         color: var(--text-white);
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: bold;
         box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+        padding: 4px;
       }
 
       .nav-link {
@@ -723,6 +724,8 @@
     let isSubmitting = false;
 
     document.addEventListener('DOMContentLoaded', async () => {
+      console.log("DOM carregado, iniciando configuração.");
+
       if (!window.firebaseAuth) {
         console.error("window.firebaseAuth não está definido. Verifique se o firebaseAuth.js foi carregado corretamente.");
         alert("Erro: Módulo de autenticação não carregado.");
@@ -740,6 +743,7 @@
 
       try {
         await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+        console.log("reCAPTCHA inicializado com sucesso.");
       } catch (error) {
         console.error("Erro ao inicializar reCAPTCHA:", error);
         alert("Erro ao carregar verificação de segurança.");
@@ -780,6 +784,7 @@
       ];
 
       function populateMunicipios() {
+        console.log("Populando municípios...");
         municipiosDeLuanda.sort().forEach((municipio) => {
           const option = document.createElement('option');
           option.value = municipio;
@@ -814,6 +819,7 @@
 
       emailOrPhoneInput.addEventListener('input', () => {
         const value = emailOrPhoneInput.value.trim();
+        console.log("Input emailOrPhone:", value);
         if (value === '') {
           phoneMask.updateOptions({ lazy: true });
         } else if (value.startsWith('+244')) {
@@ -822,6 +828,7 @@
       });
 
       function showError(element, message) {
+        console.log("Mostrando erro:", message);
         element.textContent = message;
         element.style.display = 'block';
       }
@@ -831,8 +838,9 @@
       }
 
       function toggleRegisterButtonAndTerms() {
+        console.log("Atualizando estado do botão: termsAccepted =", termsAccepted);
         termsCheckbox.checked = termsAccepted;
-        registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+        registerBtn.disabled = !termsAccepted;
         if (!termsAccepted) {
           showError(termsError, "Aceite os Termos de Serviço.");
         } else {
@@ -841,6 +849,7 @@
       }
 
       termsCheckbox.addEventListener('change', () => {
+        console.log("Checkbox de termos alterado.");
         if (!termsRead) {
           termsCheckbox.checked = false;
           termsModal.classList.add('show');
@@ -851,10 +860,12 @@
       });
 
       showTermsLink.addEventListener('click', () => {
+        console.log("Link de termos clicado.");
         termsModal.classList.add('show');
       });
 
       closeTermsModalBtn.addEventListener('click', () => {
+        console.log("Fechando modal de termos.");
         termsModal.classList.remove('show');
         if (!termsRead) {
           termsAccepted = false;
@@ -863,6 +874,7 @@
       });
 
       acceptTermsModalBtn.addEventListener('click', () => {
+        console.log("Termos aceitos no modal.");
         termsRead = true;
         termsAccepted = true;
         termsModal.classList.remove('show');
@@ -871,6 +883,7 @@
 
       termsModal.addEventListener('click', (e) => {
         if (e.target === termsModal) {
+          console.log("Clicado fora do modal de termos.");
           termsModal.classList.remove('show');
           if (!termsRead) {
             termsAccepted = false;
@@ -881,13 +894,19 @@
 
       registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (isSubmitting) return;
+        console.log("Formulário submetido.");
+
+        if (isSubmitting) {
+          console.log("Submissão já em andamento, ignorando.");
+          return;
+        }
         isSubmitting = true;
 
         document.querySelectorAll('.error-message').forEach(hideError);
 
         let isValid = true;
         const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        console.log("emailOrPhoneRaw:", emailOrPhoneRaw);
         const emailOrPhoneProcessed = emailOrPhoneRaw.startsWith('+244') ? window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw) : emailOrPhoneRaw;
 
         if (!nameInput.value.trim()) {
@@ -897,6 +916,7 @@
 
         const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneProcessed) === null;
         const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneProcessed) === null;
+        console.log("isEmail:", isEmail, "isPhone:", isPhone);
 
         if (!emailOrPhoneRaw) {
           showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
@@ -932,17 +952,39 @@
           isValid = false;
         }
 
+        if (!grecaptcha.getResponse()) {
+          console.log("reCAPTCHA não resolvido.");
+          showError(emailOrPhoneError, "Por favor, complete a verificação de segurança.");
+          isValid = false;
+        }
+
         if (!isValid) {
+          console.log("Validação falhou, interrompendo submissão.");
           isSubmitting = false;
           return;
         }
 
+        console.log("Validação bem-sucedida, iniciando registro.");
         registerBtn.disabled = true;
         registerText.classList.add('hidden');
         registerSpinner.classList.remove('hidden');
         registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
 
         try {
+          console.log("Chamando registerUser com:", {
+            name: nameInput.value.trim(),
+            email: isEmail ? emailOrPhoneProcessed : null,
+            phoneNumber: isPhone ? emailOrPhoneProcessed : null,
+            password: passwordInput.value,
+            municipio: municipioSelect.value,
+            bairro: bairroInput.value.trim(),
+            method: isEmail ? 'email' : 'phone',
+            notificationPreferences: {
+              email: receiveEmailInput.checked,
+              whatsapp: receiveWhatsAppInput.checked,
+            },
+          });
+
           const result = await window.firebaseAuth.registerUser({
             name: nameInput.value.trim(),
             email: isEmail ? emailOrPhoneProcessed : null,
@@ -956,6 +998,8 @@
               whatsapp: receiveWhatsAppInput.checked,
             },
           });
+
+          console.log("Resultado do registro:", result);
 
           if (isEmail) {
             alert('Conta criada com sucesso! Verifique seu email.');
@@ -985,6 +1029,10 @@
                 userFacingMessage = 'Número de telefone inválido.';
                 showError(emailOrPhoneError, userFacingMessage);
                 break;
+              case 'auth/captcha-check-failed':
+                userFacingMessage = 'Verificação de segurança falhou. Tente novamente.';
+                showError(emailOrPhoneError, userFacingMessage);
+                break;
               default:
                 alert(userFacingMessage);
             }
@@ -992,7 +1040,8 @@
             showError(emailOrPhoneError, userFacingMessage);
           }
         } finally {
-          registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+          console.log("Finalizando submissão.");
+          registerBtn.disabled = !termsAccepted;
           registerText.classList.remove('hidden');
           registerSpinner.classList.add('hidden');
           registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
