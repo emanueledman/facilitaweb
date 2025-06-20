@@ -3,211 +3,653 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FixABairro | Criar Conta</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <meta name="description" content="FixABairro - Crie sua conta e comece a transformar seu bairro em Angola.">
+  <meta name="keywords" content="fixabairro, angola, registro, criar conta, telefone, email, comunidade, cidadania">
+  <meta name="author" content="FixABairro Team">
+  <title>FixABairro | Junte-se a Nós</title>
+  
+  <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    :root {
-      --primary-accent: #FF5722;
-      --secondary-dark: #2C3E50;
-      --bg-light: #F8F9FA;
-      --bg-white: #FFFFFF;
-      --text-main: #34495E;
-      --text-secondary: #7F8C8D;
-      --text-white: #FFFFFF;
-      --error-red: #DC3545;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg-light);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .navbar {
-      background: var(--secondary-dark);
-      padding: 1rem;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar-brand {
-      color: var(--text-white);
-      font-size: 1.8rem;
-      font-family: 'Montserrat', sans-serif;
-      text-decoration: none;
-    }
-    .form-container {
-      margin-top: 100px;
-      padding: 2rem;
-      width: 100%;
-      max-width: 600px;
-    }
-    .form-card {
-      background: var(--bg-white);
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    .form-group label {
-      font-weight: 500;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .form-control {
-      width: 100%;
-      padding: 0.8rem;
-      border: 1px solid #CED4DA;
-      border-radius: 5px;
-      font-size: 1rem;
-    }
-    .form-control:focus {
-      border-color: var(--primary-accent);
-      outline: none;
-    }
-    .error-message {
-      color: var(--error-red);
-      font-size: 0.9rem;
-      display: none;
-    }
-    .btn-main {
-      background: var(--primary-accent);
-      color: var(--text-white);
-      padding: 0.8rem;
-      border: none;
-      border-radius: 5px;
-      width: 100%;
-      font-size: 1.1rem;
-      cursor: pointer;
-    }
-    .btn-main:hover {
-      background: #E64A19;
-    }
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.7);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1050;
-    }
-    .modal-overlay.show {
-      display: flex;
-    }
-    .modal-content {
-      background: var(--bg-white);
-      padding: 2rem;
-      border-radius: 10px;
-      max-width: 600px;
-      width: 90%;
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    .modal-close-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    .modal-body {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-    .modal-footer {
-      text-align: right;
-      margin-top: 1rem;
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --primary-accent: #FF5722;
+        --secondary-dark: #2C3E50;
+        --highlight-light: #FFC107;
+        --success-green: #4CAF50;
+        --warning-orange: #FF9800;
+        --info-blue: #2196F3;
+        --bg-light: #F8F9FA;
+        --bg-white: #FFFFFF;
+        --bg-dark-overlay: rgba(0, 0, 0, 0.7);
+        --text-main: #34495E;
+        --text-secondary: #7F8C8D;
+        --text-white: #FFFFFF;
+        --font-heading: 'Montserrat', sans-serif;
+        --font-body: 'Poppins', sans-serif;
+        --border-radius-lg: 15px;
+        --border-radius-md: 10px;
+        --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+        --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+        --error-red: #DC3545;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: var(--font-body);
+        background: var(--bg-light);
+        color: var(--text-main);
+        line-height: 1.7;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+      }
+
+      ::-webkit-scrollbar {
+          width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+          background: var(--bg-light);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--primary-accent);
+          border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #E64A19;
+      }
+
+      .navbar {
+        background: var(--navbar-bg);
+        padding: 0.5rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-white);
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        background: var(--primary-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-white);
+        font-size: 1.5rem;
+        font-weight: bold;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+        padding: 4px;
+      }
+
+      .nav-link {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 3px;
+          background: var(--primary-accent);
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after, .nav-link.active::after {
+          width: 70%;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-accent);
+      }
+
+      .btn-main {
+        background: var(--primary-accent);
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .btn-main:hover {
+        background: #E64A19;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+      }
+
+      .btn-outline-secondary-dark {
+        background: transparent;
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border: 2px solid rgba(255,255,255,0.7);
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-secondary-dark:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--text-white);
+        color: var(--text-white);
+        transform: translateY(-3px);
+      }
+
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem !important;
+      }
+      .select-wrapper::after {
+        content: '\f078';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: var(--text-secondary);
+      }
+
+      .spinner-border {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        vertical-align: -0.125em;
+        border: 0.25em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .75s linear infinite spinner-border;
+      }
+      @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+      }
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
+      }
+
+      .form-container-wrapper {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+        margin-top: 60px;
+      }
+
+      .form-card {
+        background: var(--bg-white);
+        border-radius: var(--border-radius-lg);
+        padding: 3rem;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid #ECEFF1;
+        transition: all 0.4s ease;
+        width: 100%;
+        max-width: 900px;
+      }
+      
+      .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--secondary-dark);
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--primary-accent);
+        border-radius: 2px;
+      }
+      
+      .form-group {
+        margin-bottom: 1.8rem;
+        position: relative;
+      }
+      
+      .form-group label {
+        font-weight: 500;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 1.05rem;
+      }
+
+      .form-control {
+        background: var(--bg-light);
+        border: 1px solid #CED4DA;
+        color: var(--text-main);
+        border-radius: var(--border-radius-md);
+        padding: 0.9rem 1.2rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+      
+      .form-control:focus {
+        background: var(--bg-white);
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+        color: var(--text-main);
+      }
+      
+      .form-control::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+      
+      .error-message {
+        color: var(--error-red);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: none;
+        font-weight: 500;
+      }
+
+      @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark);
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark);
+        }
+        .navbar {
+            background: var(--bg-white);
+        }
+        .nav-link {
+            color: var(--text-main);
+        }
+        .btn-outline-secondary-dark {
+            color: var(--secondary-dark);
+            border-color: var(--secondary-dark);
+        }
+        .navbar-nav {
+            background-color: var(--bg-white);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .form-card {
+          padding: 2rem;
+        }
+        .form-header h1 {
+          font-size: 2.5rem;
+        }
+        .form-header p {
+          font-size: 1rem;
+        }
+      }
+      
+      @media (max-width: 576px) {
+        .form-card {
+          padding: 1.5rem;
+        }
+        .form-header h1 {
+          font-size: 2rem;
+        }
+        .form-header p {
+          font-size: 0.9rem;
+        }
+      }
+
+      .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1050;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .modal-overlay.show {
+          opacity: 1;
+          visibility: visible;
+      }
+
+      .modal-content {
+          background: var(--bg-white);
+          border-radius: var(--border-radius-lg);
+          padding: 2rem;
+          max-width: 700px;
+          width: 90%;
+          max-height: 90%;
+          display: flex;
+          flex-direction: column;
+          box-shadow: var(--shadow-medium);
+          transform: translateY(20px);
+          transition: transform 0.3s ease;
+      }
+      .modal-overlay.show .modal-content {
+          transform: translateY(0);
+      }
+
+      .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid #ECEFF1;
+      }
+      .modal-header h3 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          color: var(--secondary-dark);
+          margin: 0;
+      }
+      .modal-close-btn {
+          background: none;
+          border: none;
+          font-size: 1.8rem;
+          color: var(--text-secondary);
+          cursor: pointer;
+          transition: color 0.3s ease;
+      }
+      .modal-close-btn:hover {
+          color: var(--primary-accent);
+      }
+
+      .modal-body {
+          flex-grow: 1;
+          overflow-y: auto;
+          line-height: 1.6;
+          color: var(--text-main);
+          font-size: 0.95rem;
+          padding-right: 0.5rem;
+      }
+      .modal-body p {
+          margin-bottom: 1rem;
+      }
+      .modal-body h4 {
+          font-size: 1.3rem;
+          font-weight: 600;
+          color: var(--primary-accent);
+          margin-top: 1.5rem;
+          margin-bottom: 0.8rem;
+      }
+
+      .modal-footer {
+          padding-top: 1.5rem;
+          border-top: 1px solid #ECEFF1;
+          margin-top: 1.5rem;
+          text-align: right;
+      }
+      .modal-footer button {
+          font-size: 1rem;
+          padding: 0.8rem 1.5rem;
+          border-radius: 30px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+      }
+      .modal-footer .btn-accept-terms {
+          background-color: var(--primary-accent);
+          color: var(--text-white);
+          border: none;
+      }
+      .modal-footer .btn-accept-terms:hover {
+          background-color: #E64A19;
+      }
     }
   </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              accent: 'var(--primary-accent)',
+            },
+            secondary: {
+              dark: 'var(--secondary-dark)',
+            },
+            highlight: {
+              light: 'var(--highlight-light)',
+            },
+            success: {
+              DEFAULT: 'var(--success-green)',
+            },
+            warning: {
+              DEFAULT: 'var(--warning-orange)',
+            },
+            info: {
+              DEFAULT: 'var(--info-blue)',
+            },
+            bg: {
+              light: 'var(--bg-light)',
+              white: 'var(--bg-white)',
+              darkOverlay: 'var(--bg-dark-overlay)',
+            },
+            text: {
+              main: 'var(--text-main)',
+              secondary: 'var(--text-secondary)',
+              white: 'var(--text-white)',
+            },
+            error: 'var(--error-red)',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': 'var(--border-radius-lg)',
+            'md': 'var(--border-radius-md)',
+          },
+          boxShadow: {
+            soft: 'var(--shadow-soft)',
+            medium: 'var(--shadow-medium)',
+          },
+        }
+      }
+    }
+  </script>
 </head>
 <body>
-  <nav class="navbar">
-    <a class="navbar-brand" href="index.html">FixABairro</a>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container mx-auto px-4">
+      <a class="navbar-brand flex items-center" href="index.html">
+        <div class="logo">F</div>
+        FixABairro
+      </a>
+      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary-dark"></i>
+      </button>
+      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
+        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#impact">Impacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+          </li>
+          <li class="nav-item ml-auto md:ml-3">
+            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
+          </li>
+          <li class="nav-item md:ml-2">
+            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </nav>
 
-  <div class="form-container">
-    <div class="form-card">
-      <h1 class="text-2xl font-montserrat text-secondary-dark text-center mb-6">Crie Sua Conta</h1>
-      <form id="registerForm">
-        <div class="form-group">
-          <label for="name">Nome Completo</label>
-          <input type="text" id="name" class="form-control" placeholder="Seu nome" required>
-          <p id="nameError" class="error-message"></p>
+  <div class="form-container-wrapper w-full px-4">
+    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
+      <div class="hidden md:flex p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
+        <div class="absolute inset-0 opacity-10"></div>
+        <i class="fas fa-handshake text-6xl text-white mb-6 transform scale-110"></i>
+        <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
+          Faça Parte da Mudança!
+        </h2>
+        <p class="text-lg font-poppins opacity-90 mb-8">
+          Sua voz tem poder. Junte-se ao FixABairro e ajude a resolver os problemas da sua comunidade.
+        </p>
+        <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Comunidade" alt="Ilustração de comunidade engajada" class="w-64 h-64 object-contain">
+      </div>
+
+      <div class="w-full p-8 md:p-12 flex flex-col justify-center bg-white z-20">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-user-plus text-3xl text-white"></i>
+          </div>
+          <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Crie Sua Conta</h1>
+          <p class="text-text-secondary text-sm mt-2">É rápido e fácil.</p>
         </div>
-        <div class="form-group">
-          <label for="emailOrPhone">Email ou Telefone</label>
-          <input type="text" id="emailOrPhone" class="form-control" placeholder="Ex: seu@email.com ou +244912345678" required>
-          <p id="emailOrPhoneError" class="error-message"></p>
-        </div>
-        <div class="form-group">
-          <label for="municipio">Município</label>
-          <select id="municipio" class="form-control" required>
-            <option value="">Selecione</option>
-            <option value="Luanda">Luanda</option>
-            <option value="Viana">Viana</option>
-            <option value="Cacuaco">Cacuaco</option>
-            <option value="Belas">Belas</option>
-            <option value="Talatona">Talatona</option>
-            <option value="Kilamba Kiaxi">Kilamba Kiaxi</option>
-            <option value="Cazenga">Cazenga</option>
-          </select>
-          <p id="municipioError" class="error-message"></p>
-        </div>
-        <div class="form-group">
-          <label for="bairro">Bairro</label>
-          <input type="text" id="bairro" class="form-control" placeholder="Seu bairro" required>
-          <p id="bairroError" class="error-message"></p>
-        </div>
-        <div class="form-group">
-          <label for="password">Senha</label>
-          <input type="password" id="password" class="form-control" placeholder="Mín. 6 caracteres" required>
-          <p id="passwordError" class="error-message"></p>
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirmar Senha</label>
-          <input type="password" id="confirmPassword" class="form-control" placeholder="Confirme sua senha" required>
-          <p id="confirmPasswordError" class="error-message"></p>
-        </div>
-        <div class="form-group">
-          <input type="checkbox" id="receiveEmail">
-          <label for="receiveEmail" class="ml-2">Receber atualizações por Email</label>
-        </div>
-        <div class="form-group">
-          <input type="checkbox" id="receiveWhatsApp">
-          <label for="receiveWhatsApp" class="ml-2">Receber atualizações por WhatsApp</label>
-        </div>
-        <div class="form-group">
-          <input type="checkbox" id="termsCheckbox">
-          <label for="termsCheckbox" class="ml-2">
-            Concordo com os <a href="#" id="showTermsLink">Termos e Condições</a>
-          </label>
-          <p id="termsError" class="error-message"></p>
-        </div>
-        <button type="submit" id="registerBtn" class="btn-main" disabled>Criar Conta</button>
-      </form>
-      <p class="text-center mt-4">
-        Já tem conta? <a href="login.html" class="text-blue-600">Faça login</a>
-      </p>
-      <div id="recaptcha-container" class="hidden"></div>
+        
+        <form id="registerForm" class="space-y-5">
+          <div>
+            <label for="name" class="block text-text-main text-sm font-medium mb-1">Nome Completo</label>
+            <input type="text" id="name" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu nome e apelido" required>
+            <p id="nameError" class="error-message">Erro de nome</p>
+          </div>
+          
+          <div>
+            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
+            <p id="emailOrPhoneError" class="error-message">Erro de email/telefone</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="municipio" class="block text-text-main text-sm font-medium mb-1">Município</label>
+              <div class="relative select-wrapper">
+                <select id="municipio" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" required>
+                  <option value="" class="bg-white text-text-secondary">Selecione</option>
+                </select>
+              </div>
+              <p id="municipioError" class="error-message">Erro de município</p>
+            </div>
+            <div>
+              <label for="bairro" class="block text-text-main text-sm font-medium mb-1">Bairro</label>
+              <input type="text" id="bairro" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Seu bairro (Ex: Morro Bento)" required>
+              <p id="bairroError" class="error-message">Erro de bairro</p>
+            </div>
+          </div>
+          
+          <div>
+            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Mín. 6 caracteres" required>
+            <p id="passwordError" class="error-message">Erro de senha</p>
+          </div>
+          
+          <div>
+            <label for="confirmPassword" class="block text-text-main text-sm font-medium mb-1">Confirmar Senha</label>
+            <input type="password" id="confirmPassword" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Confirme sua senha" required>
+            <p id="confirmPasswordError" class="error-message">Erro de confirmação de senha</p>
+          </div>
+
+          <div class="flex items-start">
+            <input type="checkbox" id="receiveEmail" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+            <label for="receiveEmail" class="ml-2 text-text-main text-sm">
+              Desejo receber atualizações por Email.
+            </label>
+          </div>
+          
+          <div class="flex items-start">
+            <input type="checkbox" id="receiveWhatsApp" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+            <label for="receiveWhatsApp" class="ml-2 text-text-main text-sm">
+              Desejo receber atualizações por WhatsApp.
+            </label>
+          </div>
+
+          <div class="flex items-start">
+            <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+            <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
+              Eu li e concordo com os 
+              <a href="#" id="showTermsLink" class="text-primary-accent hover:underline font-medium" onclick="event.preventDefault();">Termos e Condições de Serviço</a>
+              do FixABairro.
+            </label>
+          </div>
+          <p id="termsError" class="error-message mt-1">Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.</p>
+          
+          <button type="submit" id="registerBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2" disabled>
+            <span id="registerText"><i class="fas fa-user-plus"></i> Criar Conta</span>
+            <span id="registerSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+        
+        <p class="text-center text-text-secondary text-sm mt-6">
+          Já tem uma conta? 
+          <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
+        </p>
+
+        <div id="recaptcha-container" class="mt-4 hidden"></div>
+      </div>
     </div>
   </div>
 
@@ -215,190 +657,369 @@
     <div class="modal-content">
       <div class="modal-header">
         <h3>Termos e Condições</h3>
-        <button id="closeTermsModalBtn" class="modal-close-btn">×</button>
+        <button id="closeTermsModal" class="modal-close-btn">×</button>
       </div>
-      <div class="modal-body">
-        <p>O FixABairro é uma plataforma para reportar problemas nos bairros. Ao criar uma conta, você concorda em fornecer informações verdadeiras e usar a plataforma de forma respeitosa. Consulte nossa <a href="privacy-policy.html">Política de Privacidade</a> para detalhes.</p>
+      <div class="modal-body custom-scrollbar">
+        <h4>1. O Que É o FixABairro?</h4>
+        <p>O FixABairro é uma plataforma onde os cidadãos podem reportar problemas observados nos seus bairros, como buracos nas ruas, acumulação de lixo ou iluminação pública defeituosa. O objetivo é identificar esses problemas de forma clara, auxiliando as autoridades a priorizar e resolver questões que afetam a comunidade. Funciona como um mapa dinâmico dos desafios urbanos.</p>
+
+        <h4>2. Sua Conta e Seus Dados</h4>
+        <p>Para participar, é necessário criar uma conta, fornecendo nome, email (ou telefone), município e bairro. As informações devem ser verdadeiras para garantir a credibilidade dos relatos e direcionar as soluções às áreas corretas. A senha é de sua responsabilidade e deve ser mantida em segurança.</p>
+
+        <h4>3. O Que Pode Ser Publicado?</h4>
+        <p>Ao publicar conteúdos (fotos, textos, localização...):
+          <ul>
+            <li>Relatar problemas reais que impactem a comunidade.</li>
+            <li>Ser respeitosos, sem linguagem ofensiva, insultos ou conteúdos prejudiciais.</li>
+            <li>Evitar propaganda, mensagens em cadeia ou spam.</li>
+            <li>Não incluir fotos ou conteúdos sem permissão dos respectivos autores.</li>
+            <li>Basear-se em informações verificáveis, evitando rumores.</li>
+          </ul>
+        </p>
+        <p>Conteúdos que violem estas regras podem ser removidos para manter a plataforma um ambiente positivo para todos.</p>
+
+        <h4>4. Como Utilizar a Plataforma?</h4>
+        <p>O FixABairro deve ser usado para promover o bem-estar da comunidade. Não é permitido utilizar a plataforma para causar danos, interferir ou interagir de forma negativa. Buscamos um ambiente de colaboração e respeito.</p>
+
+        <h4>5. Sua Privacidade</h4>
+        <p>Protegemos suas informações pessoais. Detalhes sobre o uso dos dados estão disponíveis na nossa <a href="privacy-policy.html" class="text-primary-accent hover:underline font-medium" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>. Ao utilizar a plataforma, você concorda com as práticas descritas, sempre com foco na sua segurança.</p>
+
+        <h4>6. O Papel do FixABairro e das Autoridades</h4>
+        <p>O FixABairro atua como um intermediário, facilitando a comunicação entre cidadãos e autoridades. A resolução dos problemas depende das entidades responsáveis. Não garantimos a solução de todos os problemas reportados, mas asseguramos que sua voz será amplificada.</p>
+
+        <h4>7. Funcionamento da Plataforma</h4>
+        <p>Esforçamo-nos para manter o FixABairro operacional, mas, como qualquer ferramenta digital, podem ocorrer falhas técnicas. Não garantimos funcionamento ininterrupto, mas trabalharemos para corrigir eventuais problemas rapidamente.</p>
+
+        <h4>8. Nossa Responsabilidade</h4>
+        <p>Não nos responsabilizamos por problemas decorrentes do uso da plataforma ou por conteúdos publicados por usuários. A responsabilidade pelos relatos é de quem os publica, devendo ser feito com consciência e respeito.</p>
+
+        <h4>9. Atualizações dos Termos</h4>
+        <p>Estes termos podem ser atualizados periodicamente. Notificaremos as alterações na plataforma. A continuidade do uso após as mudanças indica aceitação dos novos termos.</p>
+
+        <h4>10. Contacto</h4>
+        <p>Para dúvidas sobre nossos termos ou outros assuntos, entre em contacto através do email: support@fixabairro.com</p>
       </div>
       <div class="modal-footer">
-        <button id="acceptTermsModalBtn" class="btn-main">Aceitar</button>
+        <button id="acceptTermsModalBtn" class="btn-main btn-accept-terms">Aceitar e Confirmar</button>
       </div>
     </div>
   </div>
 
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script src="https://www.gstatic.com/firebasejs/10.6.5/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.6.5/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.6.5/firebase-firestore-compat.js"></script>
-  <script src="./js/firebaseAuth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/firebaseAuth.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "your-api-key",
-      authDomain: "your-auth-domain",
-      projectId: "your-project-id",
-      storageBucket: "your-storage-bucket",
-      messagingSenderId: "your-messaging-sender-id",
-      appId: "your-app-id"
+      apiKey: "YOUR-API-KEY",
+      authDomain: "YOUR-AUTH-DOMAIN",
+      projectId: "YOUR-PROJECT-ID",
+      storageBucket: "YOUR-STORAGE-BUCKET",
+      messagingSenderId: "YOUR-MESSAGING-SENDER-ID",
+      appId: "YOUR-APP-ID"
     };
+
+    let isSubmitting = false;
 
     document.addEventListener('DOMContentLoaded', async () => {
       console.log("DOM carregado.");
-      try {
-        window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-        await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-      } catch (error) {
-        console.error("Erro na inicialização:", error);
-        alert("Erro ao carregar a página. Tente novamente.");
+
+      // Verifica se firebaseAuth está carregado
+      if (!window.firebaseAuth) {
+        console.error("firebaseAuth.js não carregado.");
+        alert("Erro: Módulo de autenticação não carregado.");
         return;
       }
 
-      const form = document.getElementById('registerForm');
+      // Inicializa Firebase
+      try {
+        window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+        console.log("Firebase inicializado.");
+      } catch (error) {
+        console.error("Erro ao inicializar Firebase:", error);
+        alert("Erro: Falha ao carregar o Firebase.");
+        return;
+      }
+
+      // Inicializa reCAPTCHA
+      try {
+        await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+        console.log("reCAPTCHA inicializado.");
+      } catch (error) {
+        console.error("Erro ao inicializar reCAPTCHA:", error);
+        alert("Erro: Falha na verificação de segurança.");
+        return;
+      }
+
+      // Verifica estado de autenticação
+      window.firebaseAuth.checkAuthState('index.html', null);
+
+      const registerForm = document.getElementById('registerForm');
       const nameInput = document.getElementById('name');
       const emailOrPhoneInput = document.getElementById('emailOrPhone');
-      const municipioInput = document.getElementById('municipio');
+      const municipioSelect = document.getElementById('municipio');
       const bairroInput = document.getElementById('bairro');
       const passwordInput = document.getElementById('password');
       const confirmPasswordInput = document.getElementById('confirmPassword');
       const receiveEmailInput = document.getElementById('receiveEmail');
       const receiveWhatsAppInput = document.getElementById('receiveWhatsApp');
-      const termsCheckbox = document.getElementById('termsCheckbox');
       const registerBtn = document.getElementById('registerBtn');
-      const showTermsLink = document.getElementById('showTermsLink');
+      const registerText = document.getElementById('registerText');
+      const registerSpinner = document.getElementById('registerSpinner');
+      const nameError = document.getElementById('nameError');
+      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+      const municipioError = document.getElementById('municipioError');
+      const bairroError = document.getElementById('bairroError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const termsCheckbox = document.getElementById('termsCheckbox');
+      const termsError = document.getElementById('termsError');
+      const showTermsModal = document.getElementById('showTermsLinkModal');
       const termsModal = document.getElementById('termsModal');
       const closeTermsModalBtn = document.getElementById('closeTermsModalBtn');
       const acceptTermsModalBtn = document.getElementById('acceptTermsModalBtn');
 
-      let termsAccepted = false;
+    let isTermsAccepted = false;
 
-      const showError = (id, message) => {
-        const element = document.getElementById(id);
-        element.textContent = message;
+      const municipiosDeLuanda = [
+        "Luanda', 'Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba", "Kiaxi", "Cazenga"
+      ];
+
+      function populateMunicipios() {
+        console.log("Populando municipios...");
+        municipiosDeLuanda.sort().forEach((muni) => {
+          const opt = document.createElement('option');
+          opt.value = muni;
+          opt.textContent = muni;
+          municipioSelect.appendChild(opt);
+        });
+      }
+
+      populateMunicipios();
+
+      function showError(element, message) {
+        console.log("Mostrando erro:", message);
+        element.documentTextContent = 'message';
         element.style.display = 'block';
-      };
+      }
 
-      const hideError = (id) => {
-        document.getElementById(id).style.display = 'none';
-      };
+      function hideError(element) {
+        element.style.display = 'none';
+      }
 
-      showTermsLink.addEventListener('click', (e) => {
-        e.preventDefault();
+      function toggleRegisterButton() {
+        console.log("Atualizando botão: termsAccepted =", termsAccepted);
+        termsCheckbox.checked = termsAccepted;
+        registerBtn.disabled = !termsAccepted;
+        if (!termsAccepted) {
+          showError(termsError, "Aceite os Termos e Condições.");
+        } else {
+          hideError(termsError);
+        }
+      }
+
+      showTermsLinkModal.addEventListener('click', () => {
+        console.log("Link de termos clicado.");
         termsModal.classList.add('show');
       });
 
       closeTermsModalBtn.addEventListener('click', () => {
+        console.log("Fechando modal de termos.");
         termsModal.classList.remove('show');
+        if (!termsAccepted) {
+          termsAccepted = false;
+          toggleRegisterButton();
+        }
       });
 
       acceptTermsModalBtn.addEventListener('click', () => {
+        console.log("Termos aceitos no modal.");
         termsAccepted = true;
         termsCheckbox.checked = true;
-        registerBtn.disabled = false;
         termsModal.classList.remove('show');
+        toggleRegisterButton();
       });
 
-      termsModal.addEventListener('click', (e) => {
-        if (e.target === termsModal) termsModal.classList.remove('show');
+      termsModalBtn.addEventListener('click', (e) => {
+        if (e.target === termsModal) {
+          console.log("Clicado fora do modal.");
+          termsModal.classList.remove('show');
+          if (!termsAccepted) {
+            termsAccepted = false;
+            toggleRegisterButton();
+          }
+        }
       });
 
       termsCheckbox.addEventListener('change', () => {
+        console.log("Checkbox de termos alterado.");
         if (!termsAccepted) {
           termsCheckbox.checked = false;
           termsModal.classList.add('show');
+        } else {
+          termsAccepted = termsCheckbox.checked;
+          toggleRegisterButton();
         }
       });
 
-      form.addEventListener('submit', async (e) => {
+      registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         console.log("Formulário submetido.");
-        hideError('nameError');
-        hideError('emailOrPhoneError');
-        hideError('municipioError');
-        hideError('bairroError');
-        hideError('passwordError');
-        hideError('confirmPasswordError');
-        hideError('termsError');
+
+        if (isSubmitting) {
+          console.log("Submissão já em andamento.");
+          return;
+        }
+        isSubmitting = true;
+
+        // Limpa erros
+        document.querySelectorAll('.error-message').forEach(hideError);
 
         let isValid = true;
-        const name = nameInput.value.trim();
-        const emailOrPhone = emailOrPhoneInput.value.trim();
-        const municipio = municipioInput.value;
-        const bairro = bairroInput.value.trim();
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        console.log("emailOrPhone:", emailOrPhoneRaw);
+        let emailOrPhone;
+        try {
+          emailOrPhone = emailOrPhoneRaw && (emailOrPhoneRaw.startsWith('+') || emailOrPhoneRaw.includes('@')) ? emailOrPhoneRaw : window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
+        } catch (error) {
+          showError(emailOrPhoneError, "Formato de telefone inválido.");
+          isValid = false;
+        }
 
-        if (!name) {
-          showError('nameError', "Nome é obrigatório.");
+        if (!nameInput.value || !nameInput.value.trim()) {
+          showError(nameError, "Nome completo é obrigatório.");
           isValid = false;
         }
-        if (!emailOrPhone) {
-          showError('emailOrPhoneError', "Email ou telefone é obrigatório.");
+
+        if (!emailOrPhoneRaw) {
+          showError(emailOrPhoneError, "Email ou telefone é obrigatório.");
           isValid = false;
         }
-        if (!municipio) {
-          showError('municipioError', "Município é obrigatório.");
+
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhone);
+        const isPhone = window.firebaseAuth.validatePhone(emailOrPhone);
+        if (!isEmail && !isPhone) {
+          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
           isValid = false;
         }
-        if (!bairro) {
-          showError('bairroError', "Bairro é obrigatório.");
+
+        if (!municipioSelect.value) {
+          showError(municipioError, "Selecione um município.");
           isValid = false;
         }
-        if (password !== confirmPassword) {
+
+        if (!bairroInput.value.trim()) {
+          showError(bairroError, "O bairro é obrigatório.");
+          isValid = false;
+        }
+
+        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+        if (passwordErrorMsg) {
+          showError('passwordError', passwordErrorMsg);
+          isValid = false;
+        }
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
           showError('confirmPasswordError', "As senhas não coincidem.");
           isValid = false;
         }
-        const passwordError = window.firebaseAuth.validatePassword(password);
-        if (passwordError) {
-          showError('passwordError', passwordError);
-          isValid = false;
-        }
+
         if (!termsAccepted) {
           showError('termsError', "Aceite os Termos e Condições.");
           isValid = false;
         }
 
-        const isEmail = window.firebaseAuth.validateEmail(emailOrPhone) === null;
-        const isPhone = window.firebaseAuth.validatePhone(emailOrPhone) === null;
-        if (!isEmail && !isPhone) {
-          showError('emailOrPhoneError', "Formato inválido. Use email ou +2449XXXXXXXX.");
+        if (!grecaptcha.getResponse()) {
+          console.log("reCAPTCHA não resolvido.");
+          showError('emailOrPhoneError', "Complete a verificação de segurança.");
           isValid = false;
         }
 
         if (!isValid) {
           console.log("Validação falhou.");
+          isSubmitting = false;
           return;
         }
 
+        console.log("Iniciando registro.");
         registerBtn.disabled = true;
-        registerBtn.textContent = 'Criando...';
+        registerText.classList.add('hidden');
+        registerSpinner.classList.remove('hidden');
+        registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Criando...`;
 
         try {
-          const result = await window.firebaseAuth.registerUser({
-            name,
+          console.log("Chamando registerUser:", {
+            name: nameInput.value.trim(),
             email: isEmail ? emailOrPhone : null,
             phoneNumber: isPhone ? emailOrPhone : null,
-            password,
-            municipio,
-            bairro,
+            password: passwordInput.value,
+            municipio: municipioSelect.value,
+            bairro: bairroInput.value.trim(),
             method: isEmail ? 'email' : 'phone',
             notificationPreferences: {
               email: receiveEmailInput.checked,
-              whatsapp: receiveWhatsAppInput.checked,
-            },
+              whatsapp: receiveWhatsAppInput.checked
+            }
           });
 
+          const result = await window.firebaseAuth.registerUser({
+            name: nameInput.value.trim(),
+            email: isEmail ? emailOrPhone : null,
+            phoneNumber: isPhone ? emailOrPhone : null,
+            password: passwordInput.value,
+            municipio: municipioSelect.value,
+            bairro: bairroInput.value.trim(),
+            method: isEmail ? 'email' : 'phone',
+            notificationPreferences: {
+              email: receiveEmailInput.checked,
+              whatsapp: receiveWhatsAppInput.checked
+            }
+          });
+
+          console.log("Registro concluído:", result);
           if (isEmail) {
             alert("Conta criada! Verifique seu email.");
             window.location.href = 'verify-email.html';
           } else {
-            alert("Código de verificação enviado.");
+            alert("Código de verificação enviado!");
             window.location.href = 'verify-phone.html';
           }
         } catch (error) {
           console.error("Erro no registro:", error);
-          showError('emailOrPhoneError', error.message);
+          let errorMsg = error.message;
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/email-already-in-use':
+                errorMsg = 'Este email já está registrado.';
+                break;
+              case 'auth/invalid-email':
+                errorMsg = 'Formato de email inválido.';
+                break;
+              case 'auth/weak-password':
+                errorMsg = 'A senha é muito fraca.';
+                break;
+              case 'auth/invalid-phone-number':
+                errorMsg = 'Número de telefone inválido.';
+                break;
+              case 'auth/captcha-check-failed':
+                errorMsg = 'Verificação de segurança falhou. Tente novamente.';
+                break;
+              default:
+                errorMsg = error.message;
+            }
+            showError(emailOrPhoneError, errorMsg);
+          } else {
+            alert(errorMsg);
+          }
         } finally {
+          console.log("Finalizando submissão.");
           registerBtn.disabled = !termsAccepted;
-          registerBtn.textContent = 'Criar Conta';
+          registerText.classList.remove('hidden');
+          registerSpinner.classList.add('hidden');
+          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+          isSubmitting = false;
         }
       });
     });

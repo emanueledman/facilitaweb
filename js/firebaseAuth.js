@@ -27,11 +27,11 @@ const firebaseAuth = {
       },
       'expired-callback': () => {
         document.getElementById('registerBtn').disabled = true;
-        console.warn("reCAPTCHA expirou.");
+        console.warn("reCAPTCHA expirado.");
       },
     });
-    return this._recaptchaVerifier.render().catch((error) => {
-      console.error("Erro ao renderizar reCAPTCHA:", error);
+    return this._recaptchaVerifier.render().catch((err) => {
+      console.error("Erro ao renderizar reCAPTCHA:", err);
       throw new Error("Erro na verificação de segurança.");
     });
   },
@@ -53,7 +53,7 @@ const firebaseAuth = {
 
   validatePhone(phone) {
     try {
-      const normalized = this.normalizePhoneNumber(phone);
+      this.normalizePhoneNumber(phone);
       return null;
     } catch (error) {
       return error.message;
@@ -62,6 +62,18 @@ const firebaseAuth = {
 
   validatePassword(password) {
     return password.length >= 6 ? null : "Senha deve ter 6+ caracteres.";
+  },
+
+  checkAuthState(redirectIfLoggedIn, redirectIfNotSignedIn) {
+    console.log("Verificando estado de autenticação...");
+    this._auth.onAuthStateChanged((user) => {
+      console.log(user ? `Usuário logado: ${user.uid}` : "Nenhum usuário logado.");
+      if (user && redirectIfLoggedIn && window.location.pathname !== new URL(redirectIfLoggedIn, window.location.origin).pathname) {
+        window.location.href = redirectIfLoggedIn;
+      } else if (!user && redirectIfNotSignedIn && window.location.pathname !== new URL(redirectIfNotSignedIn, window.location.origin).pathname) {
+        window.location.href = redirectIfNotSignedIn;
+      }
+    });
   },
 
   async registerUser({ name, email, phoneNumber, password, municipio, bairro, method, notificationPreferences }) {
