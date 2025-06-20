@@ -855,6 +855,68 @@
     let isSubmitting = false; // Flag to prevent multiple submissions
     let currentStep = 1; // Start at the first step
     const totalSteps = 3; // Total number of steps in the form
+    let isTermsAccepted = false; // Moved this global too, as it's used by toggleRegisterButton
+    let registrationMethod = null; // 'email' or 'phone'
+
+    // --- DOM Elements (Declared globally or within a block that can access them after DOM load) ---
+    // Will be assigned in DOMContentLoaded
+    let registerBtn, registerText, registerSpinner, termsCheckbox, termsError;
+
+
+    // --- Functions (Declared globally to be accessible) ---
+
+    function showError(element, message) {
+      console.log(`Mostrando erro para ${element.id}: ${message}`);
+      element.textContent = message;
+      element.style.display = 'block';
+    }
+
+    function hideError(element) {
+      element.style.display = 'none';
+      element.textContent = '';
+    }
+
+    function hideAllErrors() {
+      document.querySelectorAll('.error-message').forEach(hideError);
+    }
+
+    function updateProgressBar() {
+      const progressBar = document.getElementById('progressBar');
+      const progress = (currentStep / totalSteps) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    function showStep(stepNumber) {
+      document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+      });
+      document.getElementById(`step${stepNumber}`).classList.add('active');
+      currentStep = stepNumber;
+      updateProgressBar();
+      // Scroll to top of the form when navigating steps
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // After showing a step, re-evaluate button state
+      if (currentStep === totalSteps) {
+          toggleRegisterButton();
+      }
+    }
+
+    // This function must be accessible globally, so it's outside DOMContentLoaded
+    function toggleRegisterButton() {
+      // Ensure these elements are defined before use (they will be after DOMContentLoaded)
+      if (!registerBtn || !termsCheckbox || !termsError) return;
+
+      console.log("Atualizando botão: isTermsAccepted =", isTermsAccepted);
+      termsCheckbox.checked = isTermsAccepted; // Ensure checkbox reflects the state
+      registerBtn.disabled = !isTermsAccepted; // Disable if terms not accepted
+
+      if (!isTermsAccepted && currentStep === totalSteps) { // Only show error if on the last step
+        showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
+      } else {
+        hideError(termsError);
+      }
+    }
+
 
     document.addEventListener('DOMContentLoaded', async () => {
       console.log("DOM carregado.");
@@ -891,7 +953,7 @@
       // Check authentication state (e.g., redirect if already logged in)
       window.firebaseAuth.checkAuthState('index.html', null);
 
-      // --- Get DOM Elements ---
+      // --- Assign DOM Elements (now safe to do after DOMContentLoaded) ---
       const registerForm = document.getElementById('registerForm');
       const nameInput = document.getElementById('name');
       const emailOrPhoneInput = document.getElementById('emailOrPhone');
@@ -901,9 +963,13 @@
       const confirmPasswordInput = document.getElementById('confirmPassword');
       const receiveEmailInput = document.getElementById('receiveEmail');
       const receiveWhatsAppInput = document.getElementById('receiveWhatsApp');
-      const registerBtn = document.getElementById('registerBtn');
-      const registerText = document.getElementById('registerText');
-      const registerSpinner = document.getElementById('registerSpinner');
+      
+      // Assign the global variables
+      registerBtn = document.getElementById('registerBtn');
+      registerText = document.getElementById('registerText');
+      registerSpinner = document.getElementById('registerSpinner');
+      termsCheckbox = document.getElementById('termsCheckbox');
+      termsError = document.getElementById('termsError');
 
       // Password toggle icons
       const togglePassword = document.getElementById('togglePassword');
@@ -911,17 +977,17 @@
       const phonePrefixDiv = document.getElementById('phonePrefix');
 
 
-      // Error message elements
+      // Error message elements (these can stay local to DOMContentLoaded if only used here)
       const nameError = document.getElementById('nameError');
       const emailOrPhoneError = document.getElementById('emailOrPhoneError');
       const municipioError = document.getElementById('municipioError');
       const bairroError = document.getElementById('bairroError');
       const passwordError = document.getElementById('passwordError');
       const confirmPasswordError = document.getElementById('confirmPasswordError');
-      const termsError = document.getElementById('termsError');
+      // termsError is now global
+
 
       // Terms and Conditions elements
-      const termsCheckbox = document.getElementById('termsCheckbox');
       const showTermsLink = document.getElementById('showTermsLink');
       const termsModal = document.getElementById('termsModal');
       const closeTermsModalBtn = document.getElementById('closeTermsModal');
@@ -933,18 +999,16 @@
       const nextStep2Btn = document.getElementById('nextStep2');
       const prevStep3Btn = document.getElementById('prevStep3');
 
-      const progressBar = document.getElementById('progressBar');
+      // progressBar is already accessed globally in updateProgressBar
 
-      // --- State Variable ---
-      let isTermsAccepted = false;
-      let registrationMethod = null; // 'email' or 'phone'
 
       // --- Data for Select Input ---
       const municipiosDeLuanda = [
         "Belas", "Cacuaco", "Cazenga", "Icolo e Bengo", "Kilamba Kiaxi", "Luanda", "Quissama", "Talatona", "Viana"
       ];
 
-      // --- Functions ---
+      // --- Functions (can be defined within DOMContentLoaded if only used here, or globally as needed) ---
+
       function populateMunicipios() {
         console.log("Populando municípios...");
         municipiosDeLuanda.sort().forEach((muni) => {
@@ -955,44 +1019,9 @@
         });
       }
 
-      function showError(element, message) {
-        console.log(`Mostrando erro para ${element.id}: ${message}`);
-        element.textContent = message;
-        element.style.display = 'block';
-      }
-
-      function hideError(element) {
-        element.style.display = 'none';
-        element.textContent = '';
-      }
-
-      function hideAllErrors() {
-        document.querySelectorAll('.error-message').forEach(hideError);
-      }
-
-      function updateProgressBar() {
-        const progress = (currentStep / totalSteps) * 100;
-        progressBar.style.width = `${progress}%`;
-      }
-
-      function showStep(stepNumber) {
-        document.querySelectorAll('.form-step').forEach(step => {
-          step.classList.remove('active');
-        });
-        document.getElementById(`step${stepNumber}`).classList.add('active');
-        currentStep = stepNumber;
-        updateProgressBar();
-        // Scroll to top of the form when navigating steps
-        document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // After showing a step, re-evaluate button state
-        if (currentStep === totalSteps) {
-            toggleRegisterButton();
-        }
-      }
-
       // --- Step-specific Validation Functions ---
       function validateStep1() {
-        hideAllErrors();
+        hideAllErrors(); // Call the global hideAllErrors
         let isValid = true;
 
         if (!nameInput.value.trim()) {
@@ -1006,7 +1035,7 @@
           isValid = false;
         } else {
             const isEmailFormat = emailOrPhoneRaw.includes('@');
-            const isPhoneFormat = /^\d+$/.test(emailOrPhoneRaw); // Check if contains only digits for basic phone check
+            const isPhoneFormat = /^\d+$/.test(emailOrPhoneRaw); // Basic check for digits or Angola prefix
 
             if (isEmailFormat) {
                 const emailValidationResult = window.firebaseAuth.validateEmail(emailOrPhoneRaw);
@@ -1074,13 +1103,11 @@
         }
 
         // Only check reCAPTCHA response if it's a phone number registration
-        // Firebase Phone Auth explicitly requires reCAPTCHA
         if (registrationMethod === 'phone' && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
             showError(termsError, "Complete a verificação de segurança reCAPTCHA.");
             isValid = false;
-            // Optionally, try to execute reCAPTCHA if it hasn't already
             if (typeof grecaptcha !== 'undefined') {
-                 grecaptcha.execute(); // Try to force execution for invisible reCAPTCHA
+                 grecaptcha.execute();
             }
         }
 
@@ -1092,7 +1119,6 @@
         toggleElement.addEventListener('click', function () {
           const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
           inputElement.setAttribute('type', type);
-          // Toggle the eye icon
           this.querySelector('i').classList.toggle('fa-eye');
           this.querySelector('i').classList.toggle('fa-eye-slash');
         });
@@ -1101,9 +1127,12 @@
       // --- Phone Input Formatting and Flag ---
       function handleEmailOrPhoneInput() {
         const value = emailOrPhoneInput.value.trim();
-        const isLikelyPhoneNumber = /^\d{1,9}$/.test(value) || value.startsWith('+244'); // Basic check for digits or Angola prefix
+        // A user might start typing a phone number directly, or an email.
+        // If they start with '+', it's likely a phone. If it contains '@', it's an email.
+        // Otherwise, assume it's a phone number digits until an '@' is typed.
+        const isLikelyPhoneNumber = /^\d+$/.test(value) || value.startsWith('+'); // Basic check for digits or Angola prefix
 
-        if (isLikelyPhoneNumber) {
+        if (isLikelyPhoneNumber && !value.includes('@')) {
             phonePrefixDiv.classList.remove('hidden');
             // Adjust input padding to make space for the flag/prefix
             emailOrPhoneInput.style.paddingLeft = '6.5rem'; // Enough space for flag + dial code + small gap
@@ -1112,8 +1141,8 @@
             emailOrPhoneInput.style.paddingLeft = '0.9rem'; // Reset to default padding
         }
 
-        // Auto-add +244 if user starts with '9' (common in Angola)
-        if (value.startsWith('9') && value.length <= 9 && !value.startsWith('+244')) {
+        // Auto-add +244 if user starts with '9' (common in Angola) and isn't already prefixed or clearly an email
+        if (value.startsWith('9') && value.length <= 9 && !value.startsWith('+244') && !value.includes('@')) {
             emailOrPhoneInput.value = `+244${value}`;
             // Move cursor to the end
             setTimeout(() => {
@@ -1126,6 +1155,7 @@
       // --- Initialization ---
       populateMunicipios();
       showStep(currentStep); // Show the first step initially
+      // Call toggleRegisterButton after elements are assigned
       toggleRegisterButton(); // Set initial button state (disabled)
 
       // Setup password toggles
@@ -1168,26 +1198,26 @@
 
       closeTermsModalBtn.addEventListener('click', () => {
         termsModal.classList.remove('show');
-        if (!isTermsAccepted) {
+        if (!isTermsAccepted) { // If terms were not accepted, ensure checkbox reflects this
           termsCheckbox.checked = false;
-          toggleRegisterButton();
         }
+        toggleRegisterButton(); // Re-evaluate button state
       });
 
       acceptTermsModalBtn.addEventListener('click', () => {
         isTermsAccepted = true;
         termsCheckbox.checked = true;
         termsModal.classList.remove('show');
-        toggleRegisterButton();
+        toggleRegisterButton(); // Re-evaluate button state
       });
 
       termsModal.addEventListener('click', (e) => {
         if (e.target === termsModal) {
           termsModal.classList.remove('show');
-          if (!isTermsAccepted) {
+          if (!isTermsAccepted) { // If user clicked outside and didn't accept, ensure checkbox is unchecked
             termsCheckbox.checked = false;
-            toggleRegisterButton();
           }
+          toggleRegisterButton(); // Re-evaluate button state
         }
       });
 
@@ -1196,10 +1226,10 @@
           if (!isTermsAccepted) { // Only show modal if user just checked and terms weren't already accepted
             termsModal.classList.add('show');
           } else {
-             toggleRegisterButton();
+             toggleRegisterButton(); // If already accepted, just update button if terms are unchecked
           }
         } else {
-          isTermsAccepted = false;
+          isTermsAccepted = false; // User unchecked the box
           toggleRegisterButton();
         }
       });
@@ -1239,11 +1269,8 @@
           finalEmail = emailOrPhoneRaw;
         } else if (registrationMethod === 'phone') {
           finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-          // For phone sign-up, Firebase Auth still internally uses an email-like identifier
-          // This ensures a unique user record even if actual email isn't provided
           finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`;
         } else {
-            // This case should ideally not be reached if step 1 validation passes
             console.error("Tipo de registro (email/phone) não determinado. Abortando.");
             alert("Erro interno: Tipo de registro não reconhecido. Por favor, recarregue a página.");
             isSubmitting = false;
@@ -1254,11 +1281,11 @@
         const userData = {
             name: nameInput.value.trim(),
             email: finalEmail,
-            phoneNumber: finalPhoneNumber, // This will be the actual phone number saved to Firestore
+            phoneNumber: finalPhoneNumber,
             password: passwordInput.value,
             municipio: municipioSelect.value,
             bairro: bairroInput.value.trim(),
-            method: registrationMethod, // Explicitly tell FirebaseAuth if it's 'email' or 'phone'
+            method: registrationMethod,
             notificationPreferences: {
               email: receiveEmailInput.checked,
               whatsapp: receiveWhatsAppInput.checked
@@ -1278,8 +1305,6 @@
             window.location.href = 'verify-email.html';
           } else if (result.requiresPhoneVerification) {
             alert("Código de verificação enviado para o seu telemóvel. Por favor, verifique-o.");
-            // In a real app, you'd typically pass confirmationResult to the next page
-            // For now, redirect and the next page (verify-phone.html) would handle the SMS code entry
             window.location.href = 'verify-phone.html';
           } else {
             alert("Conta criada com sucesso!");
@@ -1288,15 +1313,14 @@
 
         } catch (error) {
           console.error("Erro no registro:", error);
-          let errorMsg = "Ocorreu um erro inesperado. Tente novamente."; // Default error message
+          let errorMsg = "Ocorreu um erro inesperado. Tente novamente.";
 
-          // Handle specific Firebase authentication errors
           if (error.code) {
             switch (error.code) {
               case 'auth/email-already-in-use':
                 errorMsg = 'Este email já está registado. Por favor, faça login ou use outro email.';
                 showError(emailOrPhoneError, errorMsg);
-                showStep(1); // Go back to the first step for this error
+                showStep(1);
                 break;
               case 'auth/invalid-email':
                 errorMsg = 'Formato de email inválido.';
@@ -1306,7 +1330,7 @@
               case 'auth/weak-password':
                 errorMsg = 'A senha é muito fraca. Por favor, use uma senha mais segura.';
                 showError(passwordError, errorMsg);
-                showStep(2); // Go back to password step
+                showStep(2);
                 break;
               case 'auth/invalid-phone-number':
                 errorMsg = 'Número de telefone inválido ou mal formatado. Use o formato +2449XXXXXXXX.';
@@ -1315,12 +1339,15 @@
                 break;
               case 'auth/captcha-check-failed':
                 errorMsg = 'A verificação de segurança reCAPTCHA falhou. Tente novamente ou recarregue a página.';
-                showError(termsError, errorMsg); // Display on last step
-                // Reset reCAPTCHA to allow another attempt
+                showError(termsError, errorMsg);
                 if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
-                    grecaptcha.reset(); // This is crucial for re-attempting reCAPTCHA
+                    grecaptcha.reset();
                 }
-                showStep(3); // Stay on the last step for reCAPTCHA
+                showStep(3);
+                break;
+              case 'auth/code-expired':
+                errorMsg = 'O código de verificação expirou. Tente novamente.';
+                alert(errorMsg);
                 break;
               case 'auth/too-many-requests':
                 errorMsg = 'Muitas tentativas de registro. Por favor, tente novamente mais tarde.';
