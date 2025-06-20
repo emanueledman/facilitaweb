@@ -648,7 +648,7 @@
           <a href="login.html" class="text-primary-accent hover:underline font-medium">Faça login agora!</a>
         </p>
 
-        <div id="recaptcha-container" class="mt-4 hidden"></div>
+        <div id="recaptcha-container" class="mt-4"></div>
       </div>
     </div>
   </div>
@@ -745,8 +745,7 @@
 
       // Initialize reCAPTCHA
       try {
-        // reCAPTCHA container is initially hidden in your HTML,
-        // ensure it's made visible if needed or initialize it even if hidden.
+        // Ensure recaptcha-container is in the DOM. Its visibility is handled by reCAPTCHA itself for 'invisible' size.
         await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
         console.log("reCAPTCHA inicializado.");
       } catch (error) {
@@ -785,7 +784,7 @@
       const termsCheckbox = document.getElementById('termsCheckbox');
       const showTermsLink = document.getElementById('showTermsLink'); // Corrected ID
       const termsModal = document.getElementById('termsModal');
-      const closeTermsModalBtn = document.getElementById('closeTermsModal'); // Corrected ID
+      const closeTermsModalBtn = document.getElementById('closeTermsModal');
       const acceptTermsModalBtn = document.getElementById('acceptTermsModalBtn');
 
       // --- State Variable ---
@@ -810,7 +809,7 @@
 
       function showError(element, message) {
         console.log(`Mostrando erro para ${element.id}: ${message}`);
-        element.textContent = message; // Corrected typo here
+        element.textContent = message;
         element.style.display = 'block';
       }
 
@@ -839,7 +838,7 @@
       toggleRegisterButton();
 
       // Show Terms Modal
-      showTermsLink.addEventListener('click', (e) => { // Corrected variable name
+      showTermsLink.addEventListener('click', (e) => {
         e.preventDefault(); // Prevent default link behavior
         console.log("Link de termos clicado.");
         termsModal.classList.add('show');
@@ -882,7 +881,12 @@
         console.log("Checkbox de termos alterado.");
         if (termsCheckbox.checked) {
           // If user checks the box, show modal to confirm acceptance
-          termsModal.classList.add('show');
+          // This ensures they read terms before accepting.
+          if (!isTermsAccepted) { // Only show if not already accepted
+            termsModal.classList.add('show');
+          } else { // If already accepted and they just re-checked, no need to show modal
+             toggleRegisterButton(); // Just update button state
+          }
         } else {
           // If user unchecks, set state to false and update button
           isTermsAccepted = false;
@@ -909,7 +913,9 @@
 
         // --- Input Validation ---
         const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-        let emailOrPhone = null; // Normalized value
+        let finalEmail = null;
+        let finalPhoneNumber = null;
+        let registrationMethod = null;
 
         // Validate Name
         if (!nameInput.value.trim()) {
@@ -917,26 +923,33 @@
           isValid = false;
         }
 
-        // Validate Email or Phone Input
+        // Validate Email or Phone Input and determine method
         if (!emailOrPhoneRaw) {
           showError(emailOrPhoneError, "Email ou telefone é obrigatório.");
           isValid = false;
         } else {
-          try {
-            // Attempt to normalize phone number if it looks like one, otherwise keep as is
-            emailOrPhone = emailOrPhoneRaw.startsWith('+') || emailOrPhoneRaw.includes('@') ? emailOrPhoneRaw : window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
-          } catch (error) {
-            showError(emailOrPhoneError, "Formato de telefone inválido.");
-            isValid = false;
+          // Check if it's an email
+          if (emailOrPhoneRaw.includes('@')) {
+            const emailValidationResult = window.firebaseAuth.validateEmail(emailOrPhoneRaw);
+            if (emailValidationResult) {
+              showError(emailOrPhoneError, emailValidationResult);
+              isValid = false;
+            } else {
+              finalEmail = emailOrPhoneRaw;
+              registrationMethod = 'email';
+            }
+          } else { // Assume it's a phone number
+            const phoneValidationResult = window.firebaseAuth.validatePhone(emailOrPhoneRaw);
+            if (phoneValidationResult) {
+              showError(emailOrPhoneError, phoneValidationResult);
+              isValid = false;
+            } else {
+              finalPhoneNumber = window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw);
+              // For phone sign-up, a synthetic email is still passed to Firebase Auth
+              finalEmail = `${finalPhoneNumber.replace(/\D/g, '')}@fixabairro.com`;
+              registrationMethod = 'phone';
+            }
           }
-        }
-
-        const isEmail = emailOrPhone ? window.firebaseAuth.validateEmail(emailOrPhone) === null : false; // Check for null (no error)
-        const isPhone = emailOrPhone ? window.firebaseAuth.validatePhone(emailOrPhone) === null : false; // Check for null (no error)
-
-        if (emailOrPhoneRaw && !isEmail && !isPhone) { // Only show this if raw input exists and is invalid
-          showError(emailOrPhoneError, "Formato inválido. Use um email (ex: seu.email@exemplo.com) ou número de telefone no formato +2449XXXXXXXX.");
-          isValid = false;
         }
 
         // Validate Municipality
@@ -968,18 +981,19 @@
         }
 
         // Validate Terms and Conditions
-        if (!isTermsAccepted) { // Use the consistent variable
+        if (!isTermsAccepted) {
           showError(termsError, "Para criar sua conta, você precisa ler e aceitar nossos Termos de Serviço.");
           isValid = false;
         }
 
-        // Validate reCAPTCHA
-        // Check if grecaptcha and getResponse exist before calling
-        if (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse()) {
-          console.log("reCAPTCHA não resolvido.");
-          showError(emailOrPhoneError, "Complete a verificação de segurança reCAPTCHA."); // Show under email/phone for visibility
+        // Validate reCAPTCHA only if registrationMethod is 'phone' or if it needs to be explicitly verified
+        // For 'invisible' reCAPTCHA, it should ideally resolve automatically, but we check if a response exists.
+        if (registrationMethod === 'phone' && (typeof grecaptcha === 'undefined' || !grecaptcha.getResponse())) {
+          console.log("reCAPTCHA não resolvido para autenticação por telefone.");
+          showError(emailOrPhoneError, "Complete a verificação de segurança reCAPTCHA.");
           isValid = false;
         }
+
 
         // If any validation failed, stop here
         if (!isValid) {
@@ -999,12 +1013,12 @@
         try {
           const userData = {
             name: nameInput.value.trim(),
-            email: isEmail ? emailOrPhone : null,
-            phoneNumber: isPhone ? emailOrPhone : null,
+            email: finalEmail, // This will be the actual email for Firebase Auth
+            phoneNumber: finalPhoneNumber, // This will be the actual phone number for Firestore
             password: passwordInput.value,
             municipio: municipioSelect.value,
             bairro: bairroInput.value.trim(),
-            method: isEmail ? 'email' : 'phone', // Indicate registration method
+            method: registrationMethod, // Determined method: 'email' or 'phone'
             notificationPreferences: {
               email: receiveEmailInput.checked,
               whatsapp: receiveWhatsAppInput.checked
@@ -1020,14 +1034,18 @@
           // --- Post-Registration Actions ---
           if (result.requiresEmailVerification) {
             alert("Conta criada com sucesso! Por favor, verifique seu email para ativar sua conta.");
-            window.location.href = 'verify-email.html';
+            window.location.href = 'verify-email.html'; // Redirect to email verification page
           } else if (result.requiresPhoneVerification) {
+            // For phone verification, the 'confirmationResult' is needed to prompt for SMS code.
+            // You would typically redirect to a page where the user enters the SMS code.
+            // For simplicity, we'll just alert and redirect here. In a real app,
+            // `confirmationResult` would be used in `verify-phone.html`.
             alert("Código de verificação enviado para o seu telemóvel. Por favor, verifique-o.");
-            window.location.href = 'verify-phone.html';
+            window.location.href = 'verify-phone.html'; // Redirect to phone verification page
           } else {
-            // Fallback in case neither email nor phone verification is explicitly required
+            // Fallback for cases where no explicit verification is immediately required
             alert("Conta criada com sucesso!");
-            window.location.href = 'index.html'; // Or dashboard
+            window.location.href = 'index.html'; // Or dashboard, if applicable
           }
 
 
@@ -1057,7 +1075,7 @@
               case 'auth/captcha-check-failed':
                 errorMsg = 'A verificação de segurança reCAPTCHA falhou. Tente novamente ou recarregue a página.';
                 showError(emailOrPhoneError, errorMsg);
-                // Consider re-rendering or resetting reCAPTCHA if necessary
+                // Reset reCAPTCHA to allow another attempt
                 if (typeof grecaptcha !== 'undefined' && grecaptcha.reset) {
                     grecaptcha.reset();
                 }
@@ -1066,14 +1084,19 @@
                 errorMsg = 'Muitas tentativas de registro. Por favor, tente novamente mais tarde.';
                 showError(emailOrPhoneError, errorMsg);
                 break;
+              case 'auth/network-request-failed':
+                  errorMsg = 'Problema de conexão com a internet. Verifique sua rede e tente novamente.';
+                  showError(emailOrPhoneError, errorMsg);
+                  break;
               default:
                 // For other Firebase errors, use the Firebase message directly
                 errorMsg = error.message;
-                alert(`Erro: ${errorMsg}`); // Generic alert for less common errors
+                // If it's a generic Firebase error, show it generally
+                alert(`Erro: ${errorMsg}`);
             }
           } else {
-            // Non-Firebase errors (e.g., network issues)
-            alert(`Erro de rede ou conexão: ${errorMsg}`);
+            // Non-Firebase errors (e.g., from your custom validation)
+            alert(`Erro: ${error.message}`);
           }
         } finally {
           console.log("Finalizando submissão. Resetando UI.");
