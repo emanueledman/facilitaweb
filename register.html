@@ -613,6 +613,20 @@
           </div>
 
           <div class="flex items-start">
+            <input type="checkbox" id="receiveEmail" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+            <label for="receiveEmail" class="ml-2 text-text-main text-sm">
+              Desejo receber atualizações por Email.
+            </label>
+          </div>
+          
+          <div class="flex items-start">
+            <input type="checkbox" id="receiveWhatsApp" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
+            <label for="receiveWhatsApp" class="ml-2 text-text-main text-sm">
+              Desejo receber atualizações por WhatsApp.
+            </label>
+          </div>
+
+          <div class="flex items-start">
             <input type="checkbox" id="termsCheckbox" class="mt-1.5 rounded text-primary-accent focus:ring-primary-accent">
             <label for="termsCheckbox" class="ml-2 text-text-main text-sm">
               Eu li e concordo com os 
@@ -697,290 +711,295 @@
   <script src="https://unpkg.com/imask"></script>
   <script src="js/firebaseAuth.js"></script>
   <script>
-   const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+    };
 
-let isSubmitting = false;
+    let isSubmitting = false;
 
-document.addEventListener('DOMContentLoaded', async () => {
-  // Inicializa o Firebase App
-  try {
-    window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
-    console.log("Firebase App inicializado.");
-  } catch (error) {
-    console.error("Erro ao inicializar Firebase:", error);
-    alert("Erro: Firebase SDK não carregado.");
-    return;
-  }
-
-  // Verifica o estado de autenticação
-  window.firebaseAuth.checkAuthState('index.html', null);
-
-  // Inicializa o reCAPTCHA
-  try {
-    await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
-  } catch (error) {
-    console.error("Erro ao inicializar reCAPTCHA:", error);
-    alert("Erro ao carregar verificação de segurança.");
-  }
-
-  // Referências aos elementos da UI
-  const registerForm = document.getElementById('registerForm');
-  const nameInput = document.getElementById('name');
-  const emailOrPhoneInput = document.getElementById('emailOrPhone');
-  const municipioSelect = document.getElementById('municipio');
-  const bairroInput = document.getElementById('bairro');
-  const passwordInput = document.getElementById('password');
-  const confirmPasswordInput = document.getElementById('confirmPassword');
-  const registerBtn = document.getElementById('registerBtn');
-  const registerText = document.getElementById('registerText');
-  const registerSpinner = document.getElementById('registerSpinner');
-  const nameError = document.getElementById('nameError');
-  const emailOrPhoneError = document.getElementById('emailOrPhoneError');
-  const municipioError = document.getElementById('municipioError');
-  const bairroError = document.getElementById('bairroError');
-  const passwordError = document.getElementById('passwordError');
-  const confirmPasswordError = document.getElementById('confirmPasswordError');
-  const termsCheckbox = document.getElementById('termsCheckbox');
-  const termsError = document.getElementById('termsError');
-  const showTermsLink = document.getElementById('showTermsLink');
-  const termsModal = document.getElementById('termsModal');
-  const closeTermsModalBtn = document.getElementById('closeTermsModal');
-  const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
-
-  let termsRead = false;
-  let termsAccepted = false;
-
-  const municipiosDeLuanda = [
-    "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi", "Cazenga"
-  ];
-
-  function populateMunicipios() {
-    municipiosDeLuanda.sort().forEach((municipio) => {
-      const option = document.createElement('option');
-      option.value = municipio;
-      option.textContent = municipio;
-      municipioSelect.appendChild(option);
-    });
-  }
-
-  populateMunicipios();
-
-  const phoneMask = IMask(emailOrPhoneInput, {
-    mask: [
-      {
-        mask: '+244 000 000 000',
-        startsWith: '+244',
-        lazy: true,
-      },
-      {
-        mask: /^\S+@\S+\.\S+$/,
-        startsWith: '',
-        lazy: false,
-      },
-    ],
-    dispatch: (appended, dynamicMasked) => {
-      const value = (dynamicMasked.value + appended).trim();
-      if (value.startsWith('+244') || value.startsWith('+')) {
-        return dynamicMasked.compiledMasks[0];
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!window.firebaseAuth) {
+        console.error("window.firebaseAuth não está definido. Verifique se o firebaseAuth.js foi carregado corretamente.");
+        alert("Erro: Módulo de autenticação não carregado.");
+        return;
       }
-      return dynamicMasked.compiledMasks[1];
-    },
-  });
 
-  emailOrPhoneInput.addEventListener('input', () => {
-    const value = emailOrPhoneInput.value.trim();
-    if (value === '') {
-      phoneMask.updateOptions({ lazy: true });
-    } else if (value.startsWith('+244')) {
-      phoneMask.updateOptions({ lazy: false });
-    }
-  });
-
-  function showError(element, message) {
-    element.textContent = message;
-    element.style.display = 'block';
-  }
-
-  function hideError(element) {
-    element.style.display = 'none';
-  }
-
-  function toggleRegisterButtonAndTerms() {
-    termsCheckbox.checked = termsAccepted;
-    registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
-    if (!termsAccepted) {
-      showError(termsError, "Aceite os Termos de Serviço.");
-    } else {
-      hideError(termsError);
-    }
-  }
-
-  termsCheckbox.addEventListener('change', () => {
-    if (!termsRead) {
-      termsCheckbox.checked = false;
-      termsModal.classList.add('show');
-    } else {
-      termsAccepted = termsCheckbox.checked;
-      toggleRegisterButtonAndTerms();
-    }
-  });
-
-  showTermsLink.addEventListener('click', () => {
-    termsModal.classList.add('show');
-  });
-
-  closeTermsModalBtn.addEventListener('click', () => {
-    termsModal.classList.remove('show');
-    if (!termsRead) {
-      termsAccepted = false;
-      toggleRegisterButtonAndTerms();
-    }
-  });
-
-  acceptTermsModalBtn.addEventListener('click', () => {
-    termsRead = true;
-    termsAccepted = true;
-    termsModal.classList.remove('show');
-    toggleRegisterButtonAndTerms();
-  });
-
-  termsModal.addEventListener('click', (e) => {
-    if (e.target === termsModal) {
-      termsModal.classList.remove('show');
-      if (!termsRead) {
-        termsAccepted = false;
-        toggleRegisterButtonAndTerms();
+      try {
+        window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+        console.log("Firebase App inicializado.");
+      } catch (error) {
+        console.error("Erro ao inicializar Firebase:", error);
+        alert("Erro: Firebase SDK não carregado.");
+        return;
       }
-    }
-  });
 
-  registerForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    isSubmitting = true;
-
-    document.querySelectorAll('.error-message').forEach(hideError);
-
-    let isValid = true;
-    const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
-    const emailOrPhoneProcessed = emailOrPhoneRaw.startsWith('+244') ? window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw) : emailOrPhoneRaw;
-
-    if (!nameInput.value.trim()) {
-      showError(nameError, "Nome completo é obrigatório.");
-      isValid = false;
-    }
-
-    const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneProcessed) === null;
-    const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneProcessed) === null;
-
-    if (!emailOrPhoneRaw) {
-      showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
-      isValid = false;
-    } else if (!isEmail && !isPhone) {
-      showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
-      isValid = false;
-    }
-
-    if (!municipioSelect.value) {
-      showError(municipioError, "Selecione seu município.");
-      isValid = false;
-    }
-
-    if (!bairroInput.value.trim()) {
-      showError(bairroError, "O nome do bairro é obrigatório.");
-      isValid = false;
-    }
-
-    const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
-    if (passwordErrorMsg) {
-      showError(passwordError, passwordErrorMsg);
-      isValid = false;
-    }
-
-    if (passwordInput.value !== confirmPasswordInput.value) {
-      showError(confirmPasswordError, "As senhas não coincidem.");
-      isValid = false;
-    }
-
-    if (!termsAccepted) {
-      showError(termsError, "Aceite os Termos e Condições.");
-      isValid = false;
-    }
-
-    if (!isValid) {
-      isSubmitting = false;
-      return;
-    }
-
-    registerBtn.disabled = true;
-    registerText.classList.add('hidden');
-    registerSpinner.classList.remove('hidden');
-    registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
-
-    try {
-      if (isEmail) {
-        const result = await window.firebaseAuth.registerUserWithEmail(
-          nameInput.value.trim(),
-          emailOrPhoneProcessed,
-          passwordInput.value,
-          municipioSelect.value,
-          bairroInput.value.trim()
-        );
-        alert('Conta criada com sucesso! Verifique seu email.');
-        window.location.href = 'verify-email.html';
-      } else {
-        await window.firebaseAuth.initiatePhoneRegistration(
-          nameInput.value.trim(),
-          emailOrPhoneProcessed,
-          municipioSelect.value,
-          bairroInput.value.trim()
-        );
-        alert('Código de verificação enviado para o seu telefone.');
-        window.location.href = 'verify-phone.html';
+      try {
+        await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+      } catch (error) {
+        console.error("Erro ao inicializar reCAPTCHA:", error);
+        alert("Erro ao carregar verificação de segurança.");
       }
-    } catch (error) {
-      console.error("Erro no registo:", error);
-      let userFacingMessage = error.message;
-      if (error.code) {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            userFacingMessage = 'Este email já está registado.';
-            showError(emailOrPhoneError, userFacingMessage);
-            break;
-          case 'auth/invalid-email':
-            userFacingMessage = 'O formato do email é inválido.';
-            showError(emailOrPhoneError, userFacingMessage);
-            break;
-          case 'auth/weak-password':
-            userFacingMessage = 'A senha é muito fraca.';
-            showError(passwordError, userFacingMessage);
-            break;
-          case 'auth/invalid-phone-number':
-            userFacingMessage = 'Número de telefone inválido.';
-            showError(emailOrPhoneError, userFacingMessage);
-            break;
-          default:
-            alert(userFacingMessage);
+
+      window.firebaseAuth.checkAuthState('index.html', null);
+
+      const registerForm = document.getElementById('registerForm');
+      const nameInput = document.getElementById('name');
+      const emailOrPhoneInput = document.getElementById('emailOrPhone');
+      const municipioSelect = document.getElementById('municipio');
+      const bairroInput = document.getElementById('bairro');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+      const receiveEmailInput = document.getElementById('receiveEmail');
+      const receiveWhatsAppInput = document.getElementById('receiveWhatsApp');
+      const registerBtn = document.getElementById('registerBtn');
+      const registerText = document.getElementById('registerText');
+      const registerSpinner = document.getElementById('registerSpinner');
+      const nameError = document.getElementById('nameError');
+      const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+      const municipioError = document.getElementById('municipioError');
+      const bairroError = document.getElementById('bairroError');
+      const passwordError = document.getElementById('passwordError');
+      const confirmPasswordError = document.getElementById('confirmPasswordError');
+      const termsCheckbox = document.getElementById('termsCheckbox');
+      const termsError = document.getElementById('termsError');
+      const showTermsLink = document.getElementById('showTermsLink');
+      const termsModal = document.getElementById('termsModal');
+      const closeTermsModalBtn = document.getElementById('closeTermsModal');
+      const acceptTermsModalBtn = document.getElementById('acceptTermsModal');
+
+      let termsRead = false;
+      let termsAccepted = false;
+
+      const municipiosDeLuanda = [
+        "Luanda", "Viana", "Cacuaco", "Belas", "Talatona", "Kilamba Kiaxi", "Cazenga"
+      ];
+
+      function populateMunicipios() {
+        municipiosDeLuanda.sort().forEach((municipio) => {
+          const option = document.createElement('option');
+          option.value = municipio;
+          option.textContent = municipio;
+          municipioSelect.appendChild(option);
+        });
+      }
+
+      populateMunicipios();
+
+      const phoneMask = IMask(emailOrPhoneInput, {
+        mask: [
+          {
+            mask: '+244 000 000 000',
+            startsWith: '+244',
+            lazy: true,
+          },
+          {
+            mask: /^\S+@\S+\.\S+$/,
+            startsWith: '',
+            lazy: false,
+          },
+        ],
+        dispatch: (appended, dynamicMasked) => {
+          const value = (dynamicMasked.value + appended).trim();
+          if (value.startsWith('+244') || value.startsWith('+')) {
+            return dynamicMasked.compiledMasks[0];
+          }
+          return dynamicMasked.compiledMasks[1];
+        },
+      });
+
+      emailOrPhoneInput.addEventListener('input', () => {
+        const value = emailOrPhoneInput.value.trim();
+        if (value === '') {
+          phoneMask.updateOptions({ lazy: true });
+        } else if (value.startsWith('+244')) {
+          phoneMask.updateOptions({ lazy: false });
         }
-      } else {
-        showError(emailOrPhoneError, userFacingMessage);
+      });
+
+      function showError(element, message) {
+        element.textContent = message;
+        element.style.display = 'block';
       }
-    } finally {
-      registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
-      registerText.classList.remove('hidden');
-      registerSpinner.classList.add('hidden');
-      registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
-      isSubmitting = false;
-    }
-  });
-});
+
+      function hideError(element) {
+        element.style.display = 'none';
+      }
+
+      function toggleRegisterButtonAndTerms() {
+        termsCheckbox.checked = termsAccepted;
+        registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+        if (!termsAccepted) {
+          showError(termsError, "Aceite os Termos de Serviço.");
+        } else {
+          hideError(termsError);
+        }
+      }
+
+      termsCheckbox.addEventListener('change', () => {
+        if (!termsRead) {
+          termsCheckbox.checked = false;
+          termsModal.classList.add('show');
+        } else {
+          termsAccepted = termsCheckbox.checked;
+          toggleRegisterButtonAndTerms();
+        }
+      });
+
+      showTermsLink.addEventListener('click', () => {
+        termsModal.classList.add('show');
+      });
+
+      closeTermsModalBtn.addEventListener('click', () => {
+        termsModal.classList.remove('show');
+        if (!termsRead) {
+          termsAccepted = false;
+          toggleRegisterButtonAndTerms();
+        }
+      });
+
+      acceptTermsModalBtn.addEventListener('click', () => {
+        termsRead = true;
+        termsAccepted = true;
+        termsModal.classList.remove('show');
+        toggleRegisterButtonAndTerms();
+      });
+
+      termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) {
+          termsModal.classList.remove('show');
+          if (!termsRead) {
+            termsAccepted = false;
+            toggleRegisterButtonAndTerms();
+          }
+        }
+      });
+
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (isSubmitting) return;
+        isSubmitting = true;
+
+        document.querySelectorAll('.error-message').forEach(hideError);
+
+        let isValid = true;
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        const emailOrPhoneProcessed = emailOrPhoneRaw.startsWith('+244') ? window.firebaseAuth.normalizePhoneNumber(emailOrPhoneRaw) : emailOrPhoneRaw;
+
+        if (!nameInput.value.trim()) {
+          showError(nameError, "Nome completo é obrigatório.");
+          isValid = false;
+        }
+
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneProcessed) === null;
+        const isPhone = window.firebaseAuth.validatePhone(emailOrPhoneProcessed) === null;
+
+        if (!emailOrPhoneRaw) {
+          showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
+          isValid = false;
+        } else if (!isEmail && !isPhone) {
+          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+          isValid = false;
+        }
+
+        if (!municipioSelect.value) {
+          showError(municipioError, "Selecione seu município.");
+          isValid = false;
+        }
+
+        if (!bairroInput.value.trim()) {
+          showError(bairroError, "O nome do bairro é obrigatório.");
+          isValid = false;
+        }
+
+        const passwordErrorMsg = window.firebaseAuth.validatePassword(passwordInput.value);
+        if (passwordErrorMsg) {
+          showError(passwordError, passwordErrorMsg);
+          isValid = false;
+        }
+
+        if (passwordInput.value !== confirmPasswordInput.value) {
+          showError(confirmPasswordError, "As senhas não coincidem.");
+          isValid = false;
+        }
+
+        if (!termsAccepted) {
+          showError(termsError, "Aceite os Termos e Condições.");
+          isValid = false;
+        }
+
+        if (!isValid) {
+          isSubmitting = false;
+          return;
+        }
+
+        registerBtn.disabled = true;
+        registerText.classList.add('hidden');
+        registerSpinner.classList.remove('hidden');
+        registerBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A criar...`;
+
+        try {
+          const result = await window.firebaseAuth.registerUser({
+            name: nameInput.value.trim(),
+            email: isEmail ? emailOrPhoneProcessed : null,
+            phoneNumber: isPhone ? emailOrPhoneProcessed : null,
+            password: passwordInput.value,
+            municipio: municipioSelect.value,
+            bairro: bairroInput.value.trim(),
+            method: isEmail ? 'email' : 'phone',
+            notificationPreferences: {
+              email: receiveEmailInput.checked,
+              whatsapp: receiveWhatsAppInput.checked,
+            },
+          });
+
+          if (isEmail) {
+            alert('Conta criada com sucesso! Verifique seu email.');
+            window.location.href = 'verify-email.html';
+          } else {
+            alert('Código de verificação enviado para o seu telefone.');
+            window.location.href = 'verify-phone.html';
+          }
+        } catch (error) {
+          console.error("Erro no registro:", error);
+          let userFacingMessage = error.message;
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/email-already-in-use':
+                userFacingMessage = 'Este email já está registrado.';
+                showError(emailOrPhoneError, userFacingMessage);
+                break;
+              case 'auth/invalid-email':
+                userFacingMessage = 'O formato do email é inválido.';
+                showError(emailOrPhoneError, userFacingMessage);
+                break;
+              case 'auth/weak-password':
+                userFacingMessage = 'A senha é muito fraca.';
+                showError(passwordError, userFacingMessage);
+                break;
+              case 'auth/invalid-phone-number':
+                userFacingMessage = 'Número de telefone inválido.';
+                showError(emailOrPhoneError, userFacingMessage);
+                break;
+              default:
+                alert(userFacingMessage);
+            }
+          } else {
+            showError(emailOrPhoneError, userFacingMessage);
+          }
+        } finally {
+          registerBtn.disabled = !termsAccepted || !grecaptcha.getResponse();
+          registerText.classList.remove('hidden');
+          registerSpinner.classList.add('hidden');
+          registerBtn.innerHTML = `<i class="fas fa-user-plus"></i> Criar Conta`;
+          isSubmitting = false;
+        }
+      });
+    });
   </script>
 </body>
 </html>
