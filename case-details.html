@@ -995,23 +995,13 @@
         commentsList.innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar comentários.</p></div>';
       });
 
-      // Habilitar/Desabilitar o botão de comentar com base no login
-      if (!window.firebaseAuth.isGuest()) {
-        submitCommentButton.disabled = false;
-        commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
-      } else {
-        submitCommentButton.disabled = true;
-        commentTextarea.placeholder = 'Faça login para comentar...';
-      }
+      // Habilitar o formulário de comentários para todos
+      submitCommentButton.disabled = false;
+      commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
     }
 
     // Função para adicionar um novo comentário
     function addComment(caseId, db) {
-      if (window.firebaseAuth.isGuest()) {
-        showLoginPrompt();
-        return;
-      }
-
       const commentTextarea = document.getElementById('commentText');
       const commentText = commentTextarea.value.trim();
 
@@ -1020,29 +1010,61 @@
         return;
       }
 
+      let userName = 'Visitante';
+      let userId = null;
+
+      // Verifica se há usuário autenticado
       window.firebaseAuth.getCurrentUser().then(user => {
-        if (!user) {
-          showLoginPrompt();
-          return;
+        if (user) {
+          userName = user.displayName || user.email || 'Utilizador Registado';
+          userId = user.uid;
         }
 
-        const userName = user.displayName || user.email || 'Utilizador Registado';
-        const userId = user.uid;
+        const newCommentRef = db.ref('comments/' + caseId).push();
+        const commentData = {
+          text: commentText,
+          userName: userName,
+          timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
 
+        if (userId) {
+          commentData.userId = userId; // Adiciona userId apenas se autenticado
+        }
+
+        newCommentRef.set(commentData)
+          .then(() => {
+            commentTextarea.value = '';
+            console.log('Comentário publicado com sucesso como', userName);
+          })
+          .catch((error) => {
+            console.error('Erro ao adicionar comentário:', error);
+            if (error.code === 'PERMISSION_DENIED') {
+              alert('Você não tem permissão para adicionar comentários. Verifique as configurações do sistema.');
+            } else {
+              alert('Erro ao publicar comentário: ' + error.message);
+            }
+          });
+      }).catch(error => {
+        console.error('Erro ao obter usuário, prosseguindo como visitante:', error);
+        // Prossegue como visitante
         const newCommentRef = db.ref('comments/' + caseId).push();
         newCommentRef.set({
           text: commentText,
-          userName: userName,
-          userId: userId,
+          userName: 'Visitante',
           timestamp: firebase.database.ServerValue.TIMESTAMP
         })
-        .then(() => {
-          commentTextarea.value = '';
-        })
-        .catch((error) => {
-          console.error('Erro ao adicionar comentário:', error);
-          alert('Erro ao publicar comentário: ' + error.message);
-        });
+          .then(() => {
+            commentTextarea.value = '';
+            console.log('Comentário publicado com sucesso como Visitante');
+          })
+          .catch((error) => {
+            console.error('Erro ao adicionar comentário como visitante:', error);
+            if (error.code === 'PERMISSION_DENIED') {
+              alert('Você não tem permissão para adicionar comentários. Verifique as configurações do sistema.');
+            } else {
+              alert('Erro ao publicar comentário: ' + error.message);
+            }
+          });
       });
     }
 
@@ -1078,6 +1100,7 @@
         onGuest: () => {
           currentUser = null;
           markResolvedButton.style.display = 'none';
+          supportButton.disabled = true; // Desabilita o botão de apoio para visitantes
           supportButton.classList.remove('btn-outline-secondary-dark');
           supportButton.classList.add('btn-main');
           supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${supportCountSpan.textContent})`;
@@ -1165,21 +1188,15 @@
     function updateAuthUI(user) {
       const authButton = document.getElementById('authButton');
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
-      const submitCommentButton = document.getElementById('submitCommentButton');
-      const commentTextarea = document.getElementById('commentText');
 
       if (user) {
         authButton.textContent = 'Meu Perfil';
         authButton.href = 'profile.html';
         currentUser = user;
-        submitCommentButton.disabled = false;
-        commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
       } else {
         authButton.textContent = 'Entrar';
         authButton.href = 'login.html';
         currentUser = null;
-        submitCommentButton.disabled = true;
-        commentTextarea.placeholder = 'Faça login para comentar...';
       }
 
       navTogglerIcon.style.color = 'var(--secondary-dark)';
@@ -1267,26 +1284,32 @@
             // Inicializa o listener de autenticação com firebaseAuth
             window.firebaseAuth.checkAuthState({
               onLoggedIn: (user) => {
+                console.log('Usuário logado:', user.uid);
                 updateAuthUI(user);
                 loadProblemDetails(caseId, firebase.database());
               },
               onGuest: () => {
+                console.log('Usuário não autenticado (convidado).');
                 updateAuthUI(null);
                 loadProblemDetails(caseId, firebase.database());
               }
+            }).catch(error => {
+              console.error('Erro ao verificar estado de autenticação:', error);
+              errorMessageDiv.style.display = 'block';
+              errorText.textContent = 'Erro ao verificar autenticação: ' + error.message;
             });
 
             checkCookieConsent();
           }, { once: true });
         }, 800);
       } else {
-        console.warn('Firebase Auth SDK ou auth.js não carregado. Verifique sua conexão ou configuração.');
+        console.warn('Firebase Auth SDK ou auth.js não carregado.');
         document.getElementById('loadingScreen').classList.add('fade-out');
         setTimeout(() => {
           document.getElementById('loadingScreen').style.display = 'none';
           document.getElementById('caseDetailsPage').style.display = 'block';
           errorMessageDiv.style.display = 'block';
-          errorText.textContent = 'Erro de inicialização. Firebase Auth ou auth.js não carregado. Verifique sua conexão.';
+          errorText.textContent = 'Erro de inicialização. Firebase Auth ou auth.js não carregado.';
           AOS.init({ once: true, duration: 1000 });
           checkCookieConsent();
         }, 300);
@@ -1295,10 +1318,10 @@
       // Adiciona o evento para o formulário de comentários
       document.getElementById('addCommentForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        if (window.firebaseAuth && firebase.database()) {
+        if (firebase.database()) {
           addComment(caseId, firebase.database());
         } else {
-          alert('O Firebase ou auth.js não foi inicializado corretamente. Não foi possível adicionar o comentário.');
+          alert('O Firebase não foi inicializado corretamente. Não foi possível adicionar o comentário.');
         }
       });
     });
