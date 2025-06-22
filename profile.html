@@ -184,127 +184,156 @@
     }
 
     .profile-container {
-      max-width: 800px;
-      margin: 5rem auto;
+      max-width: 900px;
+      margin: 6rem auto 2rem;
       padding: 0 1rem;
     }
 
     .profile-header {
-      background: var(--bg-white);
+      background: linear-gradient(135deg, var(--bg-white) 60%, rgba(255, 87, 34, 0.05) 100%);
       border-radius: var(--border-radius);
-      padding: 1.5rem;
+      padding: 2rem;
       box-shadow: var(--card-shadow);
       border: 1px solid #E0E0E0;
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 87, 34, 0.1) 10%, transparent 50%);
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .profile-header > * {
+      position: relative;
+      z-index: 1;
     }
 
     .profile-header .avatar {
-      width: 100px;
-      height: 100px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      border: 4px solid var(--primary-accent);
-      margin-bottom: 1rem;
+      border: 5px solid var(--primary-accent);
+      margin-bottom: 1.5rem;
       background: #ddd;
       object-fit: cover;
       display: block;
       margin-left: auto;
       margin-right: auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(255, 87, 34, 0.2);
+    }
+
+    .profile-header .avatar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.3);
     }
 
     .profile-header h1 {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
       color: var(--secondary-dark);
+      letter-spacing: 0.5px;
     }
 
     .profile-header p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--text-secondary);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
     }
 
     .profile-card {
       background: var(--bg-white);
       border-radius: var(--border-radius);
-      padding: 1.5rem;
+      padding: 2rem;
       box-shadow: var(--card-shadow);
       border: 1px solid #E0E0E0;
     }
 
     .stats-section {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
     }
 
     .stat-item {
       background: var(--bg-light);
-      border-radius: 8px;
-      padding: 1rem;
+      border-radius: 12px;
+      padding: 1.5rem;
       text-align: center;
       transition: all 0.3s ease;
     }
 
     .stat-item:hover {
       background: rgba(255, 87, 34, 0.1);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
     }
 
     .stat-item i {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
       color: var(--primary-accent);
     }
 
     .stat-number {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--primary-accent);
     }
 
     .stat-label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
     }
 
     .problems-section h3 {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: var(--secondary-dark);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .filter-group {
-      margin-bottom: 12px;
+      margin-bottom: 1rem;
     }
 
     .filter-label {
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--text-main);
-      margin-bottom: 6px;
+      margin-bottom: 0.75rem;
     }
 
     .filter-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 0.75rem;
     }
 
     .filter-button {
       background: var(--bg-light);
       border: 1px solid var(--text-secondary);
       color: var(--text-main);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 0.85rem;
+      border-radius: 25px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -318,13 +347,13 @@
     .problems-list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.5rem;
     }
 
     .problem-card {
       background: var(--bg-light);
-      border-radius: 8px;
-      padding: 1rem;
+      border-radius: 12px;
+      padding: 1.5rem;
       border: 1px solid #E0E0E0;
       display: flex;
       align-items: center;
@@ -332,16 +361,16 @@
     }
 
     .problem-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
     .problem-card img {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-right: 1rem;
+      border-radius: 12px;
+      margin-right: 1.5rem;
     }
 
     .problem-info {
@@ -349,22 +378,22 @@
     }
 
     .problem-title {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: var(--secondary-dark);
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
     }
 
     .problem-status {
-      padding: 4px 10px;
+      padding: 0.4rem 1rem;
       border-radius: 25px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: var(--text-white);
     }
 
     .problem-details {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-secondary);
     }
 
@@ -372,10 +401,10 @@
     .status-EmAndamento { background: var(--info-blue); }
     .status-Resolvido { background: var(--success-green); }
     .category-Buraco { background: var(--highlight-light); color: var(--text-main); }
-    .category-Lixo { background: #10b981; color: var(--text-main); }
-    .category-Iluminação { background: #f59e0b; color: var(--text-main); }
-    .category-Água { background: #0ea5e9; color: var(--text-main); }
-    .category-Segurança { background: #dc3545; }
+    .category-Lixo { background: #10b981; color: var(--text-white); }
+    .category-Iluminação { background: #f59e0b; color: var(--text-white); }
+    .category-Água { background: #0ea5e9; color: var(--text-white); }
+    .category-Segurança { background: #dc3545; color: var(--text-white); }
 
     .modal-content {
       border-radius: var(--border-radius);
@@ -394,20 +423,20 @@
     }
 
     .modal-body {
-      padding: 1.5rem;
+      padding: 2rem;
     }
 
     .form-label {
       font-weight: 600;
       color: var(--text-main);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
 
     .form-control {
-      border-radius: 8px;
+      border-radius: 12px;
       border: 1px solid #E0E0E0;
-      padding: 0.75rem;
-      font-size: 0.95rem;
+      padding: 0.8rem;
+      font-size: 1rem;
       transition: border-color 0.3s ease;
     }
 
@@ -427,25 +456,25 @@
 
     @media (max-width: 768px) {
       .profile-container {
-        margin: 4rem auto;
-        padding: 0 0.75rem;
+        margin: 5rem auto 1.5rem;
+        padding: 0 1rem;
       }
 
       .profile-header {
-        padding: 1rem;
+        padding: 1.5rem;
       }
 
       .profile-header .avatar {
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
       }
 
       .profile-header h1 {
-        font-size: 1.25rem;
+        font-size: 1.75rem;
       }
 
       .profile-header p {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
       }
 
       .stats-grid {
@@ -453,16 +482,16 @@
       }
 
       .problem-card img {
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
       }
 
       .problem-title {
-        font-size: 0.9rem;
+        font-size: 1rem;
       }
 
       .problem-details {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
       }
     }
 
@@ -478,6 +507,7 @@
       .logo {
         width: 36px;
         height: 36px;
+        font-size: 1.2rem;
       }
 
       .nav-link {
@@ -485,22 +515,30 @@
         font-size: 0.9rem;
       }
 
+      .profile-container {
+        margin: 4rem auto 1rem;
+      }
+
+      .profile-header {
+        padding: 1rem;
+      }
+
       .profile-header .avatar {
-        width: 60px;
-        height: 60px;
+        width: 100px;
+        height: 100px;
       }
 
       .profile-header h1 {
-        font-size: 1.1rem;
+        font-size: 1.5rem;
       }
 
       .profile-header p {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
       }
 
       .filter-button {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -551,7 +589,7 @@
 
     <div class="profile-container">
       <div class="profile-header" data-aos="fade-down">
-        <img id="userAvatar" src="https://via.placeholder.com/100/cccccc/ffffff?text=Sem+Foto" alt="Avatar do usuário" class="avatar" loading="lazy">
+        <img id="userAvatar" src="https://via.placeholder.com/140/cccccc/ffffff?text=Sem+Foto" alt="Avatar do usuário" class="avatar" loading="lazy">
         <h1 id="userName">Carregando...</h1>
         <p id="userEmail"></p>
       </div>
@@ -602,491 +640,433 @@
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
-   document.addEventListener('DOMContentLoaded', () => {
-  AOS.init({ duration: 800, once: true });
+    document.addEventListener('DOMContentLoaded', () => {
+      AOS.init({ duration: 800, once: true });
 
-  if (typeof firebase === 'undefined') {
-    console.error('Firebase SDK not loaded.');
-    document.getElementById('loadingScreen').innerHTML = `
-      <div class="error-message">Erro ao carregar Firebase. Verifique sua conexão e tente novamente.</div>
-    `;
-    return;
-  }
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-    authDomain: "facilita-479b3.firebaseapp.com",
-    databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
-    projectId: "facilita-479b3",
-    storageBucket: "facilita-479b3.appspot.com",
-    messagingSenderId: "385676676886",
-    appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-
-  function showMessage(elementId, message, isError = true) {
-    const messageContainer = document.getElementById(elementId);
-    messageContainer.className = isError ? 'error-message' : 'success-message';
-    messageContainer.textContent = message;
-    messageContainer.style.display = 'block';
-    setTimeout(() => messageContainer.style.display = 'none', 5000);
-  }
-
-  function animateCounter(element, target, duration = 1500) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    const timer = setInterval(() => {
-      start += increment;
-      if (start >= target) {
-        element.textContent = target.toLocaleString('pt-BR');
-        clearInterval(timer);
-      } else {
-        element.textContent = Math.floor(start).toLocaleString('pt-BR');
-      }
-    }, 16);
-  }
-
-  function getStatusClass(status) {
-    switch (status) {
-      case 'Aguardando': return 'status-Aguardando';
-      case 'Em andamento': return 'status-EmAndamento';
-      case 'Resolvido': return 'status-Resolvido';
-      default: return '';
-    }
-  }
-
-  function getCategoryClass(category) {
-    switch (category) {
-      case 'Buraco': return 'category-Buraco';
-      case 'Lixo': return 'category-Lixo';
-      case 'Iluminação': return 'category-Iluminação';
-      case 'Água': return 'category-Água';
-      case 'Segurança': return 'category-Segurança';
-      default: return '';
-    }
-  }
-
-  function updateProfileUI(user, userData, stats, problems) {
-    const userName = document.getElementById('userName');
-    const userEmail = document.getElementById('userEmail');
-    const userAvatar = document.getElementById('userAvatar');
-    const profileContent = document.getElementById('profileContent');
-
-    userName.textContent = userData?.displayName || user.displayName || 'Usuário';
-    userEmail.textContent = userData?.email || user.email || '';
-    userAvatar.src = userData?.photoURL || 'https://via.placeholder.com/100/cccccc/ffffff?text=Sem+Foto';
-    userAvatar.onerror = () => {
-      userAvatar.src = 'https://via.placeholder.com/100/cccccc/ffffff?text=Sem+Foto';
-    };
-
-    let problemsHTML = problems.length ? '' : '<div class="error-message">Nenhum problema reportado ainda.</div>';
-    problems.forEach(problem => {
-      problemsHTML += `
-        <div class="problem-card" data-aos="fade-up">
-          ${problem.imageUrl ? `<img src="${problem.imageUrl}" alt="Imagem do problema" loading="lazy" onerror="this.src='https://via.placeholder.com/60/cccccc/ffffff?text=Sem+Imagem';">` : ''}
-          <div class="problem-info">
-            <div class="problem-title">${problem.title || 'Problema'}</div>
-            <div class="problem-details">
-              <span class="problem-status ${getStatusClass(problem.status)}">${problem.status || 'Aguardando'}</span>
-              <span class="problem-status ${getCategoryClass(problem.category)}">${problem.category || 'Desconhecida'}</span>
-              <br>
-              <span>${new Date(problem.createdAt).toLocaleDateString('pt-BR')}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    profileContent.innerHTML = `
-      <div class="stats-section">
-        <div class="stats-grid">
-          <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
-            <i class="fas fa-exclamation-triangle"></i>
-            <div class="stat-number" id="reportedProblems">${stats.reportedProblems}</div>
-            <div class="stat-label">Problemas Reportados</div>
-          </div>
-          <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-            <i class="fas fa-check-circle"></i>
-            <div class="stat-number" id="solvedProblems">${stats.solvedProblems}</div>
-            <div class="stat-label">Problemas Resolvidos</div>
-          </div>
-        </div>
-      </div>
-      <div class="problems-section">
-        <h3>Meus Problemas Reportados</h3>
-        <div class="filter-group">
-          <div class="filter-label">Status:</div>
-          <div class="filter-options" id="statusFilters">
-            <button class="filter-button active" data-filter="all" aria-label="Todos os status">Todos</button>
-            <button class="filter-button" data-filter="Aguardando" aria-label="Aberto">Aberto</button>
-            <button class="filter-button" data-filter="Em andamento" aria-label="Em andamento">Em andamento</button>
-            <button class="filter-button" data-filter="Resolvido" aria-label="Resolvido">Resolvido</button>
-          </div>
-        </div>
-        <div class="filter-group">
-          <div class="filter-label">Categoria:</div>
-          <div class="filter-options" id="categoryFilters">
-            <button class="filter-button active" data-filter="all" aria-label="Todas as categorias">Todas</button>
-            <button class="filter-button" data-filter="Buraco" aria-label="Buracos">Buracos</button>
-            <button class="filter-button" data-filter="Lixo" aria-label="Lixo">Lixo</button>
-            <button class="filter-button" data-filter="Iluminação" aria-label="Iluminação">Iluminação</button>
-            <button class="filter-button" data-filter="Água" aria-label="Água">Água</button>
-            <button class="filter-button" data-filter="Segurança" aria-label="Segurança">Segurança</button>
-          </div>
-        </div>
-        <div class="problems-list" id="problemsList">${problemsHTML}</div>
-      </div>
-    `;
-
-    animateCounter(document.getElementById('reportedProblems'), stats.reportedProblems);
-    animateCounter(document.getElementById('solvedProblems'), stats.solvedProblems);
-
-    ['statusFilters', 'categoryFilters'].forEach(filterId => {
-      document.getElementById(filterId).addEventListener('click', e => {
-        if (e.target.classList.contains('filter-button')) {
-          document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
-          e.target.classList.add('active');
-          updateProblemsList(problems);
-        }
-      });
-    });
-  }
-
-  function updateProblemsList(allProblems) {
-    const statusFilter = document.querySelector('#statusFilters .active')?.dataset.filter || 'all';
-    const categoryFilter = document.querySelector('#categoryFilters .active')?.dataset.filter || 'all';
-    let filteredProblems = allProblems;
-
-    if (statusFilter !== 'all') {
-      filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
-    }
-    if (categoryFilter !== 'all') {
-      filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
-    }
-
-    const problemsList = document.getElementById('problemsList');
-    problemsList.innerHTML = filteredProblems.length ? '' : '<div class="error-message">Nenhum problema encontrado com os filtros selecionados.</div>';
-    filteredProblems.forEach(problem => {
-      problemsList.innerHTML += `
-        <div class="problem-card" data-aos="fade-up">
-          ${problem.imageUrl ? `<img src="${problem.imageUrl}" alt="Imagem do problema" loading="lazy" onerror="this.src='https://via.placeholder.com/60/cccccc/ffffff?text=Sem+Imagem';">` : ''}
-          <div class="problem-info">
-            <div class="problem-title">${problem.title || 'Problema'}</div>
-            <div class="problem-details">
-              <span class="problem-status ${getStatusClass(problem.status)}">${problem.status || 'Aguardando'}</span>
-              <span class="problem-status ${getCategoryClass(problem.category)}">${problem.category || 'Desconhecida'}</span>
-              <br>
-              <span>${new Date(problem.createdAt).toLocaleDateString('pt-BR')}</span>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-  }
-
-  function loadProfileData(user, firebase) {
-    const profileName = document.getElementById('profileName');
-    const profileEmail = document.getElementById('profileEmail');
-    const profilePhoto = document.getElementById('profilePhoto');
-    const profileMessage = document.getElementById('profileMessage');
-
-    // MUDANÇA: Usar a coleção 'usuarios' ao invés de 'users'
-    firebase.firestore().collection('usuarios').doc(user.uid).get()
-      .then(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          profileName.value = data.displayName || '';
-          profileEmail.value = data.email || user.email || '';
-          profilePhoto.value = data.photoURL || '';
-        } else {
-          profileName.value = user.displayName || '';
-          profileEmail.value = user.email || '';
-          profilePhoto.value = user.photoURL || '';
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao carregar perfil:', error);
-        showMessage('profileMessage', 'Erro ao carregar perfil. Tente novamente.');
-      });
-
-    document.getElementById('saveProfileBtn').addEventListener('click', () => {
-      const name = profileName.value.trim();
-      const email = profileEmail.value.trim();
-      const photoURL = profilePhoto.value.trim();
-
-      if (!name) {
-        showMessage('profileMessage', 'O nome é obrigatório.');
-        return;
-      }
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showMessage('profileMessage', 'Por favor, insira um email válido.');
-        return;
-      }
-      if (photoURL && !/^(https?:\/\/[^\s$.?#].[^\s]*)$/.test(photoURL)) {
-        showMessage('profileMessage', 'Por favor, insira uma URL válida para a foto.');
-        return;
-      }
-
-      const updates = { displayName: name };
-      if (photoURL) updates.photoURL = photoURL;
-
-      user.updateProfile(updates)
-        .then(() => {
-          if (email !== user.email) {
-            return user.updateEmail(email);
-          }
-        })
-        .then(() => {
-          // MUDANÇA: Usar a coleção 'usuarios' ao invés de 'users'
-          return firebase.firestore().collection('usuarios').doc(user.uid).set({
-            displayName: name,
-            email: email,
-            photoURL: photoURL || null
-          }, { merge: true });
-        })
-        .then(() => {
-          showMessage('profileMessage', 'Perfil atualizado com sucesso!', false);
-          setTimeout(() => {
-            document.getElementById('editProfileModal').querySelector('.btn-close').click();
-            loadProfileData(user, firebase);
-            updateProfileUI(user, { displayName: name, email, photoURL }, null, allProblems);
-          }, 1000);
-        })
-        .catch(error => {
-          console.error('Erro ao atualizar perfil:', error);
-          if (error.code === 'auth/requires-recent-login') {
-            showMessage('profileMessage', 'Para atualizar o email, faça login novamente.');
-          } else {
-            showMessage('profileMessage', 'Erro ao atualizar perfil. Tente novamente.');
-          }
-        });
-    });
-  }
-
-  // FUNÇÃO AUXILIAR: Buscar dados de agendamentos
-  async function getUserAgendamentos(userId) {
-    try {
-      const agendamentosSnapshot = await firebase.firestore()
-        .collection('agendamentos')
-        .where('usuario_id', '==', userId)
-        .get();
-      
-      return agendamentosSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Erro ao buscar agendamentos:', error);
-      return [];
-    }
-  }
-
-  // FUNÇÃO AUXILIAR: Buscar dados de matrículas
-  async function getUserMatriculas(userId) {
-    try {
-      const matriculasSnapshot = await firebase.firestore()
-        .collection('matriculas')
-        .where('usuario_id', '==', userId)
-        .get();
-      
-      return matriculasSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Erro ao buscar matrículas:', error);
-      return [];
-    }
-  }
-
-  // FUNÇÃO AUXILIAR: Buscar dados do banco de alimentação
-  async function getUserBancoAlimentacao(userId) {
-    try {
-      const bancoSnapshot = await firebase.firestore()
-        .collection('banco_alimentacao')
-        .where('usuario_id', '==', userId)
-        .get();
-      
-      return bancoSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Erro ao buscar dados do banco de alimentação:', error);
-      return [];
-    }
-  }
-
-  // FUNÇÃO AUXILIAR: Buscar problemas do Realtime Database
-  async function getUserProblems(userId) {
-    try {
-      const problemsRef = firebase.database().ref('problems');
-      const snapshot = await problemsRef.orderByChild('usuarioId').equalTo(userId).once('value');
-      
-      const problems = [];
-      snapshot.forEach(childSnapshot => {
-        problems.push({
-          id: childSnapshot.key,
-          ...childSnapshot.val()
-        });
-      });
-      
-      return problems;
-    } catch (error) {
-      console.error('Erro ao buscar problemas:', error);
-      return [];
-    }
-  }
-
-  function loadProfileContent() {
-    firebase.auth().onAuthStateChanged(async user => {
-      if (!user) {
-        showMessage('profileContent', 'Por favor, faça login para visualizar seu perfil.');
-        setTimeout(() => window.location.href = 'login.html', 2000);
-        return;
-      }
-
-      try {
-        // MUDANÇA PRINCIPAL: Usar Realtime Database para problemas e Firestore para o resto
-        const [userDoc, allProblems, agendamentos, matriculas, bancoAlimentacao] = await Promise.all([
-          firebase.firestore().collection('usuarios').doc(user.uid).get(),
-          getUserProblems(user.uid), // Buscar do Realtime Database
-          getUserAgendamentos(user.uid),
-          getUserMatriculas(user.uid),
-          getUserBancoAlimentacao(user.uid)
-        ]);
-
-        const userData = userDoc.exists ? userDoc.data() : { 
-          displayName: user.displayName, 
-          email: user.email, 
-          photoURL: user.photoURL 
-        };
-
-        // Calcular estatísticas
-        const solvedProblems = allProblems.filter(problem => problem.status === 'Resolvido');
-        const stats = {
-          reportedProblems: allProblems.length,
-          solvedProblems: solvedProblems.length,
-          totalAgendamentos: agendamentos.length,
-          totalMatriculas: matriculas.length,
-          totalBancoAlimentacao: bancoAlimentacao.length
-        };
-
-        // Armazenar dados globalmente para uso em outras funções
-        window.allProblems = allProblems;
-        window.userAgendamentos = agendamentos;
-        window.userMatriculas = matriculas;
-        window.userBancoAlimentacao = bancoAlimentacao;
-
-        updateProfileUI(user, userData, stats, allProblems);
-        loadProfileData(user, firebase);
-
-        // Adicionar seção com todos os dados do usuário
-        addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao);
-
-      } catch (error) {
-        console.error('Erro ao carregar dados do perfil:', error);
-        showMessage('profileContent', `Erro ao carregar perfil: ${error.message}`);
-        document.getElementById('profileContent').innerHTML += `
-          <button class="btn btn-main mt-2" onclick="loadProfileContent()">Tentar Novamente</button>
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase SDK not loaded.');
+        document.getElementById('loadingScreen').innerHTML = `
+          <div class="error-message">Erro ao carregar Firebase. Verifique sua conexão e tente novamente.</div>
         `;
+        return;
       }
-    });
-  }
 
-  // NOVA FUNÇÃO: Adicionar seções com todos os dados do usuário
-  function addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao) {
-    const profileContent = document.getElementById('profileContent');
-    
-    // Adicionar estatísticas expandidas
-    const statsSection = profileContent.querySelector('.stats-section .stats-grid');
-    if (statsSection) {
-      statsSection.innerHTML += `
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
-          <i class="fas fa-calendar-alt"></i>
-          <div class="stat-number">${stats.totalAgendamentos}</div>
-          <div class="stat-label">Agendamentos</div>
-        </div>
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
-          <i class="fas fa-graduation-cap"></i>
-          <div class="stat-number">${stats.totalMatriculas}</div>
-          <div class="stat-label">Matrículas</div>
-        </div>
-        <div class="stat-item" data-aos="fade-up" data-aos-delay="500">
-          <i class="fas fa-utensils"></i>
-          <div class="stat-number">${stats.totalBancoAlimentacao}</div>
-          <div class="stat-label">Banco Alimentar</div>
-        </div>
-      `;
-    }
+      const firebaseConfig = {
+        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+        authDomain: "facilita-479b3.firebaseapp.com",
+        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+        projectId: "facilita-479b3",
+        storageBucket: "facilita-479b3.appspot.com",
+        messagingSenderId: "385676676886",
+        appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+      };
 
-    // Adicionar seções detalhadas (opcional - você pode comentar se não quiser mostrar)
-    /*
-    const problemsSection = profileContent.querySelector('.problems-section');
-    if (problemsSection) {
-      problemsSection.innerHTML += `
-        <div class="user-data-sections mt-4">
-          <div class="data-section">
-            <h4>Meus Agendamentos</h4>
-            <div class="data-list">
-              ${agendamentos.length ? agendamentos.map(item => `
-                <div class="data-item">
-                  <strong>${item.servico || 'Serviço'}</strong>
-                  <span>${new Date(item.data_agendamento || item.createdAt).toLocaleDateString('pt-BR')}</span>
+      firebase.initializeApp(firebaseConfig);
+
+      function showMessage(elementId, message, isError = true) {
+        const messageContainer = document.getElementById(elementId);
+        messageContainer.className = isError ? 'error-message' : 'success-message';
+        messageContainer.textContent = message;
+        messageContainer.style.display = 'block';
+        setTimeout(() => messageContainer.style.display = 'none', 5000);
+      }
+
+      function animateCounter(element, target, duration = 1500) {
+        let start = 0;
+        const increment = target / (duration / 16);
+        const timer = setInterval(() => {
+          start += increment;
+          if (start >= target) {
+            element.textContent = target.toLocaleString('pt-BR');
+            clearInterval(timer);
+          } else {
+            element.textContent = Math.floor(start).toLocaleString('pt-BR');
+          }
+        }, 16);
+      }
+
+      function getStatusClass(status) {
+        switch (status) {
+          case 'Aguardando': return 'status-Aguardando';
+          case 'Em andamento': return 'status-EmAndamento';
+          case 'Resolvido': return 'status-Resolvido';
+          default: return '';
+        }
+      }
+
+      function getCategoryClass(category) {
+        switch (category) {
+          case 'Buraco': return 'category-Buraco';
+          case 'Lixo': return 'category-Lixo';
+          case 'Iluminação': return 'category-Iluminação';
+          case 'Água': return 'category-Água';
+          case 'Segurança': return 'category-Segurança';
+          default: return '';
+        }
+      }
+
+      function updateProfileUI(user, userData, stats, problems) {
+        const userName = document.getElementById('userName');
+        const userEmail = document.getElementById('userEmail');
+        const userAvatar = document.getElementById('userAvatar');
+        const profileContent = document.getElementById('profileContent');
+
+        userName.textContent = userData?.displayName || user.displayName || 'Usuário';
+        userEmail.textContent = userData?.email || user.email || '';
+        userAvatar.src = userData?.photoURL || 'https://via.placeholder.com/140/cccccc/ffffff?text=Sem+Foto';
+        userAvatar.onerror = () => {
+          userAvatar.src = 'https://via.placeholder.com/140/cccccc/ffffff?text=Sem+Foto';
+        };
+
+        let problemsHTML = problems.length ? '' : '<div class="error-message">Nenhum problema reportado ainda.</div>';
+        problems.forEach(problem => {
+          problemsHTML += `
+            <div class="problem-card" data-aos="fade-up">
+              ${problem.imageUrl ? `<img src="${problem.imageUrl}" alt="Imagem do problema" loading="lazy" onerror="this.src='https://via.placeholder.com/70/cccccc/ffffff?text=Sem+Imagem';">` : ''}
+              <div class="problem-info">
+                <div class="problem-title">${problem.title || 'Problema'}</div>
+                <div class="problem-details">
+                  <span class="problem-status ${getStatusClass(problem.status)}">${problem.status || 'Aguardando'}</span>
+                  <span class="problem-status ${getCategoryClass(problem.category)}">${problem.category || 'Desconhecida'}</span>
+                  <br>
+                  <span>${new Date(problem.createdAt).toLocaleDateString('pt-BR')}</span>
                 </div>
-              `).join('') : '<p>Nenhum agendamento encontrado.</p>'}
+              </div>
+            </div>
+          `;
+        });
+
+        profileContent.innerHTML = `
+          <div class="stats-section">
+            <div class="stats-grid">
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-number" id="reportedProblems">${stats.reportedProblems}</div>
+                <div class="stat-label">Problemas Reportados</div>
+              </div>
+              <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-number" id="solvedProblems">${stats.solvedProblems}</div>
+                <div class="stat-label">Problemas Resolvidos</div>
+              </div>
             </div>
           </div>
+          <div class="problems-section">
+            <h3>Meus Problemas Reportados</h3>
+            <div class="filter-group">
+              <div class="filter-label">Status:</div>
+              <div class="filter-options" id="statusFilters">
+                <button class="filter-button active" data-filter="all" aria-label="Todos os status">Todos</button>
+                <button class="filter-button" data-filter="Aguardando" aria-label="Aberto">Aberto</button>
+                <button class="filter-button" data-filter="Em andamento" aria-label="Em andamento">Em andamento</button>
+                <button class="filter-button" data-filter="Resolvido" aria-label="Resolvido">Resolvido</button>
+              </div>
+            </div>
+            <div class="filter-group">
+              <div class="filter-label">Categoria:</div>
+              <div class="filter-options" id="categoryFilters">
+                <button class="filter-button active" data-filter="all" aria-label="Todas as categorias">Todas</button>
+                <button class="filter-button" data-filter="Buraco" aria-label="Buracos">Buracos</button>
+                <button class="filter-button" data-filter="Lixo" aria-label="Lixo">Lixo</button>
+                <button class="filter-button" data-filter="Iluminação" aria-label="Iluminação">Iluminação</button>
+                <button class="filter-button" data-filter="Água" aria-label="Água">Água</button>
+                <button class="filter-button" data-filter="Segurança" aria-label="Segurança">Segurança</button>
+              </div>
+            </div>
+            <div class="problems-list" id="problemsList">${problemsHTML}</div>
+          </div>
+        `;
+
+        animateCounter(document.getElementById('reportedProblems'), stats.reportedProblems);
+        animateCounter(document.getElementById('solvedProblems'), stats.solvedProblems);
+
+        ['statusFilters', 'categoryFilters'].forEach(filterId => {
+          document.getElementById(filterId).addEventListener('click', e => {
+            if (e.target.classList.contains('filter-button')) {
+              document.querySelectorAll(`#${filterId} .filter-button`).forEach(btn => btn.classList.remove('active'));
+              e.target.classList.add('active');
+              updateProblemsList(problems);
+            }
+          });
+        });
+      }
+
+      function updateProblemsList(allProblems) {
+        const statusFilter = document.querySelector('#statusFilters .active')?.dataset.filter || 'all';
+        const categoryFilter = document.querySelector('#categoryFilters .active')?.dataset.filter || 'all';
+        let filteredProblems = allProblems;
+
+        if (statusFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.status === statusFilter);
+        }
+        if (categoryFilter !== 'all') {
+          filteredProblems = filteredProblems.filter(p => p.category === categoryFilter);
+        }
+
+        const problemsList = document.getElementById('problemsList');
+        problemsList.innerHTML = filteredProblems.length ? '' : '<div class="error-message">Nenhum problema encontrado com os filtros selecionados.</div>';
+        filteredProblems.forEach(problem => {
+          problemsList.innerHTML += `
+            <div class="problem-card" data-aos="fade-up">
+              ${problem.imageUrl ? `<img src="${problem.imageUrl}" alt="Imagem do problema" loading="lazy" onerror="this.src='https://via.placeholder.com/70/cccccc/ffffff?text=Sem+Imagem';">` : ''}
+              <div class="problem-info">
+                <div class="problem-title">${problem.title || 'Problema'}</div>
+                <div class="problem-details">
+                  <span class="problem-status ${getStatusClass(problem.status)}">${problem.status || 'Aguardando'}</span>
+                  <span class="problem-status ${getCategoryClass(problem.category)}">${problem.category || 'Desconhecida'}</span>
+                  <br>
+                  <span>${new Date(problem.createdAt).toLocaleDateString('pt-BR')}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      }
+
+      function loadProfileData(user, firebase) {
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const profilePhoto = document.getElementById('profilePhoto');
+        const profileMessage = document.getElementById('profileMessage');
+
+        firebase.firestore().collection('usuarios').doc(user.uid).get()
+          .then(doc => {
+            if (doc.exists) {
+              const data = doc.data();
+              profileName.value = data.displayName || '';
+              profileEmail.value = data.email || user.email || '';
+              profilePhoto.value = data.photoURL || '';
+            } else {
+              profileName.value = user.displayName || '';
+              profileEmail.value = user.email || '';
+              profilePhoto.value = user.photoURL || '';
+            }
+          })
+          .catch(error => {
+            console.error('Erro ao carregar perfil:', error);
+            showMessage('profileMessage', 'Erro ao carregar perfil. Tente novamente.');
+          });
+
+        document.getElementById('saveProfileBtn').addEventListener('click', () => {
+          const name = profileName.value.trim();
+          const email = profileEmail.value.trim();
+          const photoURL = profilePhoto.value.trim();
+
+          if (!name) {
+            showMessage('profileMessage', 'O nome é obrigatório.');
+            return;
+          }
+          if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showMessage('profileMessage', 'Por favor, insira um email válido.');
+            return;
+          }
+          if (photoURL && !/^(https?:\/\/[^\s$.?#].[^\s]*)$/.test(photoURL)) {
+            showMessage('profileMessage', 'Por favor, insira uma URL válida para a foto.');
+            return;
+          }
+
+          const updates = { displayName: name };
+          if (photoURL) updates.photoURL = photoURL;
+
+          user.updateProfile(updates)
+            .then(() => {
+              if (email !== user.email) {
+                return user.updateEmail(email);
+              }
+            })
+            .then(() => {
+              return firebase.firestore().collection('usuarios').doc(user.uid).set({
+                displayName: name,
+                email: email,
+                photoURL: photoURL || null
+              }, { merge: true });
+            })
+            .then(() => {
+              showMessage('profileMessage', 'Perfil atualizado com sucesso!', false);
+              setTimeout(() => {
+                document.getElementById('editProfileModal').querySelector('.btn-close').click();
+                loadProfileData(user, firebase);
+                updateProfileUI(user, { displayName: name, email, photoURL }, null, allProblems);
+              }, 1000);
+            })
+            .catch(error => {
+              console.error('Erro ao atualizar perfil:', error);
+              if (error.code === 'auth/requires-recent-login') {
+                showMessage('profileMessage', 'Para atualizar o email, faça login novamente.');
+              } else {
+                showMessage('profileMessage', 'Erro ao atualizar perfil. Tente novamente.');
+              }
+            });
+        });
+      }
+
+      async function getUserAgendamentos(userId) {
+        try {
+          const agendamentosSnapshot = await firebase.firestore()
+            .collection('agendamentos')
+            .where('usuario_id', '==', userId)
+            .get();
           
-          <div class="data-section">
-            <h4>Minhas Matrículas</h4>
-            <div class="data-list">
-              ${matriculas.length ? matriculas.map(item => `
-                <div class="data-item">
-                  <strong>${item.escola || 'Escola'}</strong>
-                  <span>${item.ano_letivo || 'Ano não informado'}</span>
-                </div>
-              `).join('') : '<p>Nenhuma matrícula encontrada.</p>'}
-            </div>
-          </div>
+          return agendamentosSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar agendamentos:', error);
+          return [];
+        }
+      }
+
+      async function getUserMatriculas(userId) {
+        try {
+          const matriculasSnapshot = await firebase.firestore()
+            .collection('matriculas')
+            .where('usuario_id', '==', userId)
+            .get();
           
-          <div class="data-section">
-            <h4>Banco de Alimentação</h4>
-            <div class="data-list">
-              ${bancoAlimentacao.length ? bancoAlimentacao.map(item => `
-                <div class="data-item">
-                  <strong>${item.tipo_beneficio || 'Benefício'}</strong>
-                  <span>${new Date(item.createdAt || Date.now()).toLocaleDateString('pt-BR')}</span>
-                </div>
-              `).join('') : '<p>Nenhum registro encontrado.</p>'}
+          return matriculasSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar matrículas:', error);
+          return [];
+        }
+      }
+
+      async function getUserBancoAlimentacao(userId) {
+        try {
+          const bancoSnapshot = await firebase.firestore()
+            .collection('banco_alimentacao')
+            .where('usuario_id', '==', userId)
+            .get();
+          
+          return bancoSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+        } catch (error) {
+          console.error('Erro ao buscar dados do banco de alimentação:', error);
+          return [];
+        }
+      }
+
+      async function getUserProblems(userId) {
+        try {
+          const problemsRef = firebase.database().ref('problems');
+          const snapshot = await problemsRef.orderByChild('usuarioId').equalTo(userId).once('value');
+          
+          const problems = [];
+          snapshot.forEach(childSnapshot => {
+            problems.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
+          });
+          
+          return problems;
+        } catch (error) {
+          console.error('Erro ao buscar problemas:', error);
+          return [];
+        }
+      }
+
+      function loadProfileContent() {
+        firebase.auth().onAuthStateChanged(async user => {
+          if (!user) {
+            showMessage('profileContent', 'Por favor, faça login para visualizar seu perfil.');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
+          }
+
+          try {
+            const [userDoc, allProblems, agendamentos, matriculas, bancoAlimentacao] = await Promise.all([
+              firebase.firestore().collection('usuarios').doc(user.uid).get(),
+              getUserProblems(user.uid),
+              getUserAgendamentos(user.uid),
+              getUserMatriculas(user.uid),
+              getUserBancoAlimentacao(user.uid)
+            ]);
+
+            const userData = userDoc.exists ? userDoc.data() : { 
+              displayName: user.displayName, 
+              email: user.email, 
+              photoURL: user.photoURL 
+            };
+
+            const solvedProblems = allProblems.filter(problem => problem.status === 'Resolvido');
+            const stats = {
+              reportedProblems: allProblems.length,
+              solvedProblems: solvedProblems.length,
+              totalAgendamentos: agendamentos.length,
+              totalMatriculas: matriculas.length,
+              totalBancoAlimentacao: bancoAlimentacao.length
+            };
+
+            window.allProblems = allProblems;
+            window.userAgendamentos = agendamentos;
+            window.userMatriculas = matriculas;
+            window.userBancoAlimentacao = bancoAlimentacao;
+
+            updateProfileUI(user, userData, stats, allProblems);
+            loadProfileData(user, firebase);
+
+            addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao);
+
+          } catch (error) {
+            console.error('Erro ao carregar dados do perfil:', error);
+            showMessage('profileContent', `Erro ao carregar perfil: ${error.message}`);
+            document.getElementById('profileContent').innerHTML += `
+              <button class="btn btn-main mt-2" onclick="loadProfileContent()">Tentar Novamente</button>
+            `;
+          }
+        });
+      }
+
+      function addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao) {
+        const profileContent = document.getElementById('profileContent');
+        
+        const statsSection = profileContent.querySelector('.stats-section .stats-grid');
+        if (statsSection) {
+          statsSection.innerHTML += `
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
+              <i class="fas fa-calendar-alt"></i>
+              <div class="stat-number">${stats.totalAgendamentos}</div>
+              <div class="stat-label">Agendamentos</div>
             </div>
-          </div>
-        </div>
-      `;
-    }
-    */
-  }
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="400">
+              <i class="fas fa-graduation-cap"></i>
+              <div class="stat-number">${stats.totalMatriculas}</div>
+              <div class="stat-label">Matrículas</div>
+            </div>
+            <div class="stat-item" data-aos="fade-up" data-aos-delay="500">
+              <i class="fas fa-utensils"></i>
+              <div class="stat-number">${stats.totalBancoAlimentacao}</div>
+              <div class="stat-label">Banco Alimentar</div>
+            </div>
+          `;
+        }
+      }
 
-  document.getElementById('logoutLink').addEventListener('click', e => {
-    e.preventDefault();
-    firebase.auth().signOut().then(() => {
-      window.location.href = 'login.html';
-    }).catch(error => {
-      console.error('Erro ao fazer logout:', error);
-      showMessage('profileContent', 'Erro ao fazer logout. Tente novamente.');
+      document.getElementById('logoutLink').addEventListener('click', e => {
+        e.preventDefault();
+        firebase.auth().signOut().then(() => {
+          window.location.href = 'login.html';
+        }).catch(error => {
+          console.error('Erro ao fazer logout:', error);
+          showMessage('profileContent', 'Erro ao fazer logout. Tente novamente.');
+        });
+      });
+
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('fade-out');
+        document.getElementById('loadingScreen').addEventListener('transitionend', () => {
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+          loadProfileContent();
+        }, { once: true });
+      }, 800);
     });
-  });
-
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('fade-out');
-    document.getElementById('loadingScreen').addEventListener('transitionend', () => {
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('content').style.display = 'block';
-      loadProfileContent();
-    }, { once: true });
-  }, 800);
-});
   </script>
 </body>
 </html>
