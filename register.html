@@ -937,21 +937,33 @@
       },
 
       async validateBINumber(biNumber) {
-        try {
-          const response = await fetch(`https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`);
-          const data = await response.json();
-          
-          if (!response.ok) {
+    try {
+        console.log('Validando BI:', biNumber); // Debug
+        const response = await fetch(`https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`);
+        const data = await response.json();
+        
+        console.log('Resposta completa:', data); // Debug
+        console.log('Status da resposta:', response.status); // Debug
+        
+        if (!response.ok) {
+            console.error('Erro na resposta:', data); // Debug
             throw new Error(data.message || "Erro ao validar BI");
-          }
-          
-          return data.success;
-        } catch (error) {
-          console.error("Erro na validação do BI:", error);
-          return false;
         }
-      },
-
+        
+        // Verifica se a propriedade success existe
+        if (typeof data.success !== 'boolean') {
+            console.error('Propriedade success não encontrada ou inválida:', data);
+            return false;
+        }
+        
+        console.log('Resultado da validação:', data.success); // Debug
+        return data.success;
+        
+    } catch (error) {
+        console.error("Erro na validação do BI:", error);
+        return false;
+    }
+},
       async registerUser({ name, email, phoneNumber, password, municipio, bairro, method, notificationPreferences }) {
         console.log("Iniciando registro de usuário:", { name, method });
 
