@@ -69,7 +69,7 @@
     .form-container {
       display: grid;
       grid-template-columns: 1fr;
-      min-height: calc(100vh - 80px);
+      min-height: calc(100vh - 80px); /* Adjust based on header height */
       align-items: center;
     }
 
@@ -83,7 +83,7 @@
     .form-illustration {
       background: linear-gradient(135deg, var(--primary), #a8072a);
       padding: 3rem;
-      display: none;
+      display: none; /* Hidden by default on small screens */
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -95,7 +95,7 @@
 
     @media (min-width: 992px) {
       .form-illustration {
-        display: flex;
+        display: flex; /* Display on larger screens */
       }
     }
 
@@ -106,6 +106,7 @@
       left: 0;
       width: 100%;
       height: 100%;
+      /* Better SVG for background to avoid potential rendering issues with data URI */
       background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(0,0,0,0.05)" d="M0,0 L100,0 L100,100 Q50,80 0,100 Z"></path></svg>');
       background-size: cover;
       z-index: 0;
@@ -133,13 +134,13 @@
     .form-card {
       background: white;
       padding: 2.5rem;
-      border-radius: 0 15px 15px 0;
+      border-radius: 0 15px 15px 0; /* Right side rounded on large screens */
       box-shadow: 0 8px 30px rgba(0,0,0,0.1);
     }
 
     @media (max-width: 991px) {
       .form-card {
-        border-radius: 15px;
+        border-radius: 15px; /* Fully rounded on smaller screens */
         margin: 2rem 0;
       }
     }
@@ -207,6 +208,7 @@
     /* Form Elements */
     .form-group {
       margin-bottom: 1.5rem;
+      position: relative; /* For password toggle and error messages */
     }
 
     .form-label {
@@ -242,6 +244,10 @@
       border-radius: 8px;
       overflow: hidden;
     }
+    .phone-input-group:focus-within { /* Highlight entire group on focus */
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(204, 9, 47, 0.2);
+    }
 
     .phone-prefix {
       padding: 0 1rem;
@@ -249,6 +255,7 @@
       align-items: center;
       background: #eee;
       height: 100%;
+      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .phone-prefix img {
@@ -261,18 +268,28 @@
       border: none;
       padding: 0.9rem 1rem;
       background: transparent;
+      height: 100%; /* Ensure input fills prefix height */
     }
+    .phone-input:focus {
+      outline: none;
+    }
+
 
     /* Password Toggle */
     .password-toggle {
       position: absolute;
       right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 50%; /* Adjusted to align with label and input */
+      transform: translateY(calc(50% + 15px)); /* Fine-tune positioning based on label height and padding */
       cursor: pointer;
       color: var(--dark);
       opacity: 0.6;
+      transition: opacity 0.2s;
     }
+    .password-toggle:hover {
+      opacity: 1;
+    }
+
 
     /* Terms Checkbox */
     .terms-check {
@@ -281,9 +298,10 @@
       margin-bottom: 1.5rem;
     }
 
-    .terms-check input {
+    .terms-check input[type="checkbox"] {
       margin-right: 0.75rem;
       margin-top: 0.25rem;
+      flex-shrink: 0; /* Prevent checkbox from shrinking */
     }
 
     .terms-text {
@@ -295,10 +313,15 @@
       text-decoration: none;
       font-weight: 500;
     }
+    .terms-link:hover {
+      text-decoration: underline;
+    }
 
     /* Buttons */
     .btn {
-      display: inline-block;
+      display: inline-flex; /* Use flex for button content alignment (spinner) */
+      align-items: center;
+      justify-content: center;
       padding: 0.9rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
@@ -306,6 +329,7 @@
       cursor: pointer;
       transition: all 0.3s;
       border: none;
+      gap: 0.5rem; /* Space between text and icon */
     }
 
     .btn-primary {
@@ -315,10 +339,16 @@
       box-shadow: 0 5px 15px rgba(204, 9, 47, 0.3);
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background: #a8072a;
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(204, 9, 47, 0.4);
+    }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     /* Error Messages */
@@ -326,8 +356,29 @@
       color: var(--error);
       font-size: 0.85rem;
       margin-top: 0.5rem;
+      display: block; /* Always show the div, just hide content */
+      min-height: 1rem; /* Reserve space to prevent layout shifts */
+    }
+    .error-message:empty { /* Hide if no text */
       display: none;
     }
+    .form-control.is-invalid, .phone-input-group.is-invalid {
+      border-color: var(--error) !important;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
+    }
+
+    /* Success Message */
+    .success-message {
+        color: var(--success);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        min-height: 1rem;
+    }
+    .success-message:empty {
+        display: none;
+    }
+
 
     /* Spinner */
     .spinner {
@@ -357,6 +408,9 @@
       color: var(--primary);
       text-decoration: none;
       font-weight: 500;
+    }
+    .form-footer a:hover {
+      text-decoration: underline;
     }
 
     /* Modal Styles */
@@ -585,13 +639,12 @@
       font-weight: 600;
     }
 
-    .btn-outline:hover {
+    .btn-outline:hover:not(:disabled) {
       background: rgba(204, 9, 47, 0.1);
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="container">
       <a href="index.html" class="logo">
@@ -601,10 +654,8 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main class="container">
     <div class="form-container">
-      <!-- Ilustração -->
       <div class="form-illustration">
         <div class="illustration-content">
           <i class="fas fa-id-card fa-4x mb-4"></i>
@@ -614,7 +665,6 @@
         </div>
       </div>
 
-      <!-- Formulário de Cadastro -->
       <div class="form-card">
         <div class="form-header">
           <div class="form-icon">
@@ -624,10 +674,9 @@
           <p class="form-subtitle">É rápido e fácil</p>
         </div>
 
-        <!-- Progress Bar -->
         <div class="progress-container">
           <div class="progress-steps">
-            <div class="progress-bar" id="progressBar" style="width: 33%"></div>
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
             <div class="step active" id="step1Indicator">
               <span>1</span>
               <span class="step-label">Dados Pessoais</span>
@@ -643,28 +692,27 @@
           </div>
         </div>
 
-        <!-- BI Info Box -->
         <div class="bi-info">
           <i class="fas fa-id-card"></i>
           <div class="bi-info-text">
             <h4>Verificação Segura</h4>
-            <p>Seu Bilhete de Identidade será usado apenas para validação</p>
+            <p>Seu Bilhete de Identidade será usado apenas para validação e não será armazenado integralmente.</p>
           </div>
         </div>
 
         <form id="registerForm">
-          <!-- Passo 1: Dados Pessoais -->
           <div id="step1" class="form-step active">
             <div class="form-group">
               <label for="fullName" class="form-label">Nome Completo (como no BI)</label>
               <input type="text" id="fullName" class="form-control" placeholder="Seu nome completo" required>
-              <div id="nameError" class="error-message"></div>
+              <div id="fullNameError" class="error-message"></div>
             </div>
 
             <div class="form-group">
               <label for="biNumber" class="form-label">Número do Bilhete de Identidade</label>
-              <input type="text" id="biNumber" class="form-control" placeholder="Ex: 123456789LA042" required>
-              <div id="biError" class="error-message"></div>
+              <input type="text" id="biNumber" class="form-control" placeholder="Ex: 123456789LA041" required>
+              <div id="biNumberError" class="error-message"></div>
+              <div id="biSuccess" class="success-message"></div>
             </div>
 
             <div class="form-group">
@@ -686,11 +734,10 @@
             </div>
 
             <div class="form-navigation">
-              <button type="button" id="nextStep1" class="btn btn-primary">Próximo <i class="fas fa-arrow-right ml-1"></i></button>
+              <button type="button" id="nextStep1" class="btn btn-primary">Próximo <i class="fas fa-arrow-right"></i></button>
             </div>
           </div>
 
-          <!-- Passo 2: Localização -->
           <div id="step2" class="form-step">
             <div class="form-group">
               <label for="municipio" class="form-label">Município</label>
@@ -713,7 +760,7 @@
               <div id="bairroError" class="error-message"></div>
             </div>
 
-            <div class="form-group" style="position: relative;">
+            <div class="form-group">
               <label for="password" class="form-label">Senha</label>
               <input type="password" id="password" class="form-control" placeholder="Mínimo 8 caracteres" required>
               <span class="password-toggle" onclick="togglePassword('password')">
@@ -722,7 +769,7 @@
               <div id="passwordError" class="error-message"></div>
             </div>
 
-            <div class="form-group" style="position: relative;">
+            <div class="form-group">
               <label for="confirmPassword" class="form-label">Confirmar Senha</label>
               <input type="password" id="confirmPassword" class="form-control" placeholder="Digite novamente" required>
               <span class="password-toggle" onclick="togglePassword('confirmPassword')">
@@ -732,26 +779,23 @@
             </div>
 
             <div class="form-navigation">
-              <button type="button" id="prevStep2" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
-              <button type="button" id="nextStep2" class="btn btn-primary">Próximo <i class="fas fa-arrow-right ml-1"></i></button>
+              <button type="button" id="prevStep2" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Anterior</button>
+              <button type="button" id="nextStep2" class="btn btn-primary">Próximo <i class="fas fa-arrow-right"></i></button>
             </div>
           </div>
 
-          <!-- Passo 3: Termos -->
           <div id="step3" class="form-step">
             <div class="terms-check">
               <input type="checkbox" id="terms" required>
               <label for="terms" class="terms-text">
-                Concordo com os <a href="#" id="showTerms" class="terms-link">Termos de Serviço</a> e 
+                Concordo com os <a href="#" id="showTerms" class="terms-link">Termos de Serviço</a> e
                 <a href="#" class="terms-link">Política de Privacidade</a>
               </label>
             </div>
             <div id="termsError" class="error-message"></div>
 
-            <div id="recaptcha-container"></div>
-
-            <div class="form-navigation">
-              <button type="button" id="prevStep3" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
+            <div id="recaptcha-container"></div> <div class="form-navigation">
+              <button type="button" id="prevStep3" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Anterior</button>
               <button type="submit" id="registerBtn" class="btn btn-primary">
                 <span id="btnText">Criar Conta</span>
                 <span id="btnSpinner" class="spinner" style="display: none;"></span>
@@ -767,7 +811,6 @@
     </div>
   </main>
 
-  <!-- Modal de Termos -->
   <div id="termsModal" class="modal-overlay">
     <div class="modal-content">
       <div class="modal-header">
@@ -819,14 +862,13 @@
     </div>
   </div>
 
-  <!-- Firebase e scripts necessários -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   
   <script>
-    // Configuração do Firebase
+    // --- Configuração do Firebase ---
     const firebaseConfig = {
       apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
@@ -842,202 +884,147 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Módulo Firebase Auth (como fornecido)
-    const firebaseAuth = {
-      _app: null,
-      _auth: null,
-      _firestore: null,
-      _recaptchaVerifier: null,
-
-      initializeFirebaseApp(firebaseConfig) {
-        console.log("Inicializando Firebase...");
-        if (typeof firebase === 'undefined') {
-          throw new Error("Firebase SDK não carregado.");
-        }
-        this._app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
-        this._auth = firebase.auth();
-        this._firestore = firebase.firestore();
-        console.log("Firebase inicializado com sucesso.");
+    // --- Variáveis de Estado do Formulário ---
+    const formState = {
+      currentStep: 1,
+      totalSteps: 3,
+      formData: {
+        fullName: '',
+        biNumber: '',
+        email: '',
+        phone: '',
+        municipio: '',
+        bairro: '',
+        password: '',
+        confirmPassword: '',
+        termsAccepted: false
       },
-
-      initializeRecaptcha(containerId) {
-        console.log(`Inicializando reCAPTCHA no contêiner: ${containerId}...`);
-        if (!this._auth) throw new Error("Firebase Auth não inicializado.");
-        
-        this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier(containerId, {
-          size: 'invisible',
-          callback: (response) => {
-            document.getElementById('registerBtn').disabled = false;
-            console.log("reCAPTCHA resolvido:", response);
-          },
-          'expired-callback': () => {
-            document.getElementById('registerBtn').disabled = true;
-            console.warn("reCAPTCHA expirado.");
-          },
-          'error-callback': (error) => {
-            console.error("Erro no reCAPTCHA:", error);
-            alert("Erro na verificação de segurança. Recarregue a página.");
-          }
-        });
-
-        return this._recaptchaVerifier.render().catch((err) => {
-          console.error("Erro ao renderizar reCAPTCHA:", err);
-          throw new Error("Erro ao carregar a verificação de segurança.");
-        });
+      validationErrors: {
+        fullName: '',
+        biNumber: '',
+        email: '',
+        phone: '',
+        municipio: '',
+        bairro: '',
+        password: '',
+        confirmPassword: '',
+        terms: ''
       },
-
-      normalizePhoneNumber(phone) {
-        let normalized = phone.replace(/\D/g, '');
-        
-        if (normalized.startsWith('244') && normalized.length === 12) {
-          normalized = '+' + normalized;
-        } else if (normalized.startsWith('9') && normalized.length === 9) {
-          normalized = '+244' + normalized;
-        } else if (!normalized.startsWith('+244')) {
-          normalized = '+244' + normalized;
-        }
-
-        if (!/^\+2449\d{8}$/.test(normalized)) {
-          throw new Error("Formato de telefone inválido. Use 9XXXXXXXX ou +2449XXXXXXXX.");
-        }
-        return normalized;
-      },
-
-      validateEmail(email) {
-        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!regex.test(email)) {
-          return "Por favor, insira um email válido";
-        }
-        return null;
-      },
-
-      validatePhone(phone) {
-        try {
-          this.normalizePhoneNumber(phone);
-          return null;
-        } catch (error) {
-          return error.message;
-        }
-      },
-
-      validatePassword(password) {
-        return password.length >= 6 ? null : "A senha deve ter pelo menos 6 caracteres.";
-      },
-
-      checkAuthState(redirectIfLoggedIn, redirectIfNotSignedIn) {
-        this._auth.onAuthStateChanged((user) => {
-          const currentPath = window.location.pathname;
-
-          if (user && redirectIfLoggedIn && currentPath !== new URL(redirectIfLoggedIn, window.location.origin).pathname) {
-            window.location.href = redirectIfLoggedIn;
-          } else if (!user && redirectIfNotSignedIn && currentPath !== new URL(redirectIfNotSignedIn, window.location.origin).pathname) {
-            window.location.href = redirectIfNotSignedIn;
-          }
-        });
-      },
-
-      async validateBINumber(biNumber) {
-         try {
-    const response = await fetch(`https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`);
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Erro ao validar BI");
-    }
-    
-    const data = await response.json();
-    
-    // Verifique o campo 'success' explicitamente
-    if (data.success === true) {
-      return true;
-    } else {
-      throw new Error(data.message || "BI inválido");
-    }
-    
-  } catch (error) {
-    console.error("Erro na validação do BI:", error);
-    throw error; // Rejeita a promessa com o erro
-  }
-      },
-
-      async registerUser({ name, email, phoneNumber, password, municipio, bairro, method, notificationPreferences }) {
-        console.log("Iniciando registro de usuário:", { name, method });
-
-        if (!name || !method || !municipio || !bairro || !password) {
-          throw new Error("Por favor, preencha todos os campos obrigatórios.");
-        }
-
-        let user;
-        let finalEmail = email;
-
-        try {
-          if (method === 'email') {
-            const emailError = this.validateEmail(email);
-            if (emailError) throw new Error(emailError);
-
-            const userCredential = await this._auth.createUserWithEmailAndPassword(email, password);
-            user = userCredential.user;
-
-            await user.updateProfile({ displayName: name });
-            await user.sendEmailVerification();
-            console.log(`Usuário ${user.uid} registado via email.`);
-
-          } else if (method === 'phone') {
-            const phoneError = this.validatePhone(phoneNumber);
-            if (phoneError) throw new Error(phoneError);
-
-            const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
-            finalEmail = `${normalizedPhone.replace(/\D/g, '')}@fixabairro.com`;
-
-            const userCredential = await this._auth.createUserWithEmailAndPassword(finalEmail, password);
-            user = userCredential.user;
-            await user.updateProfile({ displayName: name });
-
-            if (!this._recaptchaVerifier) {
-                throw new Error("reCAPTCHA não foi inicializado corretamente.");
-            }
-            const confirmationResult = await this._auth.signInWithPhoneNumber(normalizedPhone, this._recaptchaVerifier);
-            console.log(`Usuário ${user.uid} registado via telefone.`);
-
-            return { confirmationResult, user, method: 'phone', requiresPhoneVerification: true };
-          } else {
-            throw new Error("Método de registro inválido.");
-          }
-
-          await this._firestore.collection('users').doc(user.uid).set({
-            name,
-            email: finalEmail,
-            phoneNumber: phoneNumber ? this.normalizePhoneNumber(phoneNumber) : null,
-            municipio,
-            bairro,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            registrationMethod: method,
-            notificationPreferences: {
-              email: notificationPreferences.email || false,
-              whatsapp: notificationPreferences.whatsapp || false,
-            },
-          });
-
-          console.log("Dados do usuário guardados no Firestore.");
-          return { user, method, requiresEmailVerification: method === 'email' };
-
-        } catch (error) {
-          console.error("Erro no registro:", error);
-          throw error;
-        }
-      },
+      biValidatedExternally: false, // Track external BI validation status
+      recaptchaResolved: false,
+      recaptchaVerifier: null,
+      loading: false
     };
 
-    // Expor firebaseAuth globalmente
-    window.firebaseAuth = firebaseAuth;
+    // --- Elementos do DOM ---
+    const registerForm = document.getElementById('registerForm');
+    const steps = [
+      document.getElementById('step1'),
+      document.getElementById('step2'),
+      document.getElementById('step3')
+    ];
+    const stepIndicators = [
+      document.getElementById('step1Indicator'),
+      document.getElementById('step2Indicator'),
+      document.getElementById('step3Indicator')
+    ];
+    const progressBar = document.getElementById('progressBar');
 
-    // Inicializar Firebase
-    firebaseAuth.initializeFirebaseApp(firebaseConfig);
+    const fullNameInput = document.getElementById('fullName');
+    const biNumberInput = document.getElementById('biNumber');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const municipioSelect = document.getElementById('municipio');
+    const bairroInput = document.getElementById('bairro');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const termsCheckbox = document.getElementById('terms');
 
-    // Verificar estado de autenticação
-    firebaseAuth.checkAuthState('dashboard.html', null);
+    const nextStep1Btn = document.getElementById('nextStep1');
+    const prevStep2Btn = document.getElementById('prevStep2');
+    const nextStep2Btn = document.getElementById('nextStep2');
+    const prevStep3Btn = document.getElementById('prevStep3');
+    const registerBtn = document.getElementById('registerBtn');
+    const btnText = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
 
-    // Funções auxiliares
+    const biSuccessMessage = document.getElementById('biSuccess');
+
+    // Modal de Termos
+    const termsModal = document.getElementById('termsModal');
+    const showTermsLink = document.getElementById('showTerms');
+    const closeTermsModalBtn = document.getElementById('closeTermsModal');
+    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+
+    // --- Funções Auxiliares de UI ---
+
+    /**
+     * Atualiza a visibilidade dos passos do formulário.
+     */
+    function updateFormSteps() {
+      steps.forEach((step, index) => {
+        if (index + 1 === formState.currentStep) {
+          step.classList.add('active');
+        } else {
+          step.classList.remove('active');
+        }
+      });
+      updateProgressBar();
+      updateStepIndicators();
+    }
+
+    /**
+     * Atualiza a barra de progresso.
+     */
+    function updateProgressBar() {
+      const progress = ((formState.currentStep - 1) / (formState.totalSteps - 1)) * 100;
+      progressBar.style.width = `${progress}%`;
+    }
+
+    /**
+     * Atualiza os indicadores de passo (números e labels).
+     */
+    function updateStepIndicators() {
+      stepIndicators.forEach((indicator, index) => {
+        indicator.classList.remove('active', 'completed');
+        if (index + 1 === formState.currentStep) {
+          indicator.classList.add('active');
+        } else if (index + 1 < formState.currentStep) {
+          indicator.classList.add('completed');
+        }
+      });
+    }
+
+    /**
+     * Exibe ou oculta uma mensagem de erro para um campo.
+     * @param {HTMLElement} element - O elemento do campo (input, select, etc.).
+     * @param {string} message - A mensagem de erro.
+     */
+    function displayError(element, message) {
+      const errorDiv = document.getElementById(element.id + 'Error');
+      if (errorDiv) {
+        errorDiv.textContent = message;
+        element.classList.toggle('is-invalid', !!message);
+        // Special handling for phone input group
+        if (element.id === 'phone') {
+          element.closest('.phone-input-group').classList.toggle('is-invalid', !!message);
+        }
+      }
+    }
+
+    /**
+     * Limpa todas as mensagens de erro e estados de validação.
+     */
+    function clearErrors() {
+      document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+      document.querySelectorAll('.form-control, .phone-input-group').forEach(el => el.classList.remove('is-invalid'));
+      biSuccessMessage.textContent = ''; // Clear BI success message too
+    }
+
+    /**
+     * Alterna a visibilidade da senha e o ícone.
+     * @param {string} fieldId - O ID do campo de senha.
+     */
     function togglePassword(fieldId) {
       const field = document.getElementById(fieldId);
       const icon = field.nextElementSibling.querySelector('i');
@@ -1051,173 +1038,514 @@
       }
     }
 
-    function validateBINumber(biNumber) {
-      const biRegex = /^\d{9}[A-Za-z]{2}\d{3}$/;
-      return biRegex.test(biNumber);
-    }
-
-    // Controle de passos do formulário
-    let currentStep = 1;
-    const totalSteps = 3;
-
-    function showStep(stepNumber) {
-      // Esconder todos os passos
-      document.querySelectorAll('.form-step').forEach(step => {
-        step.classList.remove('active');
-      });
-      
-      // Mostrar o passo atual
-      document.getElementById(`step${stepNumber}`).classList.add('active');
-      
-      // Atualizar indicadores de progresso
-      document.querySelectorAll('.step').forEach((step, index) => {
-        if (index + 1 < stepNumber) {
-          step.classList.add('completed');
-          step.classList.remove('active');
-        } else if (index + 1 === stepNumber) {
-          step.classList.add('active');
-          step.classList.remove('completed');
-        } else {
-          step.classList.remove('active', 'completed');
-        }
-      });
-      
-      // Atualizar barra de progresso
-      const progressPercentage = ((stepNumber - 1) / (totalSteps - 1)) * 100;
-      document.getElementById('progressBar').style.width = `${progressPercentage}%`;
-      
-      currentStep = stepNumber;
-    }
-
-    // Navegação entre passos
-    document.getElementById('nextStep1').addEventListener('click', async () => {
-      // Validação do passo 1
-      const fullName = document.getElementById('fullName').value.trim();
-      const biNumber = document.getElementById('biNumber').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-
-      let isValid = true;
-
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
-      });
-
-      if (fullName.length < 5) {
-        document.getElementById('nameError').textContent = 'Nome completo é obrigatório';
-        document.getElementById('nameError').style.display = 'block';
-        isValid = false;
-      }
-
-      // Validar BI localmente primeiro
-      if (!validateBINumber(biNumber)) {
-        document.getElementById('biError').textContent = 'Formato de BI inválido. Use: 123456789LA042';
-        document.getElementById('biError').style.display = 'block';
-        isValid = false;
+    /**
+     * Controla o estado do botão de envio (loading spinner).
+     * @param {boolean} isLoading - Se o botão deve mostrar o spinner.
+     */
+    function setButtonLoading(isLoading) {
+      formState.loading = isLoading;
+      if (isLoading) {
+        btnText.style.display = 'none';
+        btnSpinner.style.display = 'inline-block';
+        registerBtn.disabled = true;
       } else {
-        // Se o formato local estiver correto, validar com a API
-        document.getElementById('biError').textContent = 'Validando BI...';
-        document.getElementById('biError').style.display = 'block';
-        document.getElementById('biError').style.color = 'var(--dark)';
-        
-        try {
-          const isBIValid = await firebaseAuth.validateBINumber(biNumber);
-          if (!isBIValid) {
-            document.getElementById('biError').textContent = 'Número de BI inválido ou não encontrado';
-            document.getElementById('biError').style.display = 'block';
-            document.getElementById('biError').style.color = 'var(--error)';
-            isValid = false;
-          } else {
-            document.getElementById('biError').style.display = 'none';
-          }
-        } catch (error) {
-          console.error("Erro na validação do BI:", error);
-          document.getElementById('biError').textContent = 'Erro ao validar BI. Tente novamente.';
-          document.getElementById('biError').style.display = 'block';
-          document.getElementById('biError').style.color = 'var(--error)';
-          isValid = false;
+        btnText.style.display = 'inline';
+        btnSpinner.style.display = 'none';
+        // Re-enable only if reCAPTCHA is resolved and terms are accepted
+        registerBtn.disabled = !(formState.recaptchaResolved && formState.formData.termsAccepted);
+      }
+    }
+
+    // --- Funções de Validação de Dados ---
+
+    /**
+     * Valida um nome completo (não vazio e pelo menos duas palavras).
+     * @param {string} name
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateFullName(name) {
+      if (!name.trim()) return "Nome completo é obrigatório.";
+      if (name.trim().split(' ').length < 2) return "Por favor, insira nome e sobrenome.";
+      return null;
+    }
+
+    /**
+     * Valida o formato do BI angolano.
+     * @param {string} biNumber
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateBiFormat(biNumber) {
+      const regex = /^\d{9}[A-Z]{2}\d{3}$/; // Ex: 006151112LA041
+      if (!biNumber.trim()) return "Número do BI é obrigatório.";
+      if (!regex.test(biNumber.toUpperCase())) { // Convert to uppercase for consistent validation
+        return "Formato do BI inválido. Ex: 123456789LA041 (9 dígitos, 2 letras, 3 dígitos)";
+      }
+      return null;
+    }
+
+    /**
+     * Valida o formato do email.
+     * @param {string} email
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateEmail(email) {
+      const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!email.trim()) return "Email é obrigatório.";
+      if (!regex.test(email)) return "Por favor, insira um email válido.";
+      return null;
+    }
+
+    /**
+     * Normaliza e valida o número de telefone angolano.
+     * @param {string} phone
+     * @returns {string} Telefone normalizado ou lança erro se inválido.
+     */
+    function normalizePhoneNumber(phone) {
+        let normalized = phone.replace(/\D/g, ''); // Remove todos os não-dígitos
+
+        // Se já começar com +244 e tiver o comprimento correto (12 dígitos após +), é válido
+        if (normalized.startsWith('244') && normalized.length === 12) {
+            normalized = '+' + normalized;
+        } 
+        // Se começar com '9' e tiver 9 dígitos, adiciona '+244'
+        else if (normalized.startsWith('9') && normalized.length === 9) {
+            normalized = '+244' + normalized;
+        } 
+        // Caso não comece com '+244' mas tenha o formato de 9 dígitos angolano após um possível prefixo de país mal formado
+        else if (!normalized.startsWith('+244') && normalized.length > 9) {
+            // Tenta extrair os últimos 9 dígitos se for mais longo que 9 e não começar com +244
+            const last9digits = normalized.slice(-9);
+            if (last9digits.startsWith('9')) {
+                normalized = '+244' + last9digits;
+            } else {
+                throw new Error("Formato de telefone inválido. Deve começar com '9' e ter 9 dígitos (ex: 923123456) ou incluir o código do país (+244923123456).");
+            }
         }
+        else {
+            throw new Error("Formato de telefone inválido. Deve começar com '9' e ter 9 dígitos (ex: 923123456) ou incluir o código do país (+244923123456).");
+        }
+
+        // Validação final do formato: deve ser +244 seguido por 9 dígitos, começando com 9
+        if (!/^\+2449\d{8}$/.test(normalized)) {
+            throw new Error("Formato de telefone inválido após normalização. Ex: +244923123456.");
+        }
+        return normalized;
+    }
+
+    /**
+     * Valida o número de telefone (Angola).
+     * @param {string} phone
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validatePhone(phone) {
+      if (!phone.trim()) return "Telefone é obrigatório.";
+      try {
+        normalizePhoneNumber(phone); // A função lança erro se for inválida
+        return null;
+      } catch (error) {
+        return error.message;
       }
+    }
 
-      const emailError = firebaseAuth.validateEmail(email);
-      if (emailError) {
-        document.getElementById('emailError').textContent = emailError;
-        document.getElementById('emailError').style.display = 'block';
-        isValid = false;
-      }
+    /**
+     * Valida se a senha tem pelo menos 8 caracteres.
+     * @param {string} password
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validatePassword(password) {
+      if (!password) return "Senha é obrigatória.";
+      if (password.length < 8) return "A senha deve ter pelo menos 8 caracteres.";
+      return null;
+    }
 
-      if (!/^9\d{8}$/.test(phone)) {
-        document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX';
-        document.getElementById('phoneError').style.display = 'block';
-        isValid = false;
-      }
+    /**
+     * Valida se as senhas coincidem.
+     * @param {string} password
+     * @param {string} confirmPassword
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateConfirmPassword(password, confirmPassword) {
+      if (!confirmPassword) return "Confirmação de senha é obrigatória.";
+      if (password !== confirmPassword) return "As senhas não coincidem.";
+      return null;
+    }
 
-      if (isValid) {
-        showStep(2);
-      }
-    });
+    /**
+     * Valida o município.
+     * @param {string} municipio
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateMunicipio(municipio) {
+      if (!municipio) return "Município é obrigatório.";
+      return null;
+    }
 
-    document.getElementById('prevStep2').addEventListener('click', () => {
-      showStep(1);
-    });
+    /**
+     * Valida o bairro.
+     * @param {string} bairro
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateBairro(bairro) {
+      if (!bairro.trim()) return "Bairro é obrigatório.";
+      return null;
+    }
 
-    document.getElementById('nextStep2').addEventListener('click', () => {
-      // Validação do passo 2
-      const municipio = document.getElementById('municipio').value;
-      const bairro = document.getElementById('bairro').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
+    /**
+     * Valida os termos de serviço.
+     * @param {boolean} accepted
+     * @returns {string|null} Mensagem de erro ou null se válido.
+     */
+    function validateTerms(accepted) {
+      if (!accepted) return "Você deve concordar com os Termos de Serviço.";
+      return null;
+    }
 
+    /**
+     * Executa a validação de um campo específico e atualiza a UI.
+     * @param {HTMLElement} element - O elemento do campo.
+     * @param {function} validator - A função de validação para o campo.
+     * @param {...any} args - Argumentos adicionais para o validador.
+     * @returns {boolean} True se o campo for válido, false caso contrário.
+     */
+    function validateField(element, validator, ...args) {
+      const value = element.value;
+      const error = validator(value, ...args);
+      formState.validationErrors[element.id] = error;
+      displayError(element, error);
+      return !error;
+    }
+
+    /**
+     * Executa todas as validações para o passo atual.
+     * @returns {boolean} True se todos os campos do passo atual forem válidos.
+     */
+    async function validateCurrentStep() {
+      clearErrors(); // Limpa erros anteriores
       let isValid = true;
 
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
-      });
+      if (formState.currentStep === 1) {
+        isValid = validateField(fullNameInput, validateFullName) && isValid;
+        isValid = validateField(emailInput, validateEmail) && isValid;
+        isValid = validateField(phoneInput, validatePhone) && isValid;
 
-      if (municipio === '') {
-        document.getElementById('municipioError').textContent = 'Selecione um município';
-        document.getElementById('municipioError').style.display = 'block';
-        isValid = false;
+        // Validação do BI: formatação primeiro, depois API externa
+        const biFormatError = validateBiFormat(biNumberInput.value);
+        if (biFormatError) {
+            displayError(biNumberInput, biFormatError);
+            isValid = false;
+        } else {
+            // Se o formato for válido, dispara a validação externa se ainda não foi feita ou se o BI mudou
+            if (!formState.biValidatedExternally || biNumberInput.value !== formState.formData.biNumber) {
+                biSuccessMessage.textContent = 'Verificando BI...';
+                displayError(biNumberInput, ''); // Clear any previous error
+                try {
+                    const isValidBi = await validateBINumberExternal(biNumberInput.value);
+                    if (!isValidBi) {
+                        displayError(biNumberInput, 'Número de BI inválido ou não encontrado.');
+                        biSuccessMessage.textContent = '';
+                        isValid = false;
+                    } else {
+                        biSuccessMessage.textContent = 'BI validado com sucesso!';
+                        displayError(biNumberInput, '');
+                        formState.biValidatedExternally = true;
+                        formState.formData.biNumber = biNumberInput.value; // Store validated BI
+                    }
+                } catch (error) {
+                    displayError(biNumberInput, error.message || 'Erro ao validar BI. Tente novamente.');
+                    biSuccessMessage.textContent = '';
+                    isValid = false;
+                }
+            } else {
+                // Already validated and BI hasn't changed
+                biSuccessMessage.textContent = 'BI validado com sucesso!';
+            }
+        }
+      } else if (formState.currentStep === 2) {
+        isValid = validateField(municipioSelect, validateMunicipio) && isValid;
+        isValid = validateField(bairroInput, validateBairro) && isValid;
+        isValid = validateField(passwordInput, validatePassword) && isValid;
+        isValid = validateField(confirmPasswordInput, validateConfirmPassword, passwordInput.value) && isValid;
+      } else if (formState.currentStep === 3) {
+        isValid = validateField(termsCheckbox, validateTerms, termsCheckbox.checked) && isValid;
+        // Also check if reCAPTCHA is resolved
+        if (!formState.recaptchaResolved) {
+            // We don't display an error here directly for reCAPTCHA as it's handled by Firebase itself
+            // The submit button will remain disabled if not resolved.
+            isValid = false;
+        }
       }
+      return isValid;
+    }
 
-      if (bairro.length < 2) {
-        document.getElementById('bairroError').textContent = 'Nome do bairro é obrigatório';
-        document.getElementById('bairroError').style.display = 'block';
-        isValid = false;
-      }
+    // --- Integração com API Externa de BI ---
+    async function validateBINumberExternal(biNumber) {
+        try {
+            // Use a sua URL da API de validação de BI.
+            // Para desenvolvimento, pode ser 'http://127.0.0.1:5000/validate-bi/'
+            // Em produção, use a URL do seu backend no Render.
+            const apiUrl = `https://fixabairro-backend.onrender.com/validate-bi/${biNumber}`; // Replace with your actual backend URL
 
-      if (password.length < 8) {
-        document.getElementById('passwordError').textContent = 'A senha deve ter no mínimo 8 caracteres';
-        document.getElementById('passwordError').style.display = 'block';
-        isValid = false;
-      }
+            const response = await fetch(apiUrl);
+            const data = await response.json();
 
-      if (password !== confirmPassword) {
-        document.getElementById('confirmPasswordError').textContent = 'As senhas não coincidem';
-        document.getElementById('confirmPasswordError').style.display = 'block';
-        isValid = false;
-      }
+            if (!response.ok) {
+                throw new Error(data.message || "Erro ao validar BI na API externa.");
+            }
+            
+            return data.success; // Retorna true se o BI for válido, false caso contrário
+        } catch (error) {
+            console.error("Erro na validação do BI com a API externa:", error);
+            throw new Error(error.message || "Não foi possível conectar ao serviço de validação de BI.");
+        }
+    }
+
+
+    // --- Navegação entre os Passos ---
+
+    /**
+     * Avança para o próximo passo se o passo atual for válido.
+     */
+    async function goToNextStep() {
+      // Disable buttons during validation
+      nextStep1Btn.disabled = true;
+      nextStep2Btn.disabled = true;
+
+      const isValid = await validateCurrentStep();
+      
+      // Re-enable buttons
+      nextStep1Btn.disabled = false;
+      nextStep2Btn.disabled = false;
 
       if (isValid) {
-        showStep(3);
+        // Collect data from current step before moving
+        if (formState.currentStep === 1) {
+            formState.formData.fullName = fullNameInput.value;
+            formState.formData.email = emailInput.value;
+            formState.formData.phone = phoneInput.value;
+        } else if (formState.currentStep === 2) {
+            formState.formData.municipio = municipioSelect.value;
+            formState.formData.bairro = bairroInput.value;
+            formState.formData.password = passwordInput.value;
+            formState.formData.confirmPassword = confirmPasswordInput.value;
+        }
+
+        if (formState.currentStep < formState.totalSteps) {
+          formState.currentStep++;
+          updateFormSteps();
+        }
+
+        // Initialize reCAPTCHA on step 3 if not already done
+        if (formState.currentStep === 3 && !formState.recaptchaVerifier) {
+            try {
+                // Use a key de site reCAPTCHA válida, ou configure Firebase para usar uma
+                // Isso inicializa o reCAPTCHA invisível
+                formState.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+                    'size': 'invisible',
+                    'callback': (response) => {
+                        console.log("reCAPTCHA resolvido:", response);
+                        formState.recaptchaResolved = true;
+                        registerBtn.disabled = !formState.formData.termsAccepted; // Enable if terms accepted
+                    },
+                    'expired-callback': () => {
+                        console.warn("reCAPTCHA expirado.");
+                        formState.recaptchaResolved = false;
+                        registerBtn.disabled = true;
+                        alert("A verificação de segurança (reCAPTCHA) expirou. Por favor, tente novamente.");
+                    },
+                    'error-callback': (error) => {
+                        console.error("Erro no reCAPTCHA:", error);
+                        formState.recaptchaResolved = false;
+                        registerBtn.disabled = true;
+                        alert("Erro na verificação de segurança (reCAPTCHA). Recarregue a página ou tente novamente.");
+                    }
+                });
+                formState.recaptchaVerifier.render().then(widgetId => {
+                    console.log("reCAPTCHA renderizado. Widget ID:", widgetId);
+                }).catch(error => {
+                    console.error("Erro ao renderizar reCAPTCHA:", error);
+                    alert("Erro ao carregar a verificação de segurança. Recarregue a página.");
+                });
+            } catch (error) {
+                console.error("Erro ao inicializar reCAPTCHA:", error);
+                alert("Erro grave ao carregar a verificação de segurança. Recarregue a página.");
+            }
+        }
+      }
+    }
+
+    /**
+     * Volta para o passo anterior.
+     */
+    function goToPrevStep() {
+      if (formState.currentStep > 1) {
+        formState.currentStep--;
+        clearErrors(); // Limpa erros ao voltar
+        updateFormSteps();
+      }
+    }
+
+    // --- Manipuladores de Eventos do Formulário ---
+
+    // Listener para o botão "Próximo" do Passo 1
+    nextStep1Btn.addEventListener('click', goToNextStep);
+
+    // Listeners para os botões "Anterior" e "Próximo" do Passo 2
+    prevStep2Btn.addEventListener('click', goToPrevStep);
+    nextStep2Btn.addEventListener('click', goToNextStep);
+
+    // Listener para o botão "Anterior" do Passo 3
+    prevStep3Btn.addEventListener('click', goToPrevStep);
+
+    // Listener para a mudança do checkbox de termos
+    termsCheckbox.addEventListener('change', () => {
+      formState.formData.termsAccepted = termsCheckbox.checked;
+      validateField(termsCheckbox, validateTerms, termsCheckbox.checked); // Validate terms on change
+      // Enable/disable register button based on terms and reCAPTCHA
+      registerBtn.disabled = !(formState.formData.termsAccepted && formState.recaptchaResolved);
+    });
+
+    // Validar campos ao perder o foco (blur)
+    fullNameInput.addEventListener('blur', () => validateField(fullNameInput, validateFullName));
+    biNumberInput.addEventListener('blur', async () => {
+        const formatValid = validateField(biNumberInput, validateBiFormat);
+        if (formatValid) {
+            biSuccessMessage.textContent = 'Verificando BI...';
+            displayError(biNumberInput, ''); // Clear any previous error
+            try {
+                const isValidBi = await validateBINumberExternal(biNumberInput.value);
+                if (!isValidBi) {
+                    displayError(biNumberInput, 'Número de BI inválido ou não encontrado.');
+                    biSuccessMessage.textContent = '';
+                    formState.biValidatedExternally = false;
+                } else {
+                    biSuccessMessage.textContent = 'BI validado com sucesso!';
+                    displayError(biNumberInput, '');
+                    formState.biValidatedExternally = true;
+                }
+            } catch (error) {
+                displayError(biNumberInput, error.message || 'Erro ao validar BI. Tente novamente.');
+                biSuccessMessage.textContent = '';
+                formState.biValidatedExternally = false;
+            }
+        } else {
+            biSuccessMessage.textContent = '';
+            formState.biValidatedExternally = false;
+        }
+    });
+    emailInput.addEventListener('blur', () => validateField(emailInput, validateEmail));
+    phoneInput.addEventListener('blur', () => validateField(phoneInput, validatePhone));
+    municipioSelect.addEventListener('blur', () => validateField(municipioSelect, validateMunicipio));
+    bairroInput.addEventListener('blur', () => validateField(bairroInput, validateBairro));
+    passwordInput.addEventListener('blur', () => validateField(passwordInput, validatePassword));
+    confirmPasswordInput.addEventListener('blur', () => validateField(confirmPasswordInput, validateConfirmPassword, passwordInput.value));
+    
+    // Validar confirmação de senha também quando a senha principal muda
+    passwordInput.addEventListener('input', () => {
+        if (confirmPasswordInput.value) { // Only re-validate if confirm password has input
+            validateField(confirmPasswordInput, validateConfirmPassword, passwordInput.value);
+        }
+    });
+
+    // --- Lógica de Submissão do Formulário ---
+    registerForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Impede o envio padrão do formulário
+
+      setButtonLoading(true); // Ativa o spinner
+
+      const isValid = await validateCurrentStep(); // Valida o passo final
+
+      if (!isValid) {
+        setButtonLoading(false);
+        // If validation fails on submit, user might need to go back
+        // Or if it's the last step, just show errors.
+        if (formState.currentStep !== formState.totalSteps) {
+            alert('Por favor, preencha todos os campos obrigatórios corretamente antes de prosseguir.');
+        } else {
+            alert('Por favor, revise os campos marcados em vermelho.');
+        }
+        return;
+      }
+
+      // Ensure reCAPTCHA is explicitly executed for final submission
+      if (formState.recaptchaVerifier) {
+          try {
+            const token = await formState.recaptchaVerifier.execute();
+            console.log("reCAPTCHA token:", token);
+            formState.recaptchaResolved = true; // Confirm token received
+          } catch (error) {
+            console.error("Erro ao executar reCAPTCHA para submissão:", error);
+            alert("Falha na verificação de segurança (reCAPTCHA). Por favor, tente novamente.");
+            setButtonLoading(false);
+            return;
+          }
+      } else {
+          alert("Erro: Verificação de segurança não inicializada. Recarregue a página.");
+          setButtonLoading(false);
+          return;
+      }
+
+      // Dados para o Firebase
+      const userData = {
+        name: formState.formData.fullName,
+        email: formState.formData.email,
+        phoneNumber: formState.formData.phone, // Firebase Auth handles phone validation
+        password: formState.formData.password,
+        municipio: formState.formData.municipio,
+        bairro: formState.formData.bairro,
+        method: 'email', // Defaulting to email. You can add logic for phone authentication later if needed
+        notificationPreferences: {
+          email: true, // Example preference
+          whatsapp: false,
+        },
+      };
+
+      try {
+        // Assume email registration for now, phone auth requires more steps (SMS code)
+        // Adjust the method based on your Firebase setup (e.g., if phone is primary)
+        const userCredential = await auth.createUserWithEmailAndPassword(userData.email, userData.password);
+        const user = userCredential.user;
+
+        await user.updateProfile({ displayName: userData.name });
+
+        // If email registration, send verification email
+        await user.sendEmailVerification();
+        console.log(`Usuário ${user.uid} registrado via email.`);
+
+        // Salvar dados adicionais no Firestore
+        await db.collection('users').doc(user.uid).set({
+          name: userData.name,
+          email: userData.email,
+          phoneNumber: normalizePhoneNumber(userData.phoneNumber), // Store normalized phone
+          municipio: userData.municipio,
+          bairro: userData.bairro,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          registrationMethod: userData.method,
+          termsAcceptedAt: firebase.firestore.FieldValue.serverTimestamp(), // Store when terms were accepted
+        });
+
+        console.log("Dados do usuário guardados no Firestore.");
+        alert("Conta criada com sucesso! Por favor, verifique seu email para ativar a conta.");
+        window.location.href = 'login.html'; // Redireciona para a página de login
+
+      } catch (error) {
+        console.error("Erro no registro Firebase:", error);
+        let errorMessage = "Erro ao criar conta. Por favor, tente novamente.";
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = "Este email já está em uso.";
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = "A senha é muito fraca. Use pelo menos 6 caracteres, incluindo letras e números."; // Firebase minimum is 6
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = "O email fornecido é inválido.";
+        }
+        alert(errorMessage);
+      } finally {
+        setButtonLoading(false); // Desativa o spinner
       }
     });
 
-    document.getElementById('prevStep3').addEventListener('click', () => {
-      showStep(2);
-    });
-
-    // Modal de Termos
-    const termsModal = document.getElementById('termsModal');
-    const showTermsBtn = document.getElementById('showTerms');
-    const closeTermsModalBtn = document.getElementById('closeTermsModal');
-    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
-    const termsCheckbox = document.getElementById('terms');
-
-    showTermsBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    // --- Lógica do Modal de Termos ---
+    showTermsLink.addEventListener('click', (event) => {
+      event.preventDefault();
       termsModal.classList.add('show');
     });
 
@@ -1226,117 +1554,42 @@
     });
 
     acceptTermsBtn.addEventListener('click', () => {
-      termsCheckbox.checked = true;
+      termsCheckbox.checked = true; // Marca o checkbox como aceito
+      formState.formData.termsAccepted = true;
+      validateField(termsCheckbox, validateTerms, true); // Re-validate the terms field
+      registerBtn.disabled = !(formState.formData.termsAccepted && formState.recaptchaResolved); // Re-enable if reCAPTCHA is also resolved
       termsModal.classList.remove('show');
-      document.getElementById('termsError').style.display = 'none';
     });
 
-    termsModal.addEventListener('click', (e) => {
-      if (e.target === termsModal) {
+    // Fechar modal clicando fora
+    termsModal.addEventListener('click', (event) => {
+      if (event.target === termsModal) {
         termsModal.classList.remove('show');
       }
     });
 
-    // Inicializar reCAPTCHA
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        await firebaseAuth.initializeRecaptcha('recaptcha-container');
-        console.log("reCAPTCHA inicializado com sucesso");
-      } catch (error) {
-        console.error("Falha ao inicializar reCAPTCHA:", error);
-        alert("Erro na verificação de segurança. Recarregue a página.");
-      }
+    // --- Inicialização ---
+    document.addEventListener('DOMContentLoaded', () => {
+      updateFormSteps(); // Garante que o passo 1 esteja ativo ao carregar
+      registerBtn.disabled = true; // Desabilita o botão de registro inicialmente
     });
 
-    // Envio do formulário
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Verificar se os termos foram aceitos
-      if (!termsCheckbox.checked) {
-        document.getElementById('termsError').textContent = 'Você deve aceitar os termos e condições';
-        document.getElementById('termsError').style.display = 'block';
-        return;
-      }
-
-      // Obter todos os valores
-      const fullName = document.getElementById('fullName').value.trim();
-      const biNumber = document.getElementById('biNumber').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const municipio = document.getElementById('municipio').value;
-      const bairro = document.getElementById('bairro').value.trim();
-      const password = document.getElementById('password').value;
-
-      // Mostrar spinner
-      document.getElementById('btnText').style.display = 'none';
-      document.getElementById('btnSpinner').style.display = 'inline-block';
-      document.getElementById('registerBtn').disabled = true;
-
-      try {
-        // Registrar usuário
-        const result = await firebaseAuth.registerUser({
-          name: fullName,
-          email,
-          phoneNumber: phone,
-          password,
-          municipio,
-          bairro,
-          method: 'email', // ou 'phone' se preferir
-          notificationPreferences: {
-            email: true,
-            whatsapp: true
-          }
-        });
-
-        if (result.requiresEmailVerification) {
-          alert('Conta criada com sucesso! Verifique seu email para confirmar.');
-          window.location.href = 'login.html';
-        } else if (result.requiresPhoneVerification) {
-          alert('Código de verificação enviado para seu telefone. Por favor, verifique.');
-          window.location.href = 'verify-phone.html';
+    // Firebase Auth State Listener (opcional, para redirecionar se já logado)
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            console.log("Usuário já logado:", user.uid);
+            // Optionally redirect to dashboard if user is already authenticated
+            // window.location.href = 'dashboard.html';
+        } else {
+            console.log("Nenhum usuário logado.");
         }
-      } catch (error) {
-        console.error("Erro no registro:", error);
-        
-        // Esconder spinner
-        document.getElementById('btnText').style.display = 'inline';
-        document.getElementById('btnSpinner').style.display = 'none';
-        document.getElementById('registerBtn').disabled = false;
-
-        // Mostrar mensagem de erro apropriada
-        let errorMessage = 'Erro ao criar conta. Tente novamente.';
-        
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            errorMessage = 'Este email já está em uso.';
-            document.getElementById('emailError').textContent = errorMessage;
-            document.getElementById('emailError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'auth/invalid-email':
-            errorMessage = 'Email inválido.';
-            document.getElementById('emailError').textContent = errorMessage;
-            document.getElementById('emailError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'auth/weak-password':
-            errorMessage = 'Senha muito fraca. Use pelo menos 8 caracteres.';
-            document.getElementById('passwordError').textContent = errorMessage;
-            document.getElementById('passwordError').style.display = 'block';
-            showStep(2);
-            break;
-          case 'auth/invalid-phone-number':
-            errorMessage = 'Número de telefone inválido.';
-            document.getElementById('phoneError').textContent = errorMessage;
-            document.getElementById('phoneError').style.display = 'block';
-            showStep(1);
-            break;
-          default:
-            alert(errorMessage + '\n' + error.message);
-        }
-      }
     });
+
+    // If reCAPTCHA global object is available, try to render.
+    // This is useful if the script loads before DOMContentLoaded, but typically it runs later.
+    if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+        // grecaptcha.render() will be called when user reaches step 3
+    }
   </script>
 </body>
 </html>
