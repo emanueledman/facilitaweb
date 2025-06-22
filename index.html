@@ -61,27 +61,27 @@
     }
 
     h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-heading);
-        color: var(--secondary-dark);
-        line-height: 1.2;
+      font-family: var(--font-heading);
+      color: var(--secondary-dark);
+      line-height: 1.2;
     }
 
     /* Scrollbar estilizada */
     ::-webkit-scrollbar {
-        width: 8px;
+      width: 8px;
     }
 
     ::-webkit-scrollbar-track {
-        background: var(--bg-light);
+      background: var(--bg-light);
     }
 
     ::-webkit-scrollbar-thumb {
-        background: var(--primary-accent);
-        border-radius: 4px;
+      background: var(--primary-accent);
+      border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #E64A19;
+      background: #E64A19;
     }
 
     /* Navbar */
@@ -97,9 +97,9 @@
     }
 
     .navbar.scrolled {
-        background: var(--bg-white);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        padding: 0.8rem 0;
+      background: var(--bg-white);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 0.8rem 0;
     }
 
     .navbar-brand {
@@ -113,15 +113,15 @@
     }
 
     .navbar.scrolled .navbar-brand {
-        color: var(--secondary-dark);
+      color: var(--secondary-dark);
     }
 
     .logo {
-      width: 40px; /* Mais robusto */
+      width: 40px;
       height: 40px;
       margin-right: 10px;
       background: var(--primary-accent);
-      border-radius: 50%; /* Completamente redondo */
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -142,23 +142,23 @@
     }
 
     .navbar.scrolled .nav-link {
-        color: var(--text-main);
+      color: var(--text-main);
     }
 
     .nav-link::after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 3px;
-        background: var(--primary-accent);
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: width 0.3s ease;
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      background: var(--primary-accent);
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: width 0.3s ease;
     }
 
     .nav-link:hover::after, .nav-link.active::after {
-        width: 70%;
+      width: 70%;
     }
 
     .nav-link:hover {
@@ -170,7 +170,7 @@
       background: var(--primary-accent);
       color: var(--text-white);
       padding: 0.9rem 2.5rem;
-      border-radius: 30px; /* Mais arredondado */
+      border-radius: 30px;
       font-weight: 600;
       font-size: 1.1rem;
       text-decoration: none;
@@ -200,8 +200,8 @@
     }
 
     .navbar.scrolled .btn-outline-secondary-dark {
-        color: var(--secondary-dark);
-        border-color: var(--secondary-dark);
+      color: var(--secondary-dark);
+      border-color: var(--secondary-dark);
     }
 
     .btn-outline-secondary-dark:hover {
@@ -211,9 +211,9 @@
     }
 
     .navbar.scrolled .btn-outline-secondary-dark:hover {
-        background: var(--secondary-dark);
-        color: var(--text-white);
-        border-color: var(--secondary-dark);
+      background: var(--secondary-dark);
+      color: var(--text-white);
+      border-color: var(--secondary-dark);
     }
 
     /* Hero Section */
@@ -265,9 +265,9 @@
     }
 
     .hero-footer-text {
-        font-size: 1.15rem;
-        opacity: 0.9;
-        font-weight: 500;
+      font-size: 1.15rem;
+      opacity: 0.9;
+      font-weight: 500;
     }
 
     /* Section Header */
@@ -294,254 +294,254 @@
 
     /* Stats Section */
     .stats-section {
-        background: var(--bg-light);
-        padding: 6rem 0;
+      background: var(--bg-light);
+      padding: 6rem 0;
     }
 
     .stats-grid {
-        display: flex;
-        justify-content: center;
-        gap: 2.5rem;
-        flex-wrap: wrap;
-        margin-bottom: 5rem;
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 5rem;
     }
 
     .stat-card {
-        background: var(--bg-white);
-        border-radius: 15px;
-        padding: 2.5rem;
-        text-align: center;
-        flex: 1;
-        min-width: 280px;
-        max-width: 350px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        border-bottom: 5px solid var(--primary-accent); /* Borda de destaque */
+      background: var(--bg-white);
+      border-radius: 15px;
+      padding: 2.5rem;
+      text-align: center;
+      flex: 1;
+      min-width: 280px;
+      max-width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border-bottom: 5px solid var(--primary-accent);
     }
 
     .stat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 45px rgba(0,0,0,0.15);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 45px rgba(0,0,0,0.15);
     }
 
     .stat-icon {
-        font-size: 3rem;
-        color: var(--primary-accent);
-        margin-bottom: 1.5rem;
+      font-size: 3rem;
+      color: var(--primary-accent);
+      margin-bottom: 1.5rem;
     }
 
     .stat-number {
-        font-size: 4rem;
-        font-weight: 700;
-        color: var(--secondary-dark);
-        line-height: 1;
-        margin-bottom: 0.8rem;
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--secondary-dark);
+      line-height: 1;
+      margin-bottom: 0.8rem;
     }
 
     .stat-label {
-        font-size: 1.2rem;
-        color: var(--text-secondary);
-        font-weight: 500;
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      font-weight: 500;
     }
 
     /* Before After Gallery */
     .transformations-section {
-        background: var(--bg-white);
-        padding: 6rem 0;
-        border-top: 1px solid #ECEFF1;
+      background: var(--bg-white);
+      padding: 6rem 0;
+      border-top: 1px solid #ECEFF1;
     }
 
     .before-after-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
     }
 
     .before-after-card {
-        background: var(--bg-white);
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        transition: transform 0.4s ease, box-shadow 0.4s ease;
-        border: 1px solid #E0E0E0; /* Borda mais fina */
+      background: var(--bg-white);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border: 1px solid #E0E0E0;
     }
 
     .before-after-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+      transform: translateY(-8px);
+      box-shadow: 0 15px 45px rgba(0,0,0,0.2);
     }
 
     .image-comparison {
-        position: relative;
-        height: 280px; /* Maior altura para as imagens */
-        overflow: hidden;
+      position: relative;
+      height: 280px;
+      overflow: hidden;
     }
 
     .image-comparison img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        position: absolute;
-        top: 0;
-        left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .before-image {
-        width: 100%;
-        z-index: 1;
+      width: 100%;
+      z-index: 1;
     }
 
     .after-image {
-        width: 50%;
-        z-index: 2;
-        clip-path: inset(0 50% 0 0);
+      width: 50%;
+      z-index: 2;
+      clip-path: inset(0 50% 0 0);
     }
 
     .slider-handle {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 4px;
-        height: 100%;
-        background: var(--primary-accent);
-        z-index: 3;
-        cursor: ew-resize;
-        transform: translateX(-50%);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: var(--primary-accent);
+      z-index: 3;
+      cursor: ew-resize;
+      transform: translateX(-50%);
     }
 
     .slider-handle::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 40px;
-        height: 40px;
-        background: var(--primary-accent);
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      background: var(--primary-accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .slider-handle::after {
-        content: '\\f337'; /* FontAwesome arrows left-right */
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        color: var(--text-white);
-        font-size: 20px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+      content: '\f337';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      color: var(--text-white);
+      font-size: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .slider-handle:focus {
-        outline: 2px solid var(--highlight-light);
-        outline-offset: 2px;
+      outline: 2px solid var(--highlight-light);
+      outline-offset: 2px;
     }
 
     .card-content {
-        padding: 1.8rem;
+      padding: 1.8rem;
     }
 
     .card-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--secondary-dark);
-        margin-bottom: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--secondary-dark);
+      margin-bottom: 0.8rem;
     }
 
     .card-location {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.2rem;
     }
 
     .card-link {
-        color: var(--primary-accent);
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.3s ease;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
+      color: var(--primary-accent);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .card-link:hover {
-        color: #E64A19;
+      color: #E64A19;
     }
 
     /* How It Works Section */
     .how-it-works-section {
-        background: var(--secondary-dark); /* Fundo escuro */
-        padding: 6rem 0;
-        color: var(--text-white);
+      background: var(--secondary-dark);
+      padding: 6rem 0;
+      color: var(--text-white);
     }
 
     .how-it-works-section .section-title {
-        color: var(--text-white);
+      color: var(--text-white);
     }
 
     .how-it-works-section .section-subtitle {
-        color: rgba(255,255,255,0.85);
+      color: rgba(255,255,255,0.85);
     }
 
     .step-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 3rem;
-        margin-top: 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
     }
 
     .step-card {
-        text-align: center;
-        padding: 3rem 2rem;
-        border-radius: 15px;
-        background: rgba(255,255,255,0.08); /* Fundo translúcido suave */
-        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-        transition: transform 0.4s ease, background 0.4s ease;
-        border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+      padding: 3rem 2rem;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      transition: transform 0.4s ease, background 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
     .step-card:hover {
-        background: rgba(255,255,255,0.15);
-        transform: translateY(-8px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+      background: rgba(255,255,255,0.15);
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
     }
 
     .step-icon {
-        font-size: 3.5rem; /* Ícone maior */
-        color: var(--highlight-light); /* Amarelo para destaque */
-        margin-bottom: 1.8rem;
+      font-size: 3.5rem;
+      color: var(--highlight-light);
+      margin-bottom: 1.8rem;
     }
 
     .step-title {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: var(--text-white);
-        margin-bottom: 1rem;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--text-white);
+      margin-bottom: 1rem;
     }
 
     .step-description {
-        font-size: 1.05rem;
-        color: rgba(255,255,255,0.75);
-        margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 1.5rem;
     }
 
     .step-link {
-        color: var(--highlight-light);
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        transition: color 0.3s ease;
+      color: var(--highlight-light);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s ease;
     }
 
     .step-link:hover {
-        color: #FFEB3B;
+      color: #FFEB3B;
     }
 
     /* Recent Issues Section */
@@ -647,49 +647,49 @@
     }
 
     .issue-meta span {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
     }
 
     .issue-meta i {
-        color: var(--primary-accent);
+      color: var(--primary-accent);
     }
 
     /* Call to Action Final */
     .cta-section {
-        background: var(--primary-accent);
-        padding: 6rem 0;
-        text-align: center;
-        color: var(--text-white);
+      background: var(--primary-accent);
+      padding: 6rem 0;
+      text-align: center;
+      color: var(--text-white);
     }
 
     .cta-section .section-title {
-        color: var(--text-white);
-        margin-bottom: 2rem;
+      color: var(--text-white);
+      margin-bottom: 2rem;
     }
 
     .cta-section .section-subtitle {
-        color: rgba(255,255,255,0.95);
-        margin-bottom: 3rem;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 3rem;
     }
 
     .cta-actions {
-        display: flex;
-        gap: 1.8rem;
-        justify-content: center;
-        flex-wrap: wrap;
+      display: flex;
+      gap: 1.8rem;
+      justify-content: center;
+      flex-wrap: wrap;
     }
 
     .cta-actions .btn-outline-secondary-dark {
-        border-color: rgba(255,255,255,0.8);
-        color: var(--text-white);
+      border-color: rgba(255,255,255,0.8);
+      color: var(--text-white);
     }
 
     .cta-actions .btn-outline-secondary-dark:hover {
-        background: rgba(255,255,255,0.15);
-        border-color: var(--text-white);
+      background: rgba(255,255,255,0.15);
+      border-color: var(--text-white);
     }
 
     /* Rodapé */
@@ -767,8 +767,8 @@
     }
 
     .spinner {
-      width: 50px; /* Maior */
-      height: 50px; /* Maior */
+      width: 50px;
+      height: 50px;
       border: 5px solid #E0E0E0;
       border-top: 5px solid var(--primary-accent);
       border-radius: 50%;
@@ -856,111 +856,110 @@
 
     /* Responsividade */
     @media (max-width: 992px) {
-        .navbar-brand {
-            color: var(--secondary-dark);
-        }
-        .navbar-toggler {
-            color: var(--secondary-dark);
-        }
-        .navbar.scrolled .navbar-brand, .navbar.scrolled .nav-link, .navbar.scrolled .btn-outline-secondary-dark {
-            color: var(--secondary-dark);
-            border-color: transparent; /* No mobile, os botões do nav não têm borda */
-        }
-        .navbar .nav-link, .navbar .btn-outline-secondary-dark {
-            color: var(--text-main);
-            border-color: transparent;
-        }
-        .hero-title {
-            font-size: 3.5rem;
-        }
-        .hero-subtitle {
-            font-size: 1.4rem;
-        }
-        .hero-actions {
-            flex-direction: column;
-            align-items: center;
-        }
-        .btn-main, .btn-outline-secondary-dark {
-            width: 90%; /* Ocupa mais espaço */
-            max-width: 380px;
-        }
-        .section-title {
-            font-size: 2.8rem;
-        }
-        .section-subtitle {
-            font-size: 1.1rem;
-        }
-        .stats-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .stat-card {
-            max-width: 90%;
-            margin: 0 auto;
-        }
-        .step-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .issue-grid {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-        .footer-links {
-            justify-content: flex-start;
-            gap: 1.8rem;
-        }
-        .cookie-banner {
-          padding: 1.2rem;
-        }
-        .cookie-banner p {
-          font-size: 0.9rem;
-        }
-        .cookie-banner .btn-group {
-            flex-direction: column;
-            width: 100%;
-            align-items: center;
-        }
-        .cookie-banner .btn-accept, .cookie-banner .btn-more-info {
-            width: 90%;
-            max-width: 300px;
-        }
+      .navbar-brand {
+        color: var(--secondary-dark);
+      }
+      .navbar-toggler {
+        color: var(--secondary-dark);
+      }
+      .navbar.scrolled .navbar-brand, .navbar.scrolled .nav-link, .navbar.scrolled .btn-outline-secondary-dark {
+        color: var(--secondary-dark);
+        border-color: transparent;
+      }
+      .navbar .nav-link, .navbar .btn-outline-secondary-dark {
+        color: var(--text-main);
+        border-color: transparent;
+      }
+      .hero-title {
+        font-size: 3.5rem;
+      }
+      .hero-subtitle {
+        font-size: 1.4rem;
+      }
+      .hero-actions {
+        flex-direction: column;
+        align-items: center;
+      }
+      .btn-main, .btn-outline-secondary-dark {
+        width: 90%;
+        max-width: 380px;
+      }
+      .section-title {
+        font-size: 2.8rem;
+      }
+      .section-subtitle {
+        font-size: 1.1rem;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .stat-card {
+        max-width: 90%;
+        margin: 0 auto;
+      }
+      .step-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .issue-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .footer-links {
+        justify-content: flex-start;
+        gap: 1.8rem;
+      }
+      .cookie-banner {
+        padding: 1.2rem;
+      }
+      .cookie-banner p {
+        font-size: 0.9rem;
+      }
+      .cookie-banner .btn-group {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+      }
+      .cookie-banner .btn-accept, .cookie-banner .btn-more-info {
+        width: 90%;
+        max-width: 300px;
+      }
     }
 
     @media (max-width: 576px) {
-        .hero-title {
-            font-size: 2.8rem;
-        }
-        .hero-subtitle {
-            font-size: 1.1rem;
-        }
-        .btn-main, .btn-outline-secondary-dark {
-            padding: 0.8rem 2rem;
-            font-size: 1rem;
-        }
-        .stat-number {
-            font-size: 3.2rem;
-        }
-        .stat-label {
-            font-size: 1rem;
-        }
-        .issue-image, .issue-placeholder, .image-comparison {
-            height: 200px;
-        }
-        .section-title {
-            font-size: 2.2rem;
-        }
-        .slider-handle::before {
-            width: 30px;
-            height: 30px;
-        }
-        .slider-handle::after {
-            font-size: 16px;
-        }
+      .hero-title {
+        font-size: 2.8rem;
+      }
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+      .btn-main, .btn-outline-secondary-dark {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+      }
+      .stat-number {
+        font-size: 3.2rem;
+      }
+      .stat-label {
+        font-size: 1rem;
+      }
+      .issue-image, .issue-placeholder, .image-comparison {
+        height: 200px;
+      }
+      .section-title {
+        font-size: 2.2rem;
+      }
+      .slider-handle::before {
+        width: 30px;
+        height: 30px;
+      }
+      .slider-handle::after {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
-
 <body>
   <div id="loadingScreen" class="loading-container">
     <div class="spinner"></div>
@@ -1002,7 +1001,127 @@
       </div>
     </nav>
 
-    <!-- Other sections unchanged until CTA section -->
+    <section class="hero-section" role="banner" aria-label="Transforme o Seu Bairro. Juntos.">
+      <div class="container">
+        <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
+          <h1 class="hero-title">Transforme Seu Bairro.<br>A Sua Voz Faz a Diferença.</h1>
+          <p class="hero-subtitle">
+            Conecte-se com a sua comunidade para reportar problemas urbanos, acompanhar soluções e construir um futuro melhor para Angola.
+          </p>
+          <div class="hero-actions">
+            <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Agora <i class="fas fa-arrow-right ms-2"></i></a>
+            <a href="report.html" class="btn-outline-secondary-dark" aria-label="Explorar o mapa de problemas">Explorar Mapa <i class="fas fa-map-marked-alt ms-2"></i></a>
+          </div>
+          <p class="mt-4 hero-footer-text">
+            *Não é necessário registo para participar. Sua contribuição é valiosa!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section" id="impact">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">O Seu Impacto, em Números.</h2>
+          <p class="section-subtitle">
+            Cada reporte, cada solução, constrói um futuro mais limpo e organizado para as nossas comunidades.
+          </p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
+            <i class="fas fa-lightbulb stat-icon"></i>
+            <span class="stat-number" id="totalReports">0</span>
+            <div class="stat-label">Problemas Levantados</div>
+          </div>
+          <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
+            <i class="fas fa-handshake stat-icon"></i>
+            <span class="stat-number" id="solvedReports">0</span>
+            <div class="stat-label">Soluções Alcançadas</div>
+          </div>
+          <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
+            <i class="fas fa-city stat-icon"></i>
+            <span class="stat-number" id="activeUsers">0</span>
+            <div class="stat-label">Bairros Engajados</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="transformations-section">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Transformações Visíveis. Histórias Reais.</h2>
+          <p class="section-subtitle">
+            Confira o impacto concreto da nossa comunidade. Problemas resolvidos, bairros renovados!
+          </p>
+        </div>
+        <div class="before-after-gallery" id="resolvedIssuesGallery">
+          <div class="col-12 text-center text-muted" id="noTransformationsMessage" style="display: none;">
+            <i class="fas fa-box-open fa-3x mb-3" style="color: var(--text-secondary);"></i>
+            <p>Nenhuma transformação visível para mostrar ainda. Seja o primeiro a reportar e ver a mudança!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="how-it-works-section" id="how-it-works">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Seu Guia Rápido para a Transformação</h2>
+          <p class="section-subtitle">
+            Começar a fazer a diferença é mais simples do que você imagina. Siga estes passos!
+          </p>
+        </div>
+        <div class="step-grid">
+          <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-camera step-icon"></i>
+            <h3 class="step-title">1. Identifique e Registre</h3>
+            <p class="step-description">Encontrou um buraco, lixo ou falha na iluminação? Tire uma foto e descreva o problema em poucos cliques.</p>
+            <a href="new-report.html" class="step-link">
+              Reportar Problema <i class="fas fa-chevron-right ms-2"></i>
+            </a>
+          </div>
+          <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-street-map step-icon"></i>
+            <h3 class="step-title">2. Acompanhe no Mapa</h3>
+            <p class="step-description">Veja todos os problemas da sua área e o status de cada um em um mapa interativo e intuitivo.</p>
+            <a href="report.html" class="step-link">
+              Ver Mapa Completo <i class="fas fa-chevron-right ms-2"></i>
+            </a>
+          </div>
+          <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-users-gear step-icon"></i>
+            <h3 class="step-title">3. Colabore e Celebre</h3>
+            <p class="step-description">Conecte-se com vizinhos, sugira soluções e celebre as melhorias que JUNTOS conquistamos.</p>
+            <a href="profile.html" class="step-link">
+              Junte-se à Comunidade <i class="fas fa-chevron-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="recent-issues-section" id="issues">
+      <div class="container">
+        <div class="section-header" data-aos="fade-up">
+          <h2 class="section-title">Problemas Ativos Próximos de Si.</h2>
+          <p class="section-subtitle">
+            Estes são os desafios mais recentes na sua comunidade que aguardam a atenção e a colaboração de todos.
+          </p>
+        </div>
+        <div class="issue-grid" id="recentIssues">
+          <div class="col-12 text-center text-muted" id="noRecentIssuesMessage" style="display: none;">
+            <i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
+            <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>
+          </div>
+        </div>
+        <div class="text-center mt-5" data-aos="fade-up">
+          <a href="report.html" class="btn-main" aria-label="Ver todos os problemas no mapa">Ver Todos os Problemas no Mapa <i class="fas fa-arrow-right ms-2"></i></a>
+        </div>
+      </div>
+    </section>
+
     <section class="cta-section" data-aos="zoom-in">
       <div class="container">
         <h2 class="section-title">Pronto para Ver a Mudança?</h2>
@@ -1016,7 +1135,47 @@
       </div>
     </section>
 
-    <!-- Footer and cookie banner unchanged -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="footer-brand">
+              <div class="logo">F</div>
+              <span>FixABairro</span>
+            </div>
+            <p>
+              Transformando bairros através da participação cidadã e tecnologia.
+              Juntos construímos comunidades mais fortes e vibrantes em Angola.
+            </p>
+          </div>
+          <div class="col-lg-6">
+            <div class="footer-links">
+              <a href="report.html" aria-label="Mapa de problemas">Mapa de Problemas</a>
+              <a href="new-report.html" aria-label="Relatar problema">Relatar Problema</a>
+              <a href="#" aria-label="Sobre nós (em desenvolvimento)">Sobre Nós</a>
+              <a href="#" aria-label="Contato (em desenvolvimento)">Contato</a>
+              <a href="#" id="openCookiePolicy" aria-label="Política de Cookies">Política de Cookies</a>
+              <a href="#" aria-label="Termos de uso (em desenvolvimento)">Termos de Uso</a>
+              <a href="#" aria-label="Política de privacidade (em desenvolvimento)">Privacidade</a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 FixABairro. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <div class="cookie-banner" id="cookieConsentBanner">
+      <p>
+        Nós utilizamos cookies para aprimorar sua experiência no FixABairro, analisar o tráfego e personalizar conteúdo. Ao continuar a navegar, você concorda com a nossa utilização de cookies.
+        <a href="#" id="openCookiePolicyInBanner" style="color: var(--primary-accent); text-decoration: underline; font-weight: 600;">Saiba mais aqui</a>.
+      </p>
+      <div class="btn-group">
+        <button class="btn-accept" id="acceptCookies">Aceitar e Continuar</button>
+        <button class="btn-more-info" id="rejectCookies">Recusar</button>
+      </div>
+    </div>
   </div>
 
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1027,7 +1186,7 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // Configuração do Firebase (unchanged)
+    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
@@ -1038,7 +1197,7 @@
       databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
     };
 
-    // Carregamento de estatísticas do Firebase (unchanged)
+    // Carregamento de estatísticas do Firebase
     function loadStats(firebaseApp) {
       const db = firebaseApp.database();
       db.ref('problems').once('value')
@@ -1068,7 +1227,7 @@
         });
     }
 
-    // Animação de contador (unchanged)
+    // Animação de contador
     function animateCounter(element, target, duration = 1500) {
       let start = 0;
       const increment = target / (duration / 16);
@@ -1207,7 +1366,7 @@
       }
     }
 
-    // Carregamento de Transformações Visíveis (unchanged)
+    // Carregamento de Transformações Visíveis
     function loadResolvedIssues(firebaseApp) {
       const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
       const noTransformationsMessage = document.getElementById('noTransformationsMessage');
@@ -1274,7 +1433,7 @@
       );
     }
 
-    // Inicialização dos Sliders de Comparação (unchanged)
+    // Inicialização dos Sliders de Comparação
     function initImageSliders() {
       const sliders = document.querySelectorAll('.image-comparison');
       sliders.forEach((slider, index) => {
@@ -1401,7 +1560,7 @@
       }
     }
 
-    // Gerenciamento de Cookies (unchanged)
+    // Gerenciamento de Cookies
     function setCookie(name, value, days) {
       let expires = "";
       if (days) {
