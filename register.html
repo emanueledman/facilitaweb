@@ -1283,13 +1283,13 @@
             // Use a sua URL da API de validação de BI.
             // Para desenvolvimento, pode ser 'http://127.0.0.1:5000/validate-bi/'
             // Em produção, use a URL do seu backend no Render.
-            const apiUrl = `https://fixabairro-backend.onrender.com/validate-bi/${biNumber}`; // Replace with your actual backend URL
+            const apiUrl = `https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`; // Replace with your actual backend URL
 
             const response = await fetch(apiUrl);
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Erro ao validar BI na API externa.");
+                throw new Error(data.message || "Erro ao validar BI");
             }
             
             return data.success; // Retorna true se o BI for válido, false caso contrário
