@@ -936,28 +936,25 @@
         });
       },
 
-      async validateBINumber(biNumber) {
+async validateBINumber(biNumber) {
     try {
-        console.log('Validando BI:', biNumber); // Debug
+        console.log('Validando BI:', biNumber);
         const response = await fetch(`https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`);
         const data = await response.json();
         
-        console.log('Resposta completa:', data); // Debug
-        console.log('Status da resposta:', response.status); // Debug
+        console.log('Resposta completa:', data);
+        console.log('Status da resposta:', response.status);
         
         if (!response.ok) {
-            console.error('Erro na resposta:', data); // Debug
+            console.error('Erro na resposta:', data);
             throw new Error(data.message || "Erro ao validar BI");
         }
         
-        // Verifica se a propriedade success existe
-        if (typeof data.success !== 'boolean') {
-            console.error('Propriedade success não encontrada ou inválida:', data);
-            return false;
-        }
+        // CORREÇÃO: Verifica tanto 'success' quanto 'sucess' (erro de digitação da API externa)
+        const isValid = data.success || data.sucess || false;
         
-        console.log('Resultado da validação:', data.success); // Debug
-        return data.success;
+        console.log('Resultado da validação:', isValid);
+        return isValid;
         
     } catch (error) {
         console.error("Erro na validação do BI:", error);
