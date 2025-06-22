@@ -1,4 +1,13 @@
-
+// auth.js
+const firebaseConfig = {
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+  authDomain: "facilita-479b3.firebaseapp.com",
+  databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
+  projectId: "facilita-479b3",
+  storageBucket: "facilita-479b3.appspot.com",
+  messagingSenderId: "385676676886",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+};
 
 const firebaseAuth = {
   _app: null,
@@ -11,7 +20,8 @@ const firebaseAuth = {
     if (typeof firebase === 'undefined') {
       throw new Error("Firebase SDK não carregado.");
     }
-    this._app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+    // Use firebase.apps to check if an app is already initialized
+    this._app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(firebaseConfig);
     this._auth = firebase.auth();
     this._firestore = firebase.firestore();
     console.log("Firebase inicializado com sucesso.");
@@ -24,11 +34,13 @@ const firebaseAuth = {
     this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier(containerId, {
       size: 'invisible',
       callback: (response) => {
-        document.getElementById('registerBtn')?.disabled = false;
+        const registerBtn = document.getElementById('registerBtn');
+        if (registerBtn) registerBtn.disabled = false;
         console.log("reCAPTCHA resolvido:", response);
       },
       'expired-callback': () => {
-        document.getElementById('registerBtn')?.disabled = true;
+        const registerBtn = document.getElementById('registerBtn');
+        if (registerBtn) registerBtn.disabled = true;
         console.warn("reCAPTCHA expirado.");
       },
       'error-callback': (error) => {
@@ -128,7 +140,6 @@ const firebaseAuth = {
     }
 
     let user;
-    let finalEmail = email;
 
     try {
       // Validar BI
@@ -298,7 +309,10 @@ const firebaseAuth = {
 };
 
 // Inicializar Firebase
-firebaseAuth.initializeFirebaseApp(firebaseConfig);
-
-// Expor firebaseAuth globalmente
-window.firebaseAuth = firebaseAuth;
+try {
+  firebaseAuth.initializeFirebaseApp(firebaseConfig);
+  // Expor firebaseAuth globalmente
+  window.firebaseAuth = firebaseAuth;
+} catch (error) {
+  console.error("Erro ao inicializar Firebase:", error);
+}

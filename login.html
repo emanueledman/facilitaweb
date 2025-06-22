@@ -182,8 +182,6 @@
     }
 
     .form-label {
-
-
       display: block;
       font-weight: 500;
       margin-bottom: 0.5rem;
@@ -574,7 +572,7 @@
         <p>O FixaBairro deve ser usado para promover o bem-estar da comunidade. Não é permitido utilizar a plataforma para causar danos, interferir ou interagir de forma negativa. Buscamos um ambiente de colaboração e respeito.</p>
 
         <h4>5. Sua Privacidade</h4>
-        <p>Protegemos suas informações pessoais. Detalhes sobre o uso dos dados estão disponíveis na nossa <a href="#" class="terms-link">Política de Privacidade</a>. Ao utilizar a plataforma, você concorda com as práticas descritas, sempre com foco na sua segurança.</p>
+        <p>Protegemos suas informações pessoais. Detalhes sobre o uso dos dados estão disponíveis na nossa <a href="#" class="terms-link">Política de Privacidade</a>.</p>
 
         <h4>6. O Papel do FixaBairro e das Autoridades</h4>
         <p>O FixaBairro atua como um intermediário, facilitando a comunicação entre cidadãos e autoridades. A resolução dos problemas depende das entidades responsáveis. Não garantimos a solução de todos os problemas reportados, mas asseguramos que sua voz será amplificada.</p>
@@ -583,7 +581,7 @@
         <p>Esforçamo-nos para manter o FixaBairro operacional, mas, como qualquer ferramenta digital, podem ocorrer falhas técnicas. Não garantimos funcionamento ininterrupto, mas trabalharemos para corrigir eventuais problemas rapidamente.</p>
 
         <h4>8. Nossa Responsabilidade</h4>
-        <p>Não nos responsabilizamos por problemas decorrentes do uso da plataforma ou por conteúdos publicados por usuários. A responsabilidade pelos relatos é de quem os publica, devendo ser feito com consciência e respeito.</p>
+        <p>Não nos responsabilizamos por problemas decorrentes do uso da plataforma ou por conteúdos publicados por usuários. A responsabilidade pelos relatos é de quem os publica, devendo ser feito com consciência e responsabilidade.</p>
 
         <h4>9. Atualizações dos Termos</h4>
         <p>Estes termos podem ser atualizados periodicamente. Notificaremos as alterações na plataforma. A continuidade do uso após as mudanças indica aceitação dos novos termos.</p>
@@ -597,24 +595,15 @@
     </div>
   </div>
 
-  <!-- Firebase e scripts necessários -->
+  <!-- Firebase e Scripts -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script src="auth.js"></script>
+  <script src="auth.js" defer></script>
   
   <script>
     // Funções auxiliares
-    const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-  authDomain: "facilita-479b3.firebaseapp.com",
-  databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
-  projectId: "facilita-479b3",
-  storageBucket: "facilita-479b3.appspot.com",
-  messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-};
     function togglePassword(fieldId) {
       const field = document.getElementById(fieldId);
       const icon = field.nextElementSibling.querySelector('i');
@@ -639,13 +628,29 @@
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', async () => {
+      // Aguarde até que window.firebaseAuth esteja definido
+      const waitForFirebaseAuth = () => new Promise((resolve, reject) => {
+        const maxAttempts = 50;
+        let attempts = 0;
+        const interval = setInterval(() => {
+          if (window.firebaseAuth) {
+            clearInterval(interval);
+            resolve();
+          } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            reject(new Error('firebaseAuth não foi carregado a tempo.'));
+          }
+          attempts++;
+        }, 100);
+      });
+
       try {
-        // Verificar estado de autenticação antes de carregar a página
-        await firebaseAuth.checkAuthState({
+        await waitForFirebaseAuth();
+        await window.firebaseAuth.checkAuthState({
           redirectIfLoggedIn: 'dashboard.html',
           onGuest: async () => {
             // Inicializar reCAPTCHA apenas para visitantes
-            await firebaseAuth.initializeRecaptcha('recaptcha-container');
+            await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
             console.log("reCAPTCHA inicializado com sucesso");
           },
           onLoggedIn: (user) => {
@@ -716,7 +721,7 @@
         document.getElementById('loginBtn').disabled = true;
 
         try {
-          await firebaseAuth.login(identifier, password);
+          await window.firebaseAuth.login(identifier, password);
           window.location.href = 'dashboard.html';
         } catch (error) {
           console.error("Erro no login:", error);
