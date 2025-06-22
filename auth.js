@@ -118,6 +118,16 @@ const firebaseAuth = {
     }
   },
 
+  async checkIdentifierExists(identifier) {
+    try {
+      const doc = await this._firestore.collection('authMappings').doc(identifier).get();
+      return doc.exists;
+    } catch (error) {
+      console.error("Erro ao verificar identificador:", error);
+      throw new Error("Erro ao verificar identificador. Tente novamente.");
+    }
+  },
+
   async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro }) {
     console.log("Iniciando registro de usuário:", { fullName });
 

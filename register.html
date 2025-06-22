@@ -682,7 +682,7 @@
                   <img src="https://flagcdn.com/ao.svg" alt="Bandeira de Angola">
                   <span>+244</span>
                 </div>
-                <input type="tel" id="phone" class="phone-input" placeholder="923123456" required>
+                <input type="tel" id="phone" class="form-input" placeholder="923123456" required>
               </div>
               <div id="phoneError" class="error-message"></div>
             </div>
@@ -921,7 +921,17 @@
             document.getElementById('biError').style.color = 'var(--error)';
             isValid = false;
           } else {
-            document.getElementById('biError').style.display = 'none';
+            // Verificar se BI já está em uso
+            const biExists = await firebaseAuth.checkIdentifierExists(biNumber);
+            if (biExists) {
+              document.getElementById('biError').textContent = 'Este Bilhete de Identidade já está em uso.';
+              document.getElementById('biError').style.display = 'block';
+              document.getElementById('biError').style.color = 'var(--error)';
+              alert('Este Bilhete de Identidade já está em uso.');
+              isValid = false;
+            } else {
+              document.getElementById('biError').style.display = 'none';
+            }
           }
         } catch (error) {
           console.error("Erro na validação do BI:", error);
@@ -943,6 +953,22 @@
         document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX';
         document.getElementById('phoneError').style.display = 'block';
         isValid = false;
+      } else {
+        // Verificar se telefone já está em uso
+        try {
+          const phoneExists = await firebaseAuth.checkIdentifierExists(firebaseAuth.normalizePhoneNumber(phone));
+          if (phoneExists) {
+            document.getElementById('phoneError').textContent = 'Este número de telefone já está em uso.';
+            document.getElementById('phoneError').style.display = 'block';
+            alert('Este número de telefone já está em uso.');
+            isValid = false;
+          }
+        } catch (error) {
+          console.error("Erro ao verificar telefone:", error);
+          document.getElementById('phoneError').textContent = 'Erro ao verificar telefone. Tente novamente.';
+          document.getElementById('phoneError').style.display = 'block';
+          isValid = false;
+        }
       }
 
       if (isValid) {
