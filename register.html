@@ -776,7 +776,7 @@
 
             <div class="form-navigation">
               <button type="button" id="prevStep4" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
-              <button type="submit" id="registerBtn" class="btn btn-primary">
+              <button type="submit" id="registerBtn" class="btn btn-primary" disabled>
                 <span id="btnText">Criar Conta</span>
                 <span id="btnSpinner" class="spinner" style="display: none;"></span>
               </button>
@@ -811,7 +811,7 @@
           <li>Relatar problemas reais que impactem a comunidade.</li>
           <li>Ser respeitosos, sem linguagem ofensiva, insultos ou conteúdos prejudiciais.</li>
           <li>Evitar propaganda, mensagens em cadeia ou spam.</li>
-          <li>Não incluir ebooks ou ebooks sem permissão dos respectivos autores.</li>
+          <li>Não incluir fotos ou conteúdos sem permissão dos respectivos autores.</li>
           <li>Basear-se em informações verificáveis, evitando rumores.</li>
         </ul>
         <p>Conteúdos que violem estas regras podem ser removidos para manter a plataforma um ambiente positivo para todos.</p>
@@ -848,7 +848,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <script src="auth.js"></script>
+  <script src="auth.js" defer></script>
   
   <script>
     // Funções auxiliares
@@ -903,319 +903,343 @@
       currentStep = stepNumber;
     }
 
-    // Navegação entre passos
-    document.getElementById('nextStep1').addEventListener('click', async () => {
-      // Validação do passo 1
-      const fullName = document.getElementById('fullName').value.trim();
-      const biNumber = document.getElementById('biNumber').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-
-      let isValid = true;
-
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Aguarde até que window.firebaseAuth esteja definido
+      const waitForFirebaseAuth = () => new Promise((resolve, reject) => {
+        const maxAttempts = 50;
+        let attempts = 0;
+        const interval = setInterval(() => {
+          if (window.firebaseAuth) {
+            clearInterval(interval);
+            resolve();
+          } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            reject(new Error('firebaseAuth não foi carregado a tempo.'));
+          }
+          attempts++;
+        }, 100);
       });
 
-      if (fullName.length < 5) {
-        document.getElementById('nameError').textContent = 'Nome completo é obrigatório';
-        document.getElementById('nameError').style.display = 'block';
-        isValid = false;
+      try {
+        await waitForFirebaseAuth();
+        // Verificar estado de autenticação
+        await window.firebaseAuth.checkAuthState({
+          redirectIfLoggedIn: 'dashboard.html',
+          onGuest: async () => {
+            // Inicializar reCAPTCHA apenas para visitantes
+            await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
+            console.log("reCAPTCHA inicializado com sucesso");
+          },
+          onLoggedIn: (user) => {
+            console.log(`Usuário logado: ${user.uid}`);
+          }
+        });
+      } catch (error) {
+        console.error("Erro na inicialização:", error);
+        alert("Erro na inicialização do sistema. Recarregue a página.");
       }
 
-      // Validar BI localmente primeiro
-      if (!validateBINumber(biNumber)) {
-        document.getElementById('biError').textContent = 'Formato de BI inválido. Use: 123456789LA042';
-        document.getElementById('biError').style.display = 'block';
-        isValid = false;
-      } else {
-        // Se o formato local estiver correto, validar com a API
-        document.getElementById('biError').textContent = 'Validando BI...';
-        document.getElementById('biError').style.display = 'block';
-        document.getElementById('biError').style.color = 'var(--dark)';
-        
-        try {
-          const isBIValid = await firebaseAuth.validateBINumber(biNumber);
-          if (!isBIValid) {
-            document.getElementById('biError').textContent = 'Número de BI inválido ou não encontrado';
+      // Modal de Termos
+      const termsModal = document.getElementById('termsModal');
+      const showTermsBtn = document.getElementById('showTerms');
+      const closeTermsModalBtn = document.getElementById('closeTermsModal');
+      const acceptTermsBtn = document.getElementById('acceptTermsBtn');
+      const termsCheckbox = document.getElementById('terms');
+
+      showTermsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        termsModal.classList.add('show');
+      });
+
+      closeTermsModalBtn.addEventListener('click', () => {
+        termsModal.classList.remove('show');
+      });
+
+      acceptTermsBtn.addEventListener('click', () => {
+        termsCheckbox.checked = true;
+        termsModal.classList.remove('show');
+        document.getElementById('termsError').style.display = 'none';
+      });
+
+      termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) {
+          termsModal.classList.remove('show');
+        }
+      });
+
+      // Navegação entre passos
+      document.getElementById('nextStep1').addEventListener('click', async () => {
+        // Validação do passo 1
+        const fullName = document.getElementById('fullName').value.trim();
+        const biNumber = document.getElementById('biNumber').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        let isValid = true;
+
+        // Resetar erros
+        document.querySelectorAll('.error-message').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        if (fullName.length < 5) {
+          document.getElementById('nameError').textContent = 'Nome completo é obrigatório';
+          document.getElementById('nameError').style.display = 'block';
+          isValid = false;
+        }
+
+        // Validar BI localmente primeiro
+        if (!validateBINumber(biNumber)) {
+          document.getElementById('biError').textContent = 'Formato de BI inválido. Use: 123456789LA042';
+          document.getElementById('biError').style.display = 'block';
+          isValid = false;
+        } else {
+          // Se o formato local estiver correto, validar com a API
+          document.getElementById('biError').textContent = 'Validando BI...';
+          document.getElementById('biError').style.display = 'block';
+          document.getElementById('biError').style.color = 'var(--dark)';
+          
+          try {
+            const isBIValid = await window.firebaseAuth.validateBINumber(biNumber);
+            if (!isBIValid) {
+              document.getElementById('biError').textContent = 'Número de BI inválido ou não encontrado';
+              document.getElementById('biError').style.display = 'block';
+              document.getElementById('biError').style.color = 'var(--error)';
+              isValid = false;
+            } else {
+              // Verificar se BI já está em uso
+              const biExists = await window.firebaseAuth.checkIdentifierExists(biNumber);
+              if (biExists) {
+                document.getElementById('biError').textContent = 'Este Bilhete de Identidade já está em uso.';
+                document.getElementById('biError').style.display = 'block';
+                document.getElementById('biError').style.color = 'var(--error)';
+                alert('Este Bilhete de Identidade já está em uso.');
+                isValid = false;
+              } else {
+                document.getElementById('biError').style.display = 'none';
+              }
+            }
+          } catch (error) {
+            console.error("Erro na validação do BI:", error);
+            document.getElementById('biError').textContent = 'Erro ao validar BI. Tente novamente.';
             document.getElementById('biError').style.display = 'block';
             document.getElementById('biError').style.color = 'var(--error)';
             isValid = false;
-          } else {
-            // Verificar se BI já está em uso
-            const biExists = await firebaseAuth.checkIdentifierExists(biNumber);
-            if (biExists) {
-              document.getElementById('biError').textContent = 'Este Bilhete de Identidade já está em uso.';
-              document.getElementById('biError').style.display = 'block';
-              document.getElementById('biError').style.color = 'var(--error)';
-              alert('Este Bilhete de Identidade já está em uso.');
-              isValid = false;
-            } else {
-              document.getElementById('biError').style.display = 'none';
-            }
           }
-        } catch (error) {
-          console.error("Erro na validação do BI:", error);
-          document.getElementById('biError').textContent = 'Erro ao validar BI. Tente novamente.';
-          document.getElementById('biError').style.display = 'block';
-          document.getElementById('biError').style.color = 'var(--error)';
+        }
+
+        const emailError = window.firebaseAuth.validateEmail(email);
+        if (emailError) {
+          document.getElementById('emailError').textContent = emailError;
+          document.getElementById('emailError').style.display = 'block';
           isValid = false;
         }
-      }
 
-      const emailError = firebaseAuth.validateEmail(email);
-      if (emailError) {
-        document.getElementById('emailError').textContent = emailError;
-        document.getElementById('emailError').style.display = 'block';
-        isValid = false;
-      }
-
-      if (!/^\+?2449\d{8}$|^9\d{8}$/.test(phone)) {
-        document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX ou +2449XXXXXXXX';
-        document.getElementById('phoneError').style.display = 'block';
-        isValid = false;
-      } else {
-        // Verificar se telefone já está em uso
-        try {
-          const phoneExists = await firebaseAuth.checkIdentifierExists(firebaseAuth.normalizePhoneNumber(phone));
-          if (phoneExists) {
-            document.getElementById('phoneError').textContent = 'Este número de telefone já está em uso.';
-            document.getElementById('phoneError').style.display = 'block';
-            alert('Este número de telefone já está em uso.');
-            isValid = false;
-          }
-        } catch (error) {
-          console.error("Erro ao verificar telefone:", error);
-          document.getElementById('phoneError').textContent = 'Erro ao verificar telefone. Tente novamente.';
+        if (!/^\+?2449\d{8}$|^9\d{8}$/.test(phone)) {
+          document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX ou +2449XXXXXXXX';
           document.getElementById('phoneError').style.display = 'block';
           isValid = false;
+        } else {
+          // Verificar se telefone já está em uso
+          try {
+            const phoneExists = await window.firebaseAuth.checkIdentifierExists(window.firebaseAuth.normalizePhoneNumber(phone));
+            if (phoneExists) {
+              document.getElementById('phoneError').textContent = 'Este número de telefone já está em uso.';
+              document.getElementById('phoneError').style.display = 'block';
+              alert('Este número de telefone já está em uso.');
+              isValid = false;
+            }
+          } catch (error) {
+            console.error("Erro ao verificar telefone:", error);
+            document.getElementById('phoneError').textContent = 'Erro ao verificar telefone. Tente novamente.';
+            document.getElementById('phoneError').style.display = 'block';
+            isValid = false;
+          }
         }
-      }
 
-      if (isValid) {
-        showStep(2);
-      }
-    });
-
-    document.getElementById('prevStep2').addEventListener('click', () => {
-      showStep(1);
-    });
-
-    document.getElementById('nextStep2').addEventListener('click', () => {
-      // Validação do passo 2
-      const municipio = document.getElementById('municipio').value;
-      const bairro = document.getElementById('bairro').value.trim();
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      let isValid = true;
-
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
+        if (isValid) {
+          showStep(2);
+        }
       });
 
-      if (municipio === '') {
-        document.getElementById('municipioError').textContent = 'Selecione um município';
-        document.getElementById('municipioError').style.display = 'block';
-        isValid = false;
-      }
-
-      if (bairro.length < 2) {
-        document.getElementById('bairroError').textContent = 'Nome do bairro é obrigatório';
-        document.getElementById('bairroError').style.display = 'block';
-        isValid = false;
-      }
-
-      if (password.length < 8) {
-        document.getElementById('passwordError').textContent = 'A senha deve ter no mínimo 8 caracteres';
-        document.getElementById('passwordError').style.display = 'block';
-        isValid = false;
-      }
-
-      if (password !== confirmPassword) {
-        document.getElementById('confirmPasswordError').textContent = 'As senhas não coincidem';
-        document.getElementById('confirmPasswordError').style.display = 'block';
-        isValid = false;
-      }
-
-      if (isValid) {
-        showStep(3);
-      }
-    });
-
-    document.getElementById('prevStep3').addEventListener('click', () => {
-      showStep(2);
-    });
-
-    document.getElementById('nextStep3').addEventListener('click', () => {
-      // Validação do passo 3
-      const notificationPreferences = document.getElementById('notificationPreferences').value;
-
-      let isValid = true;
-
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
+      document.getElementById('prevStep2').addEventListener('click', () => {
+        showStep(1);
       });
 
-      if (notificationPreferences === '') {
-        document.getElementById('notificationPreferencesError').textContent = 'Selecione uma preferência de notificação';
-        document.getElementById('notificationPreferencesError').style.display = 'block';
-        isValid = false;
-      }
+      document.getElementById('nextStep2').addEventListener('click', () => {
+        // Validação do passo 2
+        const municipio = document.getElementById('municipio').value;
+        const bairro = document.getElementById('bairro').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (isValid) {
-        showStep(4);
-      }
-    });
+        let isValid = true;
 
-    document.getElementById('prevStep4').addEventListener('click', () => {
-      showStep(3);
-    });
-
-    // Modal de Termos
-    const termsModal = document.getElementById('termsModal');
-    const showTermsBtn = document.getElementById('showTerms');
-    const closeTermsModalBtn = document.getElementById('closeTermsModal');
-    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
-    const termsCheckbox = document.getElementById('terms');
-
-    showTermsBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      termsModal.classList.add('show');
-    });
-
-    closeTermsModalBtn.addEventListener('click', () => {
-      termsModal.classList.remove('show');
-    });
-
-    acceptTermsBtn.addEventListener('click', () => {
-      termsCheckbox.checked = true;
-      termsModal.classList.remove('show');
-      document.getElementById('termsError').style.display = 'none';
-    });
-
-    termsModal.addEventListener('click', (e) => {
-      if (e.target === termsModal) {
-        termsModal.classList.remove('show');
-      }
-    });
-
-    // Inicializar reCAPTCHA
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        await firebaseAuth.initializeRecaptcha('recaptcha-container');
-        console.log("reCAPTCHA inicializado com sucesso");
-      } catch (error) {
-        console.error("Falha ao inicializar reCAPTCHA:", error);
-        alert("Erro na verificação de segurança. Recarregue a página.");
-      }
-    });
-
-    // Envio do formulário
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Validar termos
-      const termsCheckbox = document.getElementById('terms').checked;
-      if (!termsCheckbox) {
-        document.getElementById('termsError').textContent = 'Você deve aceitar os termos e condições';
-        document.getElementById('termsError').style.display = 'block';
-        return;
-      }
-
-      // Obter todos os valores
-      const fullName = document.getElementById('fullName').value.trim();
-      const biNumber = document.getElementById('biNumber').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const municipio = document.getElementById('municipio').value;
-      const bairro = document.getElementById('bairro').value.trim();
-      const password = document.getElementById('password').value;
-      const notificationPreferences = document.getElementById('notificationPreferences').value;
-
-      // Mostrar spinner
-      document.getElementById('btnText').style.display = 'none';
-      document.getElementById('btnSpinner').style.display = 'inline-block';
-      document.getElementById('registerBtn').disabled = true;
-
-      try {
-        // Registrar usuário
-        const result = await firebaseAuth.registerUser({
-          fullName,
-          biNumber,
-          email,
-          phoneNumber: phone,
-          password,
-          municipio,
-          bairro,
-          notificationPreferences
+        // Resetar erros
+        document.querySelectorAll('.error-message').forEach(el => {
+          el.style.display = 'none';
         });
 
-        if (result.requiresEmailVerification) {
-          alert('Conta criada com sucesso! Verifique seu email para confirmar.');
-          window.location.href = 'login.html';
+        if (municipio === '') {
+          document.getElementById('municipioError').textContent = 'Selecione um município';
+          document.getElementById('municipioError').style.display = 'block';
+          isValid = false;
         }
-      } catch (error) {
-        console.error("Erro no registro:", error);
-        
-        // Esconder spinner
-        document.getElementById('btnText').style.display = 'inline';
-        document.getElementById('btnSpinner').style.display = 'none';
-        document.getElementById('registerBtn').disabled = false;
 
-        // Mostrar mensagem de erro apropriada
-        let errorMessage = 'Erro ao criar conta. Tente novamente.';
-        
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            errorMessage = 'Este email já está em uso.';
-            alert(errorMessage);
-            document.getElementById('emailError').textContent = errorMessage;
-            document.getElementById('emailError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'auth/invalid-email':
-            errorMessage = 'Email inválido.';
-            alert(errorMessage);
-            document.getElementById('emailError').textContent = errorMessage;
-            document.getElementById('emailError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'auth/weak-password':
-            errorMessage = 'Senha muito fraca. Use pelo menos 8 caracteres.';
-            alert(errorMessage);
-            document.getElementById('passwordError').textContent = errorMessage;
-            document.getElementById('passwordError').style.display = 'block';
-            showStep(2);
-            break;
-          case 'auth/invalid-phone-number':
-            errorMessage = 'Número de telefone inválido.';
-            alert(errorMessage);
-            document.getElementById('phoneError').textContent = errorMessage;
-            document.getElementById('phoneError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'custom/bi-already-in-use':
-            errorMessage = 'Este Bilhete de Identidade já está em uso.';
-            alert(errorMessage);
-            document.getElementById('biError').textContent = errorMessage;
-            document.getElementById('biError').style.display = 'block';
-            showStep(1);
-            break;
-          case 'custom/phone-already-in-use':
-            errorMessage = 'Este número de telefone já está em uso.';
-            alert(errorMessage);
-            document.getElementById('phoneError').textContent = errorMessage;
-            document.getElementById('phoneError').style.display = 'block';
-            showStep(1);
-            break;
-          default:
-            alert(errorMessage + '\n' + error.message);
+        if (bairro.length < 2) {
+          document.getElementById('bairroError').textContent = 'Nome do bairro é obrigatório';
+          document.getElementById('bairroError').style.display = 'block';
+          isValid = false;
         }
-      }
+
+        if (password.length < 8) {
+          document.getElementById('passwordError').textContent = 'A senha deve ter no mínimo 8 caracteres';
+          document.getElementById('passwordError').style.display = 'block';
+          isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+          document.getElementById('confirmPasswordError').textContent = 'As senhas não coincidem';
+          document.getElementById('confirmPasswordError').style.display = 'block';
+          isValid = false;
+        }
+
+        if (isValid) {
+          showStep(3);
+        }
+      });
+
+      document.getElementById('prevStep3').addEventListener('click', () => {
+        showStep(2);
+      });
+
+      document.getElementById('nextStep3').addEventListener('click', () => {
+        // Validação do passo 3
+        const notificationPreferences = document.getElementById('notificationPreferences').value;
+
+        let isValid = true;
+
+        // Resetar erros
+        document.querySelectorAll('.error-message').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        if (notificationPreferences === '') {
+          document.getElementById('notificationPreferencesError').textContent = 'Selecione uma preferência de notificação';
+          document.getElementById('notificationPreferencesError').style.display = 'block';
+          isValid = false;
+        }
+
+        if (isValid) {
+          showStep(4);
+        }
+      });
+
+      document.getElementById('prevStep4').addEventListener('click', () => {
+        showStep(3);
+      });
+
+      // Envio do formulário
+      document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Validar termos
+        const termsCheckbox = document.getElementById('terms').checked;
+        if (!termsCheckbox) {
+          document.getElementById('termsError').textContent = 'Você deve aceitar os termos e condições';
+          document.getElementById('termsError').style.display = 'block';
+          return;
+        }
+
+        // Obter todos os valores
+        const fullName = document.getElementById('fullName').value.trim();
+        const biNumber = document.getElementById('biNumber').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const municipio = document.getElementById('municipio').value;
+        const bairro = document.getElementById('bairro').value.trim();
+        const password = document.getElementById('password').value;
+        const notificationPreferences = document.getElementById('notificationPreferences').value;
+
+        // Mostrar spinner
+        document.getElementById('btnText').style.display = 'none';
+        document.getElementById('btnSpinner').style.display = 'inline-block';
+        document.getElementById('registerBtn').disabled = true;
+
+        try {
+          // Registrar usuário
+          const result = await window.firebaseAuth.registerUser({
+            fullName,
+            biNumber,
+            email,
+            phoneNumber: phone,
+            password,
+            municipio,
+            bairro,
+            notificationPreferences
+          });
+
+          if (result.requiresEmailVerification) {
+            alert('Conta criada com sucesso! Verifique seu email para confirmar.');
+            window.location.href = 'login.html';
+          }
+        } catch (error) {
+          console.error("Erro no registro:", error);
+          
+          // Esconder spinner
+          document.getElementById('btnText').style.display = 'inline';
+          document.getElementById('btnSpinner').style.display = 'none';
+          document.getElementById('registerBtn').disabled = false;
+
+          // Mostrar mensagem de erro apropriada
+          let errorMessage = 'Erro ao criar conta. Tente novamente.';
+          
+          switch (error.code || error.message) {
+            case 'auth/email-already-in-use':
+              errorMessage = 'Este email já está em uso.';
+              document.getElementById('emailError').textContent = errorMessage;
+              document.getElementById('emailError').style.display = 'block';
+              showStep(1);
+              break;
+            case 'auth/invalid-email':
+              errorMessage = 'Email inválido.';
+              document.getElementById('emailError').textContent = errorMessage;
+              document.getElementById('emailError').style.display = 'block';
+              showStep(1);
+              break;
+            case 'auth/weak-password':
+              errorMessage = 'Senha muito fraca. Use pelo menos 8 caracteres.';
+              document.getElementById('passwordError').textContent = errorMessage;
+              document.getElementById('passwordError').style.display = 'block';
+              showStep(2);
+              break;
+            case 'custom/bi-already-in-use':
+              errorMessage = 'Este Bilhete de Identidade já está em uso.';
+              document.getElementById('biError').textContent = errorMessage;
+              document.getElementById('biError').style.display = 'block';
+              showStep(1);
+              break;
+            case 'custom/phone-already-in-use':
+              errorMessage = 'Este número de telefone já está em uso.';
+              document.getElementById('phoneError').textContent = errorMessage;
+              document.getElementById('phoneError').style.display = 'block';
+              showStep(1);
+              break;
+            case 'Número de BI inválido ou não encontrado.':
+              errorMessage = 'Número de BI inválido ou não encontrado.';
+              document.getElementById('biError').textContent = errorMessage;
+              document.getElementById('biError').style.display = 'block';
+              showStep(1);
+              break;
+            default:
+              errorMessage = `Erro: ${error.message}`;
+              document.getElementById('termsError').textContent = errorMessage;
+              document.getElementById('termsError').style.display = 'block';
+          }
+          alert(errorMessage);
+        }
+      });
     });
   </script>
 </body>
