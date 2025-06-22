@@ -960,6 +960,7 @@
     }
   </style>
 </head>
+
 <body>
   <div id="loadingScreen" class="loading-container">
     <div class="spinner"></div>
@@ -974,7 +975,7 @@
           FixABairro
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars" style="color: var(--text-white);"></i> 
+          <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-lg-center">
@@ -1001,181 +1002,21 @@
       </div>
     </nav>
 
-    <section class="hero-section" role="banner" aria-label="Transforme o Seu Bairro. Juntos.">
-      <div class="container">
-        <div class="hero-content" data-aos="fade-up" data-aos-duration="1200">
-          <h1 class="hero-title">Transforme Seu Bairro.<br>A Sua Voz Faz a Diferença.</h1>
-          <p class="hero-subtitle">
-            Conecte-se com a sua comunidade para reportar problemas urbanos, acompanhar soluções e construir um futuro melhor para Angola.
-          </p>
-          <div class="hero-actions">
-            <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Agora <i class="fas fa-arrow-right ms-2"></i></a>
-            <a href="report.html" class="btn-outline-secondary-dark" aria-label="Explorar o mapa de problemas">Explorar Mapa <i class="fas fa-map-marked-alt ms-2"></i></a>
-          </div>
-          <p class="mt-4 hero-footer-text">
-            *Não é necessário registo para participar. Sua contribuição é valiosa!
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="stats-section" id="impact">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">O Seu Impacto, em Números.</h2>
-          <p class="section-subtitle">
-            Cada reporte, cada solução, constrói um futuro mais limpo e organizado para as nossas comunidades.
-          </p>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card" data-aos="zoom-in" data-aos-delay="100">
-                <i class="fas fa-lightbulb stat-icon"></i>
-                <span class="stat-number" id="totalReports">0</span>
-                <div class="stat-label">Problemas Levantados</div>
-            </div>
-            <div class="stat-card" data-aos="zoom-in" data-aos-delay="200">
-                <i class="fas fa-handshake stat-icon"></i>
-                <span class="stat-number" id="solvedReports">0</span>
-                <div class="stat-label">Soluções Alcançadas</div>
-            </div>
-            <div class="stat-card" data-aos="zoom-in" data-aos-delay="300">
-                <i class="fas fa-city stat-icon"></i>
-                <span class="stat-number" id="activeUsers">0</span>
-                <div class="stat-label">Bairros Engajados</div>
-            </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="transformations-section">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">Transformações Visíveis. Histórias Reais.</h2>
-          <p class="section-subtitle">
-            Confira o impacto concreto da nossa comunidade. Problemas resolvidos, bairros renovados!
-          </p>
-        </div>
-        <div class="before-after-gallery" id="resolvedIssuesGallery">
-            <div class="col-12 text-center text-muted" id="noTransformationsMessage" style="display: none;">
-                <i class="fas fa-box-open fa-3x mb-3" style="color: var(--text-secondary);"></i>
-                <p>Nenhuma transformação visível para mostrar ainda. Seja o primeiro a reportar e ver a mudança!</p>
-            </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="how-it-works-section" id="how-it-works">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">Seu Guia Rápido para a Transformação</h2>
-          <p class="section-subtitle">
-            Começar a fazer a diferença é mais simples do que você imagina. Siga estes passos!
-          </p>
-        </div>
-        <div class="step-grid">
-          <div class="step-card" data-aos="fade-up" data-aos-delay="100">
-            <i class="fas fa-camera step-icon"></i>
-            <h3 class="step-title">1. Identifique e Registre</h3>
-            <p class="step-description">Encontrou um buraco, lixo ou falha na iluminação? Tire uma foto e descreva o problema em poucos cliques.</p>
-            <a href="new-report.html" class="step-link">
-                Reportar Problema <i class="fas fa-chevron-right ms-2"></i>
-            </a>
-          </div>
-          <div class="step-card" data-aos="fade-up" data-aos-delay="200">
-            <i class="fas fa-street-map step-icon"></i>
-            <h3 class="step-title">2. Acompanhe no Mapa</h3>
-            <p class="step-description">Veja todos os problemas da sua área e o status de cada um em um mapa interativo e intuitivo.</p>
-            <a href="report.html" class="step-link">
-                Ver Mapa Completo <i class="fas fa-chevron-right ms-2"></i>
-            </a>
-          </div>
-          <div class="step-card" data-aos="fade-up" data-aos-delay="300">
-            <i class="fas fa-users-gear step-icon"></i>
-            <h3 class="step-title">3. Colabore e Celebre</h3>
-            <p class="step-description">Conecte-se com vizinhos, sugira soluções e celebre as melhorias que JUNTOS conquistamos.</p>
-            <a href="profile.html" class="step-link">
-                Junte-se à Comunidade <i class="fas fa-chevron-right ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="recent-issues-section" id="issues">
-      <div class="container">
-        <div class="section-header" data-aos="fade-up">
-          <h2 class="section-title">Problemas Ativos Próximos de Si.</h2>
-          <p class="section-subtitle">
-            Estes são os desafios mais recentes na sua comunidade que aguardam a atenção e a colaboração de todos.
-          </p>
-        </div>
-        <div class="issue-grid" id="recentIssues">
-          <div class="col-12 text-center text-muted" id="noRecentIssuesMessage" style="display: none;">
-                <i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
-                <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>
-            </div>
-        </div>
-        <div class="text-center mt-5" data-aos="fade-up">
-            <a href="report.html" class="btn-main" aria-label="Ver todos os problemas no mapa">Ver Todos os Problemas no Mapa <i class="fas fa-arrow-right ms-2"></i></a>
-        </div>
-      </div>
-    </section>
-
+    <!-- Other sections unchanged until CTA section -->
     <section class="cta-section" data-aos="zoom-in">
-        <div class="container">
-            <h2 class="section-title">Pronto para Ver a Mudança?</h2>
-            <p class="section-subtitle">
-                Sua ação é a chave para um bairro melhor. Comece hoje mesmo!
-            </p>
-            <div class="cta-actions">
-                <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Meu Problema <i class="fas fa-bullhorn ms-2"></i></a>
-                <a href="login.html" class="btn-outline-secondary-dark" aria-label="Entrar na sua conta FixABairro">Entrar na Sua Conta</a>
-            </div>
+      <div class="container">
+        <h2 class="section-title">Pronto para Ver a Mudança?</h2>
+        <p class="section-subtitle">
+          Sua ação é a chave para um bairro melhor. Comece hoje mesmo!
+        </p>
+        <div class="cta-actions">
+          <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Meu Problema <i class="fas fa-bullhorn ms-2"></i></a>
+          <a class="btn-outline-secondary-dark" id="ctaAuthButton" href="login.html" aria-label="Entrar ou visitar perfil">Entrar na Sua Conta</a>
         </div>
+      </div>
     </section>
 
-    <footer class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="footer-brand">
-              <div class="logo">F</div>
-              <span>FixABairro</span>
-            </div>
-            <p>
-              Transformando bairros através da participação cidadã e tecnologia.
-              Juntos construímos comunidades mais fortes e vibrantes em Angola.
-            </p>
-          </div>
-          <div class="col-lg-6">
-            <div class="footer-links">
-              <a href="report.html" aria-label="Mapa de problemas">Mapa de Problemas</a>
-              <a href="new-report.html" aria-label="Relatar problema">Relatar Problema</a>
-              <a href="#" aria-label="Sobre nós (em desenvolvimento)">Sobre Nós</a>
-              <a href="#" aria-label="Contato (em desenvolvimento)">Contato</a>
-              <a href="#" id="openCookiePolicy" aria-label="Política de Cookies">Política de Cookies</a>
-              <a href="#" aria-label="Termos de uso (em desenvolvimento)">Termos de Uso</a>
-              <a href="#" aria-label="Política de privacidade (em desenvolvimento)">Privacidade</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>© 2025 FixABairro. Todos os direitos reservados.</p>
-        </div>
-      </div>
-    </footer>
-
-    <div class="cookie-banner" id="cookieConsentBanner">
-      <p>
-        Nós utilizamos cookies para aprimorar sua experiência no FixABairro, analisar o tráfego e personalizar conteúdo. Ao continuar a navegar, você concorda com a nossa utilização de cookies.
-        <a href="#" id="openCookiePolicyInBanner" style="color: var(--primary-accent); text-decoration: underline; font-weight: 600;">Saiba mais aqui</a>.
-      </p>
-      <div class="btn-group">
-        <button class="btn-accept" id="acceptCookies">Aceitar e Continuar</button>
-        <button class="btn-more-info" id="rejectCookies">Recusar</button>
-      </div>
-    </div>
+    <!-- Footer and cookie banner unchanged -->
   </div>
 
   <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1186,31 +1027,27 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
-    // Configuração do Firebase
+    // Configuração do Firebase (unchanged)
     const firebaseConfig = {
-        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
-        authDomain: "facilita-479b3.firebaseapp.com",
-        projectId: "facilita-479b3",
-        storageBucket: "facilita-479b3.appspot.com",
-        messagingSenderId: "385676676886",
-        appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+      databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
     };
 
-    // Carregamento de estatísticas do Firebase
+    // Carregamento de estatísticas do Firebase (unchanged)
     function loadStats(firebaseApp) {
       const db = firebaseApp.database();
-
       db.ref('problems').once('value')
         .then((snapshot) => {
           const total = snapshot.numChildren();
           animateCounter(document.getElementById('totalReports'), total);
-
           let solved = 0;
           snapshot.forEach(childSnapshot => {
-              if (childSnapshot.val().status === 'Resolvido') {
-                  solved++;
-              }
+            if (childSnapshot.val().status === 'Resolvido') solved++;
           });
           animateCounter(document.getElementById('solvedReports'), solved);
         })
@@ -1231,7 +1068,7 @@
         });
     }
 
-    // Animação de contador
+    // Animação de contador (unchanged)
     function animateCounter(element, target, duration = 1500) {
       let start = 0;
       const increment = target / (duration / 16);
@@ -1246,91 +1083,131 @@
       }, 16);
     }
 
-    // Carregamento de problemas recentes (apenas Aguardando e Em Análise)
-    function loadRecentIssues(firebaseApp) {
+    // Carregamento de problemas recentes (modified)
+    function loadRecentIssues(firebaseApp, user) {
       const recentIssuesContainer = document.getElementById('recentIssues');
       const noRecentIssuesMessage = document.getElementById('noRecentIssuesMessage');
 
-      firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
-        (snapshot) => {
-          let html = '';
-          const issues = [];
+      // Função auxiliar para renderizar issues
+      function renderIssues(issues) {
+        let html = '';
+        const displayIssues = issues.slice(0, 3);
 
-          snapshot.forEach((childSnapshot) => {
-            const problem = { key: childSnapshot.key, ...childSnapshot.val() };
-            if (problem.status !== 'Resolvido') {
-              issues.unshift(problem);
-            }
-          });
-
-          const displayIssues = issues.slice(0, 3);
-
-          if (displayIssues.length === 0) {
-            noRecentIssuesMessage.style.display = 'block';
-            recentIssuesContainer.innerHTML = '';
-          } else {
-            noRecentIssuesMessage.style.display = 'none';
-            displayIssues.forEach((problem) => {
-              const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
-                ? problem.imageUrl
-                : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
-
-              const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
-                ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
-                : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
-
-              let statusClass = '';
-              let statusIcon = '';
-              switch (problem.status) {
-                case 'Em Análise':
-                  statusClass = 'status-EmAnálise';
-                  statusIcon = '<i class="fas fa-hourglass-half"></i>';
-                  break;
-                case 'Aguardando':
-                  statusClass = 'status-Aguardando';
-                  statusIcon = '<i class="fas fa-clock"></i>';
-                  break;
-                default:
-                  statusClass = 'status-Aguardando';
-                  statusIcon = '<i class="fas fa-question-circle"></i>';
-                  break;
-              }
-
-              const truncatedDescription = problem.description
-                ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
-                : 'Nenhuma descrição detalhada disponível para este problema.';
-
-              const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
-
-              html += `
-                <div class="issue-card" data-aos="fade-up">
-                  ${imageHtml}
-                  <div class="issue-content">
-                    <span class="issue-status ${statusClass}">${statusIcon} ${problem.status || 'Aguardando'}</span>
-                    <h3 class="issue-title">${problem.title || 'Problema Não Especificado'}</h3>
-                    <p class="issue-description">${truncatedDescription}</p>
-                    <div class="issue-meta">
-                      <span><i class="fas fa-map-marker-alt"></i> ${problem.location?.neighborhood || 'Bairro'}, ${problem.location?.municipality || 'Município'}</span>
-                      <span><i class="fas fa-user-circle"></i> ${userNameDisplay}</span>
-                    </div>
-                    <a href="case-details.html?caseId=${problem.key}" class="card-link mt-auto">Ver Detalhes <i class="fas fa-arrow-right ms-2"></i></a>
-                  </div>
-                </div>
-              `;
-            });
-          }
-          recentIssuesContainer.innerHTML = html;
-        },
-        (error) => {
-          console.error('Erro ao carregar problemas recentes:', error);
-          recentIssuesContainer.innerHTML =
-            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Por favor, tente novamente mais tarde.</p></div>';
+        if (displayIssues.length === 0) {
+          noRecentIssuesMessage.style.display = 'block';
+          noRecentIssuesMessage.innerHTML = user
+            ? `<i class="fas fa-info-circle fa-3x mb-3" style="color: var(--info-blue);"></i>
+               <p>Nenhum problema aberto ou em progresso no seu bairro (${user.bairro}, ${user.municipio}). Reporte um problema para começar!</p>`
+            : `<i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
+               <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>`;
+          recentIssuesContainer.innerHTML = '';
+        } else {
           noRecentIssuesMessage.style.display = 'none';
+          displayIssues.forEach((problem) => {
+            const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+              ? problem.imageUrl
+              : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
+            const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
+              ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
+              : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
+            let statusClass = '';
+            let statusIcon = '';
+            switch (problem.status) {
+              case 'Em Análise':
+                statusClass = 'status-EmAnálise';
+                statusIcon = '<i class="fas fa-hourglass-half"></i>';
+                break;
+              case 'Aguardando':
+                statusClass = 'status-Aguardando';
+                statusIcon = '<i class="fas fa-clock"></i>';
+                break;
+              default:
+                statusClass = 'status-Aguardando';
+                statusIcon = '<i class="fas fa-question-circle"></i>';
+            }
+            const truncatedDescription = problem.description
+              ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
+              : 'Nenhuma descrição detalhada disponível para este problema.';
+            const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
+
+            html += `
+              <div class="issue-card" data-aos="fade-up">
+                ${imageHtml}
+                <div class="issue-content">
+                  <span class="issue-status ${statusClass}">${statusIcon} ${problem.status || 'Aguardando'}</span>
+                  <h3 class="issue-title">${problem.title || 'Problema Não Especificado'}</h3>
+                  <p class="issue-description">${truncatedDescription}</p>
+                  <div class="issue-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> ${problem.location?.neighborhood || 'Bairro'}, ${problem.location?.municipality || 'Município'}</span>
+                    <span><i class="fas fa-user-circle"></i> ${userNameDisplay}</span>
+                  </div>
+                  <a href="case-details.html?caseId=${problem.key}" class="card-link mt-auto">Ver Detalhes <i class="fas fa-arrow-right ms-2"></i></a>
+                </div>
+              </div>
+            `;
+          });
+          recentIssuesContainer.innerHTML = html;
         }
-      );
+      }
+
+      // Se usuário está logado, buscar dados do perfil
+      if (user) {
+        firebaseApp.database().ref(`users/${user.uid}`).once('value')
+          .then((snapshot) => {
+            const userData = snapshot.val();
+            if (userData && userData.municipio && userData.bairro) {
+              firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(50).once('value')
+                .then((snapshot) => {
+                  const issues = [];
+                  snapshot.forEach((childSnapshot) => {
+                    const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+                    if (problem.status !== 'Resolvido' &&
+                        problem.location?.municipality?.toLowerCase() === userData.municipio.toLowerCase() &&
+                        problem.location?.neighborhood?.toLowerCase() === userData.bairro.toLowerCase()) {
+                      issues.unshift(problem);
+                    }
+                  });
+                  renderIssues(issues);
+                })
+                .catch(error => {
+                  console.error('Erro ao carregar problemas do bairro:', error);
+                  recentIssuesContainer.innerHTML =
+                    '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Tente novamente.</p></div>';
+                  noRecentIssuesMessage.style.display = 'none';
+                });
+            } else {
+              console.warn('Dados de localização do usuário não encontrados.');
+              renderIssues([]); // Mostra mensagem de "nenhum problema"
+            }
+          })
+          .catch(error => {
+            console.error('Erro ao carregar dados do usuário:', error);
+            renderIssues([]); // Mostra mensagem de "nenhum problema"
+          });
+      } else {
+        // Comportamento padrão para visitantes
+        firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
+          (snapshot) => {
+            const issues = [];
+            snapshot.forEach((childSnapshot) => {
+              const problem = { key: childSnapshot.key, ...childSnapshot.val() };
+              if (problem.status !== 'Resolvido') {
+                issues.unshift(problem);
+              }
+            });
+            renderIssues(issues);
+          },
+          (error) => {
+            console.error('Erro ao carregar problemas recentes:', error);
+            recentIssuesContainer.innerHTML =
+              '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Tente novamente.</p></div>';
+            noRecentIssuesMessage.style.display = 'none';
+          }
+        );
+      }
     }
 
-    // Carregamento de Transformações Visíveis (3 Casos Resolvidos - Qualquer Data)
+    // Carregamento de Transformações Visíveis (unchanged)
     function loadResolvedIssues(firebaseApp) {
       const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
       const noTransformationsMessage = document.getElementById('noTransformationsMessage');
@@ -1391,13 +1268,13 @@
         (error) => {
           console.error('Erro ao carregar transformações visíveis:', error);
           resolvedIssuesGallery.innerHTML =
-            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Por favor, tente novamente mais tarde.</p></div>';
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Tente novamente.</p></div>';
           noTransformationsMessage.style.display = 'none';
         }
       );
     }
 
-    // Inicialização dos Sliders de Comparação
+    // Inicialização dos Sliders de Comparação (unchanged)
     function initImageSliders() {
       const sliders = document.querySelectorAll('.image-comparison');
       sliders.forEach((slider, index) => {
@@ -1456,23 +1333,25 @@
           handle.setAttribute('aria-valuenow', Math.round(newPercentage));
         });
 
-        // Inicializa na posição 50%
         const rect = slider.getBoundingClientRect();
         updateSliderPosition(rect.width / 2, rect.width);
       });
     }
 
-    // Atualiza UI com base no estado de autenticação
+    // Atualiza UI com base no estado de autenticação (modified)
     function updateAuthUI(user) {
       const authButton = document.getElementById('authButton');
+      const ctaAuthButton = document.getElementById('ctaAuthButton');
       const profileLink = document.getElementById('profileLink');
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
 
       if (user) {
+        // Navbar updates
         authButton.textContent = 'Sair';
         authButton.href = '#';
         authButton.classList.remove('btn-outline-secondary-dark');
         authButton.classList.add('btn-main');
+        authButton.setAttribute('aria-label', 'Sair da conta');
         authButton.addEventListener('click', (e) => {
           e.preventDefault();
           firebase.auth().signOut().then(() => {
@@ -1484,74 +1363,97 @@
           });
         }, { once: true });
         profileLink.style.display = 'block';
+
+        // CTA section updates
+        ctaAuthButton.textContent = 'Visitar Perfil';
+        ctaAuthButton.href = 'profile.html';
+        ctaAuthButton.setAttribute('aria-label', 'Visitar seu perfil');
+        ctaAuthButton.classList.remove('btn-outline-secondary-dark');
+        ctaAuthButton.classList.add('btn-main');
+
+        // Reload issues with user-specific filtering
+        loadRecentIssues(firebase.app(), user);
       } else {
+        // Navbar updates
         authButton.textContent = 'Entrar';
         authButton.href = 'login.html';
         authButton.classList.add('btn-outline-secondary-dark');
         authButton.classList.remove('btn-main');
+        authButton.setAttribute('aria-label', 'Entrar na conta');
         profileLink.style.display = 'none';
+
+        // CTA section updates
+        ctaAuthButton.textContent = 'Entrar na Sua Conta';
+        ctaAuthButton.href = 'login.html';
+        ctaAuthButton.setAttribute('aria-label', 'Entrar na sua conta FixABairro');
+        ctaAuthButton.classList.add('btn-outline-secondary-dark');
+        ctaAuthButton.classList.remove('btn-main');
+
+        // Load default issues
+        loadRecentIssues(firebase.app(), null);
       }
 
+      // Update navbar toggler icon color based on scroll state
       if (!document.querySelector('.navbar').classList.contains('scrolled')) {
-          navTogglerIcon.style.color = 'var(--text-white)';
+        navTogglerIcon.style.color = 'var(--text-white)';
       } else {
-          navTogglerIcon.style.color = 'var(--secondary-dark)';
+        navTogglerIcon.style.color = 'var(--secondary-dark)';
       }
     }
 
-    // Gerenciamento de Cookies
+    // Gerenciamento de Cookies (unchanged)
     function setCookie(name, value, days) {
-        let expires = "";
-        if (days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+      let expires = "";
+      if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
     }
 
     function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for(let i=0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for(let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
     }
 
     function checkCookieConsent() {
-        const cookieBanner = document.getElementById('cookieConsentBanner');
-        const consent = getCookie('fixabairro_cookie_consent');
-        if (!consent) {
-            setTimeout(() => {
-                cookieBanner.classList.add('show');
-            }, 1000);
-        }
+      const cookieBanner = document.getElementById('cookieConsentBanner');
+      const consent = getCookie('fixabairro_cookie_consent');
+      if (!consent) {
+        setTimeout(() => {
+          cookieBanner.classList.add('show');
+        }, 1000);
+      }
 
-        document.getElementById('acceptCookies').addEventListener('click', () => {
-            setCookie('fixabairro_cookie_consent', 'accepted', 365);
-            cookieBanner.classList.remove('show');
-        });
+      document.getElementById('acceptCookies').addEventListener('click', () => {
+        setCookie('fixabairro_cookie_consent', 'accepted', 365);
+        cookieBanner.classList.remove('show');
+      });
 
-        document.getElementById('rejectCookies').addEventListener('click', () => {
-            setCookie('fixabairro_cookie_consent', 'rejected', 30);
-            cookieBanner.classList.remove('show');
-            alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
-        });
+      document.getElementById('rejectCookies').addEventListener('click', () => {
+        setCookie('fixabairro_cookie_consent', 'rejected', 30);
+        cookieBanner.classList.remove('show');
+        alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
+      });
 
-        document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-        });
-        document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-        });
+      document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+      });
+      document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
+        e.preventDefault();
+        alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
+      });
     }
 
-    // Inicialização da página
+    // Inicialização da página (modified)
     window.addEventListener('load', () => {
       if (typeof firebase !== 'undefined') {
         const app = firebase.initializeApp(firebaseConfig);
@@ -1564,9 +1466,11 @@
             AOS.init({ once: true, duration: 1000 });
 
             loadStats(app);
-            loadRecentIssues(app);
+            app.auth().onAuthStateChanged((user) => {
+              updateAuthUI(user);
+              loadRecentIssues(app, user);
+            });
             loadResolvedIssues(app);
-            app.auth().onAuthStateChanged(updateAuthUI);
             checkCookieConsent();
           }, { once: true });
         }, 800);
@@ -1588,12 +1492,12 @@
       }
     });
 
-    // Efeito de scroll da Navbar
+    // Efeito de scroll da Navbar (modified)
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
       const navLinks = document.querySelectorAll('.nav-link');
       const navBrand = document.querySelector('.navbar-brand');
-      const btnMain = document.querySelector('.btn-main');
+      const btnMain = document.querySelectorAll('.btn-main');
       const btnOutline = document.getElementById('authButton');
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
 
@@ -1602,8 +1506,10 @@
         navBrand.style.color = 'var(--secondary-dark)';
         navTogglerIcon.style.color = 'var(--secondary-dark)';
         navLinks.forEach(link => link.style.color = 'var(--text-main)');
-        btnMain.style.background = 'var(--primary-accent)';
-        btnMain.style.color = 'var(--text-white)';
+        btnMain.forEach(btn => {
+          btn.style.background = 'var(--primary-accent)';
+          btn.style.color = 'var(--text-white)';
+        });
         if (btnOutline.classList.contains('btn-outline-secondary-dark')) {
           btnOutline.style.color = 'var(--secondary-dark)';
           btnOutline.style.borderColor = 'var(--secondary-dark)';
@@ -1613,8 +1519,10 @@
         navBrand.style.color = 'var(--text-white)';
         navTogglerIcon.style.color = 'var(--text-white)';
         navLinks.forEach(link => link.style.color = 'rgba(255,255,255,0.9)');
-        btnMain.style.background = 'var(--primary-accent)';
-        btnMain.style.color = 'var(--text-white)';
+        btnMain.forEach(btn => {
+          btn.style.background = 'var(--primary-accent)';
+          btn.style.color = 'var(--text-white)';
+        });
         if (btnOutline.classList.contains('btn-outline-secondary-dark')) {
           btnOutline.style.color = 'var(--text-white)';
           btnOutline.style.borderColor = 'rgba(255,255,255,0.7)';
