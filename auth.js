@@ -1,4 +1,3 @@
-
 const firebaseConfig = {
   apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
   authDomain: "facilita-479b3.firebaseapp.com",
@@ -6,7 +5,7 @@ const firebaseConfig = {
   projectId: "facilita-479b3",
   storageBucket: "facilita-479b3.appspot.com",
   messagingSenderId: "385676676886",
-  appId: "1:385676676886:web:697d6e7f3abc6c0da94a37"
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
 };
 
 const firebaseAuth = {
@@ -119,14 +118,14 @@ const firebaseAuth = {
     }
   },
 
-  async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro, notificationPreferences }) {
+  async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro }) {
     console.log("Iniciando registro de usuário:", { fullName });
 
     if (!fullName || !biNumber || !email || !phoneNumber || !password || !municipio || !bairro) {
       throw new Error("Por favor, preencha todos os campos obrigatórios.");
     }
 
-    let user = null;
+    let user;
     let finalEmail = email;
 
     try {
@@ -146,6 +145,17 @@ const firebaseAuth = {
 
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
 
+      // Verificar se BI ou telefone já estão em uso
+      const biMapping = await this._firestore.collection('authMappings').doc(biNumber).get();
+      if (biMapping.exists) {
+        throw new Error("custom/bi-already-in-use");
+      }
+
+      const phoneMapping = await this._firestore.collection('authMappings').doc(normalizedPhone).get();
+      if (phoneMapping.exists) {
+        throw new Error("custom/phone-already-in-use");
+      }
+
       // Criar usuário com email
       const userCredential = await this._auth.createUserWithEmailAndPassword(email, password);
       user = userCredential.user;
@@ -154,8 +164,8 @@ const firebaseAuth = {
       await user.sendEmailVerification();
       console.log(`Usuário ${user.uid} registrado via email.`);
 
-      // Salvar dados no Firestore
-      await this._firestore.collection('users').doc(user.uid).set({
+      // Salvar dados no Firestore na coleção 'usuarios'
+      await this._firestore.collection('usuarios').doc(user.uid).set({
         name: fullName,
         biNumber,
         email,
@@ -163,11 +173,7 @@ const firebaseAuth = {
         municipio,
         bairro,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        registrationMethod: 'email',
-        notificationPreferences: {
-          email: notificationPreferences.email || false,
-          whatsapp: notificationPreferences.whatsapp || false,
-        },
+        registrationMethod: 'email'
       });
 
       // Criar mapeamento de BI e telefone para autenticação
