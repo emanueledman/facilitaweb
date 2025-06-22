@@ -870,7 +870,7 @@
   <script>
     // --- Configuração do Firebase ---
     const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw", // REPLACE WITH YOUR ACTUAL FIREBASE API KEY
       authDomain: "facilita-479b3.firebaseapp.com",
       databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
       projectId: "facilita-479b3",
@@ -1235,7 +1235,8 @@
             isValid = false;
         } else {
             // Se o formato for válido, dispara a validação externa se ainda não foi feita ou se o BI mudou
-            if (!formState.biValidatedExternally || biNumberInput.value !== formState.formData.biNumber) {
+            // Also, avoid re-validating if already successfully validated with the current BI number
+            if (!formState.biValidatedExternally || biNumberInput.value.toUpperCase() !== formState.formData.biNumber) {
                 biSuccessMessage.textContent = 'Verificando BI...';
                 displayError(biNumberInput, ''); // Clear any previous error
                 try {
@@ -1244,16 +1245,18 @@
                         displayError(biNumberInput, 'Número de BI inválido ou não encontrado.');
                         biSuccessMessage.textContent = '';
                         isValid = false;
+                        formState.biValidatedExternally = false;
                     } else {
                         biSuccessMessage.textContent = 'BI validado com sucesso!';
                         displayError(biNumberInput, '');
                         formState.biValidatedExternally = true;
-                        formState.formData.biNumber = biNumberInput.value; // Store validated BI
+                        formState.formData.biNumber = biNumberInput.value.toUpperCase(); // Store validated BI in uppercase
                     }
                 } catch (error) {
                     displayError(biNumberInput, error.message || 'Erro ao validar BI. Tente novamente.');
                     biSuccessMessage.textContent = '';
                     isValid = false;
+                    formState.biValidatedExternally = false;
                 }
             } else {
                 // Already validated and BI hasn't changed
@@ -1280,22 +1283,22 @@
     // --- Integração com API Externa de BI ---
     async function validateBINumberExternal(biNumber) {
         try {
-            // Use a sua URL da API de validação de BI.
-            // Para desenvolvimento, pode ser 'http://127.0.0.1:5000/validate-bi/'
-            // Em produção, use a URL do seu backend no Render.
-            const apiUrl = `https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`; // Replace with your actual backend URL
+            // Use the actual URL of your BI validation API on Render.com
+            const apiUrl = `https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`; 
 
             const response = await fetch(apiUrl);
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Erro ao validar BI");
+                // If the response is not OK (e.g., 400, 500), throw an error with the message from the backend
+                throw new Error(data.message || "Erro ao validar BI.");
             }
             
-            return data.success; // Retorna true se o BI for válido, false caso contrário
+            return data.success; // Returns true if the BI is valid, false otherwise
         } catch (error) {
             console.error("Erro na validação do BI com a API externa:", error);
-            throw new Error(error.message || "Não foi possível conectar ao serviço de validação de BI.");
+            // Provide a user-friendly message, but log the full error for debugging
+            throw new Error(error.message || "Não foi possível conectar ao serviço de validação de BI. Verifique sua conexão ou tente novamente mais tarde.");
         }
     }
 
@@ -1337,14 +1340,13 @@
         // Initialize reCAPTCHA on step 3 if not already done
         if (formState.currentStep === 3 && !formState.recaptchaVerifier) {
             try {
-                // Use a key de site reCAPTCHA válida, ou configure Firebase para usar uma
-                // Isso inicializa o reCAPTCHA invisível
+                // Use a key de site reCAPTCHA válida. This will be an 'invisible' reCAPTCHA.
                 formState.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
                     'size': 'invisible',
                     'callback': (response) => {
                         console.log("reCAPTCHA resolvido:", response);
                         formState.recaptchaResolved = true;
-                        registerBtn.disabled = !formState.formData.termsAccepted; // Enable if terms accepted
+                        registerBtn.disabled = !(formState.formData.termsAccepted); // Enable if terms accepted
                     },
                     'expired-callback': () => {
                         console.warn("reCAPTCHA expirado.");
@@ -1409,23 +1411,29 @@
     biNumberInput.addEventListener('blur', async () => {
         const formatValid = validateField(biNumberInput, validateBiFormat);
         if (formatValid) {
-            biSuccessMessage.textContent = 'Verificando BI...';
-            displayError(biNumberInput, ''); // Clear any previous error
-            try {
-                const isValidBi = await validateBINumberExternal(biNumberInput.value);
-                if (!isValidBi) {
-                    displayError(biNumberInput, 'Número de BI inválido ou não encontrado.');
+            // Only re-validate externally if the BI number has actually changed or wasn't validated yet
+            if (biNumberInput.value.toUpperCase() !== formState.formData.biNumber || !formState.biValidatedExternally) {
+                biSuccessMessage.textContent = 'Verificando BI...';
+                displayError(biNumberInput, ''); // Clear any previous error
+                try {
+                    const isValidBi = await validateBINumberExternal(biNumberInput.value);
+                    if (!isValidBi) {
+                        displayError(biNumberInput, 'Número de BI inválido ou não encontrado.');
+                        biSuccessMessage.textContent = '';
+                        formState.biValidatedExternally = false;
+                    } else {
+                        biSuccessMessage.textContent = 'BI validado com sucesso!';
+                        displayError(biNumberInput, '');
+                        formState.biValidatedExternally = true;
+                        formState.formData.biNumber = biNumberInput.value.toUpperCase(); // Store validated BI
+                    }
+                } catch (error) {
+                    displayError(biNumberInput, error.message || 'Erro ao validar BI. Tente novamente.');
                     biSuccessMessage.textContent = '';
                     formState.biValidatedExternally = false;
-                } else {
-                    biSuccessMessage.textContent = 'BI validado com sucesso!';
-                    displayError(biNumberInput, '');
-                    formState.biValidatedExternally = true;
                 }
-            } catch (error) {
-                displayError(biNumberInput, error.message || 'Erro ao validar BI. Tente novamente.');
-                biSuccessMessage.textContent = '';
-                formState.biValidatedExternally = false;
+            } else {
+                biSuccessMessage.textContent = 'BI validado com sucesso!'; // Show success if already validated
             }
         } else {
             biSuccessMessage.textContent = '';
@@ -1469,6 +1477,7 @@
       // Ensure reCAPTCHA is explicitly executed for final submission
       if (formState.recaptchaVerifier) {
           try {
+            // This forces reCAPTCHA to execute and return a token
             const token = await formState.recaptchaVerifier.execute();
             console.log("reCAPTCHA token:", token);
             formState.recaptchaResolved = true; // Confirm token received
@@ -1530,14 +1539,37 @@
       } catch (error) {
         console.error("Erro no registro Firebase:", error);
         let errorMessage = "Erro ao criar conta. Por favor, tente novamente.";
-        if (error.code === 'auth/email-already-in-use') {
-          errorMessage = "Este email já está em uso.";
-        } else if (error.code === 'auth/weak-password') {
-          errorMessage = "A senha é muito fraca. Use pelo menos 6 caracteres, incluindo letras e números."; // Firebase minimum is 6
-        } else if (error.code === 'auth/invalid-email') {
-          errorMessage = "O email fornecido é inválido.";
+        
+        switch (error.code) {
+            case 'auth/email-already-in-use':
+                errorMessage = "Este email já está em uso.";
+                displayError(emailInput, errorMessage);
+                formState.currentStep = 1; // Go back to step 1 to show the email error
+                break;
+            case 'auth/weak-password':
+                errorMessage = "A senha é muito fraca. Use pelo menos 6 caracteres, incluindo letras e números.";
+                displayError(passwordInput, errorMessage);
+                formState.currentStep = 2; // Go back to step 2 to show the password error
+                break;
+            case 'auth/invalid-email':
+                errorMessage = "O email fornecido é inválido.";
+                displayError(emailInput, errorMessage);
+                formState.currentStep = 1;
+                break;
+            case 'auth/invalid-phone-number':
+                errorMessage = "O número de telefone fornecido é inválido. Por favor, use o formato angolano (ex: 923123456).";
+                displayError(phoneInput, errorMessage);
+                formState.currentStep = 1;
+                break;
+            case 'auth/network-request-failed':
+                errorMessage = "Erro de conexão. Verifique sua internet.";
+                break;
+            default:
+                // For other unexpected errors
+                console.error("Detalhes do erro Firebase:", error.message);
+                alert(errorMessage + "\nDetalhes: " + error.message); // Show more detail for debugging
         }
-        alert(errorMessage);
+        updateFormSteps(); // Ensure the correct step is shown after an error
       } finally {
         setButtonLoading(false); // Desativa o spinner
       }
