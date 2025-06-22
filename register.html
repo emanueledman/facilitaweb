@@ -40,7 +40,7 @@
     .header {
       background: linear-gradient(135deg, var(--primary));
       padding: 1rem 0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
     .logo {
@@ -67,23 +67,20 @@
 
     /* Form Container */
     .form-container {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
       min-height: calc(100vh - 80px);
-      align-items: center;
-    }
-
-    @media (min-width: 992px) {
-      .form-container {
-        grid-template-columns: 1fr 1fr;
-      }
+      padding: 2rem 0;
     }
 
     /* Ilustração */
     .form-illustration {
+      flex: 1;
       background: linear-gradient(135deg, var(--primary));
-      padding: 2.5rem;
-      display: none;
+      padding: 2rem;
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -91,12 +88,13 @@
       color: white;
       position: relative;
       overflow: hidden;
+      min-width: 300px;
       min-height: 100%;
     }
 
-    @media (min-width: 992px) {
+    @media (max-width: 991px) {
       .form-illustration {
-        display: flex;
+        display: none;
       }
     }
 
@@ -120,40 +118,34 @@
     .form-illustration h2 {
       font-family: 'Montserrat', sans-serif;
       font-size: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .illustration-img {
       width: 100%;
-      max-width: 300px;
-      margin-top: 2rem;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+      max-width: 250px;
+      margin-top: 1rem;
     }
 
     /* Form Card */
     .form-card {
+      flex: 1;
       background: white;
-      padding: 2.5rem;
-      border-radius: 0 15px 15px 0;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      min-width: 300px;
       min-height: 100%;
-    }
-
-    @media (max-width: 991px) {
-      .form-card {
-        border-radius: 15px;
-        margin: 2rem 0;
-      }
     }
 
     .form-header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .form-icon {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       background: rgba(204, 9, 47, 0.1);
       border-radius: 50%;
       display: flex;
@@ -161,29 +153,28 @@
       justify-content: center;
       margin: 0 auto 1rem;
       color: var(--primary);
-      font-size: 1.5rem;
+      font-size: 1.2rem;
     }
 
     .form-title {
       font-family: 'Montserrat', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.5rem;
+      color: var(--dark);
     }
 
     .form-subtitle {
       color: var(--dark);
       opacity: 0.7;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
     /* BI Info Box */
     .bi-info {
       background: rgba(204, 9, 47, 0.05);
       border-left: 4px solid var(--primary);
-      padding: 1rem;
-      margin-bottom: 1.5rem;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
       border-radius: 4px;
@@ -191,84 +182,55 @@
 
     .bi-info i {
       color: var(--primary);
-      font-size: 1.5rem;
-      margin-right: 1rem;
+      font-size: 1.2rem;
+      margin-right: 0.75rem;
     }
 
     .bi-info-text h4 {
       font-weight: 600;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
       color: var(--primary);
+      font-size: 0.9rem;
     }
 
     .bi-info-text p {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       opacity: 0.8;
     }
 
     /* Form Elements */
     .form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .form-label {
       display: block;
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
       color: var(--dark);
+      font-size: 0.9rem;
     }
 
     .form-control {
       width: 100%;
-      padding: 0.9rem 1.2rem;
+      padding: 0.8rem;
       border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: border-color 0.3s;
       background: var(--light);
     }
 
     .form-control:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(204, 9, 47, 0.2);
       outline: none;
       background: white;
-    }
-
-    /* Phone Input */
-    .phone-input-group {
-      display: flex;
-      align-items: center;
-      background: var(--light);
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .phone-prefix {
-      padding: 0 1rem;
-      display: flex;
-      align-items: center;
-      background: #eee;
-      height: 100%;
-    }
-
-    .phone-prefix img {
-      width: 20px;
-      margin-right: 0.5rem;
-    }
-
-    .phone-input {
-      flex: 1;
-      border: none;
-      padding: 0.9rem 1rem;
-      background: transparent;
     }
 
     /* Password Toggle */
     .password-toggle {
       position: absolute;
-      right: 1rem;
+      right: 0.8rem;
       top: 50%;
       transform: translateY(-50%);
       cursor: pointer;
@@ -280,16 +242,16 @@
     .terms-check {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .terms-check input {
-      margin-right: 0.75rem;
-      margin-top: 0.25rem;
+      margin-right: 0.5rem;
+      margin-top: 0.2rem;
     }
 
     .terms-text {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .terms-link {
@@ -301,8 +263,8 @@
     /* Buttons */
     .btn {
       display: inline-block;
-      padding: 0.9rem 1.5rem;
-      border-radius: 8px;
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
       font-weight: 600;
       text-align: center;
       cursor: pointer;
@@ -314,29 +276,26 @@
       background: var(--primary);
       color: white;
       width: 100%;
-      box-shadow: 0 5px 15px rgba(204, 9, 47, 0.3);
     }
 
     .btn-primary:hover {
       background: #a8072a;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(204, 9, 47, 0.4);
     }
 
     /* Error Messages */
     .error-message {
       color: var(--error);
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
       display: none;
     }
 
     /* Spinner */
     .spinner {
       display: inline-block;
-      width: 1.25rem;
-      height: 1.25rem;
-      border: 3px solid rgba(255,255,255,0.3);
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(255,255,255,0.3);
       border-radius: 50%;
       border-top-color: white;
       animation: spin 1s ease-in-out infinite;
@@ -349,8 +308,8 @@
     /* Footer */
     .form-footer {
       text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
+      margin-top: 1rem;
+      font-size: 0.85rem;
       color: var(--dark);
       opacity: 0.7;
     }
@@ -368,14 +327,14 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 1000;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: opacity 0.3s ease;
     }
 
     .modal-overlay.show {
@@ -385,32 +344,24 @@
 
     .modal-content {
       background: white;
-      border-radius: 10px;
-      padding: 2rem;
-      max-width: 700px;
+      border-radius: 8px;
+      padding: 1.5rem;
+      max-width: 600px;
       width: 90%;
       max-height: 80vh;
       overflow-y: auto;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-
-    .modal-overlay.show .modal-content {
-      transform: translateY(0);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 1rem;
     }
 
     .modal-header h3 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: var(--primary);
       margin: 0;
@@ -419,56 +370,49 @@
     .modal-close-btn {
       background: none;
       border: none;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       color: var(--dark);
       cursor: pointer;
       opacity: 0.7;
-      transition: opacity 0.2s;
-    }
-
-    .modal-close-btn:hover {
-      opacity: 1;
     }
 
     .modal-body {
       line-height: 1.6;
+      font-size: 0.9rem;
     }
 
     .modal-body h4 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: var(--primary);
-      margin-top: 1.5rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .modal-body p, .modal-body ul {
-      margin-bottom: 1rem;
-    }
-
-    .modal-body ul {
-      padding-left: 1.5rem;
-    }
-
-    .modal-body li {
+      margin-top: 1rem;
       margin-bottom: 0.5rem;
     }
 
+    .modal-body p, .modal-body ul {
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-body ul {
+      padding-left: 1.2rem;
+    }
+
+    .modal-body li {
+      margin-bottom: 0.3rem;
+    }
+
     .modal-footer {
-      padding-top: 1.5rem;
-      margin-top: 1.5rem;
-      border-top: 1px solid #eee;
+      margin-top: 1rem;
       text-align: right;
     }
 
     .btn-accept-terms {
       background-color: var(--primary);
       color: white;
-      padding: 0.8rem 1.5rem;
-      border-radius: 8px;
+      padding: 0.7rem 1.2rem;
+      border-radius: 6px;
       border: none;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s;
     }
 
     .btn-accept-terms:hover {
@@ -478,14 +422,14 @@
     /* Progress Bar */
     .progress-container {
       width: 100%;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .progress-steps {
       display: flex;
       justify-content: space-between;
       position: relative;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .progress-steps::before {
@@ -494,7 +438,7 @@
       top: 50%;
       left: 0;
       right: 0;
-      height: 3px;
+      height: 2px;
       background: #ddd;
       z-index: 1;
       transform: translateY(-50%);
@@ -504,7 +448,7 @@
       position: absolute;
       top: 50%;
       left: 0;
-      height: 3px;
+      height: 2px;
       background: var(--primary);
       z-index: 2;
       transform: translateY(-50%);
@@ -512,11 +456,11 @@
     }
 
     .step {
-      width: 30px;
-      height: 30px;
+      width: 25px;
+      height: 25px;
       border-radius: 50%;
       background: white;
-      border: 3px solid #ddd;
+      border: 2px solid #ddd;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -524,7 +468,7 @@
       color: #999;
       position: relative;
       z-index: 3;
-      transition: all 0.4s ease;
+      font-size: 0.8rem;
     }
 
     .step.active {
@@ -540,10 +484,10 @@
 
     .step-label {
       position: absolute;
-      top: 40px;
+      top: 30px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       color: #999;
       white-space: nowrap;
     }
@@ -576,14 +520,14 @@
     .form-navigation {
       display: flex;
       justify-content: space-between;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .btn-outline {
       background: transparent;
       color: var(--primary);
       border: 2px solid var(--primary);
-      padding: 0.8rem 1.5rem;
+      padding: 0.7rem 1.2rem;
       font-weight: 600;
     }
 
@@ -609,10 +553,10 @@
       <!-- Ilustração -->
       <div class="form-illustration">
         <div class="illustration-content">
-          <i class="fas fa-id-card fa-4x mb-4"></i>
+          <i class="fas fa-id-card fa-3x mb-3"></i>
           <h2>Seu BI tem Poder!</h2>
-          <p>Junte-se ao FixaBairro e ajude a transformar seu bairro</p>
-          <img src="https://placehold.co/300x200/FFFFFF/CC092F?text=FixaBairro+BI" alt="Comunidade unida" class="illustration-img">
+          <p>Junte-se ao FixaBairro e transforme seu bairro</p>
+          <img src="https://placehold.co/250x150/FFFFFF/CC092F?text=FixaBairro+BI" alt="Comunidade unida" class="illustration-img">
         </div>
       </div>
 
@@ -629,7 +573,7 @@
         <!-- Progress Bar -->
         <div class="progress-container">
           <div class="progress-steps">
-            <div class="progress-bar" id="progressBar" style="width: 33.33%"></div>
+            <div class="progress-bar" id="progressBar" style="width: 25%"></div>
             <div class="step active" id="step1Indicator">
               <span>1</span>
               <span class="step-label">Dados Pessoais</span>
@@ -640,6 +584,10 @@
             </div>
             <div class="step" id="step3Indicator">
               <span>3</span>
+              <span class="step-label">Notificações</span>
+            </div>
+            <div class="step" id="step4Indicator">
+              <span>4</span>
               <span class="step-label">Termos</span>
             </div>
           </div>
@@ -677,13 +625,7 @@
 
             <div class="form-group">
               <label for="phone" class="form-label">Telefone (Angola)</label>
-              <div class="phone-input-group">
-                <div class="phone-prefix">
-                  <img src="https://flagcdn.com/ao.svg" alt="Bandeira de Angola">
-                  <span>+244</span>
-                </div>
-                <input type="tel" id="phone" class="form-input" placeholder="923123456" required>
-              </div>
+              <input type="tel" id="phone" class="form-control" placeholder="+244 923123456" required>
               <div id="phoneError" class="error-message"></div>
             </div>
 
@@ -739,8 +681,28 @@
             </div>
           </div>
 
-          <!-- Passo 3: Termos -->
+          <!-- Passo 3: Preferências de Notificação -->
           <div id="step3" class="form-step">
+            <div class="form-group">
+              <label for="notificationPreferences" class="form-label">Preferências de Notificação</label>
+              <select id="notificationPreferences" class="form-control" required>
+                <option value="">Selecione</option>
+                <option value="email">Email</option>
+                <option value="sms">SMS</option>
+                <option value="both">Ambos (Email e SMS)</option>
+                <option value="none">Nenhuma</option>
+              </select>
+              <div id="notificationPreferencesError" class="error-message"></div>
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" id="prevStep3" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
+              <button type="button" id="nextStep3" class="btn btn-primary">Próximo <i class="fas fa-arrow-right ml-1"></i></button>
+            </div>
+          </div>
+
+          <!-- Passo 4: Termos -->
+          <div id="step4" class="form-step">
             <div class="terms-check">
               <input type="checkbox" id="terms" required>
               <label for="terms" class="terms-text">
@@ -753,7 +715,7 @@
             <div id="recaptcha-container"></div>
 
             <div class="form-navigation">
-              <button type="button" id="prevStep3" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
+              <button type="button" id="prevStep4" class="btn btn-outline"><i class="fas fa-arrow-left mr-1"></i> Anterior</button>
               <button type="submit" id="registerBtn" class="btn btn-primary">
                 <span id="btnText">Criar Conta</span>
                 <span id="btnSpinner" class="spinner" style="display: none;"></span>
@@ -850,7 +812,7 @@
 
     // Controle de passos do formulário
     let currentStep = 1;
-    const totalSteps = 3;
+    const totalSteps = 4;
 
     function showStep(stepNumber) {
       // Esconder todos os passos
@@ -949,8 +911,8 @@
         isValid = false;
       }
 
-      if (!/^9\d{8}$/.test(phone)) {
-        document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX';
+      if (!/^\+?2449\d{8}$|^9\d{8}$/.test(phone)) {
+        document.getElementById('phoneError').textContent = 'Número de telefone inválido. Use: 9XXXXXXXX ou +2449XXXXXXXX';
         document.getElementById('phoneError').style.display = 'block';
         isValid = false;
       } else {
@@ -1027,6 +989,32 @@
       showStep(2);
     });
 
+    document.getElementById('nextStep3').addEventListener('click', () => {
+      // Validação do passo 3
+      const notificationPreferences = document.getElementById('notificationPreferences').value;
+
+      let isValid = true;
+
+      // Resetar erros
+      document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+      });
+
+      if (notificationPreferences === '') {
+        document.getElementById('notificationPreferencesError').textContent = 'Selecione uma preferência de notificação';
+        document.getElementById('notificationPreferencesError').style.display = 'block';
+        isValid = false;
+      }
+
+      if (isValid) {
+        showStep(4);
+      }
+    });
+
+    document.getElementById('prevStep4').addEventListener('click', () => {
+      showStep(3);
+    });
+
     // Modal de Termos
     const termsModal = document.getElementById('termsModal');
     const showTermsBtn = document.getElementById('showTerms');
@@ -1086,6 +1074,7 @@
       const municipio = document.getElementById('municipio').value;
       const bairro = document.getElementById('bairro').value.trim();
       const password = document.getElementById('password').value;
+      const notificationPreferences = document.getElementById('notificationPreferences').value;
 
       // Mostrar spinner
       document.getElementById('btnText').style.display = 'none';
@@ -1101,7 +1090,8 @@
           phoneNumber: phone,
           password,
           municipio,
-          bairro
+          bairro,
+          notificationPreferences
         });
 
         if (result.requiresEmailVerification) {

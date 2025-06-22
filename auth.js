@@ -128,10 +128,10 @@ const firebaseAuth = {
     }
   },
 
-  async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro }) {
+  async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro, notificationPreferences }) {
     console.log("Iniciando registro de usuário:", { fullName });
 
-    if (!fullName || !biNumber || !email || !phoneNumber || !password || !municipio || !bairro) {
+    if (!fullName || !biNumber || !email || !phoneNumber || !password || !municipio || !bairro || !notificationPreferences) {
       throw new Error("Por favor, preencha todos os campos obrigatórios.");
     }
 
@@ -182,6 +182,7 @@ const firebaseAuth = {
         phoneNumber: normalizedPhone,
         municipio,
         bairro,
+        notificationPreferences,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         registrationMethod: 'email'
       });
