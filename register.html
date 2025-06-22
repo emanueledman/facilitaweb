@@ -938,7 +938,7 @@
 
       async validateBINumber(biNumber) {
         try {
-          const response = await fetch(`https://angolaapi.onrender.com/api/v1/validate/bi/${biNumber}`);
+          const response = await fetch(`https://fila-facilita-rp4z.onrender.com/validate-bi/${biNumber}`);
           const data = await response.json();
           
           if (!response.ok) {
