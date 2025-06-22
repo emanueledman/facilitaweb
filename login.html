@@ -647,7 +647,7 @@
       try {
         await waitForFirebaseAuth();
         await window.firebaseAuth.checkAuthState({
-          redirectIfLoggedIn: 'dashboard.html',
+          redirectIfLoggedIn: 'profile.html',
           onGuest: async () => {
             // Inicializar reCAPTCHA apenas para visitantes
             await window.firebaseAuth.initializeRecaptcha('recaptcha-container');
