@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FixABairro - Faça login para gerenciar problemas e ajudar sua comunidade.">
+  <meta name="keywords" content="fixabairro, angola, login, entrar, conta, email, telefone, google">
+  <meta name="author" content="FixABairro Team">
+  <title>FixABairro | Entrar</title>
+  
+  <link rel="icon" type="image/png" href="https://placehold.co/32x32/FF5722/FFFFFF?text=F"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer base {
+      :root {
+        --primary-accent: #FF5722; /* Cor principal, mantendo o laranja/vermelho original */
+        --secondary-dark: #2C3E50;
+        --highlight-light: #FFC107;
+        --success-green: #4CAF50;
+        --warning-orange: #FF9800;
+        --info-blue: #2196F3;
+        --bg-light: #F8F9FA;
+        --bg-white: #FFFFFF;
+        --bg-dark-overlay: rgba(0, 0, 0, 0.7);
+        --text-main: #34495E;
+        --text-secondary: #7F8C8D;
+        --text-white: #FFFFFF;
+        --font-heading: 'Montserrat', sans-serif;
+        --font-body: 'Poppins', sans-serif;
+        --border-radius-lg: 15px;
+        --border-radius-md: 10px;
+        --shadow-soft: 0 4px 20px rgba(0,0,0,0.08);
+        --shadow-medium: 0 8px 30px rgba(0,0,0,0.1);
+        --error-red: #DC3545;
+      }
+      
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: var(--font-body);
+        background: var(--bg-light);
+        color: var(--text-main);
+        line-height: 1.7;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+        color: var(--secondary-dark);
+        line-height: 1.2;
+      }
+
+      ::-webkit-scrollbar {
+          width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+          background: var(--bg-light);
+      }
+      ::-webkit-scrollbar-thumb {
+          background: var(--primary-accent);
+          border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #E64A19;
+      }
+
+      .navbar {
+        background: var(--secondary-dark);
+        padding: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.4s ease-in-out;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-white);
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        background: var(--primary-accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-white);
+        font-size: 1.5rem;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+      }
+
+      .nav-link {
+        font-size: 1.05rem;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+        padding: 0.6rem 1.2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link::after {
+          content: '';
+          position: absolute;
+          width: 0;
+          height: 3px;
+          background: var(--primary-accent);
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after, .nav-link.active::after {
+          width: 70%;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-accent);
+      }
+
+      .btn-main {
+        background: var(--primary-accent);
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        border: none;
+        display: inline-block;
+        box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .btn-main:hover {
+        background: #E64A19;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+      }
+
+      .btn-outline-secondary-dark {
+        background: transparent;
+        color: var(--text-white);
+        padding: 0.9rem 2.5rem;
+        border: 2px solid rgba(255,255,255,0.7);
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .btn-outline-secondary-dark:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: var(--text-white);
+        color: var(--text-white);
+        transform: translateY(-3px);
+      }
+
+      .spinner-border {
+        display: inline-block;
+        width: 1.25rem;
+        height: 1.25rem;
+        vertical-align: -0.125em;
+        border: 0.25em solid currentColor;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: .75s linear infinite spinner-border;
+      }
+      @keyframes spinner-border {
+        to { transform: rotate(360deg); }
+      }
+      .spinner-border-sm {
+        width: 1rem;
+        height: 1rem;
+        border-width: 0.2em;
+      }
+
+      .form-container-wrapper {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 0;
+        margin-top: 80px;
+      }
+
+      .form-card {
+        background: var(--bg-white);
+        border-radius: var(--border-radius-lg);
+        padding: 3rem;
+        box-shadow: var(--shadow-medium);
+        border: 1px solid #ECEFF1;
+        transition: all 0.4s ease;
+        width: 100%;
+        max-width: 900px;
+      }
+      
+      .form-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: var(--secondary-dark);
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--primary-accent);
+        border-radius: 2px;
+      }
+      
+      .form-group {
+        margin-bottom: 1.8rem;
+        position: relative;
+      }
+      
+      .form-group label {
+        font-weight: 500;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+        display: block;
+        font-size: 1.05rem;
+      }
+
+      .form-control {
+        background: var(--bg-light);
+        border: 1px solid #CED4DA;
+        color: var(--text-main);
+        border-radius: var(--border-radius-md);
+        padding: 0.9rem 1.2rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+      }
+      
+      .form-control:focus {
+        background: var(--bg-white);
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+        color: var(--text-main);
+      }
+      
+      .form-control::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+      
+      .error-message {
+        color: var(--error-red);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: none;
+        font-weight: 500;
+      }
+
+      /* Estilos para a nova mensagem de notificação */
+      .notification-message {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-align: center;
+        margin-top: 1rem;
+        border: 1px solid;
+      }
+      .notification-message.success {
+        background-color: #d1fae5; /* green-100 */
+        color: #065f46; /* green-700 */
+        border-color: #34d399; /* green-400 */
+      }
+      .notification-message.error {
+        background-color: #fee2e2; /* red-100 */
+        color: #991b1b; /* red-700 */
+        border-color: #f87171; /* red-400 */
+      }
+      .notification-message.warning { /* Adicionado para avisos */
+        background-color: #fffbeb; /* yellow-100 */
+        color: #92400e; /* yellow-700 */
+        border-color: #fbbf24; /* yellow-400 */
+      }
+
+
+      /* Adicionado para a borda de erro no input */
+      .border-error {
+        border-color: var(--error-red) !important;
+      }
+
+      @media (max-width: 992px) {
+        .navbar-brand {
+            color: var(--secondary-dark);
+        }
+        .navbar-toggler {
+            color: var(--secondary-dark);
+        }
+        .navbar {
+            background: var(--bg-white);
+        }
+        .nav-link {
+            color: var(--text-main);
+        }
+        .btn-outline-secondary-dark {
+            color: var(--secondary-dark);
+            border-color: var(--secondary-dark);
+        }
+        .navbar-nav {
+            background-color: var(--bg-white);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .form-card {
+          padding: 2rem;
+        }
+        .form-card h1 {
+          font-size: 2rem;
+        }
+        .form-card p {
+          font-size: 0.95rem;
+        }
+      }
+      
+      @media (max-width: 576px) {
+        .form-card {
+          padding: 1.5rem;
+        }
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              accent: 'var(--primary-accent)',
+            },
+            secondary: {
+              dark: 'var(--secondary-dark)',
+            },
+            highlight: {
+              light: 'var(--highlight-light)',
+            },
+            success: {
+              DEFAULT: 'var(--success-green)',
+            },
+            warning: {
+              DEFAULT: 'var(--warning-orange)',
+            },
+            info: {
+              DEFAULT: 'var(--info-blue)',
+            },
+            bg: {
+              light: 'var(--bg-light)',
+              white: 'var(--bg-white)',
+              darkOverlay: 'var(--bg-dark-overlay)',
+            },
+            text: {
+              main: 'var(--text-main)',
+              secondary: 'var(--text-secondary)',
+              white: 'var(--text-white)',
+            },
+            error: 'var(--error-red)',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'lg': 'var(--border-radius-lg)',
+            'md': 'var(--border-radius-md)',
+          },
+          boxShadow: {
+            soft: 'var(--shadow-soft)',
+            medium: 'var(--shadow-medium)',
+          },
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container mx-auto px-4">
+      <a class="navbar-brand flex items-center" href="index.html">
+        <div class="logo">F</div>
+        FixABairro
+      </a>
+      <button class="navbar-toggler md:hidden border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary-dark"></i>
+      </button>
+      <div class="collapse navbar-collapse md:flex md:items-center" id="navbarNav">
+        <ul class="navbar-nav flex flex-col md:flex-row ml-auto md:ml-0 md:justify-end md:items-center w-full">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#impact">Impacto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#how-it-works">Como Funciona</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html#issues">Problemas Abertos</a>
+          </li>
+          <li class="nav-item ml-auto md:ml-3">
+            <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ml-2"></i></a>
+          </li>
+          <li class="nav-item md:ml-2">
+            <a class="btn-outline-secondary-dark" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="form-container-wrapper w-full px-4">
+    <div class="form-card grid grid-cols-1 md:grid-cols-2 shadow-2xl overflow-hidden rounded-3xl">
+      <div class="hidden md:flex p-8 flex-col items-center justify-center bg-gradient-to-br from-primary-accent to-[#E64A19] text-white text-center relative z-10">
+        <div class="absolute inset-0 opacity-10"></div>
+        <i class="fas fa-chart-line text-6xl text-white mb-6 transform scale-110"></i>
+        <h2 class="text-4xl font-montserrat font-bold leading-tight mb-4">
+          Conecte-se com Sua Comunidade!
+        </h2>
+        <p class="text-lg font-poppins opacity-90 mb-8">
+          Faça login para acompanhar e resolver problemas, e construir um bairro melhor.
+        </p>
+        <img src="https://placehold.co/250x250/FF5722/FFFFFF?text=Login" alt="Ilustração de login" class="w-64 h-64 object-contain">
+      </div>
+
+      <div class="w-full p-8 md:p-12 flex flex-col justify-center bg-white z-20">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-sign-in-alt text-3xl text-white"></i>
+          </div>
+          <h1 class="text-3xl font-montserrat font-bold text-secondary-dark">Bem-vindo(a) de Volta!</h1>
+          <p class="text-text-secondary text-sm mt-2">Entre na sua conta FixABairro.</p>
+        </div>
+        
+        <div id="notificationMessage" class="notification-message hidden" role="alert"></div>
+
+        <form id="loginForm" class="space-y-5">
+          <div>
+            <label for="emailOrPhone" class="block text-text-main text-sm font-medium mb-1">Email ou Número de Telefone</label>
+            <input type="text" id="emailOrPhone" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Ex: seu.email@exemplo.com ou +244912345678" required>
+            <p id="emailOrPhoneError" class="error-message hidden">Erro de email/telefone</p>
+          </div>
+          
+          <div>
+            <label for="password" class="block text-text-main text-sm font-medium mb-1">Senha</label>
+            <input type="password" id="password" class="w-full p-3 rounded-lg bg-bg-light border border-[#CED4DA] text-text-main placeholder-text-secondary focus:ring-2 focus:ring-primary-accent focus:border-primary-accent transition-all duration-200" placeholder="Digite sua senha" required>
+            <p id="passwordError" class="error-message hidden">Erro de senha</p>
+          </div>
+          
+          <div class="text-right text-sm">
+            <a href="#" id="forgotPassword" class="text-primary-accent hover:underline font-medium transition-all duration-200">Esqueceu a senha?</a>
+          </div>
+          
+          <button type="submit" id="loginBtn" class="w-full bg-primary-accent text-white p-3 rounded-lg font-semibold text-lg hover:bg-[#E64A19] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+            <span id="loginText"><i class="fas fa-sign-in-alt"></i> Entrar</span>
+            <span id="loginSpinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+          </button>
+        </form>
+        
+        <div class="relative flex py-5 items-center">
+          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+          <span class="flex-shrink mx-4 text-text-secondary text-sm font-medium">OU</span>
+          <div class="flex-grow border-t border-text-secondary opacity-30"></div>
+        </div>
+
+        <button type="button" id="googleLoginBtn" class="w-full flex items-center justify-center p-3 rounded-lg border border-[#CED4DA] bg-bg-light text-text-main font-semibold text-lg hover:bg-[#E0E0E0] focus:outline-none focus:ring-2 focus:ring-primary-accent focus:ring-offset-2 focus:ring-offset-bg-white transition-all duration-200 shadow-md">
+          <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3">
+          <span>Entrar com Google</span>
+        </button>
+        
+        <p class="text-center text-text-secondary text-sm mt-6">
+          Não tem uma conta? 
+          <a href="register.html" class="text-primary-accent hover:underline font-medium">Crie sua conta aqui!</a>
+        </p>
+
+        <div id="recaptcha-container" class="mt-4 hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://unpkg.com/imask"></script>
+  <script src="js/firebaseAuth.js"></script>
+
+  <script>
+    // A configuração do Firebase deve vir do seu arquivo config.js ou ser definida aqui
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw", // Substitua pela sua chave REAL
+      authDomain: "facilita-479b3.firebaseapp.com",
+      projectId: "facilita-479b3",
+      storageBucket: "facilita-479b3.appspot.com",
+      messagingSenderId: "385676676886",
+      appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
+    };
+
+    // Referências aos elementos da UI (declaradas ANTES de serem usadas)
+    const loginForm = document.getElementById('loginForm');
+    const emailOrPhoneInput = document.getElementById('emailOrPhone');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const forgotPasswordLink = document.getElementById('forgotPassword');
+    const emailOrPhoneError = document.getElementById('emailOrPhoneError');
+    const passwordError = document.getElementById('passwordError');
+    const notificationMessageDiv = document.getElementById('notificationMessage'); 
+
+    // Funções auxiliares para mostrar/ocultar mensagens
+    function showNotification(message, type) {
+        notificationMessageDiv.textContent = message;
+        notificationMessageDiv.classList.remove('hidden', 'success', 'error', 'warning'); 
+        notificationMessageDiv.classList.add(type); 
+        notificationMessageDiv.classList.add('block');
+    }
+
+    function hideNotification() {
+        notificationMessageDiv.classList.add('hidden');
+        notificationMessageDiv.textContent = '';
+    }
+
+    function showError(element, message) {
+        element.textContent = message;
+        element.classList.remove('hidden');
+        element.classList.add('block');
+        // Adiciona borda de erro ao input associado
+        if (element.previousElementSibling) { 
+            element.previousElementSibling.classList.add('border-error'); 
+        }
+    }
+
+    function hideError(element) {
+        element.classList.add('hidden');
+        // Remove borda de erro do input associado
+        if (element.previousElementSibling) { 
+            element.previousElementSibling.classList.remove('border-error'); 
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Inicializa o Firebase App através da sua instância de firebaseAuth
+      try {
+        if (window.firebaseAuth) {
+            window.firebaseAuth.initializeFirebaseApp(firebaseConfig);
+            console.log("Firebase App inicializado (via window.firebaseAuth).");
+        } else {
+            throw new Error("window.firebaseAuth não carregado. Verifique o caminho do script.");
+        }
+      } catch (error) {
+        console.error("Erro ao inicializar Firebase no login.html:", error);
+        showNotification("Erro: Firebase SDK não carregado. Verifique sua conexão.", 'error');
+        return; 
+      }
+      
+      // Máscara de telefone e tratamento de input Email/Telefone
+      const phoneMaskOptions = {
+          mask: '+244 900 000 000',
+          lazy: false,
+          placeholderChar: '_'
+      };
+      // IMask foi ajustado para permitir entrada de email ou telefone de forma mais fluida
+      const emailOrPhoneMask = IMask(emailOrPhoneInput, {
+          mask: [
+              { // Máscara para Email (permite qualquer coisa que pareça um email no início)
+                mask: /^\S*@?\S*$/,
+                prepare: (value, masked) => value.toLowerCase() // Opcional: converte para minúsculas para emails
+              }, 
+              phoneMaskOptions // Máscara para Telefone
+          ],
+          dispatch: function (appended, dynamicMasked) {
+              const value = dynamicMasked.value + appended;
+              // Se começar com +244 ou tiver 9 depois do +244 (indicando número angolano), assume telefone
+              // ou se já tem pelo menos 4 caracteres e começa com +244
+              if ((value.startsWith('+244') && value.length > 3) || (value.length > 4 && value[4] === '9' && !value.includes('@'))) { 
+                  return dynamicMasked.compiledMasks[1]; // Máscara de telefone
+              }
+              return dynamicMasked.compiledMasks[0]; // Máscara de email
+          }
+      });
+
+      emailOrPhoneInput.addEventListener('focus', () => {
+          // Se o campo estiver vazio, pré-preenche com o prefixo de Angola
+          if (!emailOrPhoneMask.value || emailOrPhoneMask.value.length === 0) {
+              emailOrPhoneMask.value = '+244';
+          }
+      });
+      emailOrPhoneInput.addEventListener('blur', () => {
+          // Limpa o campo se só tiver o prefixo ou estiver vazio
+          if (emailOrPhoneMask.value === '+244' || !emailOrPhoneMask.value.trim()) {
+              emailOrPhoneMask.value = ''; 
+          }
+      });
+
+      // Event listener para o formulário de login
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError(emailOrPhoneError);
+        hideError(passwordError);
+        hideNotification();
+
+        let isValid = true;
+        const emailOrPhoneRaw = emailOrPhoneInput.value.trim();
+        const password = passwordInput.value;
+
+        // Limpa o telefone para validação (remove espaços e máscara)
+        const cleanPhone = emailOrPhoneRaw.replace(/\D/g, ''); 
+        
+        // Verifica se é um formato de email válido ou telefone angolano válido
+        const isEmail = window.firebaseAuth.validateEmail(emailOrPhoneRaw) === null;
+        const isPhone = cleanPhone.length === 12 && cleanPhone.startsWith('244'); // +2449XXXXXXXX = 12 dígitos
+
+        if (!emailOrPhoneRaw) {
+          showError(emailOrPhoneError, "Email ou número de telefone é obrigatório.");
+          isValid = false;
+        } else if (!isEmail && !isPhone) {
+          showError(emailOrPhoneError, "Formato inválido. Use um email ou +2449XXXXXXXX.");
+          isValid = false;
+        }
+
+        // Validação da senha:
+        // A senha é obrigatória SE for um email.
+        // Se for um telefone, a senha PODE ser necessária (se o usuário tiver uma), mas o login por código é uma alternativa.
+        if (isEmail && password.length === 0) {
+            showError(passwordError, "A senha é obrigatória para login com email.");
+            isValid = false;
+        } else if (password.length > 0) { // Se a senha foi preenchida, valida o formato
+            const passwordErrorMsg = window.firebaseAuth.validatePassword(password);
+            if (passwordErrorMsg) {
+                showError(passwordError, passwordErrorMsg);
+                isValid = false;
+            }
+        }
+        // Se for telefone e a senha estiver vazia, não invalidamos o formulário aqui,
+        // pois o fluxo pode ir para "login por código".
+
+        if (!isValid) {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
+            return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+
+        try {
+            if (isPhone) {
+                const fullPhoneNumber = `+${cleanPhone}`;
+                localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); // Salva para a próxima página
+
+                let loggedIn = false;
+                if (password.length > 0) { // Se uma senha foi fornecida, tenta login com ela
+                    try {
+                        // Tentar autenticar o número de telefone como um email se uma senha for fornecida
+                        // ATENÇÃO: Se o seu Firebase Auth não suporta telefone como 'email', isso falhará.
+                        // O ideal é que o Firebase Auth aceite o telefone como email (com um email fictício)
+                        // ou que você crie um login apenas com telefone usando SMS.
+                        await firebase.auth().signInWithEmailAndPassword(fullPhoneNumber, password);
+                        loggedIn = true;
+                        showNotification('Login realizado com sucesso!', 'success');
+                        window.location.href = 'profile.html';
+                    } catch (error) {
+                        // Se falhar com senha, continua para o fluxo de código, mas notifica sobre a senha incorreta.
+                        if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                            showError(passwordError, "Senha incorreta ou usuário não encontrado. Tentando login por código...");
+                        } else {
+                            console.warn("Erro ao tentar login com senha para telefone:", error.message);
+                        }
+                    }
+                }
+                
+                if (!loggedIn) { // Se não logou com senha ou senha não foi fornecida
+                    // Chama a função de envio de código de verificação por telefone
+                    const confirmationResult = await window.firebaseAuth.sendPhoneVerificationCode(fullPhoneNumber);
+                    
+                    // Armazena o confirmationResult para ser usado na próxima página (verify-phone.html)
+                    localStorage.setItem('confirmationResultJson', JSON.stringify(confirmationResult)); 
+
+                    showNotification('Código de verificação enviado para o seu WhatsApp. Você será redirecionado.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'verify-phone.html';
+                    }, 2000);
+                }
+
+            } else { // Se for email, tenta login com email e senha
+                await window.firebaseAuth.loginWithEmail(emailOrPhoneRaw, password);
+                showNotification('Login realizado com sucesso!', 'success');
+                window.location.href = 'profile.html';
+            }
+        } catch (error) {
+          console.error("Erro no login:", error);
+          let errorMessage = "Ocorreu um erro inesperado. Tente novamente.";
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/user-not-found':
+              case 'auth/wrong-password':
+              case 'auth/invalid-credential':
+                errorMessage = "Credenciais inválidas. Verifique seu email/telefone e senha.";
+                showError(emailOrPhoneError, errorMessage); 
+                hideError(passwordError);
+                break;
+              case 'auth/invalid-email':
+                errorMessage = "Endereço de email inválido.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/too-many-requests':
+                errorMessage = "Muitas tentativas de login. Tente novamente mais tarde.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/network-request-failed':
+                errorMessage = "Erro de conexão. Verifique sua internet.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/requires-recent-login':
+                errorMessage = "Por favor, faça login novamente para realizar esta ação.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/app-not-initialized':
+                errorMessage = "O Firebase App não foi inicializado corretamente.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/captcha-check-failed': // Novo erro para reCAPTCHA
+                  errorMessage = "Verificação de segurança falhou. Por favor, tente novamente.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              case 'auth/web-storage-unsupported': // Novo erro para reCAPTCHA
+                  errorMessage = "Seu navegador não suporta a verificação de segurança (reCAPTCHA). Tente outro navegador.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              default:
+                errorMessage = error.message; 
+                showNotification(errorMessage, 'error');
+                break;
+            }
+          } else {
+              errorMessage = error.message; 
+              showNotification(errorMessage, 'error');
+          }
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Entrar`;
+        }
+      });
+
+      // Event listener para o login com Google
+      googleLoginBtn.addEventListener('click', async () => {
+        hideNotification();
+        googleLoginBtn.disabled = true;
+        googleLoginBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> A entrar...`;
+
+        try {
+          await window.firebaseAuth.loginWithGoogle();
+          showNotification('Login com Google realizado com sucesso!', 'success');
+          window.location.href = 'profile.html';
+        } catch (error) {
+          console.error("Erro no login com Google:", error);
+          let errorMessage = "Erro ao entrar com Google. Tente novamente.";
+          if (error.code === 'auth/popup-closed-by-user') {
+              errorMessage = "Login cancelado. A janela pop-up foi fechada.";
+          } else if (error.code === 'auth/cancelled-popup-request') {
+              errorMessage = "A solicitação de login com Google foi cancelada. Tente novamente.";
+          } else if (error.code === 'auth/network-request-failed') {
+              errorMessage = "Erro de conexão. Verifique sua internet.";
+          }
+          showNotification(errorMessage, 'error');
+        } finally {
+          googleLoginBtn.disabled = false;
+          googleLoginBtn.innerHTML = `<img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google Logo" class="w-6 h-6 mr-3"><span>Entrar com Google</span>`;
+        }
+      });
+
+      // Event listener para "Esqueceu a senha?"
+      forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        hideError(emailOrPhoneError);
+        hideError(passwordError); 
+        hideNotification();
+
+        const inputVal = emailOrPhoneInput.value.trim();
+        
+        if (!inputVal) {
+          showError(emailOrPhoneError, 'Por favor, digite seu email ou número de telefone para recuperar.');
+          return;
+        }
+
+        const cleanPhone = inputVal.replace(/\D/g, '');
+        const isEmailFormat = window.firebaseAuth.validateEmail(inputVal) === null;
+        const isPhoneFormat = cleanPhone.length === 12 && cleanPhone.startsWith('244');
+
+        forgotPasswordLink.style.pointerEvents = 'none'; 
+        forgotPasswordLink.textContent = 'Processando...';
+
+        try {
+          if (isPhoneFormat) {
+              const fullPhoneNumber = `+${cleanPhone}`;
+              localStorage.setItem('pendingVerificationPhoneNumber', fullPhoneNumber); 
+              
+              // Chama a função de envio de código de verificação por telefone
+              const confirmationResult = await window.firebaseAuth.sendPhoneVerificationCode(fullPhoneNumber);
+              
+              // Armazena o confirmationResult para ser usado na próxima página (verify-phone.html)
+              localStorage.setItem('confirmationResultJson', JSON.stringify(confirmationResult)); 
+              
+              showNotification('Um novo código de verificação foi enviado para o seu WhatsApp. Você será redirecionado para concluir a recuperação.', 'success');
+              setTimeout(() => {
+                  window.location.href = 'verify-phone.html';
+              }, 2000);
+              
+          } else if (isEmailFormat) {
+              await window.firebaseAuth.resetPassword(inputVal);
+              showNotification('Um email para redefinição de senha foi enviado para seu endereço. Verifique sua caixa de entrada.', 'success');
+          } else {
+              showError(emailOrPhoneError, 'Formato inválido. Digite um email ou um número de telefone angolano válido para recuperação.');
+          }
+        } catch (error) {
+          console.error("Erro ao processar 'Esqueceu a senha?':", error);
+          let errorMessage = "Erro ao processar sua solicitação de recuperação. Tente novamente.";
+          if (error.code) {
+            switch (error.code) {
+              case 'auth/user-not-found':
+              case 'auth/invalid-email':
+                errorMessage = "Não encontramos uma conta associada a este email/telefone.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/missing-email':
+                errorMessage = "Por favor, digite seu email.";
+                showError(emailOrPhoneError, errorMessage);
+                break;
+              case 'auth/network-request-failed':
+                errorMessage = "Erro de conexão. Verifique sua internet.";
+                showNotification(errorMessage, 'error');
+                break;
+              case 'auth/captcha-check-failed':
+                  errorMessage = "A verificação de segurança falhou. Tente novamente.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              case 'auth/web-storage-unsupported':
+                  errorMessage = "Seu navegador não suporta a verificação de segurança (reCAPTCHA). Tente outro navegador.";
+                  showNotification(errorMessage, 'error');
+                  break;
+              default:
+                errorMessage = error.message;
+                showNotification(errorMessage, 'error');
+                break;
+            }
+          } else {
+            errorMessage = error.message;
+            showNotification(errorMessage, 'error');
+          }
+        } finally {
+            forgotPasswordLink.style.pointerEvents = 'auto'; 
+            forgotPasswordLink.textContent = 'Esqueceu a senha?';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
