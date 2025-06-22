@@ -182,6 +182,8 @@
     }
 
     .form-label {
+
+
       display: block;
       font-weight: 500;
       margin-bottom: 0.5rem;
@@ -626,138 +628,145 @@
       return /^\+?2449\d{8}$|^9\d{8}$/.test(phone);
     }
 
-    // Inicializar reCAPTCHA
+    // Inicialização
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        await firebaseAuth.initializeRecaptcha('recaptcha-container');
-        console.log("reCAPTCHA inicializado com sucesso");
+        // Verificar estado de autenticação antes de carregar a página
+        await firebaseAuth.checkAuthState({
+          redirectIfLoggedIn: 'dashboard.html',
+          onGuest: async () => {
+            // Inicializar reCAPTCHA apenas para visitantes
+            await firebaseAuth.initializeRecaptcha('recaptcha-container');
+            console.log("reCAPTCHA inicializado com sucesso");
+          },
+          onLoggedIn: (user) => {
+            console.log(`Usuário logado: ${user.uid}`);
+          }
+        });
       } catch (error) {
-        console.error("Falha ao inicializar reCAPTCHA:", error);
-        alert("Erro na verificação de segurança. Recarregue a página.");
+        console.error("Erro na inicialização:", error);
+        alert("Erro na inicialização do sistema. Recarregue a página.");
       }
 
-      // Verificar estado de autenticação
-      firebaseAuth.checkAuthState('index.html', null);
-    });
+      // Modal de Termos
+      const termsModal = document.getElementById('termsModal');
+      const showTermsBtn = document.getElementById('showTerms');
+      const closeTermsModalBtn = document.getElementById('closeTermsModal');
+      const acceptTermsBtn = document.getElementById('acceptTermsBtn');
 
-    // Modal de Termos
-    const termsModal = document.getElementById('termsModal');
-    const showTermsBtn = document.getElementById('showTerms');
-    const closeTermsModalBtn = document.getElementById('closeTermsModal');
-    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
-
-    showTermsBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      termsModal.classList.add('show');
-    });
-
-    closeTermsModalBtn.addEventListener('click', () => {
-      termsModal.classList.remove('show');
-    });
-
-    acceptTermsBtn.addEventListener('click', () => {
-      termsModal.classList.remove('show');
-    });
-
-    termsModal.addEventListener('click', (e) => {
-      if (e.target === termsModal) {
-        termsModal.classList.remove('show');
-      }
-    });
-
-    // Envio do formulário
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const identifier = document.getElementById('identifier').value.trim();
-      const password = document.getElementById('password').value;
-
-      let isValid = true;
-
-      // Resetar erros
-      document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
+      showTermsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        termsModal.classList.add('show');
       });
 
-      if (!identifier) {
-        document.getElementById('identifierError').textContent = 'Insira seu email, telefone ou BI';
-        document.getElementById('identifierError').style.display = 'block';
-        isValid = false;
-      }
+      closeTermsModalBtn.addEventListener('click', () => {
+        termsModal.classList.remove('show');
+      });
 
-      if (!password) {
-        document.getElementById('passwordError').textContent = 'Insira sua senha';
-        document.getElementById('passwordError').style.display = 'block';
-        isValid = false;
-      }
+      acceptTermsBtn.addEventListener('click', () => {
+        termsModal.classList.remove('show');
+      });
 
-      if (!isValid) return;
+      termsModal.addEventListener('click', (e) => {
+        if (e.target === termsModal) {
+          termsModal.classList.remove('show');
+        }
+      });
 
-      // Mostrar spinner
-      document.getElementById('btnText').style.display = 'none';
-      document.getElementById('btnSpinner').style.display = 'inline-block';
-      document.getElementById('loginBtn').disabled = true;
+      // Envio do formulário
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-      try {
-        await firebaseAuth.login(identifier, password);
-        window.location.href = 'dashboard.html';
-      } catch (error) {
-        console.error("Erro no login:", error);
+        const identifier = document.getElementById('identifier').value.trim();
+        const password = document.getElementById('password').value;
 
-        // Esconder spinner
-        document.getElementById('btnText').style.display = 'inline';
-        document.getElementById('btnSpinner').style.display = 'none';
-        document.getElementById('loginBtn').disabled = false;
+        let isValid = true;
 
-        let errorMessage = 'Erro ao fazer login. Tente novamente.';
-        
-        switch (error.message) {
-          case 'Email inválido.':
-            errorMessage = 'Email inválido.';
-            document.getElementById('identifierError').textContent = errorMessage;
-            document.getElementById('identifierError').style.display = 'block';
-            break;
-          case 'Telefone não registrado.':
-            errorMessage = 'Telefone não registrado.';
-            document.getElementById('identifierError').textContent = errorMessage;
-            document.getElementById('identifierError').style.display = 'block';
-            break;
-          case 'Bilhete de Identidade não registrado.':
-            errorMessage = 'Bilhete de Identidade não registrado.';
-            document.getElementById('identifierError').textContent = errorMessage;
-            document.getElementById('identifierError').style.display = 'block';
-            break;
-          case 'Por favor, verifique seu email antes de fazer login.':
-            errorMessage = 'Verifique seu email antes de fazer login.';
-            document.getElementById('identifierError').textContent = errorMessage;
-            document.getElementById('identifierError').style.display = 'block';
-            break;
-          default:
-            switch (error.code) {
-              case 'auth/invalid-email':
-                errorMessage = 'Email inválido.';
-                document.getElementById('identifierError').textContent = errorMessage;
-                document.getElementById('identifierError').style.display = 'block';
-                break;
-              case 'auth/user-not-found':
-                errorMessage = 'Usuário não encontrado.';
-                document.getElementById('identifierError').textContent = errorMessage;
-                document.getElementById('identifierError').style.display = 'block';
-                break;
-              case 'auth/wrong-password':
-                errorMessage = 'Senha incorreta.';
-                document.getElementById('passwordError').textContent = errorMessage;
-                document.getElementById('passwordError').style.display = 'block';
-                break;
-              default:
-                errorMessage = 'Erro ao fazer login: ' + error.message;
-                document.getElementById('identifierError').textContent = errorMessage;
-                document.getElementById('identifierError').style.display = 'block';
-            }
+        // Resetar erros
+        document.querySelectorAll('.error-message').forEach(el => {
+          el.style.display = 'none';
+        });
+
+        if (!identifier) {
+          document.getElementById('identifierError').textContent = 'Insira seu email, telefone ou BI';
+          document.getElementById('identifierError').style.display = 'block';
+          isValid = false;
         }
 
-        alert(errorMessage);
-      }
+        if (!password) {
+          document.getElementById('passwordError').textContent = 'Insira sua senha';
+          document.getElementById('passwordError').style.display = 'block';
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // Mostrar spinner
+        document.getElementById('btnText').style.display = 'none';
+        document.getElementById('btnSpinner').style.display = 'inline-block';
+        document.getElementById('loginBtn').disabled = true;
+
+        try {
+          await firebaseAuth.login(identifier, password);
+          window.location.href = 'dashboard.html';
+        } catch (error) {
+          console.error("Erro no login:", error);
+
+          // Esconder spinner
+          document.getElementById('btnText').style.display = 'inline';
+          document.getElementById('btnSpinner').style.display = 'none';
+          document.getElementById('loginBtn').disabled = false;
+
+          let errorMessage = 'Erro ao fazer login. Tente novamente.';
+          
+          switch (error.message) {
+            case 'Email inválido.':
+              errorMessage = 'Email inválido.';
+              document.getElementById('identifierError').textContent = errorMessage;
+              document.getElementById('identifierError').style.display = 'block';
+              break;
+            case 'Telefone não registrado.':
+              errorMessage = 'Telefone não registrado.';
+              document.getElementById('identifierError').textContent = errorMessage;
+              document.getElementById('identifierError').style.display = 'block';
+              break;
+            case 'Bilhete de Identidade não registrado.':
+              errorMessage = 'Bilhete de Identidade não registrado.';
+              document.getElementById('identifierError').textContent = errorMessage;
+              document.getElementById('identifierError').style.display = 'block';
+              break;
+            case 'Por favor, verifique seu email antes de fazer login.':
+              errorMessage = 'Verifique seu email antes de fazer login.';
+              document.getElementById('identifierError').textContent = errorMessage;
+              document.getElementById('identifierError').style.display = 'block';
+              break;
+            default:
+              switch (error.code) {
+                case 'auth/invalid-email':
+                  errorMessage = 'Email inválido.';
+                  document.getElementById('identifierError').textContent = errorMessage;
+                  document.getElementById('identifierError').style.display = 'block';
+                  break;
+                case 'auth/user-not-found':
+                  errorMessage = 'Usuário não encontrado.';
+                  document.getElementById('identifierError').textContent = errorMessage;
+                  document.getElementById('identifierError').style.display = 'block';
+                  break;
+                case 'auth/wrong-password':
+                  errorMessage = 'Senha incorreta.';
+                  document.getElementById('passwordError').textContent = errorMessage;
+                  document.getElementById('passwordError').style.display = 'block';
+                  break;
+                default:
+                  errorMessage = 'Erro ao fazer login: ' + error.message;
+                  document.getElementById('identifierError').textContent = errorMessage;
+                  document.getElementById('identifierError').style.display = 'block';
+              }
+          }
+
+          alert(errorMessage);
+        }
+      });
     });
   </script>
 </body>

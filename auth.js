@@ -32,11 +32,11 @@ const firebaseAuth = {
     this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier(containerId, {
       size: 'invisible',
       callback: (response) => {
-        document.getElementById('registerBtn').disabled = false;
+        document.getElementById('registerBtn')?.disabled = false;
         console.log("reCAPTCHA resolvido:", response);
       },
       'expired-callback': () => {
-        document.getElementById('registerBtn').disabled = true;
+        document.getElementById('registerBtn')?.disabled = true;
         console.warn("reCAPTCHA expirado.");
       },
       'error-callback': (error) => {
@@ -250,15 +250,57 @@ const firebaseAuth = {
     }
   },
 
-  checkAuthState(redirectIfLoggedIn, redirectIfNotSignedIn) {
-    this._auth.onAuthStateChanged((user) => {
-      const currentPath = window.location.pathname;
+  async getCurrentUser() {
+    return new Promise((resolve) => {
+      const unsubscribe = this._auth.onAuthStateChanged((user) => {
+        unsubscribe();
+        resolve(user);
+      });
+    });
+  },
 
-      if (user && redirectIfLoggedIn && currentPath !== new URL(redirectIfLoggedIn, window.location.origin).pathname) {
-        window.location.href = redirectIfLoggedIn;
-      } else if (!user && redirectIfNotSignedIn && currentPath !== new URL(redirectIfNotSignedIn, window.location.origin).pathname) {
-        window.location.href = redirectIfNotSignedIn;
-      }
+  isGuest() {
+    return !this._auth.currentUser;
+  },
+
+  async logout() {
+    try {
+      await this._auth.signOut();
+      console.log("Usuário deslogado com sucesso.");
+      return true;
+    } catch (error) {
+      console.error("Erro ao deslogar:", error);
+      throw error;
+    }
+  },
+
+  checkAuthState(options = {}) {
+    const {
+      redirectIfLoggedIn = null,
+      redirectIfNotSignedIn = null,
+      onGuest = null,
+      onLoggedIn = null
+    } = options;
+
+    return new Promise((resolve) => {
+      this._auth.onAuthStateChanged((user) => {
+        const currentPath = window.location.pathname;
+        
+        if (user) {
+          // Usuário logado
+          if (redirectIfLoggedIn && currentPath !== new URL(redirectIfLoggedIn, window.location.origin).pathname) {
+            window.location.href = redirectIfLoggedIn;
+          }
+          if (onLoggedIn) onLoggedIn(user);
+        } else {
+          // Usuário visitante
+          if (redirectIfNotSignedIn && currentPath !== new URL(redirectIfNotSignedIn, window.location.origin).pathname) {
+            window.location.href = redirectIfNotSignedIn;
+          }
+          if (onGuest) onGuest();
+        }
+        resolve(user);
+      });
     });
   },
 };
