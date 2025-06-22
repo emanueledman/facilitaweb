@@ -904,9 +904,10 @@
       },
 
       validateEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email) ? null : "Endereço de email inválido.";
+        const regex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        return regex.test(email) ? null : "Apenas endereços @gmail.com são permitidos.";
       },
+
 
       validatePhone(phone) {
         try {
