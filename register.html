@@ -904,10 +904,12 @@
       },
 
       validateEmail(email) {
-        const regex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-        return regex.test(email) ? null : "Apenas endereços @gmail.com são permitidos.";
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!regex.test(email)) {
+          return "Por favor, insira um email válido";
+        }
+        return null;
       },
-
 
       validatePhone(phone) {
         try {
@@ -932,6 +934,22 @@
             window.location.href = redirectIfNotSignedIn;
           }
         });
+      },
+
+      async validateBINumber(biNumber) {
+        try {
+          const response = await fetch(`https://angolaapi.onrender.com/api/v1/validate/bi/${biNumber}`);
+          const data = await response.json();
+          
+          if (!response.ok) {
+            throw new Error(data.message || "Erro ao validar BI");
+          }
+          
+          return data.success;
+        } catch (error) {
+          console.error("Erro na validação do BI:", error);
+          return false;
+        }
       },
 
       async registerUser({ name, email, phoneNumber, password, municipio, bairro, method, notificationPreferences }) {
@@ -1064,7 +1082,7 @@
     }
 
     // Navegação entre passos
-    document.getElementById('nextStep1').addEventListener('click', () => {
+    document.getElementById('nextStep1').addEventListener('click', async () => {
       // Validação do passo 1
       const fullName = document.getElementById('fullName').value.trim();
       const biNumber = document.getElementById('biNumber').value.trim();
@@ -1084,14 +1102,39 @@
         isValid = false;
       }
 
+      // Validar BI localmente primeiro
       if (!validateBINumber(biNumber)) {
         document.getElementById('biError').textContent = 'Formato de BI inválido. Use: 123456789LA042';
         document.getElementById('biError').style.display = 'block';
         isValid = false;
+      } else {
+        // Se o formato local estiver correto, validar com a API
+        document.getElementById('biError').textContent = 'Validando BI...';
+        document.getElementById('biError').style.display = 'block';
+        document.getElementById('biError').style.color = 'var(--dark)';
+        
+        try {
+          const isBIValid = await firebaseAuth.validateBINumber(biNumber);
+          if (!isBIValid) {
+            document.getElementById('biError').textContent = 'Número de BI inválido ou não encontrado';
+            document.getElementById('biError').style.display = 'block';
+            document.getElementById('biError').style.color = 'var(--error)';
+            isValid = false;
+          } else {
+            document.getElementById('biError').style.display = 'none';
+          }
+        } catch (error) {
+          console.error("Erro na validação do BI:", error);
+          document.getElementById('biError').textContent = 'Erro ao validar BI. Tente novamente.';
+          document.getElementById('biError').style.display = 'block';
+          document.getElementById('biError').style.color = 'var(--error)';
+          isValid = false;
+        }
       }
 
-      if (!firebaseAuth.validateEmail(email)) {
-        document.getElementById('emailError').textContent = 'Por favor, insira um email válido';
+      const emailError = firebaseAuth.validateEmail(email);
+      if (emailError) {
+        document.getElementById('emailError').textContent = emailError;
         document.getElementById('emailError').style.display = 'block';
         isValid = false;
       }
