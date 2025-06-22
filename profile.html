@@ -47,10 +47,11 @@
     .navbar {
       background: var(--bg-white);
       border-bottom: 1px solid #ECEFF1;
-      padding: 1rem;
+      padding: 0.75rem 1rem;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       position: fixed;
       width: 100%;
+      top: 0;
       z-index: 1000;
     }
 
@@ -61,6 +62,11 @@
       display: flex;
       align-items: center;
       text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      color: var(--primary-accent);
     }
 
     .logo {
@@ -76,6 +82,11 @@
       font-size: 1.5rem;
       font-weight: 700;
       box-shadow: 0 2px 10px rgba(255, 87, 34, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .navbar-brand:hover .logo {
+      transform: rotate(360deg);
     }
 
     .nav-link {
@@ -100,11 +111,11 @@
       transition: width 0.3s ease;
     }
 
-    .nav-link:hover::after {
+    .nav-link:hover::after, .nav-link.active::after {
       width: 70%;
     }
 
-    .nav-link:hover {
+    .nav-link:hover, .nav-link.active {
       color: var(--primary-accent);
     }
 
@@ -114,17 +125,72 @@
       padding: 0.6rem 1.5rem;
       border-radius: 30px;
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
       text-decoration: none;
       border: none;
       box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
       transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
     }
 
     .btn-main:hover {
       background: #E64A19;
       transform: translateY(-3px);
       box-shadow: 0 12px 30px rgba(255, 87, 34, 0.5);
+    }
+
+    .btn-auth {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .btn-auth:hover {
+      color: var(--primary-accent);
+    }
+
+    .dropdown-menu {
+      border-radius: 12px;
+      border: 1px solid #E0E0E0;
+      box-shadow: var(--card-shadow);
+      margin-top: 0.5rem;
+      min-width: 180px;
+    }
+
+    .dropdown-item {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      padding: 0.75rem 1.25rem;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 87, 34, 0.1);
+      color: var(--primary-accent);
+    }
+
+    .navbar-toggler {
+      border: none;
+      padding: 0.5rem;
+    }
+
+    .navbar-toggler:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    .navbar-toggler i {
+      font-size: 1.5rem;
+      color: var(--secondary-dark);
+      transition: color 0.3s ease;
+    }
+
+    .navbar-toggler:hover i {
+      color: var(--primary-accent);
     }
 
     .error-message, .success-message {
@@ -185,7 +251,7 @@
 
     .profile-container {
       max-width: 900px;
-      margin: 6rem auto 2rem;
+      margin: 5.5rem auto 2rem;
       padding: 0 1rem;
     }
 
@@ -493,30 +559,55 @@
       .problem-details {
         font-size: 0.85rem;
       }
-    }
-
-    @media (max-width: 576px) {
-      .navbar {
-        padding: 0.75rem;
-      }
 
       .navbar-brand {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
 
       .logo {
         width: 36px;
         height: 36px;
-        font-size: 1.2rem;
+        font-size: 1.3rem;
       }
 
       .nav-link {
-        padding: 0.5rem;
+        padding: 0.75rem 1rem;
+      }
+
+      .btn-main {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .navbar {
+        padding: 0.5rem 0.75rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.4rem;
+      }
+
+      .logo {
+        width: 32px;
+        height: 32px;
+        font-size: 1.1rem;
+        margin-right: 8px;
+      }
+
+      .nav-link {
+        padding: 0.5rem 0.75rem;
         font-size: 0.9rem;
       }
 
+      .btn-main {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+      }
+
       .profile-container {
-        margin: 4rem auto 1rem;
+        margin: 4.5rem auto 1rem;
       }
 
       .profile-header {
@@ -556,8 +647,8 @@
           <div class="logo">F</div>
           FixABairro
         </a>
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fas fa-bars" style="color: var(--secondary-dark);"></i>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto align-items-lg-center">
@@ -571,16 +662,12 @@
               <a class="nav-link" href="report.html">Mapa de Problemas</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn-main" href="new-report.html" aria-label="Relatar um problema">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle active" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do perfil">
-                Perfil
+              <a class="nav-link btn-main" href="new-report.html" aria-label="Relatar um problema">
+                Relatar Problema <i class="fas fa-plus-circle ms-2"></i>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar Perfil</a></li>
-                <li><a class="dropdown-item" href="#" id="logoutLink">Sair</a></li>
-              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="btn-auth" id="authButton" href="login.html">Entrar</a>
             </li>
           </ul>
         </div>
@@ -637,31 +724,21 @@
   <script defer src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.0/firebase-database-compat.js"></script>
+  <script defer src="auth.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       AOS.init({ duration: 800, once: true });
 
-      if (typeof firebase === 'undefined') {
-        console.error('Firebase SDK not loaded.');
+      if (typeof firebase === 'undefined' || !window.firebaseAuth) {
+        console.error('Firebase SDK ou auth.js não carregado.');
         document.getElementById('loadingScreen').innerHTML = `
-          <div class="error-message">Erro ao carregar Firebase. Verifique sua conexão e tente novamente.</div>
+          <div class="error-message">Erro ao carregar Firebase ou auth.js. Verifique sua conexão e tente novamente.</div>
         `;
         return;
       }
-
-      const firebaseConfig = {
-        apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
-        authDomain: "facilita-479b3.firebaseapp.com",
-        databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
-        projectId: "facilita-479b3",
-        storageBucket: "facilita-479b3.appspot.com",
-        messagingSenderId: "385676676886",
-        appId: "1:385676676886:web:6976de7f3abc6c0da94a37"
-      };
-
-      firebase.initializeApp(firebaseConfig);
 
       function showMessage(elementId, message, isError = true) {
         const messageContainer = document.getElementById(elementId);
@@ -702,6 +779,44 @@
           case 'Água': return 'category-Água';
           case 'Segurança': return 'category-Segurança';
           default: return '';
+        }
+      }
+
+      function updateAuthUI(user) {
+        const authButton = document.getElementById('authButton');
+        if (user) {
+          authButton.textContent = 'Meu Perfil';
+          authButton.href = 'profile.html';
+          authButton.classList.add('dropdown-toggle');
+          authButton.setAttribute('data-bs-toggle', 'dropdown');
+          authButton.setAttribute('aria-expanded', 'false');
+          authButton.setAttribute('id', 'profileDropdown');
+          authButton.insertAdjacentHTML('afterend', `
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+              <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Editar Perfil</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutLink">Logout</a></li>
+            </ul>
+          `);
+          document.getElementById('logoutLink').addEventListener('click', e => {
+            e.preventDefault();
+            firebase.auth().signOut().then(() => {
+              window.location.href = 'login.html';
+            }).catch(error => {
+              console.error('Erro ao fazer logout:', error);
+              showMessage('profileContent', 'Erro ao fazer logout. Tente novamente.');
+            });
+          });
+        } else {
+          authButton.textContent = 'Entrar';
+          authButton.href = 'login.html';
+          authButton.classList.remove('dropdown-toggle');
+          authButton.removeAttribute('data-bs-toggle');
+          authButton.removeAttribute('aria-expanded');
+          authButton.removeAttribute('id');
+          const dropdown = authButton.nextElementSibling;
+          if (dropdown && dropdown.classList.contains('dropdown-menu')) {
+            dropdown.remove();
+          }
         }
       }
 
@@ -823,7 +938,7 @@
         });
       }
 
-      function loadProfileData(user, firebase) {
+      function loadProfileData(user) {
         const profileName = document.getElementById('profileName');
         const profileEmail = document.getElementById('profileEmail');
         const profilePhoto = document.getElementById('profilePhoto');
@@ -885,8 +1000,8 @@
               showMessage('profileMessage', 'Perfil atualizado com sucesso!', false);
               setTimeout(() => {
                 document.getElementById('editProfileModal').querySelector('.btn-close').click();
-                loadProfileData(user, firebase);
-                updateProfileUI(user, { displayName: name, email, photoURL }, null, allProblems);
+                loadProfileData(user);
+                updateProfileUI(user, { displayName: name, email, photoURL }, window.stats || { reportedProblems: 0, solvedProblems: 0 }, window.allProblems || []);
               }, 1000);
             })
             .catch(error => {
@@ -954,7 +1069,7 @@
       async function getUserProblems(userId) {
         try {
           const problemsRef = firebase.database().ref('problems');
-          const snapshot = await problemsRef.orderByChild('usuarioId').equalTo(userId).once('value');
+          const snapshot = await problemsRef.orderByChild('userId').equalTo(userId).once('value');
           
           const problems = [];
           snapshot.forEach(childSnapshot => {
@@ -969,58 +1084,6 @@
           console.error('Erro ao buscar problemas:', error);
           return [];
         }
-      }
-
-      function loadProfileContent() {
-        firebase.auth().onAuthStateChanged(async user => {
-          if (!user) {
-            showMessage('profileContent', 'Por favor, faça login para visualizar seu perfil.');
-            setTimeout(() => window.location.href = 'login.html', 2000);
-            return;
-          }
-
-          try {
-            const [userDoc, allProblems, agendamentos, matriculas, bancoAlimentacao] = await Promise.all([
-              firebase.firestore().collection('usuarios').doc(user.uid).get(),
-              getUserProblems(user.uid),
-              getUserAgendamentos(user.uid),
-              getUserMatriculas(user.uid),
-              getUserBancoAlimentacao(user.uid)
-            ]);
-
-            const userData = userDoc.exists ? userDoc.data() : { 
-              displayName: user.displayName, 
-              email: user.email, 
-              photoURL: user.photoURL 
-            };
-
-            const solvedProblems = allProblems.filter(problem => problem.status === 'Resolvido');
-            const stats = {
-              reportedProblems: allProblems.length,
-              solvedProblems: solvedProblems.length,
-              totalAgendamentos: agendamentos.length,
-              totalMatriculas: matriculas.length,
-              totalBancoAlimentacao: bancoAlimentacao.length
-            };
-
-            window.allProblems = allProblems;
-            window.userAgendamentos = agendamentos;
-            window.userMatriculas = matriculas;
-            window.userBancoAlimentacao = bancoAlimentacao;
-
-            updateProfileUI(user, userData, stats, allProblems);
-            loadProfileData(user, firebase);
-
-            addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao);
-
-          } catch (error) {
-            console.error('Erro ao carregar dados do perfil:', error);
-            showMessage('profileContent', `Erro ao carregar perfil: ${error.message}`);
-            document.getElementById('profileContent').innerHTML += `
-              <button class="btn btn-main mt-2" onclick="loadProfileContent()">Tentar Novamente</button>
-            `;
-          }
-        });
       }
 
       function addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao) {
@@ -1045,18 +1108,66 @@
               <div class="stat-label">Banco Alimentar</div>
             </div>
           `;
+          animateCounter(document.querySelector('.stat-item[data-aos-delay="300"] .stat-number'), stats.totalAgendamentos);
+          animateCounter(document.querySelector('.stat-item[data-aos-delay="400"] .stat-number'), stats.totalMatriculas);
+          animateCounter(document.querySelector('.stat-item[data-aos-delay="500"] .stat-number'), stats.totalBancoAlimentacao);
         }
       }
 
-      document.getElementById('logoutLink').addEventListener('click', e => {
-        e.preventDefault();
-        firebase.auth().signOut().then(() => {
-          window.location.href = 'login.html';
-        }).catch(error => {
-          console.error('Erro ao fazer logout:', error);
-          showMessage('profileContent', 'Erro ao fazer logout. Tente novamente.');
+      function loadProfileContent() {
+        window.firebaseAuth.checkAuthState({
+          onLoggedIn: async (user) => {
+            console.log('Usuário logado:', user.uid);
+            updateAuthUI(user);
+            try {
+              const [userDoc, allProblems, agendamentos, matriculas, bancoAlimentacao] = await Promise.all([
+                firebase.firestore().collection('usuarios').doc(user.uid).get(),
+                getUserProblems(user.uid),
+                getUserAgendamentos(user.uid),
+                getUserMatriculas(user.uid),
+                getUserBancoAlimentacao(user.uid)
+              ]);
+
+              const userData = userDoc.exists ? userDoc.data() : { 
+                displayName: user.displayName, 
+                email: user.email, 
+                photoURL: user.photoURL 
+              };
+
+              const solvedProblems = allProblems.filter(problem => problem.status === 'Resolvido');
+              const stats = {
+                reportedProblems: allProblems.length,
+                solvedProblems: solvedProblems.length,
+                totalAgendamentos: agendamentos.length,
+                totalMatriculas: matriculas.length,
+                totalBancoAlimentacao: bancoAlimentacao.length
+              };
+
+              window.allProblems = allProblems;
+              window.userAgendamentos = agendamentos;
+              window.userMatriculas = matriculas;
+              window.userBancoAlimentacao = bancoAlimentacao;
+              window.stats = stats;
+
+              updateProfileUI(user, userData, stats, allProblems);
+              loadProfileData(user);
+              addUserDataSections(stats, agendamentos, matriculas, bancoAlimentacao);
+            } catch (error) {
+              console.error('Erro ao carregar dados do perfil:', error);
+              showMessage('profileContent', `Erro ao carregar perfil: ${error.message}`);
+              document.getElementById('profileContent').innerHTML += `
+                <button class="btn btn-main mt-2" onclick="loadProfileContent()">Tentar Novamente</button>
+              `;
+            }
+          },
+          onGuest: () => {
+            console.log('Usuário não autenticado (convidado).');
+            updateAuthUI(null);
+            showMessage('profileContent', 'Por favor, faça login para visualizar seu perfil.');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+          }
         });
-      });
+      }
 
       setTimeout(() => {
         document.getElementById('loadingScreen').classList.add('fade-out');
