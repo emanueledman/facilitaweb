@@ -821,6 +821,8 @@
   <script>
 
 // Configuração global
+
+// Configuração global
 let map; // Instância do mapa
 let currentUser = null; // Usuário autenticado
 const caseId = getCaseIdFromUrl(); // ID do caso da URL
@@ -843,6 +845,24 @@ async function waitForFirebaseAuth() {
       } else if (attempts >= maxAttempts) {
         clearInterval(interval);
         reject(new Error("firebaseAuth não inicializado após tentativas."));
+      }
+      attempts++;
+    }, 100);
+  });
+}
+
+// Função para aguardar inicialização do Leaflet
+async function waitForLeaflet() {
+  return new Promise((resolve, reject) => {
+    const maxAttempts = 20;
+    let attempts = 0;
+    const interval = setInterval(() => {
+      if (window.L) {
+        clearInterval(interval);
+        resolve();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        reject(new Error("Leaflet não inicializado após tentativas."));
       }
       attempts++;
     }, 100);
@@ -935,18 +955,25 @@ async function loadProblemDetails(caseId, db) {
       if (problem.location && problem.location.latitude && problem.location.longitude) {
         const lat = problem.location.latitude;
         const lng = problem.location.longitude;
-        if (map) {
-          map.setView([lat, lng], 14);
-          L.marker([lat, lng]).addTo(map)
-            .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
-        } else {
-          map = L.map('caseMap').setView([lat, lng], 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          }).addTo(map);
-          L.marker([lat, lng]).addTo(map)
-            .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+        try {
+          await waitForLeaflet(); // Aguarda Leaflet estar disponível
+          if (map) {
+            map.setView([lat, lng], 14);
+            L.marker([lat, lng]).addTo(map)
+              .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+          } else {
+            map = L.map('caseMap').setView([lat, lng], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              maxZoom: 19,
+              attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+            L.marker([lat, lng]).addTo(map)
+              .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+          }
+        } catch (error) {
+          console.error('Erro ao inicializar mapa:', error);
+          document.getElementById('caseMap').style.display = 'none';
+          document.getElementById('caseMap').innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar mapa.</p></div>';
         }
       } else {
         document.getElementById('caseMap').style.display = 'none';
