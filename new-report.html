@@ -34,7 +34,7 @@
       --bg-white: #FFFFFF; /* Fundo branco puro para cards */
       --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
 
-      --text-main: #34495E; /* Azul escuro para texto principal */
+      --text-main: #34495E; /* Azul escuro para texto atual */
       --text-secondary: #7F8C8D; /* Cinza para texto secundário */
       --text-white: #FFFFFF; /* Texto branco */
 
@@ -1100,8 +1100,10 @@
 
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
+  <script defer src="auth.js"></script>
+
   <script>
-    // Configuração do Firebase (Substitua pelos seus dados reais)
+    // Configuração do Firebase (mantida para compatibilidade com Cloudinary e outras funções)
     const firebaseConfig = {
       apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
@@ -1111,9 +1113,6 @@
       appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
       databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
     };
-    
-    let firebaseApp;
-    let currentUser = null; // Para armazenar o usuário logado
 
     // Initialize AOS animation library
     window.addEventListener('load', () => {
@@ -1123,21 +1122,16 @@
         once: true
       });
 
-      // Initialize Firebase
-      if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-        firebaseApp = firebase.initializeApp(firebaseConfig);
-        // Observador de estado de autenticação
-        firebaseApp.auth().onAuthStateChanged((user) => {
-          currentUser = user;
-          updateAuthUI(user);
+      // Verifica o estado de autenticação usando auth.js
+      if (window.firebaseAuth) {
+        window.firebaseAuth.checkAuthState({
+          onLoggedIn: (userInfo) => updateAuthUI(userInfo),
+          onGuest: (userInfo) => updateAuthUI(userInfo)
         });
-      } else if (firebase.apps.length) {
-        firebaseApp = firebase.app();
-        firebaseApp.auth().onAuthStateChanged((user) => {
-          currentUser = user;
-          updateAuthUI(user);
-        });
+      } else {
+        console.error("firebaseAuth não está disponível. Verifique se auth.js foi carregado.");
       }
+
       checkCookieConsent();
     });
 
@@ -1164,9 +1158,7 @@
     };
     let map, marker;
 
-    // Municipalities and neighborhoods (com mais detalhes para facilitar a busca)
-    
-    // Cloudinary configuration (mesma do case-details)
+    // Cloudinary configuration
     const cloudinaryConfig = {
       cloudName: 'dlfukiusa',
       apiKey: '438687859144979',
@@ -1174,57 +1166,58 @@
       uploadPreset: 'fixabairro',
       folder: 'fixa/Desconhecido'
     };
+
     const municipalitiesAndNeighborhoods = {
-  'Belas': [
-    'Morro Bento', 'Benfica', 'Vila Estoril', 'Kilamba', 'Barra do Kwanza',
-    'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
-    'Vila Verde'
-  ],
-  'Cacuaco': [
-    'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
-    'Baía do Bengo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
-    'Quixinge', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40',
-    'Quilómetro 42', 'Quilómetro 44', 'Quilómetro 45', 'Quilómetro 50'
-  ],
-  'Cazenga': [
-    'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady',
-    'Cazenga Popular', 'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa',
-    'Kicolo', 'Kilemba', 'Kimbamba', 'Kimbango', 'Kinda', 'Kintambi',
-    'Kipata', 'Kuanza', 'Kueio', 'Mabor', 'Marçal', 'Ngola Kiluange'
-  ],
-  'Ícolo e Bengo': [
-    'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe',
-    'Kicabo', 'Kikabo', 'Kixico', 'Muxima', 'Panguila', 'Quiminha', 'Quixinge',
-    'Tabi', 'Zenza do Itombe'
-  ],
-  'Luanda': [
-    'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
-    'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Samba', 'Rocha Pinto',
-    'São Paulo', 'Uíge', 'Vila Alice', 'Vila Flor', 'Vila Verde', 'Marçal',
-    'Ngola Kiluange', 'Kuanza', 'Kilemba', 'Kintambi', 'Kimbamba', 'Kimbango',
-    'Kinda', 'Kipata', 'Kueio', 'Luanda Sul', 'Mabor', 'Maculusso', 'Palmeirinhas'
-  ],
-  'Quiçama': [
-    'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quiminha',
-    'Quixinge', 'Zenza do Itombe'
-  ],
-  'Kilamba Kiaxi': [
-    'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária',
-    'Bairro da Paz', 'Boavista'
-  ],
-  'Talatona': [
-    'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril',
-    'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
-    'Vila Verde'
-  ],
-  'Viana': [
-    'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Funda', 'Cabiri', 'Panguila',
-    'Bom Jesus', 'Cabo Ledo', '4 de Fevereiro', 'Kikolo', 'Sequele', 'Cacuaco Praia',
-    'Kiaxi Grande', 'Kifangondo', 'Quicolo', 'Quixinge', 'Quilómetro 30',
-    'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 44',
-    'Quilómetro 45', 'Quilómetro 50'
-  ]
-};
+      'Belas': [
+        'Morro Bento', 'Benfica', 'Vila Estoril', 'Kilamba', 'Barra do Kwanza',
+        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
+        'Vila Verde'
+      ],
+      'Cacuaco': [
+        'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
+        'Baía do Bengo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
+        'Quixinge', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40',
+        'Quilómetro 42', 'Quilómetro 44', 'Quilómetro 45', 'Quilómetro 50'
+      ],
+      'Cazenga': [
+        'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady',
+        'Cazenga Popular', 'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa',
+        'Kicolo', 'Kilemba', 'Kimbamba', 'Kimbango', 'Kinda', 'Kintambi',
+        'Kipata', 'Kuanza', 'Kueio', 'Mabor', 'Marçal', 'Ngola Kiluange'
+      ],
+      'Ícolo e Bengo': [
+        'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe',
+        'Kicabo', 'Kikabo', 'Kixico', 'Muxima', 'Panguila', 'Quimina', 'Quixinge',
+        'Tabi', 'Zenza'
+      ],
+      'Luanda': [
+        'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
+        'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Samba', 'Rocha Pinto',
+        'São Paulo', 'Uíge', 'Vila Alice', 'Vila Flor', 'Vila Verde', 'Marçal',
+        'Ngola Kiluange', 'Kuanza', 'Kilemba', 'Kintambi', 'Kimbamba', 'Kimbango',
+        'Kinda', 'Kipata', 'Kueio', 'Luanda Sul', 'Mabor', 'Maculusso', 'Palmeirinhas'
+      ],
+      'Quiçama': [
+        'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quimina',
+        'Quixinge', 'Zenza do Itombe'
+      ],
+      'Kilamba Kiaxi': [
+        'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária',
+        'Bairro da Paz', 'Boavista'
+      ],
+      'Talatona': [
+        'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril',
+        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
+        'Vila Verde'
+      ],
+      'Viana': [
+        'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Funda', 'Cabiri', 'Panguila',
+        'Bom Jesus', 'Cabo Ledo', '4 de Fevereiro', 'Kikolo', 'Sequele', 'Cacuaco Praia',
+        'Kiaxi Grande', 'Kifangondo', 'Quicolo', 'Quixinge', 'Quilómetro 30',
+        'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 44',
+        'Quilómetro 45', 'Quilómetro 50'
+      ]
+    };
 
     // Categories and urgencies (com cores da nova paleta)
     const categories = [
@@ -1264,10 +1257,10 @@
     // Get responsible ID for municipality
     async function getResponsibleIdForMunicipality(municipality) {
       try {
-        const querySnapshot = await firebaseApp.firestore()
+        const querySnapshot = await firebase.firestore()
           .collection('usuarios')
-          .where('municipality', '==', municipality)
-          .where('isResponsible', '==', true)
+          .where('municipality', 'option', municipality)
+          .where('isResponsible', true)
           .limit(1)
           .get();
         
@@ -1277,7 +1270,7 @@
         console.log(`Nenhum responsável encontrado para o município: ${municipality}`);
         return null;
       } catch (error) {
-        console.error("Erro ao buscar responsável:", error.message);
+        console.error("Erro ao buscar responsável:", error);
         return null;
       }
     }
@@ -1286,11 +1279,11 @@
     async function uploadToCloudinary(file, neighborhood) {
       try {
         const timestamp = Math.floor(Date.now() / 1000);
-        const folder = neighborhood ? `fixa/${neighborhood.replace(/\s/g, '_')}` : cloudinaryConfig.folder;
+        const folder = neighborhood ? `fix_${neighborhood.replace(/\s/g, '_')}` : cloudinaryConfig.folder;
         const paramsToSign = {
           timestamp,
           upload_preset: cloudinaryConfig.uploadPreset,
-          folder
+          folder: folder
         };
 
         const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
@@ -1312,8 +1305,6 @@
         formDataCloudinary.append('timestamp', timestamp);
         formDataCloudinary.append('signature', signature);
         formDataCloudinary.append('upload_preset', cloudinaryConfig.uploadPreset);
-        formDataCloudinary.append('folder', folder);
-
         const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
           method: 'POST',
           body: formDataCloudinary
@@ -1337,7 +1328,7 @@
       if (map) map.remove(); // Remove mapa existente antes de criar um novo
       map = L.map('formMap').setView([-8.838333, 13.234444], 13); // Centrado em Luanda
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
       }).addTo(map);
 
@@ -1427,14 +1418,14 @@
             <h3 class="section-title">Informações Essenciais</h3>
             <div class="form-group">
               <label for="title">Título Curto do Problema</label>
-              <input type="text" class="form-control" id="title" placeholder="Ex.: Buraco na rua principal" value="${formData.title}" maxlength="100">
+              <input type="text" class="form-control" id="title" placeholder="Ex.: buraco na rua principal" value="${formData.title}" maxlength="100">
               <div class="error-message" id="titleError"></div>
             </div>
             <div class="form-group">
               <label for="municipality">Município</label>
               <div class="select-container">
                 <select class="form-control" id="municipality">
-                  <option value="">Selecione o seu município</option>
+                  <option value="">Selecione o município</option>
                   ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
                     <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
                   `).join('')}
@@ -1446,7 +1437,7 @@
               <label for="neighborhood">Bairro</label>
               <div class="select-container">
                 <select class="form-control" id="neighborhood">
-                  <option value="">Selecione o seu bairro</option>
+                  <option value="">Selecione o bairro</option>
                   ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ?
                     municipalitiesAndNeighborhoods[formData.municipality].map(bairro => `
                       <option value="${bairro}" ${formData.neighborhood === bairro ? 'selected' : ''}>${bairro}</option>
@@ -1491,7 +1482,7 @@
             </div>
             <div class="form-group">
               <label for="description">Descrição Detalhada do Problema</label>
-              <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema com o máximo de detalhes possível: o que é, quando acontece, quem afeta, etc." maxlength="500">${formData.description}</textarea>
+              <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema com o máximo de detalhes possível: o que é, quando ocorre, quem afeta, etc." maxlength="500">${formData.description}</textarea>
               <div class="error-message" id="descriptionError"></div>
             </div>
             <div class="form-group">
@@ -1509,7 +1500,7 @@
                 </label>
               </div>
               <div class="image-preview-container" id="imagePreviewContainer" style="${formData.imagePreviewUrl ? 'display: flex;' : 'display: none;'}">
-                <img id="imagePreview" class="image-preview" src="${formData.imagePreviewUrl || ''}" style="${formData.imagePreviewUrl ? 'display: block;' : 'display: none;'}" alt="Pré-visualização da Imagem">
+                <img id="imagePreview" class="image-preview" src="${formData.imagePreviewUrl || ''}" style="${formData.imagePreviewUrl ? 'display: block;' : 'display: none;'}" alt="Imagem do Problema">
                 <div class="image-placeholder-text" id="imagePlaceholderText" style="${formData.imagePreviewUrl ? 'display: none;' : 'display: flex;'}">
                     <i class="fas fa-image"></i>
                     <span>Nenhuma imagem selecionada.</span>
@@ -1603,7 +1594,7 @@
 
           // Function to update neighborhood dropdown
           function updateNeighborhoods(municipality) {
-            neighborhoodSelect.innerHTML = '<option value="">Selecione o seu bairro</option>';
+            neighborhoodSelect.innerHTML = '<option value="">Selecione o bairro</option>';
             if (municipalitiesAndNeighborhoods[municipality]) {
               municipalitiesAndNeighborhoods[municipality].forEach(bairro => {
                 const option = document.createElement('option');
@@ -1671,7 +1662,7 @@
                 formData.imagePreviewUrl = null;
                 imagePreview.style.display = 'none';
                 imagePlaceholderText.style.display = 'flex';
-                imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível mesmo sem imagem
+                imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível
                 return;
               }
               formData.image = file;
@@ -1710,7 +1701,7 @@
                   formData.longitude = longitude;
                 },
                 () => {
-                  alert('Não foi possível obter sua localização. Por favor, arraste o marcador manualmente.');
+                  alert('Não foi possível obter sua localização. Por favor, arraste manualmente.');
                 }
               );
             } else {
@@ -1732,51 +1723,51 @@
       switch (currentStep) {
         case 0:
           if (!formData.title.trim()) {
-            showError('titleError', 'O título do problema é obrigatório.');
+            showError('title-error', 'O título do problema é obrigatório.');
             isValid = false;
           } else {
-            hideError('titleError');
+            hideError('title-error');
           }
           if (!formData.municipality) {
-            showError('municipalityError', 'Selecione um município.');
+            showError('municipality-error', 'Selecione um município.');
             isValid = false;
           } else {
-            hideError('municipalityError');
+            hideError('municipality-error');
           }
           if (formData.municipality && !formData.neighborhood) {
-            showError('neighborhoodError', 'Selecione um bairro.');
+            showError('neighborhood-error', 'Selecione um bairro.');
             isValid = false;
           } else {
-            hideError('neighborhoodError');
+            hideError('neighborhood-error');
           }
           break;
         case 1:
           if (!formData.category) {
-            showError('categoryError', 'Selecione uma categoria.');
+            showError('category-error', 'Selecione uma categoria.');
             isValid = false;
           } else {
-            hideError('categoryError');
+            hideError('category-error');
           }
           if (!formData.urgency) {
-            showError('urgencyError', 'Selecione um nível de urgência.');
+            showError('urgency-error', 'Selecione um nível de urgência.');
             isValid = false;
           } else {
-            hideError('urgencyError');
+            hideError('urgency-error');
           }
           if (!formData.description.trim()) {
-            showError('descriptionError', 'A descrição do problema é obrigatória.');
+            showError('description-error', 'A descrição do problema é obrigatória.');
             isValid = false;
           } else {
-            hideError('descriptionError');
+            hideError('description-error');
           }
-          // Imagem é opcional, então não validamos se está vazia
+          // Imagem é opcional, não validamos se está vazia
           break;
         case 2:
           if (formData.latitude === null || formData.longitude === null) {
-            showError('mapError', 'A localização no mapa é obrigatória. Clique ou arraste o marcador.');
+            showError('map-error', 'A localização no mapa é obrigatória. Clique ou arraste o marcador.');
             isValid = false;
           } else {
-            hideError('mapError');
+            hideError('map-error');
           }
           break;
       }
@@ -1789,7 +1780,7 @@
         return; // Valida a última etapa antes de enviar
       }
 
-      const submitBtn = document.getElementById('submitBtn');
+      const submitBtn = document.getElementById('submitButton');
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
 
@@ -1800,11 +1791,12 @@
           console.log('Imagem enviada para Cloudinary:', imageUrl);
         }
 
-        const db = firebaseApp.database();
+        const db = firebase.database();
         const problemsRef = db.ref('problems');
         const newProblemRef = problemsRef.push();
         const problemId = newProblemRef.key;
 
+        const userInfo = await window.firebaseAuth.getUserInfo();
         const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
 
         const newProblemData = {
@@ -1814,19 +1806,19 @@
           category: formData.category,
           urgency: formData.urgency,
           suggestion: formData.suggestion,
-          imageUrl: imageUrl, // URL da imagem do Cloudinary
+          imageUrl: imageUrl,
           location: {
             latitude: formData.latitude,
             longitude: formData.longitude,
             municipality: formData.municipality,
             neighborhood: formData.neighborhood
           },
-          status: 'Aguardando',
+          status: 'pending',
           createdAt: firebase.database.ServerValue.TIMESTAMP,
           updatedAt: firebase.database.ServerValue.TIMESTAMP,
-          userId: currentUser ? currentUser.uid : 'visitante', // Permite visitante reportar
-          userName: currentUser ? (currentUser.displayName || currentUser.email || 'Utilizador Registado') : 'Visitante',
-          responsibleId: responsibleId || 'N/A' // ID do responsável ou 'N/A'
+          userId: userInfo.uid,
+          userName: userInfo.name,
+          responsibleId: responsibleId || 'N/A'
         };
 
         await newProblemRef.set(newProblemData);
@@ -1841,101 +1833,60 @@
       }
     }
 
-    // Update Auth UI (from previous pages, for consistency)
-    function updateAuthUI(user) {
-      const authButton = document.getElementById('authButton');
-      const profileDropdown = document.getElementById('profileDropdown');
-      const logoutLink = document.getElementById('logoutLink');
+    // Update Auth UI
+function updateAuthUI(userInfo) {
+  const authButton = document.getElementById('authButton');
+  const profileDropdown = document.getElementById('profileDropdown');
 
-      if (user) {
-        authButton.style.display = 'none'; // Esconde o botão "Entrar"
-        profileDropdown.style.display = 'block'; // Mostra o dropdown de perfil
-        profileDropdown.textContent = user.displayName || user.email || 'Perfil';
-        
-        // Adiciona evento de logout
-        if (logoutLink && !logoutLink.dataset.hasClickListener) {
-            logoutLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                firebaseApp.auth().signOut().then(() => {
-                    alert('Sessão encerrada com sucesso.');
-                    window.location.href = 'login.html';
-                }).catch((error) => {
-                    console.error("Erro ao fazer logout:", error);
-                    alert('Erro ao fazer logout: ' + error.message);
-                });
-            });
-            logoutLink.dataset.hasClickListener = 'true'; // Marca para evitar múltiplos listeners
-        }
-
-      } else {
-        authButton.style.display = 'inline-block'; // Mostra o botão "Entrar"
-        authButton.textContent = 'Entrar';
-        authButton.href = 'login.html';
-        profileDropdown.style.display = 'none'; // Esconde o dropdown de perfil
-      }
+  if (userInfo.isLoggedIn) {
+    authButton.style.display = 'none';
+    if (profileDropdown) {
+      profileDropdown.style.display = 'block';
+      profileDropdown.textContent = userInfo.name;
     }
-
-    // Cookie Consent (from previous pages, for consistency)
-    function setCookie(name, value, days) {
-        let expires = "";
-        if (days) {
-            const date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/; SameSite=Lax";
+    console.log("Usuário logado:", userInfo.name);
+  } else {
+    authButton.style.display = 'inline-block';
+    authButton.textContent = 'Entrar';
+    authButton.href = 'login.html';
+    if (profileDropdown) {
+      profileDropdown.style.display = 'none';
     }
+    console.log("Visitante:", userInfo.uid);
+  }
+}
 
-    function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for(let i=0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-        }
-        return null;
-    }
+// Cookie Consent Logic
+function checkCookieConsent() {
+  const consent = localStorage.getItem('cookieConsent');
+  const cookieBanner = document.getElementById('cookieConsentBanner');
+  if (!consent) {
+    setTimeout(() => {
+      cookieBanner.classList.add('show');
+    }, 1000);
+  }
 
-    function checkCookieConsent() {
-        const cookieBanner = document.getElementById('cookieConsentBanner');
-        const consent = getCookie('fixabairro_cookie_consent');
-        if (!consent) {
-            setTimeout(() => {
-                cookieBanner.classList.add('show');
-            }, 1000);
-        }
+  document.getElementById('acceptCookies').addEventListener('click', () => {
+    localStorage.setItem('cookieConsent', 'accepted');
+    cookieBanner.classList.remove('show');
+  });
 
-        document.getElementById('acceptCookies').addEventListener('click', () => {
-            setCookie('fixabairro_cookie_consent', 'accepted', 365);
-            cookieBanner.classList.remove('show');
-        });
+  document.getElementById('rejectCookies').addEventListener('click', () => {
+    localStorage.setItem('cookieConsent', 'rejected');
+    cookieBanner.classList.remove('show');
+  });
 
-        document.getElementById('rejectCookies').addEventListener('click', () => {
-            setCookie('fixabairro_cookie_consent', 'rejected', 30);
-            cookieBanner.classList.remove('show');
-            alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
-        });
-
-        document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-        });
-        document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-        });
-    }
-
-    // Initial load of the first step
-    document.addEventListener('DOMContentLoaded', () => {
-      // Pequeno delay para a tela de carregamento aparecer antes do formulário
-      setTimeout(() => {
-        loadStep();
-        AOS.refresh(); // Garante que as animações iniciem após o conteúdo ser carregado
-      }, 500);
+  const openCookiePolicyLinks = document.querySelectorAll('#openCookiePolicy, #openCookiePolicyInBanner');
+  openCookiePolicyLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Política de Cookies: Estamos a trabalhar na página de políticas. Em breve estará disponível!');
     });
+  });
+}
 
+// Load initial step
+loadStep();
   </script>
 </body>
 </html>

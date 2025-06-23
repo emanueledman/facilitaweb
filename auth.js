@@ -1,6 +1,5 @@
-// auth.js
 const firebaseConfig = {
-  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJPB5xFFCbcf4UQw",
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
   authDomain: "facilita-479b3.firebaseapp.com",
   databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com",
   projectId: "facilita-479b3",
@@ -13,18 +12,21 @@ const firebaseAuth = {
   _app: null,
   _auth: null,
   _firestore: null,
+  _database: null,
   _recaptchaVerifier: null,
+  _visitorSessionId: null,
 
   initializeFirebaseApp(firebaseConfig) {
     console.log("Inicializando Firebase...");
     if (typeof firebase === 'undefined') {
       throw new Error("Firebase SDK não carregado.");
     }
-    // Use firebase.apps to check if an app is already initialized
     this._app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(firebaseConfig);
     this._auth = firebase.auth();
     this._firestore = firebase.firestore();
+    this._database = firebase.database();
     console.log("Firebase inicializado com sucesso.");
+    this.trackUserSession(); // Inicializa rastreamento de sessão
   },
 
   initializeRecaptcha(containerId) {
@@ -142,23 +144,19 @@ const firebaseAuth = {
     let user;
 
     try {
-      // Validar BI
       const isBIValid = await this.validateBINumber(biNumber);
       if (!isBIValid) {
         throw new Error("Número de BI inválido ou não encontrado.");
       }
 
-      // Validar email
       const emailError = this.validateEmail(email);
       if (emailError) throw new Error(emailError);
 
-      // Validar telefone
       const phoneError = this.validatePhone(phoneNumber);
       if (phoneError) throw new Error(phoneError);
 
       const normalizedPhone = this.normalizePhoneNumber(phoneNumber);
 
-      // Verificar se BI ou telefone já estão em uso
       const biMapping = await this._firestore.collection('authMappings').doc(biNumber).get();
       if (biMapping.exists) {
         throw new Error("custom/bi-already-in-use");
@@ -169,7 +167,6 @@ const firebaseAuth = {
         throw new Error("custom/phone-already-in-use");
       }
 
-      // Criar usuário com email
       const userCredential = await this._auth.createUserWithEmailAndPassword(email, password);
       user = userCredential.user;
 
@@ -177,7 +174,6 @@ const firebaseAuth = {
       await user.sendEmailVerification();
       console.log(`Usuário ${user.uid} registrado via email.`);
 
-      // Salvar dados no Firestore na coleção 'usuarios'
       await this._firestore.collection('usuarios').doc(user.uid).set({
         name: fullName,
         biNumber,
@@ -190,7 +186,6 @@ const firebaseAuth = {
         registrationMethod: 'email'
       });
 
-      // Criar mapeamento de BI e telefone para autenticação
       await this._firestore.collection('authMappings').doc(biNumber).set({
         uid: user.uid,
         email,
@@ -214,7 +209,6 @@ const firebaseAuth = {
     try {
       let email = identifier;
 
-      // Verificar se o identificador é um número de telefone
       if (/^\+?2449\d{8}$|^9\d{8}$/.test(identifier)) {
         const normalizedPhone = this.normalizePhoneNumber(identifier);
         const mapping = await this._firestore.collection('authMappings').doc(normalizedPhone).get();
@@ -223,7 +217,6 @@ const firebaseAuth = {
         }
         email = mapping.data().email;
       }
-      // Verificar se o identificador é um BI
       else if (this.validateBINumberFormat(identifier)) {
         const mapping = await this._firestore.collection('authMappings').doc(identifier).get();
         if (!mapping.exists) {
@@ -231,7 +224,6 @@ const firebaseAuth = {
         }
         email = mapping.data().email;
       }
-      // Caso contrário, assumir que é um email
       else {
         const emailError = this.validateEmail(identifier);
         if (emailError) {
@@ -262,12 +254,60 @@ const firebaseAuth = {
     });
   },
 
+  async getUserInfo() {
+    const user = await this.getCurrentUser();
+    if (user) {
+      const userDoc = await this._firestore.collection('usuarios').doc(user.uid).get();
+      return {
+        isLoggedIn: true,
+        uid: user.uid,
+        name: user.displayName || userDoc.data()?.name || 'Usuário Registrado',
+        email: user.email,
+        municipio: userDoc.data()?.municipio || '',
+        bairro: userDoc.data()?.bairro || '',
+        phoneNumber: userDoc.data()?.phoneNumber || ''
+      };
+    } else {
+      return {
+        isLoggedIn: false,
+        uid: this._visitorSessionId || 'visitante',
+        name: 'Visitante',
+        email: null,
+        municipio: null,
+        bairro: null,
+        phoneNumber: null
+      };
+    }
+  },
+
+  trackUserSession() {
+    if (!this._visitorSessionId && !this._auth.currentUser) {
+      this._visitorSessionId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      console.log("Sessão de visitante iniciada:", this._visitorSessionId);
+      this._firestore.collection('visitorSessions').doc(this._visitorSessionId).set({
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(err => console.error("Erro ao salvar sessão de visitante:", err));
+    }
+    // Atualiza a última atividade
+    if (this._visitorSessionId) {
+      this._firestore.collection('visitorSessions').doc(this._visitorSessionId).update({
+        lastActive: firebase.firestore.FieldValue.serverTimestamp()
+      }).catch(err => console.error("Erro ao atualizar sessão de visitante:", err));
+    }
+  },
+
   isGuest() {
     return !this._auth.currentUser;
   },
 
   async logout() {
     try {
+      if (this._visitorSessionId) {
+        await this._firestore.collection('visitorSessions').doc(this._visitorSessionId).delete();
+        this._visitorSessionId = null;
+        console.log("Sessão de visitante encerrada.");
+      }
       await this._auth.signOut();
       console.log("Usuário deslogado com sucesso.");
       return true;
@@ -286,32 +326,29 @@ const firebaseAuth = {
     } = options;
 
     return new Promise((resolve) => {
-      this._auth.onAuthStateChanged((user) => {
+      this._auth.onAuthStateChanged(async (user) => {
         const currentPath = window.location.pathname;
+        const userInfo = await this.getUserInfo();
         
         if (user) {
-          // Usuário logado
           if (redirectIfLoggedIn && currentPath !== new URL(redirectIfLoggedIn, window.location.origin).pathname) {
             window.location.href = redirectIfLoggedIn;
           }
-          if (onLoggedIn) onLoggedIn(user);
+          if (onLoggedIn) onLoggedIn(userInfo);
         } else {
-          // Usuário visitante
           if (redirectIfNotSignedIn && currentPath !== new URL(redirectIfNotSignedIn, window.location.origin).pathname) {
             window.location.href = redirectIfNotSignedIn;
           }
-          if (onGuest) onGuest();
+          if (onGuest) onGuest(userInfo);
         }
-        resolve(user);
+        resolve(userInfo);
       });
     });
   },
 };
 
-// Inicializar Firebase
 try {
   firebaseAuth.initializeFirebaseApp(firebaseConfig);
-  // Expor firebaseAuth globalmente
   window.firebaseAuth = firebaseAuth;
 } catch (error) {
   console.error("Erro ao inicializar Firebase:", error);
