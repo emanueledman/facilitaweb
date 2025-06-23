@@ -819,488 +819,518 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjGwZGOxKjW7W6q8LVSg1fPjHjJ9Ew=" crossorigin=""></script>
 
   <script>
-    let map; // Variável global para a instância do mapa
-    let currentUser = null; // Variável global para armazenar o usuário autenticado
 
-    // Função para obter o parâmetro caseId da URL
-    function getCaseIdFromUrl() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('caseId');
-    }
+// Configuração global
+let map; // Instância do mapa
+let currentUser = null; // Usuário autenticado
+const caseId = getCaseIdFromUrl(); // ID do caso da URL
 
-    // Função para formatar a data
-    function formatTimestamp(timestamp) {
-      if (!timestamp) return 'Data Indisponível';
-      const date = new Date(timestamp);
-      return date.toLocaleDateString('pt-BR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+// Função para obter o caseId da URL
+function getCaseIdFromUrl() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get('caseId');
+}
 
-    // Função para exibir modal/alerta para login/registro
-    function showLoginPrompt() {
-      if (confirm('Para realizar esta ação, você precisa estar registado ou fazer login. Deseja ser redirecionado para a página de login/registro?')) {
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Função para carregar os detalhes do problema
-    function loadProblemDetails(caseId, db) {
-      const problemRef = db.ref('problems/' + caseId);
-      const errorMessageDiv = document.getElementById('errorMessage');
-      const errorText = document.getElementById('errorText');
-      const problemDetailsContent = document.getElementById('problemDetailsContent');
-
-      problemRef.once('value', (snapshot) => {
-        const problem = snapshot.val();
-        if (problem) {
-          problemDetailsContent.style.display = 'block';
-          document.getElementById('problemTitle').textContent = problem.title || 'Problema Sem Título';
-          document.getElementById('problemDescription').textContent = problem.description || 'Nenhuma descrição detalhada fornecida.';
-          document.getElementById('problemLocation').textContent = `${problem.location?.neighborhood || 'Bairro Desconhecido'}, ${problem.location?.municipality || 'Município Desconhecido'}, ${problem.location?.province || 'Província Desconhecida'}`;
-          document.getElementById('problemReporter').textContent = problem.userName || 'Cidadão Anónimo';
-          document.getElementById('problemDate').textContent = formatTimestamp(problem.createdAt);
-          document.getElementById('problemCategory').textContent = problem.category || 'Não Classificado';
-
-          // Status Badge
-          const statusBadge = document.getElementById('problemStatus');
-          statusBadge.textContent = problem.status || 'Aguardando';
-          statusBadge.className = `status-badge status-${problem.status?.replace(/\s/g, '') || 'Aguardando'}`;
-          let statusIcon = '';
-          switch (problem.status) {
-            case 'Em Análise': statusIcon = '<i class="fas fa-hourglass-half"></i>'; break;
-            case 'Resolvido': statusIcon = '<i class="fas fa-check-circle"></i>'; break;
-            case 'Aguardando':
-            default: statusIcon = '<i class="fas fa-clock"></i>'; break;
-          }
-          statusBadge.innerHTML = statusIcon + ' ' + (problem.status || 'Aguardando');
-
-          // Suporte Count
-          const supportCount = problem.supporters ? Object.keys(problem.supporters).length : 0;
-          document.getElementById('supportCount').textContent = supportCount;
-
-          // Carregar Imagens
-          const problemImagesContainer = document.getElementById('problemImages');
-          let imagesHtml = '';
-
-          const addImageHtml = (url, caption, placeholderIcon) => {
-            if (url && typeof url === 'string' && url.trim() !== '') {
-              return `
-                <div class="image-container">
-                  <img src="${url}" alt="${caption}" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300/cccccc/ffffff?text=Imagem+N%C3%A3o+Dispon%C3%ADvel';"/>
-                  <div class="image-caption">${caption}</div>
-                </div>
-              `;
-            } else {
-              return `
-                <div class="image-container">
-                  <div class="image-placeholder">
-                    <i class="fas ${placeholderIcon}"></i>
-                    <small>${caption} (Imagem indisponível)</small>
-                  </div>
-                  <div class="image-caption">${caption}</div>
-                </div>
-              `;
-            }
-          };
-
-          imagesHtml += addImageHtml(problem.imageUrl, 'Foto do Problema (Antes)', 'fa-camera');
-          if (problem.status === 'Resolvido') {
-            imagesHtml += addImageHtml(problem.imageUrlAfter, 'Foto do Problema (Depois)', 'fa-check');
-          }
-
-          problemImagesContainer.innerHTML = imagesHtml;
-
-          // Carregar Mapa
-          if (problem.location && problem.location.latitude && problem.location.longitude) {
-            const lat = problem.location.latitude;
-            const lng = problem.location.longitude;
-
-            if (map) {
-              map.setView([lat, lng], 14);
-              L.marker([lat, lng]).addTo(map)
-                .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
-            } else {
-              map = L.map('caseMap').setView([lat, lng], 14);
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-              }).addTo(map);
-              L.marker([lat, lng]).addTo(map)
-                .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
-            }
-          } else {
-            document.getElementById('caseMap').style.display = 'none';
-          }
-
-          // Carregar Comentários
-          loadComments(caseId, db);
-
-          // Lógica dos Botões de Ação
-          setupActionButtons(caseId, db, problem);
-        } else {
-          errorMessageDiv.style.display = 'block';
-          errorText.textContent = 'Problema não encontrado. O ID fornecido pode estar incorreto ou o problema foi removido.';
-          problemDetailsContent.style.display = 'none';
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao carregar detalhes do problema:', error);
-        errorMessageDiv.style.display = 'block';
-        errorText.textContent = `Erro ao carregar os detalhes do problema: ${error.message}`;
-        problemDetailsContent.style.display = 'none';
-      });
-    }
-
-    // Função para carregar comentários
-    function loadComments(caseId, db) {
-      const commentsRef = db.ref('comments/' + caseId).orderByChild('timestamp');
-      const commentsList = document.getElementById('commentsList');
-      const noCommentsMessage = document.getElementById('noCommentsMessage');
-      const submitCommentButton = document.getElementById('submitCommentButton');
-      const commentTextarea = document.getElementById('commentText');
-
-      commentsRef.on('value', (snapshot) => {
-        let html = '';
-        if (snapshot.exists()) {
-          noCommentsMessage.style.display = 'none';
-          snapshot.forEach((childSnapshot) => {
-            const comment = childSnapshot.val();
-            const userName = comment.userName || 'Cidadão Anónimo';
-            const initial = userName.charAt(0).toUpperCase();
-            const date = formatTimestamp(comment.timestamp);
-
-            html += `
-              <div class="comment-item">
-                <div class="comment-avatar">${initial}</div>
-                <div class="comment-content">
-                  <div class="comment-author">${userName}</div>
-                  <div class="comment-date">${date}</div>
-                  <p class="comment-text">${comment.text}</p>
-                </div>
-              </div>
-            `;
-          });
-        } else {
-          noCommentsMessage.style.display = 'block';
-        }
-        commentsList.innerHTML = html;
-      }, (error) => {
-        console.error('Erro ao carregar comentários:', error);
-        commentsList.innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar comentários.</p></div>';
-      });
-
-      // Habilitar/Desabilitar o botão de comentar com base no login
-      if (!window.firebaseAuth.isGuest()) {
-        submitCommentButton.disabled = false;
-        commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
-      } else {
-        submitCommentButton.disabled = true;
-        commentTextarea.placeholder = 'Faça login para comentar...';
-      }
-    }
-
-    // Função para adicionar um novo comentário
-    function addComment(caseId, db) {
-      if (window.firebaseAuth.isGuest()) {
-        showLoginPrompt();
-        return;
-      }
-
-      const commentTextarea = document.getElementById('commentText');
-      const commentText = commentTextarea.value.trim();
-
-      if (!commentText) {
-        alert('Por favor, escreva um comentário antes de publicar.');
-        return;
-      }
-
-      window.firebaseAuth.getCurrentUser().then(user => {
-        if (!user) {
-          showLoginPrompt();
-          return;
-        }
-
-        const userName = user.displayName || user.email || 'Utilizador Registado';
-        const userId = user.uid;
-
-        const newCommentRef = db.ref('comments/' + caseId).push();
-        newCommentRef.set({
-          text: commentText,
-          userName: userName,
-          userId: userId,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
-        })
-        .then(() => {
-          commentTextarea.value = '';
-        })
-        .catch((error) => {
-          console.error('Erro ao adicionar comentário:', error);
-          alert('Erro ao publicar comentário: ' + error.message);
-        });
-      });
-    }
-
-    // Gerenciar botões de ação
-    function setupActionButtons(caseId, db, problemData) {
-      const supportButton = document.getElementById('supportButton');
-      const markResolvedButton = document.getElementById('markResolvedButton');
-      const supportCountSpan = document.getElementById('supportCount');
-
-      // Atualiza o estado dos botões com base no usuário
-      window.firebaseAuth.checkAuthState({
-        onLoggedIn: (user) => {
-          currentUser = user;
-          if (problemData.status === 'Resolvido') {
-            markResolvedButton.style.display = 'none';
-            supportButton.disabled = true;
-          } else if (user.uid === problemData.userId) {
-            markResolvedButton.style.display = 'inline-block';
-          } else {
-            markResolvedButton.style.display = 'none';
-          }
-
-          if (problemData.supporters && problemData.supporters[user.uid]) {
-            supportButton.classList.add('btn-outline-secondary-dark');
-            supportButton.classList.remove('btn-main');
-            supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiado (${supportCountSpan.textContent})`;
-          } else {
-            supportButton.classList.remove('btn-outline-secondary-dark');
-            supportButton.classList.add('btn-main');
-            supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${supportCountSpan.textContent})`;
-          }
-        },
-        onGuest: () => {
-          currentUser = null;
-          markResolvedButton.style.display = 'none';
-          supportButton.classList.remove('btn-outline-secondary-dark');
-          supportButton.classList.add('btn-main');
-          supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${supportCountSpan.textContent})`;
-        }
-      });
-
-      // Evento para o botão de Apoio
-      supportButton.addEventListener('click', () => {
-        if (window.firebaseAuth.isGuest()) {
-          showLoginPrompt();
-          return;
-        }
-
-        window.firebaseAuth.getCurrentUser().then(user => {
-          const supportersRef = db.ref(`problems/${caseId}/supporters/${user.uid}`);
-          supportersRef.once('value').then(snapshot => {
-            if (snapshot.exists()) {
-              supportersRef.remove()
-                .then(() => {
-                  const newCount = (problemData.supporters ? Object.keys(problemData.supporters).length : 1) - 1;
-                  supportCountSpan.textContent = newCount;
-                  supportButton.classList.remove('btn-outline-secondary-dark');
-                  supportButton.classList.add('btn-main');
-                  supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${newCount})`;
-                })
-                .catch(error => console.error('Erro ao remover apoio:', error));
-            } else {
-              supportersRef.set(true)
-                .then(() => {
-                  const newCount = (problemData.supporters ? Object.keys(problemData.supporters).length : 0) + 1;
-                  supportCountSpan.textContent = newCount;
-                  supportButton.classList.add('btn-outline-secondary-dark');
-                  supportButton.classList.remove('btn-main');
-                  supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiado (${newCount})`;
-                })
-                .catch(error => console.error('Erro ao adicionar apoio:', error));
-            }
-          }).catch(error => {
-            console.error('Erro ao verificar apoio:', error);
-          });
-        });
-      });
-
-      // Evento para o botão "Marcar como Resolvido"
-      markResolvedButton.addEventListener('click', async () => {
-        if (window.firebaseAuth.isGuest()) {
-          showLoginPrompt();
-          return;
-        }
-
-        const user = await window.firebaseAuth.getCurrentUser();
-        if (!user || user.uid !== problemData.userId) {
-          alert('Você não tem permissão para marcar este problema como resolvido.');
-          return;
-        }
-
-        const confirmResolved = confirm('Tem certeza de que deseja marcar este problema como RESOLVIDO? Esta ação é irreversível e significa que o problema foi completamente solucionado.');
-        if (confirmResolved) {
-          const newStatus = 'Resolvido';
-          const updates = {};
-          updates[`problems/${caseId}/status`] = newStatus;
-          updates[`problems/${caseId}/resolvedAt`] = firebase.database.ServerValue.TIMESTAMP;
-          updates[`problems/${caseId}/resolvedBy`] = user.uid;
-
-          const imageUrlAfter = prompt('O problema foi resolvido! Por favor, forneça o URL da imagem "DEPOIS" da solução:');
-          if (imageUrlAfter && imageUrlAfter.trim() !== '') {
-            updates[`problems/${caseId}/imageUrlAfter`] = imageUrlAfter.trim();
-          } else {
-            alert('É altamente recomendável adicionar uma imagem "DEPOIS" para comprovar a resolução do problema.');
-          }
-
-          try {
-            await db.ref().update(updates);
-            alert('Problema marcado como RESOLVIDO com sucesso!');
-            loadProblemDetails(caseId, db);
-          } catch (error) {
-            console.error('Erro ao marcar problema como resolvido:', error);
-            alert('Erro ao marcar problema como resolvido: ' + error.message);
-          }
-        }
-      });
-    }
-
-    // Atualiza UI com base no estado de autenticação
-    function updateAuthUI(user) {
-      const authButton = document.getElementById('authButton');
-      const navTogglerIcon = document.querySelector('.navbar-toggler i');
-      const submitCommentButton = document.getElementById('submitCommentButton');
-      const commentTextarea = document.getElementById('commentText');
-
-      if (user) {
-        authButton.textContent = 'Meu Perfil';
-        authButton.href = 'profile.html';
-        currentUser = user;
-        submitCommentButton.disabled = false;
-        commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
-      } else {
-        authButton.textContent = 'Entrar';
-        authButton.href = 'login.html';
-        currentUser = null;
-        submitCommentButton.disabled = true;
-        commentTextarea.placeholder = 'Faça login para comentar...';
-      }
-
-      navTogglerIcon.style.color = 'var(--secondary-dark)';
-    }
-
-    // Gerenciamento de Cookies
-    function setCookie(name, value, days) {
-      let expires = "";
-      if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-      }
-      document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
-    }
-
-    function getCookie(name) {
-      const nameEQ = name + "=";
-      const ca = document.cookie.split(';');
-      for(let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
-      }
-      return null;
-    }
-
-    function checkCookieConsent() {
-      const cookieBanner = document.getElementById('cookieConsentBanner');
-      const consent = getCookie('fixabairro_cookie_consent');
-      if (!consent) {
-        setTimeout(() => {
-          cookieBanner.classList.add('show');
-        }, 1000);
-      }
-
-      document.getElementById('acceptCookies').addEventListener('click', () => {
-        setCookie('fixabairro_cookie_consent', 'accepted', 365);
-        cookieBanner.classList.remove('show');
-      });
-
-      document.getElementById('rejectCookies').addEventListener('click', () => {
-        setCookie('fixabairro_cookie_consent', 'rejected', 30);
-        cookieBanner.classList.remove('show');
-        alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
-      });
-
-      document.getElementById('openCookiePolicy').addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-      });
-      document.getElementById('openCookiePolicyInBanner').addEventListener('click', (e) => {
-        e.preventDefault();
-        alert('Esta é a Política de Cookies do FixABairro. Detalhamos quais cookies utilizamos (essenciais, de desempenho e funcionalidade) e como você pode gerenciar suas preferências. A sua privacidade é a nossa prioridade. (Página/Modal em desenvolvimento)');
-      });
-    }
-
-    // Inicialização da página
-    window.addEventListener('load', () => {
-      const caseId = getCaseIdFromUrl();
-      const errorMessageDiv = document.getElementById('errorMessage');
-      const errorText = document.getElementById('errorText');
-
-      if (!caseId) {
-        document.getElementById('loadingScreen').classList.add('fade-out');
-        document.getElementById('loadingScreen').addEventListener('transitionend', () => {
-          document.getElementById('loadingScreen').style.display = 'none';
-          document.getElementById('caseDetailsPage').style.display = 'block';
-          errorMessageDiv.style.display = 'block';
-          errorText.textContent = 'ID do problema não fornecido na URL.';
-          AOS.init({ once: true, duration: 1000 });
-          checkCookieConsent();
-        }, { once: true });
-        return;
-      }
-
+// Função para aguardar inicialização do firebaseAuth
+async function waitForFirebaseAuth() {
+  return new Promise((resolve, reject) => {
+    const maxAttempts = 20;
+    let attempts = 0;
+    const interval = setInterval(() => {
       if (window.firebaseAuth) {
-        setTimeout(() => {
-          document.getElementById('loadingScreen').classList.add('fade-out');
-          document.getElementById('loadingScreen').addEventListener('transitionend', () => {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('caseDetailsPage').style.display = 'block';
-            AOS.init({ once: true, duration: 1000 });
+        clearInterval(interval);
+        resolve();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        reject(new Error("firebaseAuth não inicializado após tentativas."));
+      }
+      attempts++;
+    }, 100);
+  });
+}
 
-            // Inicializa o listener de autenticação com firebaseAuth
-            window.firebaseAuth.checkAuthState({
-              onLoggedIn: (user) => {
-                updateAuthUI(user);
-                loadProblemDetails(caseId, firebase.database());
-              },
-              onGuest: () => {
-                updateAuthUI(null);
-                loadProblemDetails(caseId, firebase.database());
-              }
-            });
+// Função para formatar data
+function formatTimestamp(timestamp) {
+  if (!timestamp) return 'Data Indisponível';
+  const date = new Date(timestamp);
+  return date.toLocaleDateString('pt-BR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
 
-            checkCookieConsent();
-          }, { once: true });
-        }, 800);
+// Função para exibir prompt de login
+function showLoginPrompt() {
+  if (confirm('Para realizar esta ação, você precisa estar registado ou fazer login. Deseja ser redirecionado para a página de login/registro?')) {
+    window.location.href = 'login.html';
+  }
+}
+
+// Função para carregar detalhes do problema
+async function loadProblemDetails(caseId, db) {
+  const problemRef = db.ref(`problems/${caseId}`);
+  const errorMessageDiv = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+  const problemDetailsContent = document.getElementById('problemDetailsContent');
+
+  try {
+    const snapshot = await problemRef.once('value');
+    const problem = snapshot.val();
+    if (problem) {
+      problemDetailsContent.style.display = 'block';
+      document.getElementById('problemTitle').textContent = problem.title || 'Problema Sem Título';
+      document.getElementById('problemDescription').textContent = problem.description || 'Nenhuma descrição detalhada fornecida.';
+      document.getElementById('problemLocation').textContent = `${problem.location?.neighborhood || 'Bairro Desconhecido'}, ${problem.location?.municipality || 'Município Desconhecido'}`;
+      document.getElementById('problemReporter').textContent = problem.userName || 'Cidadão Anónimo';
+      document.getElementById('problemDate').textContent = formatTimestamp(problem.createdAt);
+      document.getElementById('problemCategory').textContent = problem.category || 'Não Classificado';
+
+      // Status Badge
+      const statusBadge = document.getElementById('problemStatus');
+      const statusText = problem.status || 'Aguardando';
+      statusBadge.textContent = statusText;
+      statusBadge.className = `status-badge status-${statusText.replace(/\s/g, '')}`;
+      let statusIcon = '';
+      switch (statusText) {
+        case 'Em Análise': statusIcon = '<i class="fas fa-hourglass-half"></i>'; break;
+        case 'Resolvido': statusIcon = '<i class="fas fa-check-circle"></i>'; break;
+        case 'Aguardando':
+        default: statusIcon = '<i class="fas fa-clock"></i>'; break;
+      }
+      statusBadge.innerHTML = `${statusIcon} ${statusText}`;
+
+      // Carregar Imagens
+      const problemImagesContainer = document.getElementById('problemImages');
+      let imagesHtml = '';
+      const addImageHtml = (url, caption, placeholderIcon) => {
+        if (url && typeof url === 'string' && url.trim() !== '') {
+          return `
+            <div class="image-container">
+              <img src="${url}" alt="${caption}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300/cccccc/ffffff?text=Imagem+N%C3%A3o+Dispon%C3%ADvel';"/>
+              <div class="image-caption">${caption}</div>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="image-container">
+              <div class="image-placeholder">
+                <i class="fas ${placeholderIcon}"></i>
+                <small>${caption} (Imagem indisponível)</small>
+              </div>
+              <div class="image-caption">${caption}</div>
+            </div>
+          `;
+        }
+      };
+      imagesHtml += addImageHtml(problem.imageUrl, 'Foto do Problema (Antes)', 'fa-camera');
+      if (problem.status === 'Resolvido') {
+        imagesHtml += addImageHtml(problem.imageUrlAfter, 'Foto do Problema (Depois)', 'fa-check');
+      }
+      problemImagesContainer.innerHTML = imagesHtml;
+
+      // Carregar Mapa
+      if (problem.location && problem.location.latitude && problem.location.longitude) {
+        const lat = problem.location.latitude;
+        const lng = problem.location.longitude;
+        if (map) {
+          map.setView([lat, lng], 14);
+          L.marker([lat, lng]).addTo(map)
+            .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+        } else {
+          map = L.map('caseMap').setView([lat, lng], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          }).addTo(map);
+          L.marker([lat, lng]).addTo(map)
+            .bindPopup(`<b>${problem.title || 'Problema'}</b><br>${problem.location.neighborhood || ''}`).openPopup();
+        }
       } else {
-        console.warn('Firebase Auth SDK ou auth.js não carregado. Verifique sua conexão ou configuração.');
-        document.getElementById('loadingScreen').classList.add('fade-out');
-        setTimeout(() => {
-          document.getElementById('loadingScreen').style.display = 'none';
-          document.getElementById('caseDetailsPage').style.display = 'block';
-          errorMessageDiv.style.display = 'block';
-          errorText.textContent = 'Erro de inicialização. Firebase Auth ou auth.js não carregado. Verifique sua conexão.';
-          AOS.init({ once: true, duration: 1000 });
-          checkCookieConsent();
-        }, 300);
+        document.getElementById('caseMap').style.display = 'none';
       }
 
-      // Adiciona o evento para o formulário de comentários
-      document.getElementById('addCommentForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (window.firebaseAuth && firebase.database()) {
-          addComment(caseId, firebase.database());
-        } else {
-          alert('O Firebase ou auth.js não foi inicializado corretamente. Não foi possível adicionar o comentário.');
+      // Carregar Comentários
+      await loadComments(caseId, db);
+
+      // Configurar Botões de Ação
+      await setupActionButtons(caseId, db, problem);
+    } else {
+      errorMessageDiv.style.display = 'block';
+      errorText.textContent = 'Problema não encontrado. O ID fornecido pode estar incorreto ou o problema foi removido.';
+      problemDetailsContent.style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Erro ao carregar detalhes do problema:', error);
+    errorMessageDiv.style.display = 'block';
+    errorText.textContent = `Erro ao carregar os detalhes do problema: ${error.message}`;
+    problemDetailsContent.style.display = 'none';
+  }
+}
+
+// Função para carregar comentários
+async function loadComments(caseId, db) {
+  const commentsRef = db.ref(`comments/${caseId}`).orderByChild('createdAt');
+  const commentsList = document.getElementById('commentsList');
+  const noCommentsMessage = document.getElementById('noCommentsMessage');
+  const submitCommentButton = document.getElementById('submitCommentButton');
+  const commentTextarea = document.getElementById('commentText');
+
+  commentsList.innerHTML = '<div class="text-center"><div class="spinner" style="width: 30px; height: 30px;"></div></div>';
+
+  try {
+    commentsRef.on('value', (snapshot) => {
+      let html = '';
+      if (snapshot.exists()) {
+        noCommentsMessage.style.display = 'none';
+        snapshot.forEach((childSnapshot) => {
+          const comment = childSnapshot.val();
+          const userName = comment.userName || 'Cidadão Anónimo';
+          const initial = userName.charAt(0).toUpperCase();
+          const date = formatTimestamp(comment.createdAt);
+          html += `
+            <div class="comment-item" data-aos="fade-up">
+              <div class="comment-avatar">${initial}</div>
+              <div class="comment-content">
+                <div class="comment-author">${userName}</div>
+                <div class="comment-date">${date}</div>
+                <p class="comment-text">${comment.text}</p>
+              </div>
+            </div>
+          `;
+        });
+      } else {
+        noCommentsMessage.style.display = 'block';
+        html = '';
+      }
+      commentsList.innerHTML = html;
+      AOS.refresh();
+    }, (error) => {
+      console.error('Erro ao carregar comentários:', error);
+      commentsList.innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar comentários.</p></div>';
+    });
+
+    // Configurar formulário de comentários
+    const user = await window.firebaseAuth.getCurrentUser();
+    if (user) {
+      submitCommentButton.disabled = false;
+      submitCommentButton.setAttribute('aria-disabled', 'false');
+      commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
+      commentTextarea.disabled = false;
+    } else {
+      submitCommentButton.disabled = true;
+      submitCommentButton.setAttribute('aria-disabled', 'true');
+      commentTextarea.placeholder = 'Faça login para comentar...';
+      commentTextarea.disabled = true;
+    }
+  } catch (error) {
+    console.error('Erro ao configurar comentários:', error);
+    commentsList.innerHTML = '<div class="text-center text-danger"><p>Erro ao carregar comentários.</p></div>';
+  }
+}
+
+// Função para adicionar comentário
+async function addComment(caseId, db) {
+  const commentTextarea = document.getElementById('commentText');
+  const submitCommentButton = document.getElementById('submitCommentButton');
+  const commentText = commentTextarea.value.trim();
+
+  if (!commentText) {
+    alert('Por favor, escreva um comentário antes de publicar.');
+    return;
+  }
+
+  if (commentText.length > 500) {
+    alert('O comentário não pode exceder 500 caracteres.');
+    return;
+  }
+
+  submitCommentButton.disabled = true;
+  submitCommentButton.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Publicando...';
+
+  try {
+    const user = await window.firebaseAuth.getCurrentUser();
+    if (!user) {
+      showLoginPrompt();
+      submitCommentButton.disabled = false;
+      submitCommentButton.innerHTML = 'Publicar Comentário';
+      return;
+    }
+
+    const userName = user.displayName || user.email || 'Utilizador Registado';
+    const userId = user.uid;
+
+    const newCommentRef = db.ref(`comments/${caseId}`).push();
+    await newCommentRef.set({
+      text: commentText,
+      userName: userName,
+      userId: userId,
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    commentTextarea.value = '';
+    submitCommentButton.disabled = false;
+    submitCommentButton.innerHTML = 'Publicar Comentário';
+  } catch (error) {
+    console.error('Erro ao adicionar comentário:', error);
+    alert('Erro ao publicar comentário: ' + error.message);
+    submitCommentButton.disabled = false;
+    submitCommentButton.innerHTML = 'Publicar Comentário';
+  }
+}
+
+// Função para configurar botões de ação
+async function setupActionButtons(caseId, db, problemData) {
+  const supportButton = document.getElementById('supportButton');
+  const markResolvedButton = document.getElementById('markResolvedButton');
+  const supportCountSpan = document.getElementById('supportCount');
+
+  // Atualizar suporte em tempo real
+  const supportersRef = db.ref(`problems/${caseId}/supporters`);
+  supportersRef.on('value', (snapshot) => {
+    const supporters = snapshot.val() || {};
+    const supportCount = Object.keys(supporters).length;
+    supportCountSpan.textContent = supportCount;
+
+    if (currentUser && supporters[currentUser.uid]) {
+      supportButton.classList.add('btn-outline-secondary-dark');
+      supportButton.classList.remove('btn-main');
+      supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiado (${supportCount})`;
+      supportButton.setAttribute('aria-label', `Remover apoio ao problema (atualmente ${supportCount} apoiadores)`);
+    } else {
+      supportButton.classList.remove('btn-outline-secondary-dark');
+      supportButton.classList.add('btn-main');
+      supportButton.innerHTML = `<i class="fas fa-heart me-2"></i>Apoiar (${supportCount})`;
+      supportButton.setAttribute('aria-label', `Apoiar problema (atualmente ${supportCount} apoiadores)`);
+    }
+  });
+
+  // Configurar estado inicial dos botões
+  try {
+    const user = await window.firebaseAuth.getCurrentUser();
+    currentUser = user;
+    if (problemData.status === 'Resolvido') {
+      markResolvedButton.style.display = 'none';
+      supportButton.disabled = true;
+      supportButton.setAttribute('aria-disabled', 'true');
+    } else if (user && user.uid === problemData.userId) {
+      markResolvedButton.style.display = 'inline-block';
+      markResolvedButton.setAttribute('aria-hidden', 'false');
+    } else {
+      markResolvedButton.style.display = 'none';
+      markResolvedButton.setAttribute('aria-hidden', 'true');
+    }
+  } catch (error) {
+    console.error('Erro ao configurar botões:', error);
+    markResolvedButton.style.display = 'none';
+    markResolvedButton.setAttribute('aria-hidden', 'true');
+  }
+
+  // Evento para botão de apoio
+  supportButton.addEventListener('click', async () => {
+    if (!currentUser) {
+      showLoginPrompt();
+      return;
+    }
+
+    supportButton.disabled = true;
+    supportButton.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Processando...';
+
+    try {
+      const userSupporterRef = db.ref(`problems/${caseId}/supporters/${currentUser.uid}`);
+      const snapshot = await userSupporterRef.once('value');
+      if (snapshot.exists()) {
+        await userSupporterRef.remove();
+      } else {
+        await userSupporterRef.set(true);
+      }
+      supportButton.disabled = false;
+    } catch (error) {
+      console.error('Erro ao gerenciar apoio:', error);
+      alert('Erro ao gerenciar apoio: ' + error.message);
+      supportButton.disabled = false;
+    }
+  });
+
+  // Evento para botão "Marcar como Resolvido"
+  markResolvedButton.addEventListener('click', async () => {
+    if (!currentUser) {
+      showLoginPrompt();
+      return;
+    }
+
+    if (currentUser.uid !== problemData.userId) {
+      alert('Você não tem permissão para marcar este problema como resolvido.');
+      return;
+    }
+
+    const confirmResolved = confirm('Tem certeza de que deseja marcar este problema como RESOLVIDO? Esta ação é irreversível e significa que o problema foi completamente solucionado.');
+    if (!confirmResolved) return;
+
+    markResolvedButton.disabled = true;
+    markResolvedButton.innerHTML = '<span class="spinner" style="width: 20px; height: 20px;"></span> Processando...';
+
+    try {
+      const imageUrlAfter = prompt('O problema foi resolvido! Por favor, forneça o URL da imagem "DEPOIS" da solução (opcional):');
+      const updates = {
+        [`problems/${caseId}/status`]: 'Resolvido',
+        [`problems/${caseId}/resolvedAt`]: firebase.database.ServerValue.TIMESTAMP,
+        [`problems/${caseId}/resolvedBy`]: currentUser.uid
+      };
+      if (imageUrlAfter && imageUrlAfter.trim() !== '') {
+        updates[`problems/${caseId}/imageUrlAfter`] = imageUrlAfter.trim();
+      }
+      await db.ref().update(updates);
+      alert('Problema marcado como RESOLVIDO com sucesso!');
+      markResolvedButton.disabled = false;
+      markResolvedButton.innerHTML = '<i class="fas fa-check-circle me-2"></i>Marcar como Resolvido';
+      await loadProblemDetails(caseId, db); // Recarregar detalhes
+    } catch (error) {
+      console.error('Erro ao marcar problema como resolvido:', error);
+      alert('Erro ao marcar problema como resolvido: ' + error.message);
+      markResolvedButton.disabled = false;
+      markResolvedButton.innerHTML = '<i class="fas fa-check-circle me-2"></i>Marcar como Resolvido';
+    }
+  });
+}
+
+// Atualizar UI de autenticação
+function updateAuthUI(user) {
+  const authButton = document.getElementById('authButton');
+  const submitCommentButton = document.getElementById('submitCommentButton');
+  const commentTextarea = document.getElementById('commentText');
+
+  if (user) {
+    authButton.textContent = 'Meu Perfil';
+    authButton.href = 'profile.html';
+    authButton.setAttribute('aria-label', 'Acessar perfil do usuário');
+    currentUser = user;
+    submitCommentButton.disabled = false;
+    submitCommentButton.setAttribute('aria-disabled', 'false');
+    commentTextarea.placeholder = 'Adicione seu comentário ou atualização...';
+    commentTextarea.disabled = false;
+  } else {
+    authButton.textContent = 'Entrar';
+    authButton.href = 'login.html';
+    authButton.setAttribute('aria-label', 'Fazer login');
+    currentUser = null;
+    submitCommentButton.disabled = true;
+    submitCommentButton.setAttribute('aria-disabled', 'true');
+    commentTextarea.placeholder = 'Faça login para comentar...';
+    commentTextarea.disabled = true;
+  }
+}
+
+// Gerenciamento de cookies
+function setCookie(name, value, days) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
+}
+
+function getCookie(name) {
+  const nameEQ = `${name}=`;
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function checkCookieConsent() {
+  const cookieBanner = document.getElementById('cookieConsentBanner');
+  const consent = getCookie('fixabairro_cookie_consent');
+  if (!consent) {
+    setTimeout(() => cookieBanner.classList.add('show'), 1000);
+  }
+
+  document.getElementById('acceptCookies').addEventListener('click', () => {
+    setCookie('fixabairro_cookie_consent', 'accepted', 365);
+    cookieBanner.classList.remove('show');
+  });
+
+  document.getElementById('rejectCookies').addEventListener('click', () => {
+    setCookie('fixabairro_cookie_consent', 'rejected', 30);
+    cookieBanner.classList.remove('show');
+    alert('Você optou por recusar cookies. Algumas funcionalidades podem ser limitadas para garantir sua privacidade.');
+  });
+
+  const policyLinks = document.querySelectorAll('#openCookiePolicy, #openCookiePolicyInBanner');
+  policyLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('Política de Cookies do FixABairro: Utilizamos cookies essenciais, de desempenho e funcionalidade para melhorar sua experiência. Você pode gerenciar suas preferências aqui. (Página em desenvolvimento)');
+    });
+  });
+}
+
+// Inicialização da página
+window.addEventListener('load', async () => {
+  const errorMessageDiv = document.getElementById('errorMessage');
+  const errorText = document.getElementById('errorText');
+
+  if (!caseId) {
+    document.getElementById('loadingScreen').classList.add('fade-out');
+    document.getElementById('loadingScreen').addEventListener('transitionend', () => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('caseDetailsPage').style.display = 'block';
+      errorMessageDiv.style.display = 'block';
+      errorText.textContent = 'ID do problema não fornecido na URL.';
+      AOS.init({ once: true, duration: 1000 });
+      checkCookieConsent();
+    }, { once: true });
+    return;
+  }
+
+  try {
+    await waitForFirebaseAuth();
+    document.getElementById('loadingScreen').classList.add('fade-out');
+    document.getElementById('loadingScreen').addEventListener('transitionend', async () => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('caseDetailsPage').style.display = 'block';
+      AOS.init({ once: true, duration: 1000 });
+
+      window.firebaseAuth.checkAuthState({
+        onLoggedIn: async (user) => {
+          updateAuthUI(user);
+          await loadProblemDetails(caseId, firebase.database());
+        },
+        onGuest: async () => {
+          updateAuthUI(null);
+          await loadProblemDetails(caseId, firebase.database());
         }
       });
-    });
+
+      checkCookieConsent();
+
+      // Configurar formulário de comentários
+      document.getElementById('addCommentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await addComment(caseId, firebase.database());
+      });
+    }, { once: true });
+  } catch (error) {
+    console.error('Erro ao inicializar Firebase Auth:', error);
+    document.getElementById('loadingScreen').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('caseDetailsPage').style.display = 'block';
+      errorMessageDiv.style.display = 'block';
+      errorText.textContent = 'Erro de inicialização. Firebase Auth ou auth.js não carregado. Verifique sua conexão.';
+      AOS.init({ once: true, duration: 1000 });
+      checkCookieConsent();
+    }, 300);
+  }
+});
+
   </script>
 </body>
 </html>
