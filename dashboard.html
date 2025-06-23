@@ -25,6 +25,9 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <title>FixABairro | Dashboard de Relatórios</title>
   <style>
     :root {
@@ -202,7 +205,7 @@
       border-radius: 10px;
       padding: 1rem;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(34, 197, 94, 0.2);
+      border:1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease;
       height: 100%;
     }
@@ -462,6 +465,27 @@
         box-shadow: var(--card-shadow);
       }
     }
+
+    .export-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      max-width: 200px;
+    }
+
+    .export-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.5);
+    }
   </style>
 </head>
 <body>
@@ -504,6 +528,9 @@
   <div class="dashboard-container">
     <h1 class="dashboard-title" data-aos="fade-up">Dashboard de Relatórios</h1>
     
+    <!-- Export Button -->
+    <button class="export-button" id="exportReport" data-aos="fade-up" data-aos-delay="50">Gerar Relatório PDF</button>
+
     <!-- Metrics Section -->
     <div class="row g-3 mb-3 justify-content-center">
       <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="100">
@@ -695,10 +722,10 @@
             data: {
               labels: Object.keys(categories),
               datasets: [{
-                label: 'Problemas por Categoria',
+                label: 'Procedimentos por Categoria',
                 data: Object.values(categories),
-                backgroundColor: ['#f59e0b', '#10b981', '#f59e0b', '#0ea5e9', '#ef4444', '#9ca3af'],
-                borderColor: ['#f59e0b', '#10b981', '#f59e0b', '#0ea5e9', '#ef4444', '#9ca3af'],
+                backgroundColor: ['#f59e0b', '#10b981', '#0ea5e9', '#ef4444', '#9ca3af', '#ffffff'],
+                borderColor: ['#f59e0b', '#10b981', '#0ea5e9', '#ef4444', '#9ca3af', '#ffffff'],
                 borderWidth: 1
               }]
             },
@@ -733,7 +760,7 @@
               plugins: {
                 legend: {
                   position: 'bottom',
-                  labels: { font: { size: 10 }, color: '#f3f4f6' }
+                  labels: { font: { size: 10 }, color: '#fff' }
                 }
               }
             }
@@ -749,7 +776,7 @@
             data: {
               labels: Object.keys(timeData).sort(),
               datasets: [{
-                label: 'Problemas por Data',
+                label: 'Procedimentos por Data',
                 data: Object.values(timeData),
                 borderColor: '#22c55e',
                 backgroundColor: 'rgba(34, 197, 94, 0.2)',
@@ -761,8 +788,8 @@
               responsive: true,
               plugins: { legend: { display: false } },
               scales: {
-                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#f3f4f6' } },
-                x: { ticks: { font: { size: 10 }, color: '#f3f4f6' } }
+                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#fff' } },
+                x: { ticks: { font: { size: 10 }, color: '#fff' } }
               }
             }
           });
@@ -799,7 +826,7 @@
             <td>${p.title || 'Sem título'}</td>
             <td>${p.category || 'Desconhecida'}</td>
             <td>${p.urgency || 'Desconhecida'}</td>
-            <td>${p.status || 'Desconhecido'}</td>
+            <td>${p.status || 'Não especificado'}</td>
             <td>${formatDate(p.createdAt)}</td>
             <td>${p.neighborhood || 'Desconhecido'}</td>
           `;
@@ -808,6 +835,74 @@
       } catch (error) {
         console.error("Erro ao atualizar tabela:", error.message);
         showError("Erro ao carregar tabela de relatórios");
+      }
+    }
+
+    // Função para capturar gráficos e métricas para exportação
+    async function exportReport() {
+      try {
+        const exportBtn = document.getElementById('exportReport');
+        exportBtn.innerHTML = '<span class="spinner"></span> Gerando...';
+        exportBtn.disabled = true;
+
+        // Capturar métricas
+        const metrics = {
+          totalProblems: document.getElementById('totalProblems').textContent || '0',
+          openProblems: document.getElementById('openProblems').textContent || '0',
+          inProgressProblems: document.getElementById('inProgressProblems').textContent || '0',
+          resolvedProblems: document.getElementById('resolvedProblems').textContent || '0'
+        };
+
+        // Capturar gráficos como imagens
+        const charts = [
+          { id: 'categoryChart', title: 'Problemas por Categoria' },
+          { id: 'urgencyChart', title: 'Distribuição de Urgência' },
+          { id: 'timeChart', title: 'Problemas ao Longo do Tempo' }
+        ];
+
+        const imageData = {};
+        for (const chart of charts) {
+          const canvas = document.getElementById(chart.id);
+          if (canvas) {
+            const imgCanvas = await html2canvas(canvas, { scale: 2, backgroundColor: '#2d3748' });
+            imageData[chart.id] = imgCanvas.toDataURL('image/png');
+          }
+        }
+
+        // Capturar tabela
+        const tableRows = Array.from(document.querySelectorAll('#recentReportsTable tr')).slice(0, 5).map(row => {
+          const cells = row.querySelectorAll('td');
+          return cells.length ? Array.from(cells).map(cell => cell.textContent) : [];
+        }).filter(row => row.length > 0);
+
+        // Montar dados do relatório
+        const reportData = {
+          metrics,
+          charts: imageData,
+          table: tableRows,
+          date: new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })
+        };
+
+        // Criar formulário oculto para enviar dados ao backend
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/generate-pdf'; // Endpoint fictício; substitua pelo real
+        const input = document.createElement('input');
+        input.type = JSON.stringify(input.type);
+        input.name = 'reportData';
+        input.value = JSON.stringify(reportData);
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+
+        // Restaurar botão
+        exportBtn.innerHTML = 'Gerar Relatório PDF';
+        exportBtn.disabled = false;
+      } catch (error) {
+        console.error('Erro ao exportar relatório:', error.message);
+        showError('Erro ao gerar relatório PDF');
+        exportBtn.innerHTML = 'Gerar Relatório PDF';
+        exportBtn.disabled = false;
       }
     }
 
@@ -934,6 +1029,7 @@
         }
 
         document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('exportReport').addEventListener('click', exportReport);
         loadDashboardData();
       } catch (error) {
         console.error("Erro ao inicializar página:", error.message);
