@@ -1,3 +1,4 @@
+
 const firebaseConfig = {
   apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
   authDomain: "facilita-479b3.firebaseapp.com",
@@ -15,6 +16,7 @@ const firebaseAuth = {
   _database: null,
   _recaptchaVerifier: null,
   _visitorSessionId: null,
+  _isInitialized: false,
 
   initializeFirebaseApp(firebaseConfig) {
     console.log("Inicializando Firebase...");
@@ -25,13 +27,18 @@ const firebaseAuth = {
     this._auth = firebase.auth();
     this._firestore = firebase.firestore();
     this._database = firebase.database();
+    this._isInitialized = true;
     console.log("Firebase inicializado com sucesso.");
     this.trackUserSession(); // Inicializa rastreamento de sessão
   },
 
+  isInitialized() {
+    return this._isInitialized;
+  },
+
   initializeRecaptcha(containerId) {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     console.log(`Inicializando reCAPTCHA no contêiner: ${containerId}...`);
-    if (!this._auth) throw new Error("Firebase Auth não inicializado.");
     
     this._recaptchaVerifier = new firebase.auth.RecaptchaVerifier(containerId, {
       size: 'invisible',
@@ -125,6 +132,7 @@ const firebaseAuth = {
   },
 
   async checkIdentifierExists(identifier) {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     try {
       const doc = await this._firestore.collection('authMappings').doc(identifier).get();
       return doc.exists;
@@ -135,6 +143,7 @@ const firebaseAuth = {
   },
 
   async registerUser({ fullName, biNumber, email, phoneNumber, password, municipio, bairro, notificationPreferences }) {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     console.log("Iniciando registro de usuário:", { fullName });
 
     if (!fullName || !biNumber || !email || !phoneNumber || !password || !municipio || !bairro || !notificationPreferences) {
@@ -206,6 +215,7 @@ const firebaseAuth = {
   },
 
   async login(identifier, password) {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     try {
       let email = identifier;
 
@@ -246,6 +256,7 @@ const firebaseAuth = {
   },
 
   async getCurrentUser() {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     return new Promise((resolve) => {
       const unsubscribe = this._auth.onAuthStateChanged((user) => {
         unsubscribe();
@@ -255,6 +266,7 @@ const firebaseAuth = {
   },
 
   async getUserInfo() {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     const user = await this.getCurrentUser();
     if (user) {
       const userDoc = await this._firestore.collection('usuarios').doc(user.uid).get();
@@ -281,6 +293,7 @@ const firebaseAuth = {
   },
 
   trackUserSession() {
+    if (!this._isInitialized) return; // Evita rastreamento antes da inicialização
     if (!this._visitorSessionId && !this._auth.currentUser) {
       this._visitorSessionId = `visitor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       console.log("Sessão de visitante iniciada:", this._visitorSessionId);
@@ -298,10 +311,12 @@ const firebaseAuth = {
   },
 
   isGuest() {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     return !this._auth.currentUser;
   },
 
   async logout() {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     try {
       if (this._visitorSessionId) {
         await this._firestore.collection('visitorSessions').doc(this._visitorSessionId).delete();
@@ -318,6 +333,7 @@ const firebaseAuth = {
   },
 
   checkAuthState(options = {}) {
+    if (!this._isInitialized) throw new Error("Firebase Auth não inicializado.");
     const {
       redirectIfLoggedIn = null,
       redirectIfNotSignedIn = null,
@@ -347,9 +363,12 @@ const firebaseAuth = {
   },
 };
 
+// Define window.firebaseAuth imediatamente
+window.firebaseAuth = firebaseAuth;
+
+// Tenta inicializar o Firebase
 try {
   firebaseAuth.initializeFirebaseApp(firebaseConfig);
-  window.firebaseAuth = firebaseAuth;
 } catch (error) {
   console.error("Erro ao inicializar Firebase:", error);
 }
