@@ -359,7 +359,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const confirmPassword = confirmPasswordInput.value;
 
     // Validações (MANTIDAS)
-    if (!name) { showError(nameError, "Nome completo é obrigatório."); isValid = false; }
+    if (!name) { showError(nameError, "Nome completot é obrigatório."); isValid = false; }
     if (!selectedMunicipio) { showError(municipioError, "Selecione seu município."); isValid = false; }
     if (!bairro) { showError(bairroError, "O nome do bairro é obrigatório."); isValid = false; }
     else if (selectedMunicipio && municipiosData[selectedMunicipio] && !municipiosData[selectedMunicipio].includes(bairro)) {
