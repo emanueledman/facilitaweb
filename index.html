@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -21,29 +22,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Updated AOS to v2.3.4 to fix transition-delay errors -->
   <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
   <style>
-    /* Variáveis globais - Nova Paleta de Cores e Fontes */
     :root {
-      --primary-accent: #FF5722; /* Laranja VIBRANTE e único para CTA e destaque */
-      --secondary-dark: #2C3E50; /* Azul escuro profundo para seções, texto principal e footer */
-      --highlight-light: #FFC107; /* Amarelo ouro para ícones de processos e atenção */
-      --success-green: #4CAF50; /* Verde para status de sucesso */
-      --warning-orange: #FF9800; /* Laranja suave para status de aviso/pendente */
-      --info-blue: #2196F3; /* Azul para status de informação/progresso */
-      --bg-light: #F8F9FA; /* Fundo muito claro para seções de conteúdo */
-      --bg-white: #FFFFFF; /* Fundo branco puro para cards */
-      --bg-dark-overlay: rgba(0, 0, 0, 0.7); /* Overlay escuro para hero */
-      --text-main: #34495E; /* Azul escuro para texto principal */
-      --text-secondary: #7F8C8D; /* Cinza para texto secundário */
-      --text-white: #FFFFFF; /* Texto branco */
-      --font-heading: 'Montserrat', sans-serif; /* Fonte para títulos maiores */
-      --font-body: 'Poppins', sans-serif; /* Fonte para corpo de texto */
+      --primary-accent: #FF5722;
+      --secondary-dark: #2C3E50;
+      --highlight-light: #FFC107;
+      --success-green: #4CAF50;
+      --warning-orange: #FF9800;
+      --info-blue: #2196F3;
+      --bg-light: #F8F9FA;
+      --bg-white: #FFFFFF;
+      --bg-dark-overlay: rgba(0, 0, 0, 0.7);
+      --text-main: #34495E;
+      --text-secondary: #7F8C8D;
+      --text-white: #FFFFFF;
+      --font-heading: 'Montserrat', sans-serif;
+      --font-body: 'Poppins', sans-serif;
     }
 
-    /* Reset e estilos base */
     * {
       margin: 0;
       padding: 0;
@@ -64,7 +62,6 @@
       line-height: 1.2;
     }
 
-    /* Scrollbar estilizada */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -82,7 +79,6 @@
       background: #E64A19;
     }
 
-    /* Navbar */
     .navbar {
       background: transparent;
       padding: 1.2rem 0;
@@ -163,7 +159,6 @@
       color: var(--primary-accent);
     }
 
-    /* Botões Globais */
     .btn-main {
       background: var(--primary-accent);
       color: var(--text-white);
@@ -214,7 +209,6 @@
       border-color: var(--secondary-dark);
     }
 
-    /* Hero Section */
     .hero-section {
       background: linear-gradient(to right, var(--bg-dark-overlay), rgba(44, 62, 80, 0.8)), url('https://ecoangola.com/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-22-at-11.48.20.jpeg') no-repeat center center/cover;
       min-height: 100vh;
@@ -268,7 +262,6 @@
       font-weight: 500;
     }
 
-    /* Section Header */
     .section-header {
       text-align: center;
       margin-bottom: 5rem;
@@ -290,7 +283,6 @@
       line-height: 1.6;
     }
 
-    /* Stats Section */
     .stats-section {
       background: var(--bg-light);
       padding: 6rem 0;
@@ -342,7 +334,6 @@
       font-weight: 500;
     }
 
-    /* Before After Gallery */
     .transformations-section {
       background: var(--bg-white);
       padding: 6rem 0;
@@ -471,7 +462,6 @@
       color: #E64A19;
     }
 
-    /* How It Works Section */
     .how-it-works-section {
       background: var(--secondary-dark);
       padding: 6rem 0;
@@ -542,7 +532,6 @@
       color: #FFEB3B;
     }
 
-    /* Recent Issues Section */
     .recent-issues-section {
       padding: 6rem 0;
       background: var(--bg-light);
@@ -655,7 +644,6 @@
       color: var(--primary-accent);
     }
 
-    /* Call to Action Final */
     .cta-section {
       background: var(--primary-accent);
       padding: 6rem 0;
@@ -690,7 +678,6 @@
       border-color: var(--text-white);
     }
 
-    /* Rodapé */
     .footer {
       background: var(--secondary-dark);
       color: rgba(255,255,255,0.9);
@@ -742,7 +729,6 @@
       text-align: center;
     }
 
-    /* Carregamento */
     .loading-container {
       position: fixed;
       top: 0;
@@ -778,7 +764,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Cookie Consent Banner */
     .cookie-banner {
       position: fixed;
       bottom: 0;
@@ -852,7 +837,6 @@
       transform: translateY(-2px);
     }
 
-    /* Responsividade */
     @media (max-width: 992px) {
       .navbar-brand {
         color: var(--secondary-dark);
@@ -992,7 +976,7 @@
               <a class="btn-main" href="new-report.html" aria-label="Relatar um problema agora">Relatar Problema <i class="fas fa-plus-circle ms-2"></i></a>
             </li>
             <li class="nav-item ms-lg-2">
-              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou sair">Entrar</a>
+              <a class="btn-outline-secondary-dark" id="authButton" href="login.html" aria-label="Entrar ou acessar perfil">Entrar</a>
             </li>
           </ul>
         </div>
@@ -1085,7 +1069,7 @@
             <h3 class="step-title">2. Acompanhe no Mapa</h3>
             <p class="step-description">Veja todos os problemas da sua área e o status de cada um em um mapa interativo e intuitivo.</p>
             <a href="report.html" class="step-link">
-              Ver Mapa Completo <i class="fas fa-chevron-right ms-2"></i>
+              Ver Mapa Completo <i class="fas fa-chevron-right"></i>
             </a>
           </div>
           <div class="step-card" data-aos="fade-up" data-aos-delay="300">
@@ -1109,7 +1093,7 @@
           </p>
         </div>
         <div class="issue-grid" id="recentIssues">
-          <div class="col-12 text-center text-muted" id="noRecentIssuesMessage" style="display: none;">
+          <div class="col-12 text-center text-muted id="noRecentIssuesMessage" style="display: none;">
             <i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
             <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>
           </div>
@@ -1124,11 +1108,11 @@
       <div class="container">
         <h2 class="section-title">Pronto para Ver a Mudança?</h2>
         <p class="section-subtitle">
-          Sua ação é a chave para um bairro melhor. Comece hoje mesmo!
+          Sua ação é a chave para transformar o seu bairro. Comece hoje mesmo!
         </p>
         <div class="cta-actions">
-          <a href="new-report.html" class="btn-main" aria-label="Começar a relatar um problema">Reportar Meu Problema <i class="fas fa-bullhorn ms-2"></i></a>
-          <a class="btn-outline-secondary-dark" id="ctaAuthButton" href="login.html" aria-label="Entrar ou visitar perfil">Entrar na Sua Conta</a>
+          <a href="new-report.html" class="btn-main" aria-label="Começar a relatar tarefa problema">Reportar um problema <i class="fas fa-bullhorn ms-2"></i></a>
+          <a class="btn-main" id="ctaAuthButton" href="login.html" aria-label="Entrar ou visitar perfil">Entrar na Sua Conta</a>
         </div>
       </div>
     </section>
@@ -1176,27 +1160,25 @@
     </div>
   </div>
 
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="auth.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Updated AOS to v2.3.4 -->
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script defer src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 
   <script>
-    // Configuração do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
       authDomain: "facilita-479b3.firebaseapp.com",
       projectId: "facilita-479b3",
       storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+      messagingSenderId: "3856576686",
+      appId: "1:3856576686:web:6976de7f3abc6c0da94a37",
       databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
     };
 
-    // Carregamento de estatísticas do Firebase
     function loadStats(firebaseApp) {
       const db = firebaseApp.database();
       db.ref('problems').once('value')
@@ -1210,7 +1192,7 @@
           animateCounter(document.getElementById('solvedReports'), solved);
         })
         .catch(error => {
-          console.error('Erro ao carregar estatísticas de problemas:', error);
+          console.error('Erro ao carregar problemas:', error);
           document.getElementById('totalReports').textContent = 'Erro';
           document.getElementById('solvedReports').textContent = 'Erro';
         });
@@ -1226,7 +1208,6 @@
         });
     }
 
-    // Animação de contador
     function animateCounter(element, target, duration = 1500) {
       let start = 0;
       const increment = target / (duration / 16);
@@ -1241,12 +1222,10 @@
       }, 16);
     }
 
-    // Carregamento de problemas recentes
     function loadRecentIssues(firebaseApp, user) {
       const recentIssuesContainer = document.getElementById('recentIssues');
       const noRecentIssuesMessage = document.getElementById('noRecentIssuesMessage');
 
-      // Função auxiliar para renderizar issues
       function renderIssues(issues) {
         let html = '';
         const displayIssues = issues.slice(0, 3);
@@ -1257,7 +1236,7 @@
             ? `<i class="fas fa-info-circle fa-3x mb-3" style="color: var(--info-blue);"></i>
                <p>Nenhum problema aberto ou em progresso no seu bairro (${user.bairro}, ${user.municipio}). Reporte um problema para começar!</p>`
             : `<i class="fas fa-check-circle fa-3x mb-3" style="color: var(--success-green);"></i>
-               <p>Nenhum problema aberto ou em progresso registado recentemente. Excelente!</p>`;
+               <p>Nenhum problema aberto ou em progresso registado recentemente.</p>`;
           recentIssuesContainer.innerHTML = '';
         } else {
           noRecentIssuesMessage.style.display = 'none';
@@ -1265,8 +1244,8 @@
             const imageUrl = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
               ? problem.imageUrl
               : 'https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';
-            const imageHtml = problem.imageUrl && typeof problem.imageUrl === 'string' && problem.imageUrl.trim() !== ''
-              ? `<img src="${imageUrl}" alt="${problem.title || 'Imagem do problema'}" class="issue-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
+            const imageHtml = problem.imageUrl
+              ? `<img src="${imageUrl}" alt="${problem.title}" class="issue-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x250/cccccc/ffffff?text=Sem+Imagem';"/>`
               : `<div class="issue-placeholder"><i class="fas fa-camera"></i></div>`;
             let statusClass = '';
             let statusIcon = '';
@@ -1285,8 +1264,8 @@
             }
             const truncatedDescription = problem.description
               ? (problem.description.length > 100 ? `${problem.description.substring(0, 100)}...` : problem.description)
-              : 'Nenhuma descrição detalhada disponível para este problema.';
-            const userNameDisplay = problem.userName && problem.userName.trim() !== '' ? problem.userName : 'Cidadão Anónimo';
+              : 'Nenhuma descrição detalhada.';
+            const userNameDisplay = problem.userName || 'Cidadão Anónimo';
 
             html += `
               <div class="issue-card" data-aos="fade-up">
@@ -1308,7 +1287,6 @@
         }
       }
 
-      // Se usuário está logado, buscar dados do perfil
       if (user) {
         firebaseApp.database().ref(`users/${user.uid}`).once('value')
           .then((snapshot) => {
@@ -1335,15 +1313,14 @@
                 });
             } else {
               console.warn('Dados de localização do usuário não encontrados.');
-              renderIssues([]); // Mostra mensagem de "nenhum problema"
+              renderIssues([]);
             }
           })
           .catch(error => {
             console.error('Erro ao carregar dados do usuário:', error);
-            renderIssues([]); // Mostra mensagem de "nenhum problema"
+            renderIssues([]);
           });
       } else {
-        // Comportamento padrão para visitantes
         firebaseApp.database().ref('problems').orderByChild('createdAt').limitToLast(10).on('value',
           (snapshot) => {
             const issues = [];
@@ -1365,7 +1342,6 @@
       }
     }
 
-    // Carregamento de Transformações Visíveis
     function loadResolvedIssues(firebaseApp) {
       const resolvedIssuesGallery = document.getElementById('resolvedIssuesGallery');
       const noTransformationsMessage = document.getElementById('noTransformationsMessage');
@@ -1377,13 +1353,13 @@
           snapshot.forEach((childSnapshot) => {
             const problem = { key: childSnapshot.key, ...childSnapshot.val() };
             if (problem.status === 'Resolvido' && 
-                problem.imageUrlBefore && 
-                typeof problem.imageUrlBefore === 'string' && 
-                problem.imageUrlBefore.trim() !== '') {
+                problem.imageUrl && 
+                typeof problem.imageUrl === 'string' && 
+                problem.imageUrl.trim() !== '') {
               if (!problem.imageUrlAfter || 
                   typeof problem.imageUrlAfter !== 'string' || 
                   problem.imageUrlAfter.trim() === '') {
-                problem.imageUrlAfter = problem.imageUrlBefore;
+                problem.imageUrlAfter = problem.imageUrl;
               }
               resolvedProblems.push(problem);
             }
@@ -1401,14 +1377,14 @@
               const title = problem.title || 'Problema Resolvido';
               const location = problem.location?.neighborhood || 'Bairro Desconhecido';
               const municipality = problem.location?.municipality || 'Município Desconhecido';
-              const imageUrlBefore = problem.imageUrlBefore;
+              const imageUrlBefore = problem.imageUrl;
               const imageUrlAfter = problem.imageUrlAfter;
 
               html += `
                 <div class="before-after-card" data-aos="fade-up" data-aos-delay="${100 * (index + 1)}">
                   <div class="image-comparison" role="region" aria-label="Comparação Antes e Depois: ${title}">
-                    <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
-                    <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
+                    <img src="${imageUrlBefore}" alt="Antes: ${title}" class="before-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x280/cccccc/ffffff?text=Imagem+Antes+N%C3%A3o+Dispon%C3%ADvel';"/>
+                    <img src="${imageUrlAfter}" alt="Depois: ${title}" class="after-image" loading="lazy" onerror="this.src='https://via.placeholder.com/400x280/888888/ffffff?text=Imagem+Depois+N%C3%A3o+Dispon%C3%ADvel';"/>
                     <div class="slider-handle" role="slider" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Controlador de comparação antes e depois"></div>
                   </div>
                   <div class="card-content">
@@ -1424,15 +1400,14 @@
           }
         },
         (error) => {
-          console.error('Erro ao carregar transformações visíveis:', error);
+          console.error('Erro ao carregar problemas resolvidos:', error);
           resolvedIssuesGallery.innerHTML =
-            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Tente novamente.</p></div>';
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas resolvidos.</p></div>';
           noTransformationsMessage.style.display = 'none';
         }
       );
     }
 
-    // Inicialização dos Sliders de Comparação
     function initImageSliders() {
       const sliders = document.querySelectorAll('.image-comparison');
       sliders.forEach((slider, index) => {
@@ -1496,7 +1471,6 @@
       });
     }
 
-    // Atualiza UI com base no estado de autenticação
     function updateAuthUI(user) {
       const authButton = document.getElementById('authButton');
       const ctaAuthButton = document.getElementById('ctaAuthButton');
@@ -1504,54 +1478,49 @@
       const navTogglerIcon = document.querySelector('.navbar-toggler i');
 
       if (user) {
-        // Navbar updates
-        authButton.textContent = 'Sair';
-        authButton.href = '#';
-        authButton.classList.remove('btn-outline-secondary-dark');
-        authButton.classList.add('btn-main');
-        authButton.setAttribute('aria-label', 'Sair da conta');
+        authButton.textContent = 'Meu Perfil';
+        authButton.href = 'profile.html';
+        authButton.classList.add('btn-outline-secondary-dark');
+        authButton.classList.remove('btn-main');
+        authButton.setAttribute('aria-label', 'Acessar perfil do usuário');
         authButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          firebase.auth().signOut().then(() => {
-            alert('Você saiu com sucesso!');
-            window.location.reload();
-          }).catch((error) => {
-            console.error('Erro ao sair:', error);
-            alert('Erro ao sair. Tente novamente.');
-          });
+          if (e.target.textContent === 'Sair') {
+            e.preventDefault();
+            window.firebaseAuth.signOut().then(() => {
+              alert('Você saiu com sucesso!');
+              window.location.reload();
+            }).catch((error) => {
+              console.error('Erro ao sair:', error);
+              alert('Erro ao sair. Tente novamente.');
+            });
+          }
         }, { once: true });
         profileLink.style.display = 'block';
 
-        // CTA section updates
         ctaAuthButton.textContent = 'Visitar Perfil';
         ctaAuthButton.href = 'profile.html';
         ctaAuthButton.setAttribute('aria-label', 'Visitar seu perfil');
         ctaAuthButton.classList.remove('btn-outline-secondary-dark');
         ctaAuthButton.classList.add('btn-main');
 
-        // Reload issues with user-specific filtering
         loadRecentIssues(firebase.app(), user);
       } else {
-        // Navbar updates
         authButton.textContent = 'Entrar';
         authButton.href = 'login.html';
         authButton.classList.add('btn-outline-secondary-dark');
         authButton.classList.remove('btn-main');
-        authButton.setAttribute('aria-label', 'Entrar na conta');
+        authButton.setAttribute('aria-label', 'Fazer login');
         profileLink.style.display = 'none';
 
-        // CTA section updates
         ctaAuthButton.textContent = 'Entrar na Sua Conta';
         ctaAuthButton.href = 'login.html';
         ctaAuthButton.setAttribute('aria-label', 'Entrar na sua conta FixABairro');
         ctaAuthButton.classList.add('btn-outline-secondary-dark');
         ctaAuthButton.classList.remove('btn-main');
 
-        // Load default issues
         loadRecentIssues(firebase.app(), null);
       }
 
-      // Update navbar toggler icon color based on scroll state
       if (!document.querySelector('.navbar').classList.contains('scrolled')) {
         navTogglerIcon.style.color = 'var(--text-white)';
       } else {
@@ -1559,7 +1528,6 @@
       }
     }
 
-    // Gerenciamento de Cookies
     function setCookie(name, value, days) {
       let expires = "";
       if (days) {
@@ -1611,9 +1579,23 @@
       });
     }
 
-    // Inicialização da página
-    window.addEventListener('load', () => {
-      if (typeof firebase !== 'undefined') {
+    window.addEventListener('load', async () => {
+      try {
+        await new Promise((resolve, reject) => {
+          const maxAttempts = 20;
+          let attempts = 0;
+          const interval = setInterval(() => {
+            if (window.firebaseAuth) {
+              clearInterval(interval);
+              resolve();
+            } else if (attempts >= maxAttempts) {
+              clearInterval(interval);
+              reject(new Error("Firebase Auth não inicializado."));
+            }
+            attempts++;
+          }, 100);
+        });
+
         const app = firebase.initializeApp(firebaseConfig);
 
         setTimeout(() => {
@@ -1624,16 +1606,20 @@
             AOS.init({ once: true, duration: 1000 });
 
             loadStats(app);
-            app.auth().onAuthStateChanged((user) => {
-              updateAuthUI(user);
-              loadRecentIssues(app, user);
+            window.firebaseAuth.checkAuthState({
+              onLoggedIn: (user) => {
+                updateAuthUI(user);
+              },
+              onGuest: () => {
+                updateAuthUI(null);
+              }
             });
             loadResolvedIssues(app);
             checkCookieConsent();
           }, { once: true });
         }, 800);
-      } else {
-        console.warn('Firebase SDK não carregado. Verifique sua conexão ou configuração do Firebase.');
+      } catch (error) {
+        console.error('Erro ao inicializar Firebase Auth:', error);
         document.getElementById('loadingScreen').classList.add('fade-out');
         setTimeout(() => {
           document.getElementById('loadingScreen').style.display = 'none';
@@ -1641,7 +1627,7 @@
           document.getElementById('recentIssues').innerHTML =
             '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar problemas. Verifique sua conexão.</p></div>';
           document.getElementById('resolvedIssuesGallery').innerHTML =
-            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x mb-3"></i><p>Erro ao carregar transformações. Verifique sua conexão.</p></div>';
+            '<div class="col-12 text-center text-danger"><i class="fas fa-exclamation-triangle fa-2x"></i><p>Erro ao carregar problemas resolvidos.</p></div>';
           document.getElementById('totalReports').textContent = 'N/A';
           document.getElementById('solvedReports').textContent = 'N/A';
           document.getElementById('activeUsers').textContent = 'N/A';
@@ -1650,7 +1636,6 @@
       }
     });
 
-    // Efeito de scroll da Navbar
     window.addEventListener('scroll', () => {
       const navbar = document.querySelector('.navbar');
       const navLinks = document.querySelectorAll('.nav-link');
