@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -205,7 +206,7 @@
       border-radius: 10px;
       padding: 1rem;
       box-shadow: var(--card-shadow);
-      border:1px solid rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.2);
       transition: transform 0.3s ease;
       height: 100%;
     }
@@ -319,6 +320,17 @@
       box-shadow: 0 4px 10px rgba(239, 68, 68, 0.1);
     }
     
+    .success-message {
+      color: var(--accent-color);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 8px;
+      margin: 0.75rem;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
     .spinner {
       display: inline-block;
       width: 30px;
@@ -331,6 +343,80 @@
     
     @keyframes spin {
       to { transform: rotate(360deg); }
+    }
+    
+    .bi-validation-container {
+      background: var(--dark-card);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      margin-bottom: 1.5rem;
+    }
+    
+    .bi-validation-container h5 {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      color: var(--light-text);
+    }
+    
+    .bi-input-group {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .bi-input {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: var(--light-text);
+      padding: 0.5rem;
+      border-radius: 8px;
+      flex-grow: 1;
+    }
+    
+    .bi-input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+    }
+    
+    .bi-validate-button {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .bi-validate-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .export-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 1rem auto;
+      display: block;
+      text-align: center;
+      max-width: 200px;
+    }
+    
+    .export-button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.5);
     }
     
     @media (max-width: 768px) {
@@ -382,6 +468,11 @@
       .table-container th, .table-container td {
         padding: 0.4rem;
         font-size: 0.75rem;
+      }
+      
+      .bi-input-group {
+        flex-direction: column;
+        gap: 0.3rem;
       }
     }
     
@@ -465,27 +556,6 @@
         box-shadow: var(--card-shadow);
       }
     }
-
-    .export-button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 1rem auto;
-      display: block;
-      text-align: center;
-      max-width: 200px;
-    }
-
-    .export-button:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(34, 197, 94, 0.5);
-    }
   </style>
 </head>
 <body>
@@ -528,33 +598,43 @@
   <div class="dashboard-container">
     <h1 class="dashboard-title" data-aos="fade-up">Dashboard de Relatórios</h1>
     
+    <!-- BI Validation Section -->
+    <div class="bi-validation-container" data-aos="fade-up" data-aos-delay="50">
+      <h5 class="text-center">Validação de Bilhete de Identidade</h5>
+      <div class="bi-input-group">
+        <input type="text" id="biInput" class="bi-input" placeholder="Digite o número do BI" aria-label="Número do BI">
+        <button id="validateBiButton" class="bi-validate-button">Validar</button>
+      </div>
+      <div id="biResult" class="mt-2"></div>
+    </div>
+
     <!-- Export Button -->
-    <button class="export-button" id="exportReport" data-aos="fade-up" data-aos-delay="50">Gerar Relatório PDF</button>
+    <button class="export-button" id="exportReport" data-aos="fade-up" data-aos-delay="100">Gerar Relatório PDF</button>
 
     <!-- Metrics Section -->
     <div class="row g-3 mb-3 justify-content-center">
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="100">
+      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="200">
         <div class="metric-card">
           <i class="fas fa-exclamation-circle metric-icon"></i>
           <div class="metric-value" id="totalProblems">0</div>
           <div class="metric-label">Total de Problemas</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="200">
+      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="300">
         <div class="metric-card">
           <i class="fas fa-hourglass-start metric-icon"></i>
           <div class="metric-value" id="openProblems">0</div>
           <div class="metric-label">Problemas Abertos</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="400">
         <div class="metric-card">
           <i class="fas fa-cogs metric-icon"></i>
           <div class="metric-value" id="inProgressProblems">0</div>
           <div class="metric-label">Em Andamento</div>
         </div>
       </div>
-      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="400">
+      <div class="col-md-3 col-sm-4 col-6" data-aos="fade-up" data-aos-delay="500">
         <div class="metric-card">
           <i class="fas fa-check-circle metric-icon"></i>
           <div class="metric-value" id="resolvedProblems">0</div>
@@ -565,19 +645,19 @@
 
     <!-- Charts Section -->
     <div class="row g-3 mb-3">
-      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="500">
+      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="600">
         <div class="chart-container">
           <h5 class="text-center">Problemas por Categoria</h5>
           <canvas id="categoryChart"></canvas>
         </div>
       </div>
-      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="600">
+      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="700">
         <div class="chart-container">
           <h5 class="text-center">Distribuição de Urgência</h5>
           <canvas id="urgencyChart"></canvas>
         </div>
       </div>
-      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="700">
+      <div class="col-md-4 col-sm-6" data-aos="fade-up" data-aos-delay="800">
         <div class="chart-container">
           <h5 class="text-center">Problemas ao Longo do Tempo</h5>
           <canvas id="timeChart"></canvas>
@@ -587,7 +667,7 @@
 
     <!-- Recent Reports Section -->
     <div class="row g-3">
-      <div class="col-md-12" data-aos="fade-up" data-aos-delay="800">
+      <div class="col-md-12" data-aos="fade-up" data-aos-delay="900">
         <div class="table-container">
           <h5>Problemas Recentes</h5>
           <div class="filter-group">
@@ -636,16 +716,33 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- AOS Animation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-  <!-- Firebase Auth Module -->
-  <script src="js/firebaseAuth.js"></script>
+  <!-- Firebase Auth (substitua pelo seu código real) -->
+  <script>
+    // Mock do firebaseAuth.logout (substitua pelo código real em js/firebaseAuth.js)
+    const firebaseAuth = {
+      logout: (btn, text, spinner) => {
+        firebase.auth().signOut().then(() => {
+          text.style.display = 'inline';
+          spinner.remove();
+          btn.disabled = false;
+          window.location.href = 'login.html';
+        }).catch(error => {
+          console.error('Erro ao fazer logout:', error.message);
+          text.style.display = 'inline';
+          spinner.remove();
+          btn.disabled = false;
+        });
+      }
+    };
+  </script>
 
   <script>
-    // Initialize AOS animation library
+    // Initialize AOS
     try {
       AOS.init({
         duration: 800,
@@ -653,28 +750,40 @@
         once: true
       });
     } catch (error) {
-      console.error("Erro ao inicializar AOS:", error.message);
+      console.error('Erro ao inicializar AOS:', error.message);
     }
 
-    // Navbar scroll effect
+    // Navbar scroll
     window.addEventListener('scroll', () => {
       try {
         const navbar = document.querySelector('.navbar');
         navbar.classList.toggle('scrolled', window.scrollY > 50);
       } catch (error) {
-        console.error("Erro no scroll da navbar:", error.message);
+        console.error('Erro no scroll da navbar:', error.message);
       }
     });
 
-    // Função para exibir erro na UI
+    // Função para exibir erro
     function showError(message) {
       try {
         const dashboardContainer = document.querySelector('.dashboard-container');
         if (dashboardContainer) {
-          dashboardContainer.innerHTML = `<div class="error-message">${message}</div>`;
+          dashboardContainer.insertAdjacentHTML('afterbegin', `<div class="error-message">${message}</div>`);
         }
       } catch (error) {
-        console.error("Erro ao exibir mensagem de erro:", error.message);
+        console.error('Erro ao exibir mensagem de erro:', error.message);
+      }
+    }
+
+    // Função para exibir sucesso
+    function showSuccess(message) {
+      try {
+        const biResult = document.getElementById('biResult');
+        if (biResult) {
+          biResult.innerHTML = `<div class="success-message">${message}</div>`;
+        }
+      } catch (error) {
+        console.error('Erro ao exibir mensagem de sucesso:', error.message);
       }
     }
 
@@ -686,7 +795,7 @@
         if (isNaN(date.getTime())) return 'Data inválida';
         return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
       } catch (error) {
-        console.error("Erro ao formatar data:", error.message);
+        console.error('Erro ao formatar data:', error.message);
         return 'Data inválida';
       }
     }
@@ -695,7 +804,7 @@
     function initCharts(problems) {
       try {
         if (!problems || !Array.isArray(problems)) {
-          console.warn("Dados de problemas inválidos ou vazios");
+          console.warn('Dados de problemas inválidos ou vazios');
           return;
         }
 
@@ -716,16 +825,15 @@
         // Category Chart
         const categoryCanvas = document.getElementById('categoryChart');
         if (categoryCanvas) {
-          const categoryCtx = categoryCanvas.getContext('2d');
-          new Chart(categoryCtx, {
+          new Chart(categoryCanvas.getContext('2d'), {
             type: 'bar',
             data: {
               labels: Object.keys(categories),
               datasets: [{
-                label: 'Procedimentos por Categoria',
+                label: 'Problemas por Categoria',
                 data: Object.values(categories),
                 backgroundColor: ['#f59e0b', '#10b981', '#0ea5e9', '#ef4444', '#9ca3af', '#ffffff'],
-                borderColor: ['#f59e0b', '#10b981', '#0ea5e9', '#ef4444', '#9ca3af', '#ffffff'],
+                borderColor: ['#fff', '#fff', '#fff', '#fff', '#fff', '#fff'],
                 borderWidth: 1
               }]
             },
@@ -733,8 +841,8 @@
               responsive: true,
               plugins: { legend: { display: false } },
               scales: {
-                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#f3f4f6' } },
-                x: { ticks: { font: { size: 10 }, color: '#f3f4f6' } }
+                y: { beginAtZero: true, ticks: { font: { size: 10 }, color: '#fff' } },
+                x: { ticks: { font: { size: 10 }, color: '#fff' } }
               }
             }
           });
@@ -743,15 +851,14 @@
         // Urgency Chart
         const urgencyCanvas = document.getElementById('urgencyChart');
         if (urgencyCanvas) {
-          const urgencyCtx = urgencyCanvas.getContext('2d');
-          new Chart(urgencyCtx, {
+          new Chart(urgencyCanvas.getContext('2d'), {
             type: 'pie',
             data: {
               labels: Object.keys(urgencies),
               datasets: [{
                 data: Object.values(urgencies),
                 backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                borderColor: ['#10b981', '#f59e0b', '#ef4444'],
+                borderColor: ['#fff', '#fff', '#fff'],
                 borderWidth: 1
               }]
             },
@@ -770,13 +877,12 @@
         // Time Chart
         const timeCanvas = document.getElementById('timeChart');
         if (timeCanvas) {
-          const timeCtx = timeCanvas.getContext('2d');
-          new Chart(timeCtx, {
+          new Chart(timeCanvas.getContext('2d'), {
             type: 'line',
             data: {
               labels: Object.keys(timeData).sort(),
               datasets: [{
-                label: 'Procedimentos por Data',
+                label: 'Problemas por Data',
                 data: Object.values(timeData),
                 borderColor: '#22c55e',
                 backgroundColor: 'rgba(34, 197, 94, 0.2)',
@@ -795,8 +901,8 @@
           });
         }
       } catch (error) {
-        console.error("Erro ao inicializar gráficos:", error.message);
-        showError("Erro ao carregar gráficos");
+        console.error('Erro ao inicializar gráficos:', error.message);
+        showError('Erro ao carregar gráficos');
       }
     }
 
@@ -804,7 +910,7 @@
     function updateTable(problems, categoryFilter, statusFilter) {
       try {
         const tbody = document.getElementById('recentReportsTable');
-        if (!tbody) throw new Error("Tabela não encontrada");
+        if (!tbody) throw new Error('Tabela não encontrada');
         tbody.innerHTML = '';
         
         let filteredProblems = problems || [];
@@ -824,21 +930,67 @@
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${p.title || 'Sem título'}</td>
-            <td>${p.category || 'Desconhecida'}</td>
-            <td>${p.urgency || 'Desconhecida'}</td>
-            <td>${p.status || 'Não especificado'}</td>
+            <td>${p.category || 'N/A'}</td>
+            <td>${p.urgency || 'N/A'}</td>
+            <td>${p.status || 'N/A'}</td>
             <td>${formatDate(p.createdAt)}</td>
-            <td>${p.neighborhood || 'Desconhecido'}</td>
+            <td>${p.neighborhood || 'N/A'}</td>
           `;
           tbody.appendChild(row);
         });
       } catch (error) {
-        console.error("Erro ao atualizar tabela:", error.message);
-        showError("Erro ao carregar tabela de relatórios");
+        console.error('Erro ao atualizar tabela:', error.message);
+        showError('Erro ao carregar tabela de relatórios');
       }
     }
 
-    // Função para capturar gráficos e métricas para exportação
+    // Função para validar BI
+    let biValidationResult = null;
+    async function validateBi() {
+      try {
+        const biInput = document.getElementById('biInput');
+        const validateBtn = document.getElementById('validateBiButton');
+        const biResult = document.getElementById('biResult');
+        const biNumber = biInput.value.trim();
+
+        if (!biNumber) {
+          biResult.innerHTML = '<div class="error-message">Por favor, insira um número de BI.</div>';
+          return;
+        }
+
+        validateBtn.innerHTML = '<span class="spinner"></span> Validando...';
+        validateBtn.disabled = true;
+
+        const response = await fetch(`https://fila-facilita-rp4z.onrender.com/api/v1/validate/bi/${biNumber}`);
+        const result = await response.json();
+
+        validateBtn.innerHTML = 'Validar';
+        validateBtn.disabled = false;
+
+        if (result.success) {
+          showSuccess(`BI válido: ${result.message}`);
+          biValidationResult = {
+            biNumber,
+            success: true,
+            message: result.message
+          };
+        } else {
+          biResult.innerHTML = `<div class="error-message">${result['error-message'] || 'Erro na validação do BI'}</div>`;
+          biValidationResult = {
+            biNumber,
+            success: false,
+            message: result['error-message'] || 'Erro na validação'
+          };
+        }
+      } catch (error) {
+        console.error('Erro ao validar BI:', error.message);
+        document.getElementById('biResult').innerHTML = '<div class="error-message">Erro ao conectar ao servidor de validação.</div>';
+        document.getElementById('validateBiButton').innerHTML = 'Validar';
+        document.getElementById('validateBiButton').disabled = false;
+      }
+    }
+
+    // Função para exportar relatório
     async function exportReport() {
       try {
         const exportBtn = document.getElementById('exportReport');
@@ -853,7 +1005,7 @@
           resolvedProblems: document.getElementById('resolvedProblems').textContent || '0'
         };
 
-        // Capturar gráficos como imagens
+        // Capturar gráficos
         const charts = [
           { id: 'categoryChart', title: 'Problemas por Categoria' },
           { id: 'urgencyChart', title: 'Distribuição de Urgência' },
@@ -872,37 +1024,45 @@
         // Capturar tabela
         const tableRows = Array.from(document.querySelectorAll('#recentReportsTable tr')).slice(0, 5).map(row => {
           const cells = row.querySelectorAll('td');
-          return cells.length ? Array.from(cells).map(cell => cell.textContent) : [];
+          return cells.length ? Array.from(cells).map(cell => cell.textContent || 'N/A') : [];
         }).filter(row => row.length > 0);
 
         // Montar dados do relatório
         const reportData = {
           metrics,
           charts: imageData,
+          biValidation: biValidationResult || {},
           table: tableRows,
           date: new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })
         };
 
-        // Criar formulário oculto para enviar dados ao backend
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/generate-pdf'; // Endpoint fictício; substitua pelo real
-        const input = document.createElement('input');
-        input.type = JSON.stringify(input.type);
-        input.name = 'reportData';
-        input.value = JSON.stringify(reportData);
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
+        // Enviar dados ao backend
+        const response = await fetch('http://localhost:5000/generate-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ reportData })
+        });
 
-        // Restaurar botão
+        if (response.ok) {
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'relatorio_fixabairro.pdf';
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          const errorData = await response.json();
+          throw new Error(errorData['error-message'] || 'Erro ao gerar PDF');
+        }
+
         exportBtn.innerHTML = 'Gerar Relatório PDF';
         exportBtn.disabled = false;
       } catch (error) {
         console.error('Erro ao exportar relatório:', error.message);
-        showError('Erro ao gerar relatório PDF');
-        exportBtn.innerHTML = 'Gerar Relatório PDF';
-        exportBtn.disabled = false;
+        showError('Erro ao gerar PDF: ' + error.message);
+        document.getElementById('exportReport').innerHTML = 'Gerar Relatório PDF';
+        document.getElementById('exportReport').disabled = false;
       }
     }
 
@@ -911,19 +1071,17 @@
       try {
         firebase.auth().onAuthStateChanged(async user => {
           const dashboardContainer = document.querySelector('.dashboard-container');
-          if (!dashboardContainer) throw new Error("Container do dashboard não encontrado");
+          if (!dashboardContainer) throw new Error('Container do dashboard não encontrado');
           
           if (!user) {
-            dashboardContainer.innerHTML = `
-              <div class="error-message">Por favor, faça login para visualizar o dashboard.</div>
-            `;
+            dashboardContainer.innerHTML = '<div class="error-message">Por favor, faça login para acessar o dashboard.</div>';
             setTimeout(() => window.location.href = 'login.html', 2000);
             return;
           }
 
           try {
             const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
-            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || "Usuário", email: user.email || "" };
+            const userData = userDoc.exists ? userDoc.data() : { nome: user.displayName || 'Usuário', email: user.email || '' };
 
             const problemsRef = firebase.database().ref('problems');
             let allProblems = [];
@@ -938,19 +1096,19 @@
                   });
                 }
 
-                // Update metrics
+                // Atualizar métricas
                 document.getElementById('totalProblems').textContent = allProblems.length;
                 document.getElementById('openProblems').textContent = allProblems.filter(p => p.status === 'Aguardando').length;
                 document.getElementById('inProgressProblems').textContent = allProblems.filter(p => p.status === 'Em andamento').length;
                 document.getElementById('resolvedProblems').textContent = allProblems.filter(p => p.status === 'Resolvido').length;
 
-                // Initialize charts
+                // Inicializar gráficos
                 initCharts(allProblems);
 
-                // Initialize table
+                // Inicializar tabela
                 updateTable(allProblems, 'all', 'all');
 
-                // Handle filters
+                // Manipular filtros
                 ['categoryFilters', 'statusFilters'].forEach(filterId => {
                   const filterContainer = document.getElementById(filterId);
                   if (filterContainer) {
@@ -964,21 +1122,21 @@
                           updateTable(allProblems, categoryFilter, statusFilter);
                         }
                       } catch (error) {
-                        console.error("Erro ao aplicar filtro:", error.message);
+                        console.error('Erro ao aplicar filtro:', error.message);
                       }
                     });
                   }
                 });
               } catch (error) {
-                console.error("Erro ao carregar problemas:", error.message);
-                showError("Erro ao carregar dados do dashboard");
+                console.error('Erro ao carregar problemas:', error.message);
+                showError('Erro ao carregar dados do dashboard');
               }
             }, (error) => {
-              console.error("Erro no listener do Realtime Database:", error.message);
-              showError("Erro ao conectar com o banco de dados");
+              console.error('Erro no listener do banco de dados:', error.message);
+              showError('Erro ao conectar com o banco de dados');
             });
           } catch (error) {
-            console.error("Erro ao carregar dados do usuário:", error.message);
+            console.error('Erro ao carregar dados do usuário:', error.message);
             showError(`Erro ao carregar dados: ${error.message}`);
             dashboardContainer.insertAdjacentHTML('afterend', `
               <button class="btn btn-primary mt-2" onclick="loadDashboardData()">Tentar Novamente</button>
@@ -986,8 +1144,8 @@
           }
         });
       } catch (error) {
-        console.error("Erro na inicialização do carregamento:", error.message);
-        showError("Erro ao iniciar carregamento do dashboard");
+        console.error('Erro na inicialização:', error.message);
+        showError('Erro ao iniciar carregamento do dashboard');
       }
     }
 
@@ -998,7 +1156,7 @@
         const logoutBtn = document.getElementById('logoutLink');
         const logoutText = logoutBtn.querySelector('span') || logoutBtn;
         const logoutSpinner = document.createElement('span');
-        logoutSpinner.className = 'spinner';
+        logoutSpinner.classList.add('spinner');
         
         logoutText.style.display = 'none';
         logoutBtn.appendChild(logoutSpinner);
@@ -1006,8 +1164,8 @@
 
         firebaseAuth.logout(logoutBtn, logoutText, logoutSpinner);
       } catch (error) {
-        console.error("Erro ao iniciar logout:", error.message);
-        showError("Erro ao fazer logout");
+        console.error('Erro ao fazer logout:', error.message);
+        showError('Erro ao fazer logout');
       }
     }
 
@@ -1029,11 +1187,12 @@
         }
 
         document.getElementById('logoutLink').addEventListener('click', handleLogout);
+        document.getElementById('validateBiButton').addEventListener('click', validateBi);
         document.getElementById('exportReport').addEventListener('click', exportReport);
         loadDashboardData();
       } catch (error) {
-        console.error("Erro ao inicializar página:", error.message);
-        showError("Erro ao carregar página");
+        console.error('Erro ao inicializar página:', error.message);
+        showError('Erro ao carregar a página');
       }
     });
   </script>
