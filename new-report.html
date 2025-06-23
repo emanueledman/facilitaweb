@@ -1103,264 +1103,313 @@
   <script defer src="auth.js"></script>
 
   <script>
-    // Configuração do Firebase (mantida para compatibilidade com Cloudinary e outras funções)
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
-      authDomain: "facilita-479b3.firebaseapp.com",
-      projectId: "facilita-479b3",
-      storageBucket: "facilita-479b3.appspot.com",
-      messagingSenderId: "385676676886",
-      appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
-      databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
-    };
 
-    // Initialize AOS animation library
-    window.addEventListener('load', () => {
-      AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: true
-      });
+// Configuração do Firebase (mantida para compatibilidade com Cloudinary e outras funções)
+const firebaseConfig = {
+  apiKey: "AIzaSyDVtY6ML3j-qrIsAprIJJB5xFFCbcf4UQw",
+  authDomain: "facilita-479b3.firebaseapp.com",
+  projectId: "facilita-479b3",
+  storageBucket: "facilita-479b3.appspot.com",
+  messagingSenderId: "385676676886",
+  appId: "1:385676676886:web:6976de7f3abc6c0da94a37",
+  databaseURL: "https://facilita-479b3-default-rtdb.firebaseio.com/"
+};
 
-      // Verifica o estado de autenticação usando auth.js
+// Função para aguardar inicialização do firebaseAuth
+async function waitForFirebaseAuth() {
+  return new Promise((resolve, reject) => {
+    const maxAttempts = 20;
+    let attempts = 0;
+    const interval = setInterval(() => {
       if (window.firebaseAuth) {
-        window.firebaseAuth.checkAuthState({
-          onLoggedIn: (userInfo) => updateAuthUI(userInfo),
-          onGuest: (userInfo) => updateAuthUI(userInfo)
-        });
-      } else {
-        console.error("firebaseAuth não está disponível. Verifique se auth.js foi carregado.");
+        clearInterval(interval);
+        resolve();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        reject(new Error("firebaseAuth não inicializado após tentativas."));
       }
+      attempts++;
+    }, 100);
+  });
+}
 
-      checkCookieConsent();
+// Função para obter informações do usuário
+async function getUserInfo() {
+  try {
+    const user = await window.firebaseAuth.getCurrentUser();
+    if (user) {
+      // Usuário logado: buscar dados no Firestore
+      const userDoc = await firebase.firestore().collection('usuarios').doc(user.uid).get();
+      return {
+        isLoggedIn: true,
+        uid: user.uid,
+        name: user.displayName || userDoc.data()?.name || 'Usuário Registrado'
+      };
+    } else {
+      // Visitante
+      return {
+        isLoggedIn: false,
+        uid: 'visitante',
+        name: 'Visitante'
+      };
+    }
+  } catch (error) {
+    console.error("Erro ao obter informações do usuário:", error);
+    // Fallback para visitante em caso de erro
+    return {
+      isLoggedIn: false,
+      uid: 'visitante',
+      name: 'Visitante'
+    };
+  }
+}
+
+// Initialize AOS animation library and auth
+window.addEventListener('load', async () => {
+  AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: true
+  });
+
+  try {
+    await waitForFirebaseAuth();
+    window.firebaseAuth.checkAuthState({
+      onLoggedIn: async (user) => {
+        const userInfo = await getUserInfo();
+        updateAuthUI(userInfo);
+      },
+      onGuest: async () => {
+        const userInfo = await getUserInfo();
+        updateAuthUI(userInfo);
+      }
+    });
+  } catch (error) {
+    console.error("Erro ao inicializar autenticação:", error);
+    alert("Erro ao carregar sistema de autenticação. Por favor, recarregue a página.");
+    // Carrega UI de visitante como fallback
+    updateAuthUI({ isLoggedIn: false, uid: 'visitante', name: 'Visitante' });
+  }
+
+  checkCookieConsent();
+  loadStep(); // Carrega o formulário após inicialização
+});
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar');
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Form state
+let currentStep = 0;
+let formData = {
+  title: '',
+  category: 'Buraco', // Valor padrão
+  urgency: 'Média', // Valor padrão
+  description: '',
+  suggestion: '',
+  image: null,
+  latitude: null,
+  longitude: null,
+  municipality: '',
+  neighborhood: '',
+  imagePreviewUrl: null // Para exibir a imagem antes do upload
+};
+let map, marker;
+
+// Cloudinary configuration
+const cloudinaryConfig = {
+  cloudName: 'dlfukiusa',
+  apiKey: '438687859144979',
+  apiSecret: 'Fpco6q6IczfTOh-Lv5r0t1C1tMk',
+  uploadPreset: 'fixabairro',
+  folder: 'fixa/Desconhecido'
+};
+
+const municipalitiesAndNeighborhoods = {
+  'Belas': [
+    'Morro Bento', 'Benfica', 'Vila Estoril', 'Kilamba', 'Barra do Kwanza',
+    'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
+    'Vila Verde'
+  ],
+  'Cacuaco': [
+    'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
+    'Baía do Bengo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
+    'Quixinge', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40',
+    'Quilómetro 42', 'Quilómetro 44', 'Quilómetro 45', 'Quilómetro 50'
+  ],
+  'Cazenga': [
+    'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady',
+    'Cazenga Popular', 'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa',
+    'Kicolo', 'Kilemba', 'Kimbamba', 'Kimbango', 'Kinda', 'Kintambi',
+    'Kipata', 'Kuanza', 'Kueio', 'Mabor', 'Marçal', 'Ngola Kiluange'
+  ],
+  'Ícolo e Bengo': [
+    'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe',
+    'Kicabo', 'Kikabo', 'Kixico', 'Muxima', 'Panguila', 'Quimina', 'Quixinge',
+    'Tabi', 'Zenza'
+  ],
+  'Luanda': [
+    'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
+    'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Samba', 'Rocha Pinto',
+    'São Paulo', 'Uíge', 'Vila Alice', 'Vila Flor', 'Vila Verde', 'Marçal',
+    'Ngola Kiluange', 'Kuanza', 'Kilemba', 'Kintambi', 'Kimbamba', 'Kimbango',
+    'Kinda', 'Kipata', 'Kueio', 'Luanda Sul', 'Mabor', 'Maculusso', 'Palmeirinhas'
+  ],
+  'Quiçama': [
+    'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quimina',
+    'Quixinge', 'Zenza do Itombe'
+  ],
+  'Kilamba Kiaxi': [
+    'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária',
+    'Bairro da Paz', 'Boavista'
+  ],
+  'Talatona': [
+    'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril',
+    'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
+    'Vila Verde'
+  ],
+  'Viana': [
+    'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Funda', 'Cabiri', 'Panguila',
+    'Bom Jesus', 'Cabo Ledo', '4 de Fevereiro', 'Kikolo', 'Sequele', 'Cacuaco Praia',
+    'Kiaxi Grande', 'Kifangondo', 'Quicolo', 'Quixinge', 'Quilómetro 20',
+    'Quilómetro 40',
+    'Quilómetro 42', 'Quilómetro 45',
+    'Quilómetro 50'
+  ]
+};
+
+// Categories and urgencies (com cores da nova paleta)
+const categories = [
+  { name: 'Buraco', icon: 'fas fa-exclamation-triangle', color: '#f59e0b' },
+  { name: 'Lixo', icon: 'fas fa-trash', color: '#4CAF50' },
+  { name: 'Iluminação', icon: 'fas fa-lightbulb', color: '#FFC107' },
+  { name: 'Água', icon: 'fas fa-tint', color: '#2196F3' },
+  { name: 'Segurança', icon: 'fas fa-shield-alt', color: '#DC3545' },
+  { name: 'Estrada', icon: 'fas fa-road', color: '#607D8b' },
+  { name: 'Transporte', icon: 'fas fa-bus', color: '#9C27B0' },
+  { name: 'Outros', icon: 'fas fa-ellipsis-h', color: '#333' },
+];
+
+const urgencies = [
+  { level: 'Fácil', icon: 'fas fa-thermometer-empty', color: '#4CAF50' },
+  { level: 'Média', icon: 'fas fa-thermometer-half', color: '#FF9800' },
+  { level: 'Alta', icon: 'fas fa-thermometer-full', color: '#DC3545' },
+];
+
+// Show error message
+function showError(elementId, message) {
+  const errorElement = document.getElementById(elementId);
+  if (errorElement) {
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+  }
+}
+
+// Hide error message
+function hideError(elementId) {
+  const errorElement = document.getElementById(elementId);
+  if (errorElement) {
+    errorElement.style.display = 'none';
+  }
+}
+
+// Get responsible ID for municipality
+async function getResponsibleIdForMunicipality(municipality) {
+  try {
+    const querySnapshot = await firebase.firestore()
+      .collection('usuarios')
+      .where('municipality', '==', municipality)
+      .where('isResponsible', '==', true)
+      .limit(1)
+      .get();
+    
+    if (!querySnapshot.empty) {
+      return querySnapshot.docs[0].id;
+    }
+    console.log(`Não há responsável cadastrado para o município: ${municipality}`);
+    return null;
+  } catch (error) {
+    console.error("Erro ao buscar responsável:", error);
+    return null;
+  }
+}
+
+// Upload to Cloudinary
+async function uploadToCloudinary(file, neighborhood) {
+  try {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const folder = neighborhood ? `fix_${neighborhood.replace(/\s/g, '_')}` : cloudinaryConfig.folder;
+    const paramsToSign = {
+      timestamp,
+      upload_preset: cloudinaryConfig.uploadPreset,
+      folder: folder
+    };
+
+    const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
+      obj[key] = paramsToSign[key];
+      return obj;
+    }, {});
+    let signatureString = '';
+    for (const [key, value] of Object.entries(sortedParams)) {
+      if (key !== 'file' && key !== 'api_key') {
+        signatureString += `${key}=${value}&`;
+      }
+    }
+    signatureString = signatureString.slice(0, -1) + cloudinaryConfig.apiSecret;
+    const signature = CryptoJS.SHA1(signatureString).toString();
+
+    const formDataCloudinary = new FormData();
+    formDataCloudinary.append('file', file);
+    formDataCloudinary.append('api_key', cloudinaryConfig.apiKey);
+    formDataCloudinary.append('timestamp', timestamp);
+    formDataCloudinary.append('signature', signature);
+    formDataCloudinary.append('upload_preset', cloudinaryConfig.uploadPreset);
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
+      method: 'POST',
+      body: formDataCloudinary
     });
 
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-      const navbar = document.querySelector('.navbar');
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
-
-    // Form state
-    let currentStep = 0;
-    let formData = {
-      title: '',
-      category: 'Buraco', // Valor padrão
-      urgency: 'Média', // Valor padrão
-      description: '',
-      suggestion: '',
-      image: null,
-      latitude: null,
-      longitude: null,
-      municipality: '',
-      neighborhood: '',
-      imagePreviewUrl: null // Para exibir a imagem antes do upload
-    };
-    let map, marker;
-
-    // Cloudinary configuration
-    const cloudinaryConfig = {
-      cloudName: 'dlfukiusa',
-      apiKey: '438687859144979',
-      apiSecret: 'Fpco6q6IczfTOh-Lv5r0t1C1tMk',
-      uploadPreset: 'fixabairro',
-      folder: 'fixa/Desconhecido'
-    };
-
-    const municipalitiesAndNeighborhoods = {
-      'Belas': [
-        'Morro Bento', 'Benfica', 'Vila Estoril', 'Kilamba', 'Barra do Kwanza',
-        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
-        'Vila Verde'
-      ],
-      'Cacuaco': [
-        'Kikolo', 'Sequele', 'Mulenvos', 'Cacuaco Praia', 'Kiaxi Grande', '4 de Fevereiro',
-        'Baía do Bengo', 'Kifangondo', 'Funda', 'Cabiri', 'Panguila', 'Quicolo',
-        'Quixinge', 'Quilómetro 30', 'Quilómetro 36', 'Quilómetro 40',
-        'Quilómetro 42', 'Quilómetro 44', 'Quilómetro 45', 'Quilómetro 50'
-      ],
-      'Cazenga': [
-        'Hoji Ya Henda', '11 de Novembro', 'Kima Kienda', 'São Pedro', 'Tala Hady',
-        'Cazenga Popular', 'Kabolombota', 'Kambamba', 'Kassa Kala', 'Kawa',
-        'Kicolo', 'Kilemba', 'Kimbamba', 'Kimbango', 'Kinda', 'Kintambi',
-        'Kipata', 'Kuanza', 'Kueio', 'Mabor', 'Marçal', 'Ngola Kiluange'
-      ],
-      'Ícolo e Bengo': [
-        'Catete', 'Bom Jesus', 'Caculo Cahango', 'Cassoneca', 'Demba Chio', 'Kibaxe',
-        'Kicabo', 'Kikabo', 'Kixico', 'Muxima', 'Panguila', 'Quimina', 'Quixinge',
-        'Tabi', 'Zenza'
-      ],
-      'Luanda': [
-        'Maianga', 'Ingombota', 'Maculusso', 'Sambizanga', 'Rangel', 'Kinaxixi', 'Prenda',
-        'Bairro Operário', 'Bairro Azul', 'Bairro Popular', 'Samba', 'Rocha Pinto',
-        'São Paulo', 'Uíge', 'Vila Alice', 'Vila Flor', 'Vila Verde', 'Marçal',
-        'Ngola Kiluange', 'Kuanza', 'Kilemba', 'Kintambi', 'Kimbamba', 'Kimbango',
-        'Kinda', 'Kipata', 'Kueio', 'Luanda Sul', 'Mabor', 'Maculusso', 'Palmeirinhas'
-      ],
-      'Quiçama': [
-        'Quiçama', 'Cabo Ledo', 'Demba Chio', 'Kissama', 'Mumbondo', 'Quimina',
-        'Quixinge', 'Zenza do Itombe'
-      ],
-      'Kilamba Kiaxi': [
-        'Palanca', 'Golfe', 'Cassequel', 'Sapú', 'Camama', 'Cidade Universitária',
-        'Bairro da Paz', 'Boavista'
-      ],
-      'Talatona': [
-        'Futungo de Belas', 'Camama', 'Vida Pacífica', 'Benfica', 'Vila Estoril',
-        'Cabolombo', 'Quifica', 'Gamek', 'Salvador Allende', 'Quenguela', 'Ramiros',
-        'Vila Verde'
-      ],
-      'Viana': [
-        'Estalagem', 'Zango', 'Viana Centro', 'Baía', 'Funda', 'Cabiri', 'Panguila',
-        'Bom Jesus', 'Cabo Ledo', '4 de Fevereiro', 'Kikolo', 'Sequele', 'Cacuaco Praia',
-        'Kiaxi Grande', 'Kifangondo', 'Quicolo', 'Quixinge', 'Quilómetro 30',
-        'Quilómetro 36', 'Quilómetro 40', 'Quilómetro 42', 'Quilómetro 44',
-        'Quilómetro 45', 'Quilómetro 50'
-      ]
-    };
-
-    // Categories and urgencies (com cores da nova paleta)
-    const categories = [
-      { name: 'Buraco', icon: 'fa-exclamation-triangle', color: '#f59e0b' },
-      { name: 'Lixo', icon: 'fa-trash', color: '#4CAF50' },
-      { name: 'Iluminação', icon: 'fa-lightbulb', color: '#FFC107' },
-      { name: 'Água', icon: 'fa-tint', color: '#2196F3' },
-      { name: 'Segurança', icon: 'fa-shield-alt', color: '#DC3545' },
-      { name: 'Estrada', icon: 'fa-road', color: '#607D8B' },
-      { name: 'Transporte', icon: 'fa-bus', color: '#9C27B0' },
-      { name: 'Outros', icon: 'fa-ellipsis-h', color: '#7F8C8D' }
-    ];
-
-    const urgencies = [
-      { level: 'Baixa', icon: 'fa-thermometer-empty', color: '#4CAF50' },
-      { level: 'Média', icon: 'fa-thermometer-half', color: '#FF9800' },
-      { level: 'Alta', icon: 'fa-thermometer-full', color: '#DC3545' }
-    ];
-
-    // Show error message
-    function showError(elementId, message) {
-      const errorElement = document.getElementById(elementId);
-      if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.style.display = 'block';
-      }
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Falha no upload da imagem: ${response.status} - ${errorData.error.message}`);
     }
 
-    // Hide error message
-    function hideError(elementId) {
-      const errorElement = document.getElementById(elementId);
-      if (errorElement) {
-        errorElement.style.display = 'none';
-      }
-    }
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error("Erro ao fazer upload para Cloudinary:", error.message);
+    throw error;
+  }
+}
 
-    // Get responsible ID for municipality
-    async function getResponsibleIdForMunicipality(municipality) {
-      try {
-        const querySnapshot = await firebase.firestore()
-          .collection('usuarios')
-          .where('municipality', 'option', municipality)
-          .where('isResponsible', true)
-          .limit(1)
-          .get();
-        
-        if (!querySnapshot.empty) {
-          return querySnapshot.docs[0].id;
-        }
-        console.log(`Nenhum responsável encontrado para o município: ${municipality}`);
-        return null;
-      } catch (error) {
-        console.error("Erro ao buscar responsável:", error);
-        return null;
-      }
-    }
+// Initialize map
+function initializeMap() {
+  if (map) map.remove(); // Remove mapa existente antes de criar um novo
+  map = L.map('formMap').setView([-8.838333, 13.234444], 13); // Centrado em Luanda
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  }).addTo(map);
 
-    // Upload to Cloudinary
-    async function uploadToCloudinary(file, neighborhood) {
-      try {
-        const timestamp = Math.floor(Date.now() / 1000);
-        const folder = neighborhood ? `fix_${neighborhood.replace(/\s/g, '_')}` : cloudinaryConfig.folder;
-        const paramsToSign = {
-          timestamp,
-          upload_preset: cloudinaryConfig.uploadPreset,
-          folder: folder
-        };
-
-        const sortedParams = Object.keys(paramsToSign).sort().reduce((obj, key) => {
-          obj[key] = paramsToSign[key];
-          return obj;
-        }, {});
-        let signatureString = '';
-        for (const [key, value] of Object.entries(sortedParams)) {
-          if (key !== 'file' && key !== 'api_key') {
-            signatureString += `${key}=${value}&`;
-          }
-        }
-        signatureString = signatureString.slice(0, -1) + cloudinaryConfig.apiSecret;
-        const signature = CryptoJS.SHA1(signatureString).toString();
-
-        const formDataCloudinary = new FormData();
-        formDataCloudinary.append('file', file);
-        formDataCloudinary.append('api_key', cloudinaryConfig.apiKey);
-        formDataCloudinary.append('timestamp', timestamp);
-        formDataCloudinary.append('signature', signature);
-        formDataCloudinary.append('upload_preset', cloudinaryConfig.uploadPreset);
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`, {
-          method: 'POST',
-          body: formDataCloudinary
+  // Tenta obter a localização atual do usuário
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        map.setView([latitude, longitude], 15);
+        formData.latitude = latitude;
+        formData.longitude = longitude;
+        marker = L.marker([latitude, longitude], { draggable: true }).addTo(map)
+          .bindPopup('Arraste para ajustar a localização exata').openPopup();
+        marker.on('dragend', () => {
+          formData.latitude = marker.getLatLng().lat;
+          formData.longitude = marker.getLatLng().lng;
         });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Falha no upload da imagem: ${response.status} - ${errorData.error.message}`);
-        }
-
-        const data = await response.json();
-        return data.secure_url;
-      } catch (error) {
-        console.error("Erro ao fazer upload para Cloudinary:", error.message);
-        throw error;
-      }
-    }
-
-    // Initialize map
-    function initializeMap() {
-      if (map) map.remove(); // Remove mapa existente antes de criar um novo
-      map = L.map('formMap').setView([-8.838333, 13.234444], 13); // Centrado em Luanda
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        maxZoom: 19
-      }).addTo(map);
-
-      // Tenta obter a localização atual do usuário
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const { latitude, longitude } = position.coords;
-            map.setView([latitude, longitude], 15);
-            formData.latitude = latitude;
-            formData.longitude = longitude;
-            marker = L.marker([latitude, longitude], { draggable: true }).addTo(map)
-              .bindPopup('Arraste para ajustar a localização exata').openPopup();
-            marker.on('dragend', () => {
-              formData.latitude = marker.getLatLng().lat;
-              formData.longitude = marker.getLatLng().lng;
-            });
-          },
-          () => {
-            // Se falhar, usa a localização padrão de Luanda
-            marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map)
-              .bindPopup('Arraste para ajustar a localização exata').openPopup();
-            formData.latitude = -8.838333;
-            formData.longitude = 13.234444;
-            marker.on('dragend', () => {
-              formData.latitude = marker.getLatLng().lat;
-              formData.longitude = marker.getLatLng().lng;
-            });
-          }
-        );
-      } else {
-        // Se o navegador não suportar geolocalização, usa a localização padrão
+      },
+      () => {
+        // Se falhar, usa a localização padrão de Luanda
         marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map)
           .bindPopup('Arraste para ajustar a localização exata').openPopup();
         formData.latitude = -8.838333;
@@ -1370,470 +1419,483 @@
           formData.longitude = marker.getLatLng().lng;
         });
       }
+    );
+  } else {
+    // Se o navegador não suportar geolocalização, usa a localização padrão
+    marker = L.marker([-8.838333, 13.234444], { draggable: true }).addTo(map)
+      .bindPopup('Arraste para ajustar a localização exata').openPopup();
+    formData.latitude = -8.838333;
+    formData.longitude = 13.234444;
+    marker.on('dragend', () => {
+      formData.latitude = marker.getLatLng().lat;
+      formData.longitude = marker.getLatLng().lng;
+    });
+  }
 
-      // Adicionar controle de clique no mapa para posicionar o marcador
-      map.on('click', (e) => {
-        if (marker) {
-          marker.setLatLng(e.latlng);
-        } else {
-          marker = L.marker(e.latlng, { draggable: true }).addTo(map);
-        }
-        formData.latitude = e.latlng.lat;
-        formData.longitude = e.latlng.lng;
-        marker.on('dragend', () => {
-          formData.latitude = marker.getLatLng().lat;
-          formData.longitude = marker.getLatLng().lng;
-        });
-      });
+  // Adicionar controle de clique no mapa para posicionar o marcador
+  map.on('click', (e) => {
+    if (marker) {
+      marker.setLatLng(e.latlng);
+    } else {
+      marker = L.marker(e.latlng, { draggable: true }).addTo(map);
     }
+    formData.latitude = e.latlng.lat;
+    formData.longitude = e.latlng.lng;
+    marker.on('dragend', () => {
+      formData.latitude = marker.getLatLng().lat;
+      formData.longitude = marker.getLatLng().lng;
+    });
+  });
+}
 
-    // Load form step
-    function loadStep() {
-      const formContent = document.getElementById('formContent');
-      let stepHtml = '';
+// Load form step
+function loadStep() {
+  const formContent = document.getElementById('formContent');
+  let stepHtml = '';
 
-      // Stepper Section
-      const stepsConfig = [
-        { title: 'Informações Básicas' },
-        { title: 'Detalhes Adicionais' },
-        { title: 'Localização' }
-      ];
+  // Stepper Section
+  const stepsConfig = [
+    { title: 'Informações Básicas' },
+    { title: 'Detalhes Adicionais' },
+    { title: 'Localização' }
+  ];
 
-      const stepperHtml = `
-        <div class="stepper mb-5" data-step="${currentStep}">
-          ${stepsConfig.map((step, index) => `
-            <div class="step ${index === currentStep ? 'active' : ''} ${index < currentStep ? 'completed' : ''}">
-              <div class="step-circle">${index + 1}</div>
-              <div class="step-title">${step.title}</div>
-            </div>
-          `).join('')}
+  const stepperHtml = `
+    <div class="stepper mb-5" data-step="${currentStep}">
+      ${stepsConfig.map((step, index) => `
+        <div class="step ${index === currentStep ? 'active' : ''} ${index < currentStep ? 'completed' : ''}">
+          <div class="step-circle">${index + 1}</div>
+          <div class="step-title">${step.title}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  stepHtml += stepperHtml;
+
+  // Form Content per Step
+  switch (currentStep) {
+    case 0:
+      stepHtml += `
+        <h3 class="section-title">Informações Essenciais</h3>
+        <div class="form-group">
+          <label for="title">Título Curto do Problema</label>
+          <input type="text" class="form-control" id="title" placeholder="Ex.: buraco na rua principal" value="${formData.title}" maxlength="100">
+          <div class="error-message" id="titleError"></div>
+        </div>
+        <div class="form-group">
+          <label for="municipality">Município</label>
+          <div class="select-container">
+            <select class="form-control" id="municipality">
+              <option value="">Selecione o município</option>
+              ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
+                <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
+              `).join('')}
+            </select>
+          </div>
+          <div class="error-message" id="municipalityError"></div>
+        </div>
+        <div class="form-group" id="neighborhoodGroup" style="${formData.municipality ? 'display: block;' : 'display: none;'}">
+          <label for="neighborhood">Bairro</label>
+          <div class="select-container">
+            <select class="form-control" id="neighborhood">
+              <option value="">Selecione o bairro</option>
+              ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ?
+                municipalitiesAndNeighborhoods[formData.municipality].map(bairro => `
+                  <option value="${bairro}" ${formData.neighborhood === bairro ? 'selected' : ''}>${bairro}</option>
+                `).join('')
+                : ''}
+            </select>
+          </div>
+          <div class="error-message" id="neighborhoodError"></div>
+        </div>
+        <div class="btn-navigation">
+          <button type="button" class="btn-main ms-auto" id="nextBtn">Próximo Passo <i class="fas fa-arrow-right ms-2"></i></button>
         </div>
       `;
-      stepHtml += stepperHtml;
-
-      // Form Content per Step
-      switch (currentStep) {
-        case 0:
-          stepHtml += `
-            <h3 class="section-title">Informações Essenciais</h3>
-            <div class="form-group">
-              <label for="title">Título Curto do Problema</label>
-              <input type="text" class="form-control" id="title" placeholder="Ex.: buraco na rua principal" value="${formData.title}" maxlength="100">
-              <div class="error-message" id="titleError"></div>
-            </div>
-            <div class="form-group">
-              <label for="municipality">Município</label>
-              <div class="select-container">
-                <select class="form-control" id="municipality">
-                  <option value="">Selecione o município</option>
-                  ${Object.keys(municipalitiesAndNeighborhoods).map(mun => `
-                    <option value="${mun}" ${formData.municipality === mun ? 'selected' : ''}>${mun}</option>
-                  `).join('')}
-                </select>
+      break;
+    case 1:
+      stepHtml += `
+        <h3 class="section-title">Classifique e Descreva</h3>
+        <div class="form-group">
+          <label>Categoria do Problema</label>
+          <div class="category-grid">
+            ${categories.map(cat => `
+              <div class="category-chip ${formData.category === cat.name ? 'selected' : ''}" data-category="${cat.name}">
+                <i class="${cat.icon}" style="color: ${formData.category === cat.name ? 'white' : cat.color};"></i>
+                <span>${cat.name}</span>
               </div>
-              <div class="error-message" id="municipalityError"></div>
+            `).join('')}
+          </div>
+          <div class="error-message" id="categoryError"></div>
+        </div>
+        <div class="form-group">
+          <label>Nível de Urgência</label>
+          <div class="urgency-radio">
+            ${urgencies.map(urg => `
+              <input type="radio" id="urgency-${urg.level}" name="urgency" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
+              <label for="urgency-${urg.level}">
+                <i class="${urg.icon}" style="color: ${formData.urgency === urg.level ? 'white' : urg.color};"></i>
+                ${urg.level}
+              </label>
+            `).join('')}
+          </div>
+          <div class="error-message" id="urgencyError"></div>
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição Detalhada do Problema</label>
+          <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema com o máximo de detalhes possível: o que é, quando ocorre, quem afeta, etc." maxlength="500">${formData.description}</textarea>
+          <div class="error-message" id="descriptionError"></div>
+        </div>
+        <div class="form-group">
+          <label for="suggestion">Sugestão de Solução (Opcional)</label>
+          <textarea class="form-control" id="suggestion" rows="3" placeholder="Se tiver alguma ideia de como o problema pode ser resolvido, pode partilhar aqui." maxlength="300">${formData.suggestion}</textarea>
+        </div>
+        <div class="form-group">
+          <label for="imageUpload">Foto do Problema (Antes)</label>
+          <div class="image-upload-container">
+            <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+            <label for="imageUpload" class="d-block cursor-pointer">
+              <i class="fas fa-camera"></i>
+              <p class="mb-0">Clique ou arraste uma imagem aqui</p>
+              <small>Máx. 5MB</small>
+            </label>
+          </div>
+          <div class="image-preview-container" id="imagePreviewContainer" style="${formData.imagePreviewUrl ? 'display: flex;' : 'display: none;'}">
+            <img id="imagePreview" class="image-preview" src="${formData.imagePreviewUrl || ''}" style="${formData.imagePreviewUrl ? 'display: block;' : 'display: none;'}" alt="Imagem do Problema">
+            <div class="image-placeholder-text" id="imagePlaceholderText" style="${formData.imagePreviewUrl ? 'display: none;' : 'display: flex;'}">
+                <i class="fas fa-image"></i>
+                <span>Nenhuma imagem selecionada.</span>
             </div>
-            <div class="form-group" id="neighborhoodGroup" style="${formData.municipality ? 'display: block;' : 'display: none;'}">
-              <label for="neighborhood">Bairro</label>
-              <div class="select-container">
-                <select class="form-control" id="neighborhood">
-                  <option value="">Selecione o bairro</option>
-                  ${formData.municipality && municipalitiesAndNeighborhoods[formData.municipality] ?
-                    municipalitiesAndNeighborhoods[formData.municipality].map(bairro => `
-                      <option value="${bairro}" ${formData.neighborhood === bairro ? 'selected' : ''}>${bairro}</option>
-                    `).join('')
-                    : ''}
-                </select>
-              </div>
-              <div class="error-message" id="neighborhoodError"></div>
+          </div>
+          <div class="error-message" id="imageError"></div>
+        </div>
+        <div class="btn-navigation">
+          <button type="button" class="btn-outline-secondary-dark" id="prevBtn"><i class="fas fa-arrow-left me-2"></i> Anterior</button>
+          <button type="button" class="btn-main" id="nextBtn">Próximo Passo <i class="fas fa-arrow-right ms-2"></i></button>
+        </div>
+      `;
+      break;
+    case 2:
+      stepHtml += `
+        <h3 class="section-title">Localização Exata</h3>
+        <p class="text-center text-secondary mb-4">Ajuste o marcador no mapa para a localização precisa do problema.</p>
+        <div class="form-group">
+          <div class="map-container" id="formMap">
+            <div class="map-controls">
+              <button type="button" class="map-control-btn" id="locateMeBtn" title="Minha Localização"><i class="fas fa-crosshairs"></i></button>
+              <button type="button" class="map-control-btn" id="resetMapBtn" title="Resetar Mapa"><i class="fas fa-redo"></i></button>
             </div>
-            <div class="btn-navigation">
-              <button type="button" class="btn-main ms-auto" id="nextBtn">Próximo Passo <i class="fas fa-arrow-right ms-2"></i></button>
-            </div>
-          `;
-          break;
-        case 1:
-          stepHtml += `
-            <h3 class="section-title">Classifique e Descreva</h3>
-            <div class="form-group">
-              <label>Categoria do Problema</label>
-              <div class="category-grid">
-                ${categories.map(cat => `
-                  <div class="category-chip ${formData.category === cat.name ? 'selected' : ''}" data-category="${cat.name}">
-                    <i class="${cat.icon}" style="color: ${formData.category === cat.name ? 'white' : cat.color};"></i>
-                    <span>${cat.name}</span>
-                  </div>
-                `).join('')}
-              </div>
-              <div class="error-message" id="categoryError"></div>
-            </div>
-            <div class="form-group">
-              <label>Nível de Urgência</label>
-              <div class="urgency-radio">
-                ${urgencies.map(urg => `
-                  <input type="radio" id="urgency-${urg.level}" name="urgency" value="${urg.level}" ${formData.urgency === urg.level ? 'checked' : ''}>
-                  <label for="urgency-${urg.level}">
-                    <i class="${urg.icon}" style="color: ${formData.urgency === urg.level ? 'white' : urg.color};"></i>
-                    ${urg.level}
-                  </label>
-                `).join('')}
-              </div>
-              <div class="error-message" id="urgencyError"></div>
-            </div>
-            <div class="form-group">
-              <label for="description">Descrição Detalhada do Problema</label>
-              <textarea class="form-control" id="description" rows="5" placeholder="Descreva o problema com o máximo de detalhes possível: o que é, quando ocorre, quem afeta, etc." maxlength="500">${formData.description}</textarea>
-              <div class="error-message" id="descriptionError"></div>
-            </div>
-            <div class="form-group">
-              <label for="suggestion">Sugestão de Solução (Opcional)</label>
-              <textarea class="form-control" id="suggestion" rows="3" placeholder="Se tiver alguma ideia de como o problema pode ser resolvido, pode partilhar aqui." maxlength="300">${formData.suggestion}</textarea>
-            </div>
-            <div class="form-group">
-              <label for="imageUpload">Foto do Problema (Antes)</label>
-              <div class="image-upload-container">
-                <input type="file" id="imageUpload" accept="image/*" style="display: none;">
-                <label for="imageUpload" class="d-block cursor-pointer">
-                  <i class="fas fa-camera"></i>
-                  <p class="mb-0">Clique ou arraste uma imagem aqui</p>
-                  <small>Máx. 5MB</small>
-                </label>
-              </div>
-              <div class="image-preview-container" id="imagePreviewContainer" style="${formData.imagePreviewUrl ? 'display: flex;' : 'display: none;'}">
-                <img id="imagePreview" class="image-preview" src="${formData.imagePreviewUrl || ''}" style="${formData.imagePreviewUrl ? 'display: block;' : 'display: none;'}" alt="Imagem do Problema">
-                <div class="image-placeholder-text" id="imagePlaceholderText" style="${formData.imagePreviewUrl ? 'display: none;' : 'display: flex;'}">
-                    <i class="fas fa-image"></i>
-                    <span>Nenhuma imagem selecionada.</span>
-                </div>
-              </div>
-              <div class="error-message" id="imageError"></div>
-            </div>
-            <div class="btn-navigation">
-              <button type="button" class="btn-outline-secondary-dark" id="prevBtn"><i class="fas fa-arrow-left me-2"></i> Anterior</button>
-              <button type="button" class="btn-main" id="nextBtn">Próximo Passo <i class="fas fa-arrow-right ms-2"></i></button>
-            </div>
-          `;
-          break;
-        case 2:
-          stepHtml += `
-            <h3 class="section-title">Localização Exata</h3>
-            <p class="text-center text-secondary mb-4">Ajuste o marcador no mapa para a localização precisa do problema.</p>
-            <div class="form-group">
-              <div class="map-container" id="formMap">
-                <div class="map-controls">
-                  <button type="button" class="map-control-btn" id="locateMeBtn" title="Minha Localização"><i class="fas fa-crosshairs"></i></button>
-                  <button type="button" class="map-control-btn" id="resetMapBtn" title="Resetar Mapa"><i class="fas fa-redo"></i></button>
-                </div>
-              </div>
-              <div class="error-message" id="mapError"></div>
-            </div>
-            <div class="btn-navigation">
-              <button type="button" class="btn-outline-secondary-dark" id="prevBtn"><i class="fas fa-arrow-left me-2"></i> Anterior</button>
-              <button type="submit" class="btn-main" id="submitBtn"><i class="fas fa-paper-plane me-2"></i> Enviar Relato</button>
-            </div>
-          `;
-          break;
+          </div>
+          <div class="error-message" id="mapError"></div>
+        </div>
+        <div class="btn-navigation">
+          <button type="button" class="btn-outline-secondary-dark" id="prevBtn"><i class="fas fa-arrow-left me-2"></i> Anterior</button>
+          <button type="submit" class="btn-main" id="submitBtn"><i class="fas fa-paper-plane me-2"></i> Enviar Relato</button>
+        </div>
+      `;
+      break;
+  }
+  formContent.innerHTML = stepHtml;
+  addEventListenersToStep();
+  if (currentStep === 2) {
+    initializeMap();
+  }
+}
+
+// Add event listeners for the current step
+function addEventListenersToStep() {
+  // Common elements
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const submitBtn = document.getElementById('submitBtn');
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (validateStep()) {
+        currentStep++;
+        loadStep();
       }
-      formContent.innerHTML = stepHtml;
-      addEventListenersToStep();
-      if (currentStep === 2) {
-        initializeMap();
-      }
-    }
+    });
+  }
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      currentStep--;
+      loadStep();
+    });
+  }
 
-    // Add event listeners for the current step
-    function addEventListenersToStep() {
-      // Common elements
-      const nextBtn = document.getElementById('nextBtn');
-      const prevBtn = document.getElementById('prevBtn');
-      const submitBtn = document.getElementById('submitBtn');
+  switch (currentStep) {
+    case 0:
+      document.getElementById('title').addEventListener('input', (e) => {
+        formData.title = e.target.value;
+        hideError('titleError');
+      });
 
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          if (validateStep()) {
-            currentStep++;
-            loadStep();
-          }
-        });
-      }
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          currentStep--;
-          loadStep();
-        });
-      }
+      const municipalitySelect = document.getElementById('municipality');
+      const neighborhoodGroup = document.getElementById('neighborhoodGroup');
+      const neighborhoodSelect = document.getElementById('neighborhood');
 
-      switch (currentStep) {
-        case 0:
-          document.getElementById('title').addEventListener('input', (e) => {
-            formData.title = e.target.value;
-            hideError('titleError');
-          });
-
-          const municipalitySelect = document.getElementById('municipality');
-          const neighborhoodGroup = document.getElementById('neighborhoodGroup');
-          const neighborhoodSelect = document.getElementById('neighborhood');
-
-          municipalitySelect.addEventListener('change', (e) => {
-            formData.municipality = e.target.value;
-            formData.neighborhood = ''; // Reset neighborhood on municipality change
-            hideError('municipalityError');
-            updateNeighborhoods(e.target.value);
-            if (e.target.value) {
-                neighborhoodGroup.style.display = 'block';
-                AOS.refresh(); // Refresh AOS to animate the new element
-            } else {
-                neighborhoodGroup.style.display = 'none';
-            }
-          });
-
-          neighborhoodSelect.addEventListener('change', (e) => {
-            formData.neighborhood = e.target.value;
-            hideError('neighborhoodError');
-          });
-
-          // Function to update neighborhood dropdown
-          function updateNeighborhoods(municipality) {
-            neighborhoodSelect.innerHTML = '<option value="">Selecione o bairro</option>';
-            if (municipalitiesAndNeighborhoods[municipality]) {
-              municipalitiesAndNeighborhoods[municipality].forEach(bairro => {
-                const option = document.createElement('option');
-                option.value = bairro;
-                option.textContent = bairro;
-                neighborhoodSelect.appendChild(option);
-              });
-            }
-          }
-          break;
-        case 1:
-          document.querySelectorAll('.category-chip').forEach(chip => {
-            chip.addEventListener('click', () => {
-              document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
-              chip.classList.add('selected');
-              formData.category = chip.dataset.category;
-              hideError('categoryError');
-              // Atualizar cor do ícone
-              chip.querySelector('i').style.color = 'white';
-              categories.forEach(cat => {
-                if (cat.name !== formData.category) {
-                  document.querySelector(`.category-chip[data-category="${cat.name}"] i`).style.color = cat.color;
-                }
-              });
-            });
-          });
-
-          document.querySelectorAll('input[name="urgency"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-              formData.urgency = e.target.value;
-              hideError('urgencyError');
-              // Atualizar cor do ícone
-              urgencies.forEach(urg => {
-                const label = document.querySelector(`label[for="urgency-${urg.level}"]`);
-                if (e.target.value === urg.level) {
-                  label.querySelector('i').style.color = 'white';
-                } else {
-                  label.querySelector('i').style.color = urg.color;
-                }
-              });
-            });
-          });
-
-          document.getElementById('description').addEventListener('input', (e) => {
-            formData.description = e.target.value;
-            hideError('descriptionError');
-          });
-
-          document.getElementById('suggestion').addEventListener('input', (e) => {
-            formData.suggestion = e.target.value;
-          });
-
-          const imageUploadInput = document.getElementById('imageUpload');
-          const imagePreview = document.getElementById('imagePreview');
-          const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-          const imagePlaceholderText = document.getElementById('imagePlaceholderText');
-
-          imageUploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-              if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                showError('imageError', 'A imagem deve ter no máximo 5MB.');
-                imageUploadInput.value = '';
-                formData.image = null;
-                formData.imagePreviewUrl = null;
-                imagePreview.style.display = 'none';
-                imagePlaceholderText.style.display = 'flex';
-                imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível
-                return;
-              }
-              formData.image = file;
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                formData.imagePreviewUrl = e.target.result;
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-                imagePlaceholderText.style.display = 'none';
-                imagePreviewContainer.style.display = 'flex';
-                hideError('imageError');
-              };
-              reader.readAsDataURL(file);
-            } else {
-              formData.image = null;
-              formData.imagePreviewUrl = null;
-              imagePreview.style.display = 'none';
-              imagePlaceholderText.style.display = 'flex';
-              imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível mesmo sem imagem
-            }
-          });
-          break;
-        case 2:
-          document.getElementById('locateMeBtn').addEventListener('click', () => {
-            if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(
-                position => {
-                  const { latitude, longitude } = position.coords;
-                  map.setView([latitude, longitude], 15);
-                  if (marker) {
-                    marker.setLatLng([latitude, longitude]);
-                  } else {
-                    marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
-                  }
-                  formData.latitude = latitude;
-                  formData.longitude = longitude;
-                },
-                () => {
-                  alert('Não foi possível obter sua localização. Por favor, arraste manualmente.');
-                }
-              );
-            } else {
-              alert('Geolocalização não suportada pelo seu navegador.');
-            }
-          });
-          document.getElementById('resetMapBtn').addEventListener('click', () => {
-            initializeMap(); // Recria o mapa na posição padrão de Luanda
-          });
-
-          submitBtn.addEventListener('click', handleSubmit);
-          break;
-      }
-    }
-
-    // Validate current step
-    function validateStep() {
-      let isValid = true;
-      switch (currentStep) {
-        case 0:
-          if (!formData.title.trim()) {
-            showError('title-error', 'O título do problema é obrigatório.');
-            isValid = false;
-          } else {
-            hideError('title-error');
-          }
-          if (!formData.municipality) {
-            showError('municipality-error', 'Selecione um município.');
-            isValid = false;
-          } else {
-            hideError('municipality-error');
-          }
-          if (formData.municipality && !formData.neighborhood) {
-            showError('neighborhood-error', 'Selecione um bairro.');
-            isValid = false;
-          } else {
-            hideError('neighborhood-error');
-          }
-          break;
-        case 1:
-          if (!formData.category) {
-            showError('category-error', 'Selecione uma categoria.');
-            isValid = false;
-          } else {
-            hideError('category-error');
-          }
-          if (!formData.urgency) {
-            showError('urgency-error', 'Selecione um nível de urgência.');
-            isValid = false;
-          } else {
-            hideError('urgency-error');
-          }
-          if (!formData.description.trim()) {
-            showError('description-error', 'A descrição do problema é obrigatória.');
-            isValid = false;
-          } else {
-            hideError('description-error');
-          }
-          // Imagem é opcional, não validamos se está vazia
-          break;
-        case 2:
-          if (formData.latitude === null || formData.longitude === null) {
-            showError('map-error', 'A localização no mapa é obrigatória. Clique ou arraste o marcador.');
-            isValid = false;
-          } else {
-            hideError('map-error');
-          }
-          break;
-      }
-      return isValid;
-    }
-
-    // Handle form submission
-    async function handleSubmit() {
-      if (!validateStep()) {
-        return; // Valida a última etapa antes de enviar
-      }
-
-      const submitBtn = document.getElementById('submitButton');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
-
-      try {
-        let imageUrl = '';
-        if (formData.image) {
-          imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
-          console.log('Imagem enviada para Cloudinary:', imageUrl);
+      municipalitySelect.addEventListener('change', (e) => {
+        formData.municipality = e.target.value;
+        formData.neighborhood = ''; // Reset neighborhood on municipality change
+        hideError('municipalityError');
+        updateNeighborhoods(e.target.value);
+        if (e.target.value) {
+            neighborhoodGroup.style.display = 'block';
+            AOS.refresh(); // Refresh AOS to animate the new element
+        } else {
+            neighborhoodGroup.style.display = 'none';
         }
+      });
 
-        const db = firebase.database();
-        const problemsRef = db.ref('problems');
-        const newProblemRef = problemsRef.push();
-        const problemId = newProblemRef.key;
+      neighborhoodSelect.addEventListener('change', (e) => {
+        formData.neighborhood = e.target.value;
+        hideError('neighborhoodError');
+      });
 
-        const userInfo = await window.firebaseAuth.getUserInfo();
-        const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
-
-        const newProblemData = {
-          id: problemId,
-          title: formData.title,
-          description: formData.description,
-          category: formData.category,
-          urgency: formData.urgency,
-          suggestion: formData.suggestion,
-          imageUrl: imageUrl,
-          location: {
-            latitude: formData.latitude,
-            longitude: formData.longitude,
-            municipality: formData.municipality,
-            neighborhood: formData.neighborhood
-          },
-          status: 'pending',
-          createdAt: firebase.database.ServerValue.TIMESTAMP,
-          updatedAt: firebase.database.ServerValue.TIMESTAMP,
-          userId: userInfo.uid,
-          userName: userInfo.name,
-          responsibleId: responsibleId || 'N/A'
-        };
-
-        await newProblemRef.set(newProblemData);
-
-        alert('Problema reportado com sucesso! Agradecemos a sua contribuição.');
-        window.location.href = `case-details.html?caseId=${problemId}`; // Redireciona para os detalhes do caso
-      } catch (error) {
-        console.error("Erro ao reportar problema:", error);
-        alert('Ocorreu um erro ao reportar o problema: ' + error.message);
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Enviar Relato';
+      // Function to update neighborhood dropdown
+      function updateNeighborhoods(municipality) {
+        neighborhoodSelect.innerHTML = '<option value="">Selecione o bairro</option>';
+        if (municipalitiesAndNeighborhoods[municipality]) {
+          municipalitiesAndNeighborhoods[municipality].forEach(bairro => {
+            const option = document.createElement('option');
+            option.value = bairro;
+            option.textContent = bairro;
+            neighborhoodSelect.appendChild(option);
+          });
+        }
       }
+      break;
+    case 1:
+      document.querySelectorAll('.category-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+          formData.category = chip.dataset.category;
+          hideError('categoryError');
+          // Atualizar cor do ícone
+          chip.querySelector('i').style.color = 'white';
+          categories.forEach(cat => {
+            if (cat.name !== formData.category) {
+              document.querySelector(`.category-chip[data-category="${cat.name}"] i`).style.color = cat.color;
+            }
+          });
+        });
+      });
+
+      document.querySelectorAll('input[name="urgency"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          formData.urgency = e.target.value;
+          hideError('urgencyError');
+          // Atualizar cor do ícone
+          urgencies.forEach(urg => {
+            const label = document.querySelector(`label[for="urgency-${urg.level}"]`);
+            if (e.target.value === urg.level) {
+              label.querySelector('i').style.color = 'white';
+            } else {
+              label.querySelector('i').style.color = urg.color;
+            }
+          });
+        });
+      });
+
+      document.getElementById('description').addEventListener('input', (e) => {
+        formData.description = e.target.value;
+        hideError('descriptionError');
+      });
+
+      document.getElementById('suggestion').addEventListener('input', (e) => {
+        formData.suggestion = e.target.value;
+      });
+
+      const imageUploadInput = document.getElementById('imageUpload');
+      const imagePreview = document.getElementById('imagePreview');
+      const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+      const imagePlaceholderText = document.getElementById('imagePlaceholderText');
+
+      imageUploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            showError('imageError', 'A imagem deve ter no máximo 5MB.');
+            imageUploadInput.value = '';
+            formData.image = null;
+            formData.imagePreviewUrl = null;
+            imagePreview.style.display = 'none';
+            imagePlaceholderText.style.display = 'flex';
+            imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível
+            return;
+          }
+          formData.image = file;
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            formData.imagePreviewUrl = e.target.result;
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+            imagePlaceholderText.style.display = 'none';
+            imagePreviewContainer.style.display = 'flex';
+            hideError('imageError');
+          };
+          reader.readAsDataURL(file);
+        } else {
+          formData.image = null;
+          formData.imagePreviewUrl = null;
+          imagePreview.style.display = 'none';
+          imagePlaceholderText.style.display = 'flex';
+          imagePreviewContainer.style.display = 'flex'; // Certifica que o container está visível mesmo sem imagem
+        }
+      });
+      break;
+    case 2:
+      document.getElementById('locateMeBtn').addEventListener('click', () => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              const { latitude, longitude } = position.coords;
+              map.setView([latitude, longitude], 15);
+              if (marker) {
+                marker.setLatLng([latitude, longitude]);
+              } else {
+                marker = L.marker([latitude, longitude], { draggable: true }).addTo(map);
+              }
+              formData.latitude = latitude;
+              formData.longitude = longitude;
+            },
+            () => {
+              alert('Não foi possível obter sua localização. Por favor, arraste manualmente.');
+            }
+          );
+        } else {
+          alert('Geolocalização não suportada pelo seu navegador.');
+        }
+      });
+      document.getElementById('resetMapBtn').addEventListener('click', () => {
+        initializeMap(); // Recria o mapa na posição padrão de Luanda
+      });
+
+      submitBtn.addEventListener('click', handleSubmit);
+      break;
+  }
+}
+
+// Validate current step
+function validateStep() {
+  let isValid = true;
+  switch (currentStep) {
+    case 0:
+      if (!formData.title.trim()) {
+        showError('titleError', 'O título do problema é obrigatório.');
+        isValid = false;
+      } else {
+        hideError('titleError');
+      }
+      if (!formData.municipality) {
+        showError('municipalityError', 'Selecione um município.');
+        isValid = false;
+      } else {
+        hideError('municipalityError');
+      }
+      if (formData.municipality && !formData.neighborhood) {
+        showError('neighborhoodError', 'Selecione um bairro.');
+        isValid = false;
+      } else {
+        hideError('neighborhoodError');
+      }
+      break;
+    case 1:
+      if (!formData.category) {
+        showError('categoryError', 'Selecione uma categoria.');
+        isValid = false;
+      } else {
+        hideError('categoryError');
+      }
+      if (!formData.urgency) {
+        showError('urgencyError', 'Selecione um nível de urgência.');
+        isValid = false;
+      } else {
+        hideError('urgencyError');
+      }
+      if (!formData.description.trim()) {
+        showError('descriptionError', 'A descrição do problema é obrigatória.');
+        isValid = false;
+      } else {
+        hideError('descriptionError');
+      }
+      // Imagem é opcional, não validamos se está vazia
+      break;
+    case 2:
+      if (formData.latitude === null || formData.longitude === null) {
+        showError('mapError', 'A localização no mapa é obrigatória. Clique ou arraste o marcador.');
+        isValid = false;
+      } else {
+        hideError('mapError');
+      }
+      break;
+  }
+  return isValid;
+}
+
+// Handle form submission
+async function handleSubmit() {
+  if (!validateStep()) {
+    return; // Valida a última etapa antes de enviar
+  }
+
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+  try {
+    let imageUrl = '';
+    if (formData.image) {
+      imageUrl = await uploadToCloudinary(formData.image, formData.neighborhood);
+      console.log('Imagem enviada para Cloudinary:', imageUrl);
     }
 
-    // Update Auth UI
+    const db = firebase.database();
+    const problemsRef = db.ref('problems');
+    const newProblemRef = problemsRef.push();
+    const problemId = newProblemRef.key;
+
+    await waitForFirebaseAuth();
+    const userInfo = await getUserInfo();
+    const responsibleId = await getResponsibleIdForMunicipality(formData.municipality);
+
+    const newProblemData = {
+      id: problemId,
+      title: formData.title,
+      description: formData.description,
+      category: formData.category,
+      urgency: formData.urgency,
+      suggestion: formData.suggestion,
+      imageUrl: imageUrl,
+      location: {
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        municipality: formData.municipality,
+        neighborhood: formData.neighborhood
+      },
+      status: 'pending',
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP,
+      userId: userInfo.uid,
+      userName: userInfo.name,
+      responsibleId: responsibleId || 'N/A'
+    };
+
+    await newProblemRef.set(newProblemData);
+
+    alert('Problema reportado com sucesso! Agradecemos a sua contribuição.');
+    window.location.href = `case-details.html?caseId=${problemId}`; // Redireciona para os detalhes do caso
+  } catch (error) {
+    console.error("Erro ao reportar problema:", error);
+    alert('Ocorreu um erro ao reportar o problema: ' + error.message);
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Enviar Relato';
+  }
+}
+
+// Update Auth UI
 function updateAuthUI(userInfo) {
   const authButton = document.getElementById('authButton');
   const profileDropdown = document.getElementById('profileDropdown');
@@ -1885,8 +1947,6 @@ function checkCookieConsent() {
   });
 }
 
-// Load initial step
-loadStep();
   </script>
 </body>
 </html>
